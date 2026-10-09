@@ -26,6 +26,7 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
             self.assertEqual(receipt["index_evidence"]["rows"], 1921)
+            self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "PASS")
             sources = donor_l1.frozen_sources()
             entry = sources[0][0]
             sid = entry["donor_id"]
@@ -35,20 +36,33 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertTrue(donor_l1.lookup(dbpath,entry["source"]["normalized_key"],"key"))
             self.assertIsInstance(donor_l1.lookup(dbpath,"RESEARCH_DOCUMENTATION","class"), list)
             self.assertFalse(donor_l1.lookup(dbpath,"missing-id","id"))
+            union = donor_l1.json_read(donor_l1.UNION)
+            self.assertEqual(len(union["source_coverage"]), 445)
+            for original in union["source_coverage"]:
+                for url in original["original_locators"]:
+                    self.assertIn(original["resolved_donor_id"],
+                                  [item["id"] for item in donor_l1.lookup(dbpath,url,"url")])
+            supersession = union["superseded_resolution"]
+            old_url = "https://github.com/Ascend/triton-ascend"
+            self.assertIn(supersession["replacement_donor_id"],
+                          [item["id"] for item in donor_l1.lookup(dbpath,old_url,"url")])
             with sqlite3.connect(dbpath) as db:
                 meta = dict(db.execute("SELECT key,value FROM metadata"))
                 self.assertEqual(meta["publication_gate"],"PENDING")
                 self.assertEqual(meta["input_link_occurrences_B"],"UNVERIFIED")
                 self.assertEqual(meta["expansion_raw_limit"],"UNVERIFIED")
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
+                self.assertEqual(meta["bounded_union_unique_sources"],"445")
+                self.assertEqual(meta["bounded_union_original_url_records"],"445")
                 self.assertEqual(db.execute(
                     "SELECT current_status FROM sources WHERE source_origin='UNMERGED_PR_744'").fetchone()[0],
                     "BLOCKED")
 
     def test_no_modification_to_original_archive(self):
         sources = donor_l1.frozen_sources()
-        self.assertEqual(sources[0][0]["status"],"ACCEPTED_REFERENCE" if sources[0][0]["status"]=="ACCEPTED_REFERENCE" else sources[0][0]["status"])
-        self.assertTrue(donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
+        self.assertEqual(donor_l1.sha_blob(donor_l1.REGISTRY.read_bytes()),
+                         donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
+        self.assertEqual(len(sources),1921)
 
     def test_duplicate_identity_fails_closed(self):
         src = donor_l1.frozen_sources()

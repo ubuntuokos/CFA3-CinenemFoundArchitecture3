@@ -84,6 +84,30 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(donor_l1.lookup(dbpath,entry["source"]["locator"],"url")[0]["id"],sid)
                 self.assertFalse(entry["submission_review"]["exact_submitted_URL_and_approval_pair_independently_verified"])
 
+    def test_owner_approval_evidence_is_bounded_and_nonadmitting(self):
+        supplementary = donor_l1.json_read(donor_l1.SUPPLEMENT)
+        evidence = supplementary["approval_evidence_reconciliation"]
+        self.assertFalse(evidence["promotion_permitted"])
+        self.assertFalse(evidence["source_index_complete"])
+        self.assertEqual(evidence["conversation_wide_approval_report"]["affected_entries"], 10)
+        self.assertFalse(evidence["conversation_wide_approval_report"]
+                         ["exact_user_message_and_links_machine_auditable_in_repo"])
+        self.assertEqual(len(evidence["remaining_unverified_suggested_references"]),4)
+        self.assertEqual(evidence["explicit_covert_approval_historical_evidence"]["legacy_pr"],720)
+        self.assertFalse(evidence["explicit_covert_approval_historical_evidence"]
+                         ["new_repository_canonical_admission"])
+        four = {"MakeHuman2","CharMorph","SMPL-X","DECA"}
+        blocked = 0
+        for entry in supplementary["entries"]:
+            self.assertFalse(entry["intake_provenance"]["canonical_approval_admitted"])
+            self.assertFalse(entry["submission_review"]
+                             ["exact_submitted_URL_and_approval_pair_independently_verified"])
+            if entry["name"] in four:
+                blocked += 1
+                self.assertEqual(entry["submission_review"]["evidence_gap"],
+                                 "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY")
+        self.assertEqual(blocked,4)
+
     def test_duplicate_identity_fails_closed(self):
         src = donor_l1.frozen_sources()
         with tempfile.TemporaryDirectory() as tmp:

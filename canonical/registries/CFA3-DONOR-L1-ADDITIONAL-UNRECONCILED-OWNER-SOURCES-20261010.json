@@ -1,0 +1,125 @@
+{
+  "schema": "cfa3.donor-l1-supplemental-owner-approval-leads.v1",
+  "id": "CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010",
+  "status": "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED",
+  "source_evidence_type": "PRIOR_CONVERSATION_RETRIEVAL_NOT_IMMUTABLE_RAW_MESSAGE_EXPORT",
+  "archived_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "preexisting_staged_source_count": 1944,
+  "existing_23_supplement_preserved": true,
+  "original_L1_B": null,
+  "all_user_approvals_exhaustively_verified": false,
+  "missing_approved_sources_zero_proven": false,
+  "unresolved_identity_conflicts_zero_proven": false,
+  "publication_gate": "BLOCKED",
+  "runtime_admission": false,
+  "entries": [
+    {
+      "donor_id": "CFA3-L1-RECONCILE-SENTRY-001",
+      "name": "Sentry",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/getsentry/sentry",
+        "normalized_key": "github:getsentry/sentry"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T11:18:05Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-SCRAPEGRAPHAI-001",
+      "name": "ScrapeGraphAI",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/scrapegraphai/scrapegraph-ai",
+        "normalized_key": "github:scrapegraphai/scrapegraph-ai"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T10:59:35Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-FLOWSINT-001",
+      "name": "FlowSINT",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/reconurge/flowsint",
+        "normalized_key": "github:reconurge/flowsint"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T11:20:42Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-OPEN-ONTOLOGIES-001",
+      "name": "Open Ontologies",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/fabio-rovai/open-ontologies",
+        "normalized_key": "github:fabio-rovai/open-ontologies"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T13:08:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    }
+  ]
+}

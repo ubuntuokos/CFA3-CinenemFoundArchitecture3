@@ -1,0 +1,768 @@
+{
+  "schema": "cfa3.donor-l1-bounded-historical-pr-reconciliation.v1",
+  "id": "CFA3-DONOR-L1-HISTORICAL-PR-RECONCILIATION-B-20261010",
+  "status": "VERIFIED_BOUNDED_LEGACY_PR_IDENTITIES_NOT_L1_PUBLISHED",
+  "archived_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "legacy_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "method": "Match historical exact-HEAD delta identities with pre-existing frozen registry canonical keys; retain raw submitted URLs; document old donor-ID aliases but do not re-register or reanalyze",
+  "groups": [
+    {
+      "historical_pr": 676,
+      "pr_head_sha": "610bd2814300c1ae49ae80783e037e0b615fb674",
+      "delta_path": "canonical/deltas/FA3-DONOR-MESHY-RUNWARE-API-EVANGELIST-2026-10-04.json",
+      "delta_blob_sha": "4949f92a341f3b5b391d3632fc50d20c205c0309",
+      "observed_submitted_url_count": 10,
+      "observed_original_submitted_urls": [
+        "https://github.com/topics/meshy?o=asc&s=updated",
+        "https://github.com/topics/meshy?l=python&o=asc&s=updated",
+        "https://github.com/meshy-dev/Meshy-guide",
+        "https://github.com/topics/meshy?l=python",
+        "https://github.com/meshy-dev",
+        "https://github.com/topics/meshy?l=html",
+        "https://github.com/topics/ai-3d-model-generator",
+        "https://github.com/runware",
+        "https://github.com/topics/runware?l=shell",
+        "https://github.com/api-evangelist"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-MESHY-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-MESHY-001",
+          "normalized_key": "github:topics/meshy",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MESHY-DEV-MESHY-GUIDE-001",
+          "archived_donor_id": "FA3-DONOR-MESHY-DEV-MESHY-GUIDE-001",
+          "normalized_key": "github:meshy-dev/meshy-guide",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MESHY-DEV-ORG-001",
+          "archived_donor_id": "FA3-DONOR-MESHY-DEV-ORG-001",
+          "normalized_key": "github:meshy-dev",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-AI-3D-MODEL-GENERATOR-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-AI-3D-MODEL-GENERATOR-001",
+          "normalized_key": "github:topics/ai-3d-model-generator",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-RUNWARE-ORG-001",
+          "archived_donor_id": "FA3-DONOR-RUNWARE-ORG-001",
+          "normalized_key": "github:runware",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RUNWARE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RUNWARE-001",
+          "normalized_key": "github:topics/runware",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 6,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 682,
+      "pr_head_sha": "9990e57010d6955954d909432b0999e3e6b3186b",
+      "delta_path": "canonical/deltas/FA3-DONOR-PROMPT-LIBRARY-GENERATIVE-WORKFLOW-2026-10-04.json",
+      "delta_blob_sha": "b744a7907a5474f31a46981c0b1cab27fcaae63d",
+      "observed_submitted_url_count": 23,
+      "observed_original_submitted_urls": [
+        "https://github.com/topics/prompts",
+        "https://github.com/topics/prompt-library?l=shell&o=desc&s=stars",
+        "https://github.com/topics/prompt-library?l=css&o=desc&s=stars",
+        "https://github.com/topics/prompts",
+        "https://github.com/JuliusBrussee/the-prompt-library",
+        "https://github.com/hubertusgbecker/prompt-library",
+        "https://github.com/aakashg/pm-prompt-library",
+        "https://github.com/aakashg/pm-prompt-library",
+        "https://github.com/topics/prompts-template",
+        "https://github.com/hubertusgbecker/prompt-library",
+        "https://github.com/topics/ai-prompts?o=desc&s=stars",
+        "https://github.com/jamez-bondos/awesome-gpt4o-images",
+        "https://github.com/jamez-bondos",
+        "https://github.com/carson-katri/dream-textures",
+        "https://github.com/lllyasviel",
+        "https://github.com/Comfy-Org",
+        "https://github.com/Sygil-Dev",
+        "https://github.com/carson-katri/dream-textures",
+        "https://github.com/topics/prompt-library?l=jupyter+notebook&o=asc&s=updated",
+        "https://github.com/topics/prompt-templates",
+        "https://github.com/topics/prompt?l=html",
+        "https://github.com/topics/system-prompts",
+        "https://github.com/topics/chatgpt-prompts"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPTS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPTS-001",
+          "normalized_key": "github:topics/prompts",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPT-LIBRARY-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPT-LIBRARY-001",
+          "normalized_key": "github:topics/prompt-library",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-JULIUSBRUSSEE-THE-PROMPT-LIBRARY-001",
+          "archived_donor_id": "FA3-DONOR-JULIUSBRUSSEE-THE-PROMPT-LIBRARY-001",
+          "normalized_key": "github:juliusbrussee/the-prompt-library",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-HUBERTUSGBECKER-PROMPT-LIBRARY-001",
+          "archived_donor_id": "FA3-DONOR-HUBERTUSGBECKER-PROMPT-LIBRARY-001",
+          "normalized_key": "github:hubertusgbecker/prompt-library",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-AAKASHG-PM-PROMPT-LIBRARY-001",
+          "archived_donor_id": "FA3-DONOR-AAKASHG-PM-PROMPT-LIBRARY-001",
+          "normalized_key": "github:aakashg/pm-prompt-library",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPTS-TEMPLATE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPTS-TEMPLATE-001",
+          "normalized_key": "github:topics/prompts-template",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-AI-PROMPTS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-AI-PROMPTS-001",
+          "normalized_key": "github:topics/ai-prompts",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-JAMEZ-BONDOS-AWESOME-GPT4O-IMAGES-001",
+          "archived_donor_id": "FA3-DONOR-JAMEZ-BONDOS-AWESOME-GPT4O-IMAGES-001",
+          "normalized_key": "github:jamez-bondos/awesome-gpt4o-images",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-JAMEZ-BONDOS-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-JAMEZ-BONDOS-PROFILE-001",
+          "normalized_key": "github:jamez-bondos",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-CARSON-KATRI-DREAM-TEXTURES-001",
+          "archived_donor_id": "FA3-DONOR-CARSON-KATRI-DREAM-TEXTURES-001",
+          "normalized_key": "github:carson-katri/dream-textures",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-LLLYASVIEL-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-LLLYASVIEL-PROFILE-001",
+          "normalized_key": "github:lllyasviel",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-SYGIL-DEV-ORG-001",
+          "archived_donor_id": "FA3-DONOR-SYGIL-DEV-ORG-001",
+          "normalized_key": "github:sygil-dev",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPT-TEMPLATES-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPT-TEMPLATES-001",
+          "normalized_key": "github:topics/prompt-templates",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPT-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-PROMPT-001",
+          "normalized_key": "github:topics/prompt",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-SYSTEM-PROMPTS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-SYSTEM-PROMPTS-001",
+          "normalized_key": "github:topics/system-prompts",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-CHATGPT-PROMPTS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-CHATGPT-PROMPTS-001",
+          "normalized_key": "github:topics/chatgpt-prompts",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 16,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 683,
+      "pr_head_sha": "03bdb14a91a8daaf4b8a407e8ea4c0f9ec7b3033",
+      "delta_path": "canonical/deltas/FA3-DONOR-LOCALAI-ECOSYSTEM-2026-10-04.json",
+      "delta_blob_sha": "571c688cdead3fa30da0b29b743a06e035fb14ed",
+      "observed_submitted_url_count": 14,
+      "observed_original_submitted_urls": [
+        "https://github.com/mudler/localai",
+        "https://github.com/topics/local-ai",
+        "https://github.com/topics/local-ai?l=c%2B%2B&o=asc&s=forks",
+        "https://github.com/localai-org",
+        "https://github.com/topics/local-ai?l=go&o=asc&s=updated",
+        "https://github.com/topics/local-ai-agents?l=javascript",
+        "https://github.com/topics/local-ai-models",
+        "https://github.com/topics/localai",
+        "https://github.com/topics/my-local-ai",
+        "https://github.com/topics/self-hosted-ai",
+        "https://github.com/topics/offline-ai",
+        "https://github.com/topics/local-ai-app",
+        "https://github.com/aaif-goose",
+        "https://github.com/topics/local-ai-agents?o=desc&s=updated"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MUDLER-LOCALAI-001",
+          "archived_donor_id": "FA3-DONOR-MUDLER-LOCALAI-001",
+          "normalized_key": "github:mudler/localai",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-001",
+          "normalized_key": "github:topics/local-ai",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-LOCALAI-ORG-001",
+          "archived_donor_id": "FA3-DONOR-LOCALAI-ORG-001",
+          "normalized_key": "github:localai-org",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-AGENTS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-AGENTS-001",
+          "normalized_key": "github:topics/local-ai-agents",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-MODELS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-MODELS-001",
+          "normalized_key": "github:topics/local-ai-models",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCALAI-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCALAI-001",
+          "normalized_key": "github:topics/localai",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-MY-LOCAL-AI-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-MY-LOCAL-AI-001",
+          "normalized_key": "github:topics/my-local-ai",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-SELF-HOSTED-AI-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-SELF-HOSTED-AI-001",
+          "normalized_key": "github:topics/self-hosted-ai",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-OFFLINE-AI-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-OFFLINE-AI-001",
+          "normalized_key": "github:topics/offline-ai",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-APP-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-LOCAL-AI-APP-001",
+          "normalized_key": "github:topics/local-ai-app",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-AAIF-GOOSE-ORG-001",
+          "archived_donor_id": "FA3-DONOR-AAIF-GOOSE-ORG-001",
+          "normalized_key": "github:aaif-goose",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 11,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 684,
+      "pr_head_sha": "39763d952daca18e7e62e9ca35ea1623e5d6c492",
+      "delta_path": "canonical/deltas/FA3-DONOR-CLOUDFLARE-CLEF-FLASH-2026-10-04.json",
+      "delta_blob_sha": "01c9cdf09e75eeb30f624609159b17239c9275db",
+      "observed_submitted_url_count": 1,
+      "observed_original_submitted_urls": [
+        "https://huggingface.co/Cloudflare/clef-flash"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-CLOUDFLARE-CLEF-FLASH-001",
+          "archived_donor_id": "FA3-DONOR-CLOUDFLARE-CLEF-FLASH-001",
+          "normalized_key": "https://huggingface.co/cloudflare/clef-flash",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 1,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 686,
+      "pr_head_sha": "4781f925cbef26db43cc6164f2fbabc8c8761f05",
+      "delta_path": "canonical/deltas/FA3-DONOR-AUTO-RIGGING-UEBRIDGEMCP-2026-10-04.json",
+      "delta_blob_sha": "53d8e059cba5830a1c51da8684510b0411c2ff79",
+      "observed_submitted_url_count": 2,
+      "observed_original_submitted_urls": [
+        "https://github.com/topics/auto-rigging",
+        "https://github.com/uuuuzz/UEBridgeMCP"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-AUTO-RIGGING-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-AUTO-RIGGING-TOPIC-001",
+          "normalized_key": "github:topics/auto-rigging",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-UEBRIDGEMCP-001",
+          "archived_donor_id": "FA3-DONOR-UEBRIDGEMCP-001",
+          "normalized_key": "github:uuuuzz/uebridgemcp",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 2,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 693,
+      "pr_head_sha": "4a76f5188c148531b4d6d9a2c6dcb55b25007c2e",
+      "delta_path": "canonical/deltas/FA3-DONOR-WEBOS-ECOSYSTEM-2026-10-04.json",
+      "delta_blob_sha": "184cfca8b879e6fd7a948a673f9d2dfd38631725",
+      "observed_submitted_url_count": 4,
+      "observed_original_submitted_urls": [
+        "https://github.com/webosose",
+        "https://github.com/topics/webos",
+        "https://github.com/topics/web-based-os",
+        "https://github.com/topics/webos-application?o=asc&s=updated"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-WEBOSOSE-ORG-001",
+          "archived_donor_id": "FA3-DONOR-WEBOSOSE-ORG-001",
+          "normalized_key": "github:webosose",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-WEBOS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-WEBOS-001",
+          "normalized_key": "github:topics/webos",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-WEB-BASED-OS-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-WEB-BASED-OS-001",
+          "normalized_key": "github:topics/web-based-os",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-WEBOS-APPLICATION-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-WEBOS-APPLICATION-001",
+          "normalized_key": "github:topics/webos-application",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 4,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 704,
+      "pr_head_sha": "aab23277cf7d38d7b55b73bf0cae12491cb49dde",
+      "delta_path": "canonical/deltas/FA3-DONOR-ASCEND-SHARED-BACKEND-2026-10-04.json",
+      "delta_blob_sha": "ca74cec6aed61565b449b755fb61ca6682892250",
+      "observed_submitted_url_count": 8,
+      "observed_original_submitted_urls": [
+        "https://github.com/Ascend/pytorch",
+        "https://github.com/Ascend/torchair",
+        "https://github.com/triton-lang/triton-ascend",
+        "https://github.com/Ascend/triton-ascend",
+        "https://github.com/vllm-project/vllm-ascend",
+        "https://github.com/Ascend/samples",
+        "https://github.com/microsoft/onnxruntime",
+        "https://www.hiascend.com/document/detail/en/CANNCommunityEdition/910/index/index.html"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-ASCEND-PYTORCH-001",
+          "archived_donor_id": "FA3-DONOR-ASCEND-PYTORCH-001",
+          "normalized_key": "github:ascend/pytorch",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-ASCEND-TORCHAIR-001",
+          "archived_donor_id": "FA3-DONOR-ASCEND-TORCHAIR-001",
+          "normalized_key": "github:ascend/torchair",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-TRITON-LANG-TRITON-ASCEND-001",
+          "archived_donor_id": "FA3-DONOR-TRITON-LANG-TRITON-ASCEND-001",
+          "normalized_key": "github:triton-lang/triton-ascend",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001",
+          "archived_donor_id": "FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001",
+          "normalized_key": "github:ascend/triton-ascend",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-VLLM-ASCEND-001",
+          "archived_donor_id": "FA3-DONOR-VLLM-ASCEND-001",
+          "normalized_key": "github:vllm-project/vllm-ascend",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-ASCEND-SAMPLES-001",
+          "archived_donor_id": "FA3-DONOR-ASCEND-SAMPLES-001",
+          "normalized_key": "github:ascend/samples",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-ONNXRUNTIME-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-ONNX-RUNTIME-001",
+          "normalized_key": "github:microsoft/onnxruntime",
+          "legacy_donor_id_alias_only": true
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-HUAWEI-CANN-DOCS-910-001",
+          "archived_donor_id": "FA3-DONOR-HUAWEI-CANN-DOCS-910-001",
+          "normalized_key": "web:hiascend:cann-community-edition:9.1",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 8,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 706,
+      "pr_head_sha": "dd62e05810f1212a8489f4aa7cb2e033a801766d",
+      "delta_path": "canonical/deltas/FA3-DONOR-DIRECTX-INTEROP-CONVERSATION-2026-10-04.json",
+      "delta_blob_sha": "023344fc30269e1bdd8104f3737a1092f7ce9e13",
+      "observed_submitted_url_count": 11,
+      "observed_original_submitted_urls": [
+        "https://github.com/microsoft/DirectXTK",
+        "https://github.com/EduApps-CDG/OpenDX",
+        "https://github.com/microsoft/DirectXShaderCompiler",
+        "https://github.com/doitsujin/DXVK",
+        "https://github.com/microsoft/DirectXTex/wiki/DirectXTex",
+        "https://github.com/microsoft/DirectX-Headers",
+        "https://github.com/microsoft/directxtk12",
+        "https://devblogs.microsoft.com/directx/directx-heart-linux/",
+        "https://github.com/microsoft/directml",
+        "https://github.com/OpenRA",
+        "https://github.com/opencomputeproject/OpenNetworkLinux"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXSHADERCOMPILER-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXSHADERCOMPILER-001",
+          "normalized_key": "github:microsoft/directxshadercompiler",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-DOITSUJIN-DXVK-001",
+          "archived_donor_id": "FA3-DONOR-DOITSUJIN-DXVK-001",
+          "normalized_key": "github:doitsujin/dxvk",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTEX-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTEX-001",
+          "normalized_key": "github:microsoft/directxtex",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTX-HEADERS-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTX-HEADERS-001",
+          "normalized_key": "github:microsoft/directx-headers",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTK-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTK-001",
+          "normalized_key": "github:microsoft/directxtk",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-EDUAPPS-CDG-OPENDX-001",
+          "archived_donor_id": "FA3-DONOR-EDUAPPS-CDG-OPENDX-001",
+          "normalized_key": "github:eduapps-cdg/opendx",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTK12-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTK12-001",
+          "normalized_key": "github:microsoft/directxtk12",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTX-LINUX-WSL-ARTICLE-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTX-LINUX-WSL-ARTICLE-001",
+          "normalized_key": "web:microsoft:directx-heart-linux",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-MICROSOFT-DIRECTML-001",
+          "archived_donor_id": "FA3-DONOR-MICROSOFT-DIRECTML-001",
+          "normalized_key": "github:microsoft/directml",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-OPENRA-ORG-001",
+          "archived_donor_id": "FA3-DONOR-OPENRA-ORG-001",
+          "normalized_key": "github:openra",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-OCP-OPENNETWORKLINUX-001",
+          "archived_donor_id": "FA3-DONOR-OCP-OPENNETWORKLINUX-001",
+          "normalized_key": "github:opencomputeproject/opennetworklinux",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 11,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 707,
+      "pr_head_sha": "af8cd23982e27fdda0cc315ffd9e1186459f532f",
+      "delta_path": "canonical/deltas/FA3-DONOR-RAY-PATH-TRACING-ECOSYSTEM-2026-10-04.json",
+      "delta_blob_sha": "fb047c852047a4c798bc8f3f1db9ddcc46656e49",
+      "observed_submitted_url_count": 29,
+      "observed_original_submitted_urls": [
+        "https://github.com/raytracing",
+        "https://github.com/topics/ray-tracing?l=javascript",
+        "https://github.com/topics/ray-tracing?l=java&o=desc&s=forks",
+        "https://github.com/topics/ray-tracing?l=c%23&o=asc&s=stars",
+        "https://github.com/topics/raytracing-engine",
+        "https://github.com/topics/ray-tracing-in-one-weekend",
+        "https://github.com/topics/ray-tracer",
+        "https://github.com/topics/ray-tracing-in-one-weekend?o=desc&s=updated",
+        "https://github.com/topics/ray-tracer?l=c%2B%2B",
+        "https://github.com/SebLague/Ray-Tracing",
+        "https://github.com/topics/rtx",
+        "https://github.com/Project-10/OpenRT",
+        "https://github.com/worldveil/ray-tracing",
+        "https://github.com/Ancientkingg/cuda-raytracer",
+        "https://github.com/Ancientkingg/rust-raytracer",
+        "https://github.com/NVIDIA-RTX",
+        "https://github.com/bicknyers/raytracer-cpp",
+        "https://github.com/GPUOpen-Tools/radeon_raytracing_analyzer",
+        "https://github.com/GPUOpen-Drivers/gpurt",
+        "https://github.com/GPUOpen-LibrariesAndSDKs",
+        "https://github.com/topics/raytracing",
+        "https://github.com/topics/cpu-raytracing",
+        "https://github.com/intel/level-zero-raytracing-support",
+        "https://github.com/intel/level-zero-raytracing-support/releases",
+        "https://github.com/RenderKit",
+        "https://github.com/intel/intel-graphics-compiler",
+        "https://github.com/intel/RealTimePathTracingResearchFramework",
+        "https://github.com/canonical/kobuk-gfx-intel-compute-runtime",
+        "https://github.com/canonical/kobuk-gfx-packages"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-RAYTRACING-ORG-001",
+          "archived_donor_id": "FA3-DONOR-RAYTRACING-ORG-001",
+          "normalized_key": "github:raytracing",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAY-TRACING-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAY-TRACING-001",
+          "normalized_key": "github:topics/ray-tracing",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAYTRACING-ENGINE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAYTRACING-ENGINE-001",
+          "normalized_key": "github:topics/raytracing-engine",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAY-TRACING-IN-ONE-WEEKEND-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAY-TRACING-IN-ONE-WEEKEND-001",
+          "normalized_key": "github:topics/ray-tracing-in-one-weekend",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAY-TRACER-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAY-TRACER-001",
+          "normalized_key": "github:topics/ray-tracer",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-SEBLAGUE-RAY-TRACING-001",
+          "archived_donor_id": "FA3-DONOR-SEBLAGUE-RAY-TRACING-001",
+          "normalized_key": "github:seblague/ray-tracing",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RTX-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RTX-001",
+          "normalized_key": "github:topics/rtx",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-PROJECT-10-OPENRT-001",
+          "archived_donor_id": "FA3-DONOR-PROJECT-10-OPENRT-001",
+          "normalized_key": "github:project-10/openrt",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-WORLDVEIL-RAY-TRACING-001",
+          "archived_donor_id": "FA3-DONOR-WORLDVEIL-RAY-TRACING-001",
+          "normalized_key": "github:worldveil/ray-tracing",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-ANCIENTKINGG-CUDA-RAYTRACER-001",
+          "archived_donor_id": "FA3-DONOR-ANCIENTKINGG-CUDA-RAYTRACER-001",
+          "normalized_key": "github:ancientkingg/cuda-raytracer",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-ANCIENTKINGG-RUST-RAYTRACER-001",
+          "archived_donor_id": "FA3-DONOR-ANCIENTKINGG-RUST-RAYTRACER-001",
+          "normalized_key": "github:ancientkingg/rust-raytracer",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-NVIDIA-RTX-ORG-001",
+          "archived_donor_id": "FA3-DONOR-NVIDIA-RTX-ORG-001",
+          "normalized_key": "github:nvidia-rtx",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-BICKNYERS-RAYTRACER-CPP-001",
+          "archived_donor_id": "FA3-DONOR-BICKNYERS-RAYTRACER-CPP-001",
+          "normalized_key": "github:bicknyers/raytracer-cpp",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GPUOPEN-RRA-001",
+          "archived_donor_id": "FA3-DONOR-GPUOPEN-RRA-001",
+          "normalized_key": "github:gpuopen-tools/radeon_raytracing_analyzer",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GPUOPEN-GPURT-001",
+          "archived_donor_id": "FA3-DONOR-GPUOPEN-GPURT-001",
+          "normalized_key": "github:gpuopen-drivers/gpurt",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAYTRACING-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-RAYTRACING-001",
+          "normalized_key": "github:topics/raytracing",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-CPU-RAYTRACING-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPIC-CPU-RAYTRACING-001",
+          "normalized_key": "github:topics/cpu-raytracing",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-INTEL-LEVEL-ZERO-RAYTRACING-SUPPORT-001",
+          "archived_donor_id": "FA3-DONOR-INTEL-LEVEL-ZERO-RAYTRACING-SUPPORT-001",
+          "normalized_key": "github:intel/level-zero-raytracing-support",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-RENDERKIT-ORG-001",
+          "archived_donor_id": "FA3-DONOR-RENDERKIT-ORG-001",
+          "normalized_key": "github:renderkit",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-INTEL-REALTIME-PATH-TRACING-RESEARCH-FRAMEWORK-001",
+          "archived_donor_id": "FA3-DONOR-INTEL-REALTIME-PATH-TRACING-RESEARCH-FRAMEWORK-001",
+          "normalized_key": "github:intel/realtimepathtracingresearchframework",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-CANONICAL-KOBUK-GFX-INTEL-COMPUTE-RUNTIME-001",
+          "archived_donor_id": "FA3-DONOR-CANONICAL-KOBUK-GFX-INTEL-COMPUTE-RUNTIME-001",
+          "normalized_key": "github:canonical/kobuk-gfx-intel-compute-runtime",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-CANONICAL-KOBUK-GFX-PACKAGES-001",
+          "archived_donor_id": "FA3-DONOR-CANONICAL-KOBUK-GFX-PACKAGES-001",
+          "normalized_key": "github:canonical/kobuk-gfx-packages",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-AMD-GPUOPEN-LIBRARIES-SDKS-001",
+          "archived_donor_id": "FA3-DONOR-AMD-GPUOPEN-LIBRARIES-SDKS-001",
+          "normalized_key": "github:gpuopen-librariesandsdks",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-INTEL-INTEL-GRAPHICS-COMPILER-001",
+          "archived_donor_id": "FA3-DONOR-INTEL-INTEL-GRAPHICS-COMPILER-001",
+          "normalized_key": "github:intel/intel-graphics-compiler",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 24,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 711,
+      "pr_head_sha": "e4fe02e71aa8fe2530beccd7f31a7150869d2e90",
+      "delta_path": "canonical/deltas/FA3-DONOR-TILE-AI-CORE-2026-10-05.json",
+      "delta_blob_sha": "9aa790fe799268196762a8129afe76ca4fc2b73b",
+      "observed_submitted_url_count": 3,
+      "observed_original_submitted_urls": [
+        "https://github.com/tile-ai/tilelang",
+        "https://github.com/tile-ai/TileRT",
+        "https://github.com/tile-ai/TileOPs"
+      ],
+      "archive_identities": [
+        {
+          "original_proposed_donor_id": "FA3-DONOR-TILE-AI-TILELANG-001",
+          "archived_donor_id": "FA3-DONOR-TILE-AI-TILELANG-001",
+          "normalized_key": "github:tile-ai/tilelang",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-TILE-AI-TILERT-001",
+          "archived_donor_id": "FA3-DONOR-TILE-AI-TILERT-001",
+          "normalized_key": "github:tile-ai/tilert",
+          "legacy_donor_id_alias_only": false
+        },
+        {
+          "original_proposed_donor_id": "FA3-DONOR-TILE-AI-TILEOPS-001",
+          "archived_donor_id": "FA3-DONOR-TILE-AI-TILEOPS-001",
+          "normalized_key": "github:tile-ai/tileops",
+          "legacy_donor_id_alias_only": false
+        }
+      ],
+      "archive_match_count": 3,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    }
+  ],
+  "total_groups": 10,
+  "total_matched_rows": 86,
+  "legacy_donor_id_alias_rows": 1,
+  "global_approved_submissions_complete": false,
+  "frozen_l1_B": null,
+  "canonical_level_published": false,
+  "runtime_admission": false
+}

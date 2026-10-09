@@ -19,6 +19,7 @@ EXTRAS = [ARCH / f"PR-{n}-ADDITIONAL-REFERENCE.json" for n in (744, 745)]
 UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
 SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURCES-001.json"
 ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
+TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
 EXPECTED = {
     "FA3-DONOR-REFERENCE-REGISTRY-001.json": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
 }
@@ -91,6 +92,34 @@ def frozen_sources():
                 or record.get("authority") is not False):
             raise ValueError("Additional source lead must not be promoted")
         sources.append((record, "ADDITIONAL_OWNER_APPROVAL_RECONCILIATION_PENDING", False))
+    recovery = json_read(TRIPO_RECOVERY)
+    aggregate = recovery.get("historical_aggregate_reconciliation", {})
+    if (recovery.get("schema") != "cfa3.donor-l1-historical-tripo-unity-dcc-pose-recovery.v1"
+            or recovery.get("status") != "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED"
+            or recovery.get("archived_registry_blob_sha") != EXPECTED[REGISTRY.name]
+            or recovery.get("original_submitted_url_occurrences") != 48
+            or recovery.get("unique_submitted_urls") != 46
+            or recovery.get("pending_unmatched_identities") != 30
+            or recovery.get("matched_preexisting_identities") != 6
+            or len(recovery.get("entries", [])) != 30
+            or len(recovery.get("url_provenance", [])) != 48
+            or aggregate.get("status") != "NON_ADMITTED_RECONCILIATION_REFERENCE_ONLY"
+            or aggregate.get("not_a_new_donor") is not True
+            or aggregate.get("no_canonical_merge") is not True
+            or len(aggregate.get("preserved_archive_identities", [])) != 3
+            or recovery.get("original_L1_B") is not None
+            or recovery.get("all_owner_approvals_exhaustively_verified") is not False
+            or recovery.get("publication_gate") != "BLOCKED"
+            or recovery.get("runtime_admission") is not False):
+        raise ValueError("Historical Tripo recovery must preserve bounded identity evidence without publication")
+    for record in recovery["entries"]:
+        if (record.get("status") != "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE"
+                or record.get("submission_review", {}).get("exact_submitted_URL_and_approval_pair_independently_verified") is not False
+                or record.get("intake_provenance", {}).get("canonical_approval_admitted") is not False
+                or record.get("authority") is not False
+                or record.get("runtime_admission") is not False):
+            raise ValueError("Historical Tripo candidate must remain blocked")
+        sources.append((record, "HISTORICAL_TRIPO_OWNER_APPROVAL_PENDING", False))
     ids, keys = set(), set()
     for record, _, _ in sources:
         ident = record["donor_id"]
@@ -145,6 +174,49 @@ def register_historical_urls(db, sources):
     return archived
 
 
+def register_tripo_historical_urls(db, sources):
+    """Preserve every original occurrence, including repeated URLs, without new admission."""
+    manifest = json_read(TRIPO_RECOVERY)
+    by_id = {entry["donor_id"]: entry for entry, _, _ in sources}
+    seen = set()
+    for record in manifest["url_provenance"]:
+        i, url, sid = record["occurrence_index"], record["original_url"], record["source_id"]
+        if not isinstance(i, int) or isinstance(i, bool) or i < 1 or i > 48 or i in seen:
+            raise ValueError("Historical Tripo occurrence index missing, duplicated or invalid")
+        seen.add(i)
+        source = by_id.get(sid)
+        if source is None:
+            raise ValueError("Historical Tripo unresolved source: " + sid)
+        src = source["source"]
+        if record["normalized_key"] != src["normalized_key"]:
+            raise ValueError("Historical Tripo source identity and canonical key conflict: " + url)
+        if url not in ({src["locator"]} | set(src.get("discovery_urls", []))):
+            raise ValueError("Historical Tripo URL not grounded by source metadata: " + url)
+        existing = {x[0] for x in db.execute("SELECT source_id FROM aliases WHERE alias=?", (url,))}
+        if existing - {sid}:
+            raise ValueError("Historical Tripo URL alias resolves to multiple canonical IDs: " + url)
+        db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (url, sid))
+        db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                   (sid, url, "HISTORICAL_TRIPO_UNITY_DCC_POSE_20261004",
+                    "historical-branch-ce8b8a88-submitted-links"))
+        db.execute("INSERT INTO historical_link_occurrences VALUES(?,?,?,?,?,?,?)",
+                   ("HISTORICAL_TRIPO_UNITY_DCC_POSE_20261004", i, sid, url,
+                    record["normalized_key"], record["identity_resolution"],
+                    "historical-head-ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed"))
+    if seen != set(range(1, 49)):
+        raise ValueError("Historical Tripo occurrence coverage incomplete")
+    if len({row["original_url"] for row in manifest["url_provenance"]}) != 46:
+        raise ValueError("Historical Tripo distinct raw URL count mismatch")
+    for preserved in manifest["historical_aggregate_reconciliation"]["preserved_archive_identities"]:
+        rows = [x for x in manifest["url_provenance"] if x["original_url"] == preserved["original_url"]]
+        if (len(rows) != 1 or rows[0]["source_id"] != preserved["archived_donor_id"]
+                or rows[0]["normalized_key"] != preserved["archived_normalized_key"]
+                or rows[0]["identity_resolution"] !=
+                   "EXISTING_ARCHIVED_EXACT_URL_PRESERVE_DISTINCT_QUERY_VIEW"):
+            raise ValueError("Historical Tripo topic query-view identity not preserved")
+    return len(seen)
+
+
 def prepare(db, sources, run_id):
     db.executescript("""
       PRAGMA foreign_keys=ON;
@@ -171,6 +243,13 @@ def prepare(db, sources, run_id):
         historical_evidence TEXT NOT NULL,
         PRIMARY KEY(source_id,original_url,source_set,historical_evidence));
       CREATE INDEX provenance_url_lookup ON source_provenance(original_url);
+      CREATE TABLE historical_link_occurrences(
+        source_group TEXT NOT NULL, occurrence_index INTEGER NOT NULL,
+        source_id TEXT NOT NULL REFERENCES sources(source_id),
+        original_url TEXT NOT NULL, normalized_key TEXT NOT NULL,
+        identity_resolution TEXT NOT NULL, evidence_ref TEXT NOT NULL,
+        PRIMARY KEY(source_group,occurrence_index));
+      CREATE INDEX historical_link_url_lookup ON historical_link_occurrences(original_url);
     """)
     for entry, origin, from_main in sources:
         sid = entry["donor_id"]
@@ -186,6 +265,7 @@ def prepare(db, sources, run_id):
         for klass in classify(entry):
             db.execute("INSERT INTO classes VALUES(?,?,?)",(sid,klass,"HINT_BASED_UNVERIFIED"))
     register_historical_urls(db, sources)
+    register_tripo_historical_urls(db, sources)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
         ("run_id",run_id),
@@ -194,7 +274,10 @@ def prepare(db, sources, run_id):
         ("known_unique_source_identities",str(len(sources))),
         ("supplemental_owner_source_candidates","23"),
         ("additional_owner_source_leads","4"),
-        ("total_pending_owner_source_candidates","27"),
+        ("total_pending_owner_source_candidates","57"),
+        ("historical_tripo_new_pending_sources","30"),
+        ("historical_tripo_original_occurrences","48"),
+        ("historical_tripo_distinct_urls","46"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),
         ("approval_completeness","UNVERIFIED"),
@@ -217,8 +300,12 @@ def verify(path, expected):
                          for url in record["original_locators"]}
         if len(expected_urls) != 445:
             raise ValueError("Original owner URL count is not 445")
-        distinct_urls = db.execute("SELECT count(DISTINCT original_url) FROM source_provenance").fetchone()[0]
-        distinct_ids = db.execute("SELECT count(DISTINCT source_id) FROM source_provenance").fetchone()[0]
+        distinct_urls = db.execute(
+            "SELECT count(DISTINCT original_url) FROM source_provenance "
+            "WHERE historical_evidence='2026-10-05-owner-source-union'").fetchone()[0]
+        distinct_ids = db.execute(
+            "SELECT count(DISTINCT source_id) FROM source_provenance "
+            "WHERE historical_evidence='2026-10-05-owner-source-union'").fetchone()[0]
         if distinct_urls != len(expected_urls) or distinct_ids != len(set(expected_urls.values())):
             raise ValueError("Historical URL provenance coverage mismatch")
         for url, identity in expected_urls.items():
@@ -241,6 +328,33 @@ def verify(path, expected):
                 row = db.execute("SELECT current_status,locator FROM sources WHERE source_id=?", (donor_id,)).fetchone()
                 if row != ("BLOCKED", url):
                     raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
+        recovery = json_read(TRIPO_RECOVERY)
+        actual = list(db.execute(
+            "SELECT occurrence_index,source_id,original_url,normalized_key,identity_resolution "
+            "FROM historical_link_occurrences WHERE source_group=? ORDER BY occurrence_index",
+            ("HISTORICAL_TRIPO_UNITY_DCC_POSE_20261004",)))
+        expected_occurrences = [
+            (x["occurrence_index"], x["source_id"], x["original_url"],
+             x["normalized_key"], x["identity_resolution"])
+            for x in recovery["url_provenance"]
+        ]
+        if len(actual) != 48 or actual != expected_occurrences:
+            raise ValueError("Historical Tripo exact occurrence read-back mismatch")
+        if len({row[2] for row in actual}) != 46:
+            raise ValueError("Historical Tripo duplicate URL occurrence count lost")
+        for occurrence_index, sid, url, key, resolution in actual:
+            if not db.execute("SELECT 1 FROM aliases WHERE alias=? AND source_id=?",
+                              (url, sid)).fetchone():
+                raise ValueError("Historical Tripo URL alias read-back missing")
+        for item in recovery["entries"]:
+            sid = item["donor_id"]
+            row = db.execute("SELECT current_status,normalized_key FROM sources WHERE source_id=?",
+                             (sid,)).fetchone()
+            if row != ("BLOCKED", item["source"]["normalized_key"]):
+                raise ValueError("Historical Tripo source missing or improperly admitted")
+        old_aggregate_id = recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]
+        if db.execute("SELECT 1 FROM sources WHERE source_id=?", (old_aggregate_id,)).fetchone():
+            raise ValueError("Non-canonical historical Tripo aggregate was improperly admitted")
         url_locator_rows = db.execute(
             "SELECT count(*) FROM sources WHERE locator LIKE 'http://%' OR locator LIKE 'https://%'"
         ).fetchone()[0]
@@ -253,6 +367,9 @@ def verify(path, expected):
             "original_L1_link_record_count_B_verified":False,
             "supplemental_unreconciled_owner_sources":23,
             "additional_unreconciled_owner_sources":4,
+            "historical_tripo_pending_sources":30,
+            "historical_tripo_url_occurrences":48,
+            "historical_tripo_provenance":"BOUNDED_48_PASS",
             "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}

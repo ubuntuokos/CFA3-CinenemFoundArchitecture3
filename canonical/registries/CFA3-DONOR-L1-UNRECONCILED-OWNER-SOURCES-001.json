@@ -305,7 +305,14 @@
       "automatic_install": false,
       "automatic_activation": false,
       "automatic_code_import": false,
-      "automatic_provider_admission": false
+      "automatic_provider_admission": false,
+      "historical_evidence_pointer": {
+        "legacy_pr": 720,
+        "source_document": "docs/donor-covert-coder-2026-10-05.md",
+        "source_blob_sha": "662285ce1d536dedefb24ed8446dba18c4d51d5d",
+        "prior_proposed_donor_id": "FA3-DONOR-ANONYMOUSNOMAD-COVERT-CODER-001",
+        "new_canonical_admission": "BLOCKED"
+      }
     },
     {
       "donor_id": "CFA3-L1-RECONCILE-MAKEHUMANCOMMUNITY-MAKEHUMAN2-001",
@@ -321,7 +328,8 @@
         "reported_owner_marker": "accepted donor/reference sources",
         "reported_date": "2026-10-05",
         "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
-        "exact_submitted_URL_and_approval_pair_independently_verified": false
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
       },
       "intake_provenance": {
         "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
@@ -348,7 +356,8 @@
         "reported_owner_marker": "accepted donor/reference sources",
         "reported_date": "2026-10-05",
         "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
-        "exact_submitted_URL_and_approval_pair_independently_verified": false
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
       },
       "intake_provenance": {
         "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
@@ -375,7 +384,8 @@
         "reported_owner_marker": "accepted donor/reference sources",
         "reported_date": "2026-10-05",
         "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
-        "exact_submitted_URL_and_approval_pair_independently_verified": false
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
       },
       "intake_provenance": {
         "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
@@ -402,7 +412,8 @@
         "reported_owner_marker": "accepted donor/reference sources",
         "reported_date": "2026-10-05",
         "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
-        "exact_submitted_URL_and_approval_pair_independently_verified": false
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
       },
       "intake_provenance": {
         "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
@@ -417,5 +428,37 @@
     }
   ],
   "rights_status": "UNVERIFIED_NO_CODE_REUSE",
-  "runtime_admission": false
+  "runtime_admission": false,
+  "approval_evidence_reconciliation": {
+    "evidence_window": "2026-10-09",
+    "historical_owner_conversation_status": "SECONDARY_CONVERSATION_CONTEXT_NOT_RAW_SOURCE_FILE",
+    "conversation_wide_approval_report": {
+      "date": "2026-10-05",
+      "scope": "ANATOMY_HUMAN_CHARACTER_RELATED_LINKS",
+      "owner_phrase": "minden a beszélgetésben szereplő link donornak",
+      "affected_entries": 10,
+      "exact_user_message_and_links_machine_auditable_in_repo": false
+    },
+    "explicit_covert_approval_historical_evidence": {
+      "entry": "Covert Coder",
+      "date": "2026-10-05",
+      "owner_phrase": "donornak vedd fel a linket",
+      "legacy_pr": 720,
+      "legacy_pr_merged": false,
+      "source_commit": "16818c0c823dec2bc117549f092f22bc9c446f50",
+      "source_document": "docs/donor-covert-coder-2026-10-05.md",
+      "document_blob_sha": "662285ce1d536dedefb24ed8446dba18c4d51d5d",
+      "historical_proposed_donor_id": "FA3-DONOR-ANONYMOUSNOMAD-COVERT-CODER-001",
+      "new_repository_canonical_admission": false
+    },
+    "remaining_unverified_suggested_references": [
+      "MakeHuman2",
+      "CharMorph",
+      "SMPL-X",
+      "DECA"
+    ],
+    "remaining_four_approval_evidence": "NO_DIRECT_USER_DONOR_MARKER_FOUND_IN_RETRIEVED_CONTEXT_REFERENCE_ONLY_PENDING_PRIMARY_EVIDENCE",
+    "promotion_permitted": false,
+    "source_index_complete": false
+  }
 }

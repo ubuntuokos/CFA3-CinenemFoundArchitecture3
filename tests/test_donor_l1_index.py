@@ -14,9 +14,9 @@ spec.loader.exec_module(donor_l1)
 class DonorL1IndexTests(unittest.TestCase):
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
-        self.assertEqual(len(sources), 1936)
+        self.assertEqual(len(sources), 1944)
         self.assertEqual(sum(1 for _, _, canonical in sources if canonical), 1919)
-        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 17)
+        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 25)
 
     def test_staging_index_round_trip_and_no_false_publication(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -25,8 +25,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
-            self.assertEqual(receipt["index_evidence"]["rows"], 1936)
-            self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 15)
+            self.assertEqual(receipt["index_evidence"]["rows"], 1944)
+            self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 23)
             self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
             self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)
             sources = donor_l1.frozen_sources()
@@ -54,7 +54,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["input_link_occurrences_B"],"UNVERIFIED")
                 self.assertEqual(meta["expansion_raw_limit"],"UNVERIFIED")
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
-                self.assertEqual(meta["supplemental_owner_source_candidates"],"15")
+                self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
                 self.assertEqual(meta["all_owner_submissions_verified"],"FALSE")
                 self.assertEqual(meta["bounded_union_link_records"],"445")
                 self.assertEqual(meta["bounded_union_distinct_donor_ids"],"443")
@@ -63,15 +63,35 @@ class DonorL1IndexTests(unittest.TestCase):
                     "SELECT current_status FROM sources WHERE source_origin='UNMERGED_PR_744'").fetchone()[0],
                     "BLOCKED")
 
+    def test_additional_explicit_approved_links_are_preserved_but_not_auto_admitted(self):
+        supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)
+        self.assertEqual(supplement["verification_bounds"]["additional_exact_owner_marker_context_sources"], 8)
+        expected = {
+            "https://github.com/anthropics",
+            "https://krater.ai/",
+            "https://github.com/topics/ontology-development",
+            "https://github.com/microsoft/Ontology-Playground",
+            "https://github.com/ozekik/awesome-ontology",
+            "https://infranodus.com/skills/ontology-creator",
+            "https://github.com/nicovlr/smart-ontology-generator",
+            "https://github.com/arunsr1ni/databricks-ontology-generator",
+        }
+        entries = [e for e in supplement["entries"] if e["submission_review"].get("original_chat_evidence_location") == "PRIOR_CFA3_CONVERSATION_CONTEXT"]
+        self.assertEqual({e["source"]["locator"] for e in entries}, expected)
+        for entry in entries:
+            self.assertFalse(entry["intake_provenance"]["canonical_approval_admitted"])
+            self.assertFalse(entry["submission_review"]["exact_submitted_URL_and_approval_pair_independently_verified"])
+        self.assertFalse(supplement["verification_bounds"]["all_past_chats_exhaustively_audited"])
+
     def test_no_modification_to_original_archive(self):
         sources = donor_l1.frozen_sources()
         self.assertEqual(donor_l1.sha_blob(donor_l1.REGISTRY.read_bytes()),
                          donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
-        self.assertEqual(len(sources),1936)
+        self.assertEqual(len(sources),1944)
 
     def test_historical_missing_sources_recoverable_without_false_admission(self):
         supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)
-        self.assertEqual(len(supplement["entries"]), 15)
+        self.assertEqual(len(supplement["entries"]), 23)
         existing = {(e["source"]["normalized_key"]) for e,origin,_ in donor_l1.frozen_sources()
                     if origin=="OLD_MAIN_ARCHIVE"}
         with tempfile.TemporaryDirectory() as tmp:

@@ -100,18 +100,18 @@
     }
   },
   "expansion_limit": {
-    "initial_count_field": "l1_input_link_occurrences",
+    "initial_count_field": "frozen_l1_input_link_records_B",
     "limit_numerator": 115,
     "limit_denominator": 100,
     "limit_rounding": "FLOOR",
-    "threshold_formula": "floor(l1_input_link_occurrences * 115 / 100)",
-    "comparison": "RAW_OUTBOUND_LINK_OCCURRENCES_FROM_CURRENT_LEVEL_BEFORE_DEDUPLICATION_OR_CLASSIFICATION",
-    "count_repeated_discovered_urls": true,
-    "count_previously_known_discovered_urls": true,
+    "threshold_formula": "floor(frozen_l1_input_link_records_B * 115 / 100)",
+    "comparison": "NET_NEW_UNIQUE_SOURCE_IDENTITIES_AFTER_COMPLETE_PRIOR_INDEX_LOOKUP_AND_DEDUPLICATION",
+    "count_repeated_discovered_urls": false,
+    "count_previously_known_discovered_urls": false,
     "count_actual_link_references_in_inspected_current_level_sources": true,
     "per_level_not_cumulative": true,
     "denominator_frozen_for_entire_run": true,
-    "do_not_use": "ACTIVE_DONOR_DATABASE_SIZE",
+    "do_not_use": "ACTIVE_DONOR_DATABASE_SIZE_OR_RAW_OUTBOUND_OCCURRENCE_COUNT_AS_NUMERATOR",
     "stop_on_first_count_exceed": true,
     "over_limit_state": "STOPPED_EXPANSION_LIMIT",
     "no_auto_truncation_to_limit": true,
@@ -119,10 +119,35 @@
     "no_auto_resume": true,
     "retained_completed_levels_remain_published": true,
     "example": {
-      "l1_input": 1000,
-      "allowed_raw_outbound": 1150,
-      "stop_on": 1151
-    }
+      "l1_input": 445,
+      "limit": 511,
+      "cases": [
+        {
+          "raw_links": 650,
+          "known_links": 445,
+          "net_new_unique": 205,
+          "state": "WITHIN_LIMIT"
+        },
+        {
+          "raw_links": 512,
+          "known_links": 512,
+          "net_new_unique": 0,
+          "state": "EARLY_EXHAUSTION_CANDIDATE_PENDING_LEVEL_PUBLICATION"
+        },
+        {
+          "raw_links": 800,
+          "known_links": 151,
+          "net_new_unique": 649,
+          "state": "STOPPED_EXPANSION_LIMIT"
+        }
+      ]
+    },
+    "count_new_unique_sources_once_per_level": true,
+    "preserve_raw_links_and_every_parent_relation": true,
+    "known_aliases_and_superseded_identities_reused": true,
+    "known_source_reanalysis": false,
+    "index_incomplete_state": "BLOCKED_INDEX_INCOMPLETE",
+    "known_only_branch": "EARLY_EXHAUSTION_CANDIDATE_PENDING_LEVEL_PUBLICATION"
   },
   "level_publish_gate": {
     "policy_id": "CFA3-DONOR-LEVEL-PUBLISH-GATE-001",
@@ -174,6 +199,20 @@
     "migration_status": "PENDING",
     "published_levels": [],
     "source_index_complete": false,
-    "global_depth_and_raw_link_limit_included": true
+    "global_depth_and_raw_link_limit_included": false,
+    "global_depth_and_net_new_unique_limit_included": true
+  },
+  "owner_rule_override": {
+    "date": "2026-10-09",
+    "owner_explicit_approval": true,
+    "previous_rule": "RAW_OUTBOUND_LINK_OCCURRENCES_BEFORE_DEDUP",
+    "current_rule": "NET_NEW_UNIQUE_SOURCE_IDENTITIES_AFTER_COMPLETE_PRIOR_INDEX_LOOKUP_AND_DEDUPLICATION",
+    "kept_invariants": [
+      "FROZEN_L1_BASELINE_B",
+      "STRICT_SEQUENTIAL_L1_TO_L5",
+      "PUBLISHED_AND_VERIFIED_PASS_BEFORE_NEXT_LEVEL",
+      "L6_FORBIDDEN",
+      "IMMUTABLE_PRIOR_APPROVALS"
+    ]
   }
 }

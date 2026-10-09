@@ -24,8 +24,8 @@ def evaluate(raw_links, known_aliases, *, frozen_l1_b, level, previous_gate,
         return {"state":"BLOCKED_PREVIOUS_LEVEL_UNVERIFIED","new_sources":[]}
     if index_complete is not True:
         return {"state":"BLOCKED_INDEX_INCOMPLETE","new_sources":[]}
-    if level == 5 and raw_links:
-        return {"state":"BLOCKED_L6_FORBIDDEN","new_sources":[]}
+    # `level` is the destination level of links discovered from the prior level.
+    # L4 -> L5 is allowed; L5 -> L6 is rejected by the 2..5 bound above.
     canonical = {}
     for alias, source_id in known_aliases.items():
         if not isinstance(source_id, str) or not source_id:

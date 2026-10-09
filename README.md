@@ -1,2 +1,2 @@
-# CFA3-CinenemFoundArchitecture3
+# CFA3-CinenemaFoundArchitecture3
 Complete Production Platform

@@ -130,17 +130,26 @@ def validate_donor_classification_plan(policy, decision):
     require(classification.get("discovery_is_admission") is False,"discovery cannot admit donor")
     lim=policy.get("expansion_limit",{})
     require((lim.get("limit_numerator"),lim.get("limit_denominator"),lim.get("limit_rounding"))==(115,100,"FLOOR"),"15% exact threshold required")
-    require(lim.get("initial_count_field")=="l1_input_link_occurrences","baseline must be frozen L1 count")
-    require(lim.get("comparison")=="RAW_OUTBOUND_LINK_OCCURRENCES_FROM_CURRENT_LEVEL_BEFORE_DEDUPLICATION_OR_CLASSIFICATION","count raw links before dedup")
-    for key in ("count_repeated_discovered_urls","count_previously_known_discovered_urls",
-                "per_level_not_cumulative","denominator_frozen_for_entire_run",
+    require(lim.get("initial_count_field")=="frozen_l1_input_link_records_B","baseline must be frozen L1 count")
+    require(lim.get("comparison")=="NET_NEW_UNIQUE_SOURCE_IDENTITIES_AFTER_COMPLETE_PRIOR_INDEX_LOOKUP_AND_DEDUPLICATION","net-new identities only")
+    for key in ("count_new_unique_sources_once_per_level","preserve_raw_links_and_every_parent_relation",
+                "known_aliases_and_superseded_identities_reused","per_level_not_cumulative","denominator_frozen_for_entire_run",
                 "stop_on_first_count_exceed","no_auto_truncation_to_limit",
                 "no_new_level_on_stop","no_auto_resume","retained_completed_levels_remain_published"):
         require(lim.get(key) is True,key+" must be true")
-    require(lim.get("do_not_use")=="ACTIVE_DONOR_DATABASE_SIZE","donor DB size is not comparison base")
+    require(lim.get("count_repeated_discovered_urls") is False,"duplicates do not consume net-new quota")
+    require(lim.get("count_previously_known_discovered_urls") is False,"known URLs do not consume net-new quota")
+    require(lim.get("known_source_reanalysis") is False,"known sources cannot be reanalyzed")
+    require(lim.get("index_incomplete_state")=="BLOCKED_INDEX_INCOMPLETE","incomplete index blocks new identities")
+    require(lim.get("known_only_branch")=="EARLY_EXHAUSTION_CANDIDATE_PENDING_LEVEL_PUBLICATION","exhaustion requires publication")
+    require(lim.get("do_not_use")=="ACTIVE_DONOR_DATABASE_SIZE_OR_RAW_OUTBOUND_OCCURRENCE_COUNT_AS_NUMERATOR","invalid limit numerator")
     require(lim.get("over_limit_state")=="STOPPED_EXPANSION_LIMIT","limit violation must stop")
     sample=lim.get("example",{})
-    require((sample.get("l1_input"),sample.get("allowed_raw_outbound"),sample.get("stop_on"))==(1000,1150,1151),"boundary example incorrect")
+    require((sample.get("l1_input"),sample.get("limit"))==(445,511),"sample limit incorrect")
+    require([(c.get("raw_links"),c.get("known_links"),c.get("net_new_unique")) for c in sample.get("cases",[])]==[(650,445,205),(512,512,0),(800,151,649)],"approved example cases changed")
+    require(policy.get("owner_rule_override",{}).get("owner_explicit_approval") is True,"missing owner approval")
+    require(decision.get("expansion_rule_override",{}).get("approved") is True,"missing owner decision")
+    require("NET_NEW_UNIQUE_SOURCE_LIMIT_FIXED_AT_115_PERCENT_OF_FROZEN_L1" in decision.get("nonnegotiable",[]),"decision still uses raw-quota rule")
     pub=policy.get("level_publish_gate",{})
     require(pub.get("policy_id")=="CFA3-DONOR-LEVEL-PUBLISH-GATE-001","mandatory gate identity")
     require(pub.get("next_level_requires_prior_level")=="PUBLISHED_AND_VERIFIED_PASS","no next level without publication PASS")

@@ -42,7 +42,7 @@ def classify(entry):
     hints = hints.upper()
     out = [label for label, tokens in CLASS_MAP if any(token in hints for token in tokens)]
     # Absence of sufficient evidence must not manufacture an authoritative class.
-    return out or ["RESEARCH_DOCUMENTATION"]
+    return out
 
 def frozen_sources():
     raw = REGISTRY.read_bytes()
@@ -104,8 +104,9 @@ def prepare(db, sources, run_id):
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
         ("run_id",run_id),
-        ("input_link_occurrences_B",str(len(sources))),
-        ("expansion_raw_limit",str(len(sources)*115//100)),
+        ("input_link_occurrences_B","UNVERIFIED"),
+        ("expansion_raw_limit","UNVERIFIED"),
+        ("known_unique_source_identities",str(len(sources))),
         ("level","L1"),
         ("approval_completeness","UNVERIFIED"),
         ("publication_gate","PENDING"),
@@ -118,8 +119,9 @@ def verify(path, expected):
             raise ValueError("Read-back source cardinality mismatch")
         if db.execute("SELECT count(*) FROM aliases").fetchone()[0] < expected:
             raise ValueError("Read-back locator index incomplete")
-        if db.execute("SELECT count(DISTINCT source_id) FROM classes").fetchone()[0] != expected:
-            raise ValueError("Read-back class index incomplete")
+        classified_count = db.execute("SELECT count(DISTINCT source_id) FROM classes").fetchone()[0]
+        if classified_count > expected:
+            raise ValueError("Class index inconsistent")
         for sid, locator, key, content, digest in db.execute(
                 "SELECT source_id,locator,normalized_key,original_record,original_digest FROM sources"):
             if hashlib.sha256(content.encode("utf-8")).hexdigest() != digest:
@@ -129,7 +131,8 @@ def verify(path, expected):
                                  (alias,sid)).fetchone()
                 if row is None:
                     raise ValueError("Source lookup failure")
-    return {"rows":total,"locator_index":"PASS","class_index":"PASS","record_integrity":"PASS"}
+    return {"rows":total,"locator_index":"PASS","hint_classified":classified_count,
+            "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}
 
 def stage(output, run_id):
     sources = frozen_sources()
@@ -144,10 +147,10 @@ def stage(output, run_id):
         evidence = verify(provisional,len(sources))
         # Candidate index only: incomplete historical submission coverage blocks canonical publication.
         os.replace(provisional,output)
-        return {"state":"STAGED_NOT_PUBLISHED","run_id":run_id,"B":len(sources),
-                "raw_link_limit":len(sources)*115//100,
+        return {"state":"STAGED_NOT_PUBLISHED","run_id":run_id,"B":None,
+                "raw_link_limit":None,
                 "index_evidence":evidence,
-                "reason":"UNVERIFIED_ALL_OWNER_APPROVED_SUBMISSIONS"}
+                "reason":"UNVERIFIED_ORIGINAL_L1_LINK_OCCURRENCES_AND_ALL_OWNER_APPROVED_SUBMISSIONS"}
     finally:
         provisional.unlink(missing_ok=True)
 

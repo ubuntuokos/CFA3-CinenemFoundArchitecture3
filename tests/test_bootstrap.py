@@ -53,6 +53,33 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["classification"]["max_level"]=6
         self.assertTrue(validate_donor_classification_plan(bad,decision))
         bad=copy.deepcopy(pol)
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["newly_discovered_donor_may_restart_depth"]=True
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["remaining_levels_by_discovery_level"]["L2"]=5
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["remaining_levels_by_discovery_level"]["L3"]=5
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["remaining_levels_by_discovery_level"]["L4"]=5
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["remaining_levels_by_discovery_level"]["L5"]=5
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["newly_classified_or_approved_donor_may_become_additional_L1_root"]=True
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["last_level_further_expansion"]="ALLOWED"
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["global_depth_contract"]["multiple_parent_paths"]="CREATE_NEW_ROOT"
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        broken_decision=copy.deepcopy(decision)
+        broken_decision["depth_clarification"]["newly_discovered_donors_no_root_reset"]=False
+        self.assertTrue(validate_donor_classification_plan(pol,broken_decision))
         bad["boundaries"]["status_of_actual_migration"]="COMPLETED"
         self.assertTrue(validate_donor_classification_plan(bad,decision))
 

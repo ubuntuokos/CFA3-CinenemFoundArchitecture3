@@ -94,6 +94,36 @@ def validate_donor_classification_plan(policy, decision):
     require(classification.get("levels")==["L1","L2","L3","L4","L5"],"L1–L5 only")
     require(classification.get("max_level")==5,"no sixth level")
     require(classification.get("sequence")=="STRICT_SEQUENTIAL","level concurrency forbidden")
+    depth=classification.get("global_depth_contract",{})
+    require(depth.get("accounting")=="ABSOLUTE_GLOBAL_LEVELS_L1_THROUGH_L5","depth contract: global levels")
+    require(depth.get("original_roots")=="ONLY_FROZEN_L1_INPUT_IDENTITIES","only original frozen L1 roots")
+    require(depth.get("root_level")==1,"global root is L1")
+    require(depth.get("discovered_child_level_rule")=="CHILD_GLOBAL_LEVEL_EQUALS_PARENT_GLOBAL_LEVEL_PLUS_ONE","child must increment global depth by one")
+    require(depth.get("levels_are_relative_to_new_donor") is False,"no relative donor depth")
+    for key in ("newly_discovered_donor_may_restart_depth",
+                "newly_classified_or_approved_donor_may_become_additional_L1_root"):
+        require(depth.get(key) is False,key+" forbidden")
+    expected_remaining={"L1":5,"L2":4,"L3":3,"L4":2,"L5":1}
+    require(depth.get("remaining_levels_by_discovery_level")==expected_remaining,
+            "remaining global depth mapping L1:5,L2:4,L3:3,L4:2,L5:1")
+    require(depth.get("remaining_levels_include_discovery_level") is True,"include current level")
+    require(depth.get("max_global_level")==5,"global depth must stop at L5")
+    require(depth.get("enqueue_child_only_when_parent_level_below")==5,"cannot enqueue after L5")
+    require(depth.get("last_level_further_expansion")=="FORBIDDEN","L5 cannot expand further")
+    require(depth.get("prohibit_L6_and_later") is True,"L6 and deeper prohibited")
+    for key in ("level_publication_does_not_reset_depth","reappearing_known_source_does_not_reset_depth",
+                "discovery_approval_does_not_reset_depth","no_hidden_reparenting_or_root_promotion"):
+        require(depth.get(key) is True,key+" required")
+    require(depth.get("same_source_found_again")==
+            "PRESERVE_PRIOR_DECISION_AND_ADD_PROVENANCE_ONLY_NO_NEW_ROOT",
+            "known source re-encounter cannot create a new root")
+    require(depth.get("existing_original_L1_root")==
+            "RETAIN_ORIGINAL_L1_ROOT_ONLY_NO_SECONDARY_RESET",
+            "old L1 root cannot become a second root")
+    require(depth.get("multiple_parent_paths")==
+            "RECORD_ALL_VERIFIED_EDGES_BUT_DO_NOT_RESTART_OR_EXTEND_DEPTH",
+            "multiple parents do not extend depth")
+
     require(classification.get("single_canonical_source_identity") is True,"one canonical identity")
     require(classification.get("existing_source_previous_decision_overwrite") is False,"prior decision cannot be overwritten")
     require(classification.get("known_source_no_reanalysis") is True,"known source must not be redone")
@@ -135,6 +165,19 @@ def validate_donor_classification_plan(policy, decision):
     require(decision.get("approved_policy_id")==policy.get("id"),"decision/policy mismatch")
     require(decision.get("status")=="OWNER_APPROVED_PLAN_PENDING_REPOSITORY_MERGE","decision merge status overstated")
     require(decision.get("owner_approved") is True,"owner approval missing")
+    clarification=decision.get("depth_clarification",{})
+    require(clarification.get("global_depth_not_per_donor") is True,"owner global depth clarification")
+    require(clarification.get("frozen_original_roots_only") is True,"no newly created donor roots")
+    require(clarification.get("newly_discovered_donors_no_root_reset") is True,"no donor-based depth restart")
+    require(clarification.get("remaining_levels_including_current")==expected_remaining,
+            "owner-confirmed remaining depth mapping")
+    require(clarification.get("absolute_max_level")==5,"owner-confirmed max depth")
+    for key in ("GLOBAL_DISCOVERY_DEPTH_L1_TO_L5_NEVER_RESETS",
+                "DISCOVERED_DONORS_NOT_NEW_FIVE_LEVEL_ROOTS",
+                "REMAINING_DEPTH_AT_L2_4_L3_3_L4_2_L5_1",
+                "NO_L6"):
+        require(key in decision.get("nonnegotiable",[]),"nonnegotiable missing: "+key)
+
     require(decision.get("effects",{}).get("runtime_admission") is False,"runtime cannot be admitted")
     return errors
 

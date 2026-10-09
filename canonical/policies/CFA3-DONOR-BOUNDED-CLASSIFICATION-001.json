@@ -69,7 +69,35 @@
     "no_unapproved_code_import": true,
     "rights_and_security_review_required": true,
     "no_automatic_application_resurrection": true,
-    "no_unnecessary_duplicate_components": true
+    "no_unnecessary_duplicate_components": true,
+    "global_depth_contract": {
+      "accounting": "ABSOLUTE_GLOBAL_LEVELS_L1_THROUGH_L5",
+      "original_roots": "ONLY_FROZEN_L1_INPUT_IDENTITIES",
+      "root_level": 1,
+      "discovered_child_level_rule": "CHILD_GLOBAL_LEVEL_EQUALS_PARENT_GLOBAL_LEVEL_PLUS_ONE",
+      "levels_are_relative_to_new_donor": false,
+      "newly_discovered_donor_may_restart_depth": false,
+      "newly_classified_or_approved_donor_may_become_additional_L1_root": false,
+      "same_source_found_again": "PRESERVE_PRIOR_DECISION_AND_ADD_PROVENANCE_ONLY_NO_NEW_ROOT",
+      "existing_original_L1_root": "RETAIN_ORIGINAL_L1_ROOT_ONLY_NO_SECONDARY_RESET",
+      "multiple_parent_paths": "RECORD_ALL_VERIFIED_EDGES_BUT_DO_NOT_RESTART_OR_EXTEND_DEPTH",
+      "remaining_levels_include_discovery_level": true,
+      "remaining_levels_by_discovery_level": {
+        "L1": 5,
+        "L2": 4,
+        "L3": 3,
+        "L4": 2,
+        "L5": 1
+      },
+      "max_global_level": 5,
+      "enqueue_child_only_when_parent_level_below": 5,
+      "last_level_further_expansion": "FORBIDDEN",
+      "prohibit_L6_and_later": true,
+      "level_publication_does_not_reset_depth": true,
+      "reappearing_known_source_does_not_reset_depth": true,
+      "discovery_approval_does_not_reset_depth": true,
+      "no_hidden_reparenting_or_root_promotion": true
+    }
   },
   "expansion_limit": {
     "initial_count_field": "l1_input_link_occurrences",

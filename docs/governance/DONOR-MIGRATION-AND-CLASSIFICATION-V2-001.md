@@ -53,6 +53,27 @@ A **known link is not re-analyzed**. It may gain a newly observed parent relatio
 | **L4** | Only sources forwarded from L3, with the same guards. | **L4 PUBLISHED_AND_VERIFIED_PASS** |
 | **L5** | Final permitted level; classify and publish; terminate expansion permanently after L5. | **L5 FINAL PASS** |
 
+## 3.1 Global depth never resets for newly discovered donors
+
+**Owner clarification, 2026-10-09:** The five-level limit is **one global source-discovery chain rooted exclusively in the frozen original L1 inputs**. An additional donor found at L2, L3, L4 or L5 **must not** be treated as a new root with five more expansion levels. Newly approved/classified donors do not reset depth.
+
+| Level of a newly found donor/source | Maximum remaining levels *including the current level* | Permitted absolute levels |
+| --- | ---: | --- |
+| L1, as an original frozen input | 5 | L1–L5 |
+| L2 | 4 | L2–L5 |
+| L3 | 3 | L3–L5 |
+| L4 | 2 | L4–L5 |
+| L5 | 1 | L5 only |
+
+A child reached from a parent at global level `Li` belongs to global level `L(i+1)`, **never** to an invented new `L1`. An L5 source is classified and published as appropriate but **never produces an L6 processing queue**. There are no independent nested five-level discovery runs.
+
+- Record a node's global discovery level and every verified parent/root provenance edge. Recording a newly discovered parent, re-encountering a known canonical source, approving a donor or publishing a level **does not reassign the source as a new L1 root or allocate additional five-level depth**.
+- Only identities present in the original, frozen L1 input snapshot are legitimate original L1 roots. If such a source is rediscovered deeper in another path, it retains its **original** L1 root provenance; the deeper encounter adds only a verified relation and must not start a second crawl.
+- Cycles and repeated references do not increase depth budget. Multiple verified parent paths may be retained, but cannot be used to invent new roots, reset depth or extend beyond L5.
+- The next level may begin only after the prior level's `PUBLISHED_AND_VERIFIED_PASS`. The absolute depth of all queued sources and the fixed 15%-limit baseline must survive publication/restart unchanged.
+
+**Noncompliance is a STOP:** any enqueue with global child level above L5, source promotion to a new discovery root, or donor-specific depth reset is prohibited.
+
 Within a level, inspect *only actual relevant sources*; classify every processed source at its correct destination. Parents stay where classified; only references requiring a subsequent stage enter the next queue. The queue is **not an automatic donor registration list**.
 
 **Order in each level:** identify → count potential outbound references for the next level (without processing next-level targets) → raw threshold check → prior-processing/alias check → dedup → relevance/classification → staged registration → indexed, reversible publication → independent read-back verification → level PASS → **only then** start next level.
@@ -114,7 +135,7 @@ Neither background retries nor automatic rebase, admission, repair of old reposi
 
 **D – New sequential L2–L5 engine:** *new implementation* using the approved algorithm. Old PR #743 is a historical reference, **not code to copy unchanged**. The historical 16-shard rollout was cancelled; no complete historical crawl graph may be claimed.
 
-**E – Deterministic enforcement and tests:** threshold before dedup, STOP on count `LIMIT+1`, known-source skip, correct per-level counts, no L6, no duplicate donor registration, no old decisions rewritten, no publication bypass, atomic rollback, rights-status gating.
+**E – Deterministic enforcement and tests:** threshold before dedup, STOP on count `LIMIT+1`, known-source skip, correct per-level counts, fixed absolute L1–L5 global depth, no new donor-specific roots or five-level restarts, no L6, no duplicate donor registration, no old decisions rewritten, no publication bypass, atomic rollback, rights-status gating.
 
 **F – L2–L5 level-by-level execution:** each level runs only after verified published prior level. Stop on exhaustion or limit without fabricating complete results.
 
@@ -134,6 +155,13 @@ Neither background retries nor automatic rebase, admission, repair of old reposi
 | New upstream version or relocation | Source-lifecycle change review; no silent overwrite |
 | Third-party link discovered without donor approval | Classified unregistered candidate, not donor admission |
 | Source no longer produces relevant links | Stop branch; document early exhaustion |
+| Source discovered at L2 | Four remaining global levels (L2–L5), never five new levels |
+| Source discovered at L3 | Three remaining global levels (L3–L5) |
+| Source discovered at L4 | Two remaining global levels (L4–L5) |
+| Source discovered at L5 | One final global level (L5), no descendants |
+| Previously known L1 source discovered again at L4 | Original L1 root unchanged, new parent relation only; no new crawl |
+| A newly discovered donor is owner-approved at L3 | Its depth stays L3; no independent five-level restart |
+| Cycle or new parent path | Edge recorded; no new root and no global-depth extension |
 | L5 exposes more references | No L6; final level does not spawn further queues |
 | Incomplete original approval/source inventory | No donor-baseline FULL PASS |
 | Network or CI completes without index read-back | Level publication gate fails |

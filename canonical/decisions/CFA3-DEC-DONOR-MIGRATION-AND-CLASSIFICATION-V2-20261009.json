@@ -27,6 +27,26 @@
     "LEVEL_PUBLICATION_BEFORE_NEXT_LEVEL",
     "RAW_OUTBOUND_COUNT_LIMIT_FIXED_AT_115_PERCENT_OF_L1",
     "DUPLICATION_AND_PREVIOUS_DECISION_PRESERVATION",
-    "STOP_WITHOUT_AUTO_EXPANSION"
-  ]
+    "STOP_WITHOUT_AUTO_EXPANSION",
+    "GLOBAL_DISCOVERY_DEPTH_L1_TO_L5_NEVER_RESETS",
+    "DISCOVERED_DONORS_NOT_NEW_FIVE_LEVEL_ROOTS",
+    "REMAINING_DEPTH_AT_L2_4_L3_3_L4_2_L5_1",
+    "NO_L6"
+  ],
+  "depth_clarification": {
+    "owner_confirmed": "2026-10-09",
+    "scope": "CLARIFICATION_OF_APPROVED_PLAN_NOT_NEW_ADMISSION",
+    "global_depth_not_per_donor": true,
+    "frozen_original_roots_only": true,
+    "newly_discovered_donors_no_root_reset": true,
+    "remaining_levels_including_current": {
+      "L1": 5,
+      "L2": 4,
+      "L3": 3,
+      "L4": 2,
+      "L5": 1
+    },
+    "absolute_max_level": 5,
+    "status": "APPROVED_DESIGN_NOT_EXECUTED"
+  }
 }

@@ -13,8 +13,8 @@
   "original_submitted_url_occurrences": 48,
   "unique_submitted_urls": 46,
   "historical_proposed_identities": 36,
-  "matched_preexisting_identities": 5,
-  "pending_unmatched_identities": 31,
+  "matched_preexisting_identities": 6,
+  "pending_unmatched_identities": 30,
   "original_L1_B": null,
   "all_owner_approvals_exhaustively_verified": false,
   "missing_approved_sources_zero_proven": false,
@@ -54,84 +54,6 @@
     }
   ],
   "entries": [
-    {
-      "donor_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
-      "name": "GitHub tripo topic discovery index",
-      "source": {
-        "kind": "GITHUB_TOPIC",
-        "locator": "https://github.com/topics/tripo",
-        "normalized_key": "github:topics/tripo",
-        "discovery_urls": [
-          "https://github.com/topics/tripo?l=python",
-          "https://github.com/topics/tripo?o=desc&s=stars",
-          "https://github.com/topics/tripo?l=html"
-        ]
-      },
-      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
-      "historical_staged_status": "ACCEPTED_REFERENCE",
-      "submission_review": {
-        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
-        "reported_owner_marker": "donornak",
-        "reported_date": "2026-10-04",
-        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
-        "exact_submitted_URL_and_approval_pair_independently_verified": false
-      },
-      "intake_provenance": {
-        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
-        "imported_as": "METADATA_ONLY",
-        "canonical_approval_admitted": false
-      },
-      "donor_modes": [
-        "DISCOVERY_INDEX",
-        "RESEARCH_REFERENCE"
-      ],
-      "capability_hints": [
-        "text-to-3d",
-        "image-to-3d",
-        "multiview-to-3d",
-        "3d-asset-generation",
-        "mesh-and-glb-handoff",
-        "generation-task-management"
-      ],
-      "domain_hints": [
-        "3d",
-        "generative-media",
-        "dcc",
-        "asset-pipeline"
-      ],
-      "problem_hints": [
-        "3d-generation-provider-integration",
-        "asset-generation-handoff",
-        "model-task-tracking"
-      ],
-      "target_hints": [
-        "FA3 3D/DCC shared layer",
-        "Blender-engine applications",
-        "3D Asset Manager",
-        "Generative Media Mesh"
-      ],
-      "tags": [
-        "2026-10-04-intake",
-        "explicit-owner-donornak",
-        "metadata-only",
-        "tripo",
-        "3d-generation",
-        "runtime-admission-separate"
-      ],
-      "license": {
-        "declared": "NOT_APPLICABLE",
-        "status": "COLLECTION_INDEX"
-      },
-      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
-      "authority": false,
-      "automatic_fetch": false,
-      "automatic_install": false,
-      "automatic_activation": false,
-      "automatic_code_import": false,
-      "automatic_provider_admission": false,
-      "automatic_model_selection": false,
-      "runtime_admission": false
-    },
     {
       "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-GAME-001",
       "name": "GitHub unity-3d-game topic discovery index",
@@ -2432,23 +2354,23 @@
     {
       "occurrence_index": 4,
       "original_url": "https://github.com/topics/tripo?l=python",
-      "normalized_key": "github:topics/tripo",
-      "source_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
-      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+      "normalized_key": "github:topics/tripo?l=python",
+      "source_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO-L-PYTHON-1A647F71-001",
+      "identity_resolution": "EXISTING_ARCHIVED_EXACT_URL_PRESERVE_DISTINCT_QUERY_VIEW"
     },
     {
       "occurrence_index": 5,
       "original_url": "https://github.com/topics/tripo?o=desc&s=stars",
-      "normalized_key": "github:topics/tripo",
-      "source_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
-      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+      "normalized_key": "github:topics/tripo?o=desc&s=stars",
+      "source_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO-O-DESC-S-STARS-778A86D2-001",
+      "identity_resolution": "EXISTING_ARCHIVED_EXACT_URL_PRESERVE_DISTINCT_QUERY_VIEW"
     },
     {
       "occurrence_index": 6,
       "original_url": "https://github.com/topics/tripo?l=html",
-      "normalized_key": "github:topics/tripo",
-      "source_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
-      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+      "normalized_key": "github:topics/tripo?l=html",
+      "source_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO-L-HTML-3648D93A-001",
+      "identity_resolution": "EXISTING_ARCHIVED_EXACT_URL_PRESERVE_DISTINCT_QUERY_VIEW"
     },
     {
       "occurrence_index": 7,
@@ -2744,5 +2666,37 @@
       "source_id": "FA3-DONOR-FLACK-PROFILE-001",
       "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
     }
-  ]
+  ],
+  "historical_aggregate_reconciliation": {
+    "historical_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
+    "historical_proposed_normalized_key": "github:topics/tripo",
+    "status": "NON_ADMITTED_RECONCILIATION_REFERENCE_ONLY",
+    "decision": "REUSE_THREE_EXISTING_ARCHIVED_DISTINCT_QUERY_VIEW_IDENTITIES",
+    "not_a_new_donor": true,
+    "not_an_alias_to_single_donor": true,
+    "no_canonical_merge": true,
+    "no_reanalysis": true,
+    "no_runtime_admission": true,
+    "retained_original_submitted_url_occurrences": 3,
+    "preserved_archive_identities": [
+      {
+        "original_url": "https://github.com/topics/tripo?l=python",
+        "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO-L-PYTHON-1A647F71-001",
+        "archived_normalized_key": "github:topics/tripo?l=python",
+        "archived_status": "ACCEPTED_REFERENCE"
+      },
+      {
+        "original_url": "https://github.com/topics/tripo?o=desc&s=stars",
+        "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO-O-DESC-S-STARS-778A86D2-001",
+        "archived_normalized_key": "github:topics/tripo?o=desc&s=stars",
+        "archived_status": "ACCEPTED_REFERENCE"
+      },
+      {
+        "original_url": "https://github.com/topics/tripo?l=html",
+        "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO-L-HTML-3648D93A-001",
+        "archived_normalized_key": "github:topics/tripo?l=html",
+        "archived_status": "ACCEPTED_REFERENCE"
+      }
+    ]
+  }
 }

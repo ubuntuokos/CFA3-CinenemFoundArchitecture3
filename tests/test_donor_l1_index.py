@@ -26,7 +26,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
             self.assertEqual(receipt["index_evidence"]["rows"], 1921)
-            self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "PASS")
+            self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
+            self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)
             sources = donor_l1.frozen_sources()
             entry = sources[0][0]
             sid = entry["donor_id"]
@@ -52,7 +53,8 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["input_link_occurrences_B"],"UNVERIFIED")
                 self.assertEqual(meta["expansion_raw_limit"],"UNVERIFIED")
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
-                self.assertEqual(meta["bounded_union_unique_sources"],"445")
+                self.assertEqual(meta["bounded_union_link_records"],"445")
+                self.assertEqual(meta["bounded_union_distinct_donor_ids"],"443")
                 self.assertEqual(meta["bounded_union_original_url_records"],"445")
                 self.assertEqual(db.execute(
                     "SELECT current_status FROM sources WHERE source_origin='UNMERGED_PR_744'").fetchone()[0],

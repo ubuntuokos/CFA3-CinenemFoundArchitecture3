@@ -1,5 +1,7 @@
 # CFA3 — Cinema Fund Architectura 3
 
+**Development target:** Complete Production Platform.
+
 **New CFA3 implementation repository:** `ubuntuokos/CFA3-CinenemFoundArchitecture3`.
 
 > **STATUS: FOUNDATION NOT IMPLEMENTED.** This repository starts with a governance and CI bootstrap only. Neither the 200-capability ledger nor the full Foundation, application catalog, Qt 6 GUI, or physical Current Host has been completed or certified.

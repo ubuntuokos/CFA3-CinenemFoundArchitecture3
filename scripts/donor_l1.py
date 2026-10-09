@@ -18,6 +18,7 @@ REGISTRY = ARCH / "FA3-DONOR-REFERENCE-REGISTRY-001.json"
 EXTRAS = [ARCH / f"PR-{n}-ADDITIONAL-REFERENCE.json" for n in (744, 745)]
 UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
 SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURCES-001.json"
+ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
 EXPECTED = {
     "FA3-DONOR-REFERENCE-REGISTRY-001.json": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
 }
@@ -71,6 +72,25 @@ def frozen_sources():
                 or record.get("intake_provenance", {}).get("canonical_approval_admitted") is not False):
             raise ValueError("Unverified owner-source record must not be promoted")
         sources.append((record, "HISTORICAL_OWNER_APPROVAL_RECONCILIATION_PENDING", False))
+    leads = json_read(ADDITIONAL_LEADS)
+    if (leads.get("schema") != "cfa3.donor-l1-supplemental-owner-approval-leads.v1"
+            or leads.get("status") != "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED"
+            or leads.get("archived_registry_blob_sha") != EXPECTED[REGISTRY.name]
+            or leads.get("preexisting_staged_source_count") != 1944
+            or leads.get("existing_23_supplement_preserved") is not True
+            or len(leads.get("entries", [])) != 4
+            or leads.get("original_L1_B") is not None
+            or leads.get("all_user_approvals_exhaustively_verified") is not False
+            or leads.get("publication_gate") != "BLOCKED"
+            or leads.get("runtime_admission") is not False):
+        raise ValueError("Additional owner-source leads require non-admitting evidence")
+    for record in leads["entries"]:
+        if (record.get("status") != "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE"
+                or record.get("submission_review", {}).get("exact_submitted_URL_and_approval_pair_independently_verified") is not False
+                or record.get("intake_provenance", {}).get("canonical_approval_admitted") is not False
+                or record.get("authority") is not False):
+            raise ValueError("Additional source lead must not be promoted")
+        sources.append((record, "ADDITIONAL_OWNER_APPROVAL_RECONCILIATION_PENDING", False))
     ids, keys = set(), set()
     for record, _, _ in sources:
         ident = record["donor_id"]
@@ -173,6 +193,8 @@ def prepare(db, sources, run_id):
         ("expansion_raw_limit","UNVERIFIED"),
         ("known_unique_source_identities",str(len(sources))),
         ("supplemental_owner_source_candidates","23"),
+        ("additional_owner_source_leads","4"),
+        ("total_pending_owner_source_candidates","27"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),
         ("approval_completeness","UNVERIFIED"),
@@ -213,23 +235,24 @@ def verify(path, expected):
                                  (alias,sid)).fetchone()
                 if row is None:
                     raise ValueError("Source lookup failure")
-        supplement = json_read(SUPPLEMENT)
-        for entry in supplement["entries"]:
-            donor_id, url = entry["donor_id"], entry["source"]["locator"]
-            row = db.execute("SELECT current_status,locator FROM sources WHERE source_id=?", (donor_id,)).fetchone()
-            if row != ("BLOCKED", url):
-                raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
+        for source_file in (SUPPLEMENT, ADDITIONAL_LEADS):
+            for entry in json_read(source_file)["entries"]:
+                donor_id, url = entry["donor_id"], entry["source"]["locator"]
+                row = db.execute("SELECT current_status,locator FROM sources WHERE source_id=?", (donor_id,)).fetchone()
+                if row != ("BLOCKED", url):
+                    raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
         url_locator_rows = db.execute(
             "SELECT count(*) FROM sources WHERE locator LIKE 'http://%' OR locator LIKE 'https://%'"
         ).fetchone()[0]
         non_url_locator_rows = total - url_locator_rows
         # These are stored canonical locator fields, NOT original user link occurrences.
-        # In particular, neither 1944 total source records nor these URL fields freeze B.
+        # Neither staged source-record totals nor stored locator fields freeze B.
     return {"rows":total,"locator_index":"PASS","historical_url_provenance":"BOUNDED_445_PASS",
             "observed_http_source_locators":url_locator_rows,
             "observed_non_http_source_locators":non_url_locator_rows,
             "original_L1_link_record_count_B_verified":False,
             "supplemental_unreconciled_owner_sources":23,
+            "additional_unreconciled_owner_sources":4,
             "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}

@@ -35,4 +35,10 @@
 - If the imported source index is incomplete, do not label unmatched links new; record `BLOCKED_INDEX_INCOMPLETE`.
 - See `canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json` and `docs/governance/SOURCE-LIFECYCLE.md`.
 
+## Donor migration and level-by-level expansion (owner-approved design)
+- Follow `canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json` and `docs/governance/DONOR-MIGRATION-AND-CLASSIFICATION-V2-001.md` for the approved *plan*; its implementation and L1–L5 data are still PENDING.
+- Process L1 through L5 sequentially. After **each** level, approved donors must be actually published and searchable; the next level is forbidden until a durable `PUBLISHED_AND_VERIFIED_PASS` exists.
+- Freeze original L1 incoming link-record count `B`; on each level count raw outbound URL **occurrences before deduplication** and stop immediately if count exceeds `floor(1.15 * B)`. This is *not* the donor DB size and is *not* summed across levels.
+- Historical decisions, duplicate links and already-processed records are not re-analyzed. Discovered children have **no automatic donor admission**. Stop and retain the last fully published snapshot on blockers; never revive unnecessary legacy applications or configs.
+
 Read `docs/governance/RECONCILIATION.md`: the full legacy rule inventory is **not yet complete**.

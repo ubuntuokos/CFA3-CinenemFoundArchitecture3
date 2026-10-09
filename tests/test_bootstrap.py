@@ -32,6 +32,30 @@ class BootstrapPolicyTests(unittest.TestCase):
         false_ready["complete"]=True
         self.assertTrue(validate_source_lifecycle(policy,false_ready))
 
+    def test_donor_bounded_classification_policy(self):
+        from check_bootstrap import validate_donor_classification_plan
+        pol=load("canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json")
+        decision=load("canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json")
+        self.assertEqual([], validate_donor_classification_plan(pol,decision))
+        bad=copy.deepcopy(pol)
+        bad["expansion_limit"]["comparison"]="NET_NEW_DONORS_AFTER_DEDUPLICATION"
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["expansion_limit"]["per_level_not_cumulative"]=False
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["expansion_limit"]["count_previously_known_discovered_urls"]=False
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["level_publish_gate"]["next_level_requires_prior_level"]="CLASSIFICATION_FINISHED"
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["classification"]["max_level"]=6
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["boundaries"]["status_of_actual_migration"]="COMPLETED"
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+
     def test_disabling_blocker_stop_is_rejected(self):
         gov=copy.deepcopy(self.gov)
         gov["task_policy"]["blocker_means_stop"]=False

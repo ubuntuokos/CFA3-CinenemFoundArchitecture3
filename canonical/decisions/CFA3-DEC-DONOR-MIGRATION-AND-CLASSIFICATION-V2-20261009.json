@@ -1,0 +1,32 @@
+{
+  "schema": "cfa3.owner-approved-design-decision.v1",
+  "id": "CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009",
+  "status": "OWNER_APPROVED_PLAN_PENDING_REPOSITORY_MERGE",
+  "decision_date": "2026-10-09",
+  "owner_approved": true,
+  "subject": "Clean legacy donor preservation and strict sequential L1-L5 classification with mandatory per-level publish verification and bounded raw link expansion",
+  "approved_policy_id": "CFA3-DONOR-BOUNDED-CLASSIFICATION-001",
+  "approved_plan_id": "CFA3-DONOR-MIGRATION-AND-CLASSIFICATION-V2-001",
+  "supersedes_design_only": [
+    "LEGACY_CFA3_L0_L5_PARALLEL_SOURCE_GRAPH_EXPANSION_AND_PRIORITY_FIRST_CLASSIFIER"
+  ],
+  "effects": {
+    "donor_records_imported": 0,
+    "runtime_admission": false,
+    "legacy_policies_automatically_admitted": false,
+    "capability_count_changed": false,
+    "physical_current_host_pass": false,
+    "new_repository_main_changed_by_this_decision": false
+  },
+  "nonnegotiable": [
+    "NO_LEGACY_REPOSITORY_REPAIR_REQUIRED",
+    "NO_LEGACY_BAD_DECISIONS_OR_SETTINGS_TRANSFER",
+    "LOSSLESS_RAW_SOURCE_ARCHIVE",
+    "NO_LOST_OWNER_APPROVED_LINKS",
+    "FIVE_SEQUENTIAL_LEVELS",
+    "LEVEL_PUBLICATION_BEFORE_NEXT_LEVEL",
+    "RAW_OUTBOUND_COUNT_LIMIT_FIXED_AT_115_PERCENT_OF_L1",
+    "DUPLICATION_AND_PREVIOUS_DECISION_PRESERVATION",
+    "STOP_WITHOUT_AUTO_EXPANSION"
+  ]
+}

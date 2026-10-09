@@ -75,6 +75,69 @@ def validate_source_lifecycle(policy, index):
         errors.append("bootstrap source index must remain empty pending migration")
     return errors
 
+def validate_donor_classification_plan(policy, decision):
+    """Check approved design invariants only; never certify actual donor migration."""
+    errors=[]
+    def require(condition, message):
+        if not condition:
+            errors.append("donor classification plan: "+message)
+    require(policy.get("schema")=="cfa3.donor-bounded-classification-policy.v1", "schema mismatch")
+    require(policy.get("id")=="CFA3-DONOR-BOUNDED-CLASSIFICATION-001", "policy identifier missing")
+    require(policy.get("repository_status")=="OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "repo admission status overstated")
+    legacy=policy.get("legacy_scope",{})
+    require(legacy.get("repair_legacy_repo_required") is False,"legacy repair must not be prerequisite")
+    require(legacy.get("preserve_raw_records_and_original_links") is True,"lossless preservation required")
+    require(legacy.get("all_owner_approved_submissions_must_be_accounted_for") is True,"owner donor coverage required")
+    require(legacy.get("import_legacy_runtime_or_configuration") is False,"no legacy runtime/config import")
+    require(legacy.get("import_old_classifier_unchanged") is False,"legacy classifier must be redesigned")
+    classification=policy.get("classification",{})
+    require(classification.get("levels")==["L1","L2","L3","L4","L5"],"L1–L5 only")
+    require(classification.get("max_level")==5,"no sixth level")
+    require(classification.get("sequence")=="STRICT_SEQUENTIAL","level concurrency forbidden")
+    require(classification.get("single_canonical_source_identity") is True,"one canonical identity")
+    require(classification.get("existing_source_previous_decision_overwrite") is False,"prior decision cannot be overwritten")
+    require(classification.get("known_source_no_reanalysis") is True,"known source must not be redone")
+    require(classification.get("discovery_is_admission") is False,"discovery cannot admit donor")
+    lim=policy.get("expansion_limit",{})
+    require((lim.get("limit_numerator"),lim.get("limit_denominator"),lim.get("limit_rounding"))==(115,100,"FLOOR"),"15% exact threshold required")
+    require(lim.get("initial_count_field")=="l1_input_link_occurrences","baseline must be frozen L1 count")
+    require(lim.get("comparison")=="RAW_OUTBOUND_LINK_OCCURRENCES_FROM_CURRENT_LEVEL_BEFORE_DEDUPLICATION_OR_CLASSIFICATION","count raw links before dedup")
+    for key in ("count_repeated_discovered_urls","count_previously_known_discovered_urls",
+                "per_level_not_cumulative","denominator_frozen_for_entire_run",
+                "stop_on_first_count_exceed","no_auto_truncation_to_limit",
+                "no_new_level_on_stop","no_auto_resume","retained_completed_levels_remain_published"):
+        require(lim.get(key) is True,key+" must be true")
+    require(lim.get("do_not_use")=="ACTIVE_DONOR_DATABASE_SIZE","donor DB size is not comparison base")
+    require(lim.get("over_limit_state")=="STOPPED_EXPANSION_LIMIT","limit violation must stop")
+    sample=lim.get("example",{})
+    require((sample.get("l1_input"),sample.get("allowed_raw_outbound"),sample.get("stop_on"))==(1000,1150,1151),"boundary example incorrect")
+    pub=policy.get("level_publish_gate",{})
+    require(pub.get("policy_id")=="CFA3-DONOR-LEVEL-PUBLISH-GATE-001","mandatory gate identity")
+    require(pub.get("next_level_requires_prior_level")=="PUBLISHED_AND_VERIFIED_PASS","no next level without publication PASS")
+    for key in ("mandatory_after_every_completed_level","read_back_by_canonical_id",
+                "read_back_by_source_locator","searchable_index_required",
+                "parent_child_provenance_required","atomic_or_versioned_publish_required",
+                "previous_published_snapshot_preserved_on_failure",
+                "fail_closed_if_missing_required_evidence"):
+        require(pub.get(key) is True,key+" required")
+    final=policy.get("final_acceptance",{})
+    for key in ("approved_source_coverage_missing","unresolved_identity_conflicts",
+                "unjustified_duplicates","unclassified_relevant_sources",
+                "broken_source_relations","unpublished_approved_donors",
+                "inherited_bad_legacy_configurations"):
+        require(type(final.get(key)) is int and final.get(key)==0,key+" target must be zero")
+    require(final.get("stopped_expansion_limit_is_not_final_success") is True,"limit STOP cannot become FULL PASS")
+    bounds=policy.get("boundaries",{})
+    require(bounds.get("status_of_actual_migration")=="PENDING","migration not performed")
+    require(bounds.get("data_migration_performed_by_this_change") is False,"no fabricated donor import")
+    require(bounds.get("live_network_crawl_performed_by_this_change") is False,"no fabricated crawl")
+    require(bounds.get("current_host_pass_claim") is False,"no physical PASS fabricated")
+    require(decision.get("approved_policy_id")==policy.get("id"),"decision/policy mismatch")
+    require(decision.get("status")=="OWNER_APPROVED_PLAN_PENDING_REPOSITORY_MERGE","decision merge status overstated")
+    require(decision.get("owner_approved") is True,"owner approval missing")
+    require(decision.get("effects",{}).get("runtime_admission") is False,"runtime cannot be admitted")
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -84,6 +147,9 @@ def check(root=ROOT):
     policy=load("canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json",root)
     index=load("canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json",root)
     errors.extend(validate_source_lifecycle(policy,index))
+    donor_policy=load("canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",root)
+    donor_decision=load("canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json",root)
+    errors.extend(validate_donor_classification_plan(donor_policy,donor_decision))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

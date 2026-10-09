@@ -106,7 +106,8 @@ def register_historical_urls(db, sources):
     db.execute("INSERT INTO metadata VALUES(?,?)",
                ("bounded_union_link_records", str(len(coverage))))
     db.execute("INSERT INTO metadata VALUES(?,?)",
-               ("bounded_union_original_url_records", str(archived)),
+               ("bounded_union_original_url_records", str(archived)))
+    db.execute("INSERT INTO metadata VALUES(?,?)",
                ("bounded_union_distinct_donor_ids", str(len({e["resolved_donor_id"] for e in coverage}))))
     return archived
 

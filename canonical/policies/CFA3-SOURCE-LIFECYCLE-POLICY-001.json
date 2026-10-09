@@ -1,0 +1,64 @@
+{
+  "schema": "cfa3.source-lifecycle-policy.v1",
+  "id": "CFA3-SOURCE-LIFECYCLE-POLICY-001",
+  "authority_status": "OWNER_APPROVED_PENDING_REVIEW_AND_MERGE",
+  "scope": "ALL_ANALYZED_EXTERNAL_LINKS_AND_TECHNOLOGY_SOURCES",
+  "invariants": {
+    "lookup_before_analysis": true,
+    "check_existing_processing_history": true,
+    "existing_approved_decision_is_immutable": true,
+    "unchanged_source_must_reuse_previous_decision": true,
+    "change_creates_append_only_observation_and_review": true,
+    "no_automatic_decision_overwrite": true,
+    "repository_move_preserves_logical_identity": true,
+    "no_duplicate_canonical_sources": true,
+    "inactive_or_superseded_apps_not_auto_resurrected": true,
+    "no_unapproved_new_pr_or_implementation": true,
+    "reference_discovery_is_not_runtime_or_code_admission": true,
+    "incomplete_source_index": "BLOCK_UNKNOWN_CLASSIFICATION",
+    "evidence_required_for_change_and_relocation": true,
+    "rights_verification_required_before_code_modification": true,
+    "legacy_config_and_bad_decision_inheritance_forbidden": true,
+    "preserve_all_original_approved_links_and_provenance": true,
+    "retain_valid_independent_alternative_engines": true
+  },
+  "change_events": [
+    "VERSION_UPDATE",
+    "FUNCTIONAL_MODERNIZATION",
+    "RELOCATED",
+    "SUPPORT_ENDED"
+  ],
+  "unsupported_source_policy": {
+    "retained_relevant_functionality": "REPLACEMENT_PLAN_REQUIRED",
+    "allowed_code_reuse_and_modification": "MODERNIZE_AND_ADAPT_TO_CFA3_AFTER_RIGHTS_REVIEW",
+    "other_rights_or_unknown": "INDEPENDENT_CFA3_REPLACEMENT_NO_CODE_IMPORT",
+    "owner_authorization_required_before_implementation": true,
+    "unnecessary_app_recreation_forbidden": true
+  },
+  "review_states": {
+    "existing_without_fresh_observation": "CHANGE_CHECK_REQUIRED",
+    "already_processed_unchanged": "REUSE_PRIOR_DECISION",
+    "verified_material_change": "CHANGE_REVIEW_REQUIRED",
+    "verified_relocation": "RELOCATION_REVIEW_REQUIRED",
+    "unsupported": "REPLACEMENT_PLAN_REQUIRED",
+    "unknown_with_incomplete_index": "BLOCKED_INDEX_INCOMPLETE",
+    "ambiguity": "BLOCKED_INDEX_CONFLICT",
+    "unknown_with_complete_index": "NEW_SOURCE_ANALYSIS_ALLOWED",
+    "unverified": "BLOCKED_UNVERIFIED_OBSERVATION"
+  },
+  "observed_evidence_contract": {
+    "required": [
+      "evidence_ref",
+      "checked_at",
+      "verification"
+    ],
+    "verification": "VERIFIED_BY_AUTHORIZED_REVIEW",
+    "automatic_external_claims_are_not_evidence": true
+  },
+  "scope_guards": {
+    "no_live_network_fetch_by_reference_gate": true,
+    "no_data_rewrites_by_reference_gate": true,
+    "no_automatic_sdk_or_provider_admission": true,
+    "source_index_readiness_not_equal_donor_baseline_admission": true
+  }
+}

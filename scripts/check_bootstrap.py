@@ -50,12 +50,40 @@ def validate_objects(gov, cpu, platform, ledger):
     require(len(paths) == len(set(paths)), "duplicate source ledger paths")
     return errors
 
+def validate_source_lifecycle(policy, index):
+    errors=[]
+    gates=policy.get("invariants",{})
+    for key in ("lookup_before_analysis","existing_approved_decision_is_immutable",
+                "no_automatic_decision_overwrite","no_duplicate_canonical_sources",
+                "repository_move_preserves_logical_identity",
+                "no_unapproved_new_pr_or_implementation",
+                "rights_verification_required_before_code_modification",
+                "legacy_config_and_bad_decision_inheritance_forbidden"):
+        if gates.get(key) is not True:
+            errors.append("source lifecycle invariant missing: "+key)
+    if gates.get("incomplete_source_index")!="BLOCK_UNKNOWN_CLASSIFICATION":
+        errors.append("source lifecycle incomplete index must block unknown links")
+    if policy.get("id")!="CFA3-SOURCE-LIFECYCLE-POLICY-001":
+        errors.append("source lifecycle policy identity mismatch")
+    if policy.get("authority_status")!="OWNER_APPROVED_PENDING_REVIEW_AND_MERGE":
+        errors.append("source lifecycle policy admission misrepresented")
+    if index.get("schema")!="cfa3.source-lifecycle-index.v1":
+        errors.append("source lifecycle index schema mismatch")
+    if index.get("complete") is not False:
+        errors.append("cannot claim complete donor/source migration")
+    if index.get("source_records")!=[]:
+        errors.append("bootstrap source index must remain empty pending migration")
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
     platform=load("canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json",root)
     ledger=load("canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json",root)
     errors=validate_objects(gov,cpu,platform,ledger)
+    policy=load("canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json",root)
+    index=load("canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json",root)
+    errors.extend(validate_source_lifecycle(policy,index))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

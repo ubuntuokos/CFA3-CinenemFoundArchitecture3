@@ -20,6 +20,18 @@ class BootstrapPolicyTests(unittest.TestCase):
     def test_structural_seed(self):
         self.assertEqual([],check())
 
+    def test_lifecycle_policy_structural_guard(self):
+        from check_bootstrap import validate_source_lifecycle
+        policy=load("canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json")
+        index=load("canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json")
+        self.assertEqual([],validate_source_lifecycle(policy,index))
+        broken=copy.deepcopy(policy)
+        broken["invariants"]["lookup_before_analysis"]=False
+        self.assertTrue(validate_source_lifecycle(broken,index))
+        false_ready=copy.deepcopy(index)
+        false_ready["complete"]=True
+        self.assertTrue(validate_source_lifecycle(policy,false_ready))
+
     def test_disabling_blocker_stop_is_rejected(self):
         gov=copy.deepcopy(self.gov)
         gov["task_policy"]["blocker_means_stop"]=False

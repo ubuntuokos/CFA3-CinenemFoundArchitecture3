@@ -1,0 +1,9 @@
+{
+  "schema": "cfa3.source-lifecycle-index.v1",
+  "id": "CFA3-SOURCE-LIFECYCLE-INDEX-001",
+  "source_status": "BOOTSTRAP_EMPTY_PENDING_FULL_DONOR_MIGRATION",
+  "complete": false,
+  "source_records": [],
+  "migration_authority": "NONE",
+  "note": "Intentionally empty. This must NEVER authorize treating an unrecognized URL as a new source until the preserved historic donor/source set is migrated and independently reconciled."
+}

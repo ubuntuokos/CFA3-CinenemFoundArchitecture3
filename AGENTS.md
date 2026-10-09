@@ -28,4 +28,11 @@
 - Real edge/handoff graph only. Three-level Platform/Layer/Global Current Host. Handoffs preserve source origin, revisions, processing ownership, acceptance and rollback.
 - Donor review and usage-edge registration are separate from source discovery, dependency install and runtime admission.
 
+## External-link processing (owner-approved lifecycle rule)
+- **Before analyzing any external link** run the source lifecycle lookup and inspect the prior processing history, verified versions, moves, aliases and approval status.
+- Reuse the earlier approved decision when unchanged. Updates, moves and discontinued support produce new, append-only review actions, **not silent decision overrides**.
+- For unsupported technology supplying a retained capability: propose CFA3 adaptation of reusable, licensed code or an independent CFA3 replacement. Never self-authorize implementation.
+- If the imported source index is incomplete, do not label unmatched links new; record `BLOCKED_INDEX_INCOMPLETE`.
+- See `canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json` and `docs/governance/SOURCE-LIFECYCLE.md`.
+
 Read `docs/governance/RECONCILIATION.md`: the full legacy rule inventory is **not yet complete**.

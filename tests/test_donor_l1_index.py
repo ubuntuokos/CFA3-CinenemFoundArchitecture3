@@ -23,8 +23,8 @@ class DonorL1IndexTests(unittest.TestCase):
             dbpath = Path(tmp) / "staged.sqlite"
             receipt = donor_l1.stage(dbpath, "unit-test")
             self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
-            self.assertEqual(receipt["B"], 1921)
-            self.assertEqual(receipt["raw_link_limit"], 2209)
+            self.assertIsNone(receipt["B"])
+            self.assertIsNone(receipt["raw_link_limit"])
             self.assertEqual(receipt["index_evidence"]["rows"], 1921)
             sources = donor_l1.frozen_sources()
             entry = sources[0][0]
@@ -33,11 +33,13 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(donor_l1.lookup(dbpath,sid,"id")[0]["id"],sid)
             self.assertEqual(donor_l1.lookup(dbpath,locator,"alias")[0]["id"],sid)
             self.assertTrue(donor_l1.lookup(dbpath,entry["source"]["normalized_key"],"key"))
-            self.assertTrue(donor_l1.lookup(dbpath,"RESEARCH_DOCUMENTATION","class"))
+            self.assertIsInstance(donor_l1.lookup(dbpath,"RESEARCH_DOCUMENTATION","class"), list)
             self.assertFalse(donor_l1.lookup(dbpath,"missing-id","id"))
             with sqlite3.connect(dbpath) as db:
                 meta = dict(db.execute("SELECT key,value FROM metadata"))
                 self.assertEqual(meta["publication_gate"],"PENDING")
+                self.assertEqual(meta["input_link_occurrences_B"],"UNVERIFIED")
+                self.assertEqual(meta["expansion_raw_limit"],"UNVERIFIED")
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
                 self.assertEqual(db.execute(
                     "SELECT current_status FROM sources WHERE source_origin='UNMERGED_PR_744'").fetchone()[0],

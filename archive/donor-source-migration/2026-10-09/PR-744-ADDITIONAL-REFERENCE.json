@@ -1,0 +1,87 @@
+{
+  "pr": 744,
+  "source_commit": "576a4e21866dcceb05d0a08cfa0926651a7e8628",
+  "source_registry_blob_sha": "6b7b0f3aa06e81b174c7a12e7f9d24ea089f2679",
+  "entry": {
+    "donor_id": "FA3-DONOR-AFFAAN-M-ECC-001",
+    "name": "affaan-m/ECC",
+    "source": {
+      "kind": "GITHUB",
+      "locator": "https://github.com/affaan-m/ECC",
+      "normalized_key": "github:affaan-m/ecc"
+    },
+    "status": "ACCEPTED_REFERENCE",
+    "discovered_from": [
+      "conversation"
+    ],
+    "first_seen": "2026-10-07",
+    "last_seen": "2026-10-07",
+    "donor_modes": [
+      "REFERENCE_IMPLEMENTATION",
+      "SDK_DESIGN_INPUT"
+    ],
+    "capability_hints": [
+      "AGENT_HARNESS",
+      "AGENT_SKILL_LIFECYCLE",
+      "AGENT_VERIFICATION",
+      "AGENT_SECURITY",
+      "HARNESS_COMPATIBILITY",
+      "MCP_INTEGRATION",
+      "PLUGIN_ADAPTERS"
+    ],
+    "domain_hints": [
+      "AGENT_ENGINEERING",
+      "DEVELOPER_TOOLING",
+      "SDK"
+    ],
+    "problem_hints": [
+      "CROSS_HARNESS_AGENT_SKILL_PACKAGING",
+      "AGENT_SECURITY_AND_VERIFICATION",
+      "REUSABLE_AGENT_SDK_DESIGN_INPUT"
+    ],
+    "target_hints": [
+      "CFA3 SDK",
+      "CFA3 Agent Native",
+      "CFA3 Shared Agent Fabric"
+    ],
+    "tags": [
+      "agent-harness",
+      "agent-skills",
+      "codex",
+      "mcp",
+      "plugins",
+      "sdk-input",
+      "security",
+      "verification"
+    ],
+    "license": {
+      "declared": "MIT",
+      "status": "UPSTREAM_LICENSE_FILE_OBSERVED",
+      "evidence": "https://github.com/affaan-m/ECC/blob/ef648e01899ba3e8dc6371642deaaf64b4477775/LICENSE"
+    },
+    "observed_revision": "ef648e01899ba3e8dc6371642deaaf64b4477775",
+    "code_reuse_policy": "SOURCE_COPY_BLOCKED_PENDING_LICENSE_RIGHTS_SECURITY_COMPATIBILITY_REVIEW",
+    "discoverable_for_planning": true,
+    "authority": false,
+    "automatic_selection": false,
+    "automatic_fetch": false,
+    "automatic_install": false,
+    "automatic_activation": false,
+    "automatic_dependency": false,
+    "automatic_code_import": false,
+    "automatic_provider_admission": false,
+    "automatic_model_selection": false,
+    "submission_review": {
+      "basis": "OWNER_PRE_REVIEWED_DIRECT_DONOR_LINK",
+      "scope": "REFERENCE_REGISTRATION_AND_SDK_DESIGN_INPUT_ONLY",
+      "owner_donor_command": "donornak",
+      "second_registry_approval_required": false
+    },
+    "sdk_input": true,
+    "sdk_input_state": "DESIGN_INPUT_ONLY",
+    "sdk_materialized": false,
+    "automatic_sdk_adoption": false,
+    "sdk_adoption_requires_separate_approval": true
+  },
+  "state": "UNMERGED_HISTORICAL_PR_PRESERVED_NOT_CFA3_CANONICAL_ADMITTED"
+}

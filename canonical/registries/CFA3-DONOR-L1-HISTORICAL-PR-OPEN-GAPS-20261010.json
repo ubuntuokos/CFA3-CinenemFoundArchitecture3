@@ -1,0 +1,806 @@
+{
+  "schema": "cfa3.donor-l1-open-historical-pr-gaps.v1",
+  "id": "CFA3-DONOR-L1-HISTORICAL-PR-OPEN-GAPS-20261010",
+  "status": "BLOCKED_APPROVAL_AND_IDENTITY_RECONCILIATION",
+  "archive_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "legacy_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "method": "Frozen historical unmerged PR source deltas compared by source identity, preserved URL locator, and previous donor ID, without approval promotion",
+  "groups": [
+    {
+      "pr": 537,
+      "pr_head": "83db6c28c08efd3e85a60d41bab2d692a0b9f925",
+      "delta_blob": "a12ece7e7224f1fd3857c3ec8216e9738fa8f034",
+      "type": "MATCHED_EXISTING_SOURCES",
+      "rows": [
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-GJASNY-V4L-UTILS-001",
+          "normalized_key": "github:gjasny/v4l-utils",
+          "original_url": "https://github.com/gjasny/v4l-utils",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-KORANDIZ-V4L-001",
+          "normalized_key": "github:korandiz/v4l",
+          "original_url": "https://github.com/korandiz/v4l",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GIST-ATORKHOV-3664384-001",
+          "normalized_key": "gist:atorkhov/3664384",
+          "original_url": "https://gist.github.com/atorkhov/3664384",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TORVALDS-LINUX-BLOB-MASTER-SAMPLES-V4L-V4L2-PCI-001",
+          "normalized_key": "github:torvalds/linux/blob/master/samples/v4l/v4l2-pci-skeleton.c",
+          "original_url": "https://github.com/torvalds/linux/blob/master/samples/v4l/v4l2-pci-skeleton.c",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-QUIC-V4L-VIDEO-TEST-APP-001",
+          "normalized_key": "github:quic/v4l-video-test-app",
+          "original_url": "https://github.com/quic/v4l-video-test-app",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-V4L2-DEVICES-001",
+          "normalized_key": "github:topics/v4l2-devices",
+          "original_url": "https://github.com/topics/v4l2-devices",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-METROLOGICAL-001",
+          "normalized_key": "github:metrological",
+          "original_url": "https://github.com/Metrological",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-GJASNY-001",
+          "normalized_key": "github:gjasny",
+          "original_url": "https://github.com/gjasny",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-NICUPAVEL-PICTUREGRABBER-001",
+          "normalized_key": "github:nicupavel/picturegrabber",
+          "original_url": "https://github.com/nicupavel/picturegrabber",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TORVALDS-AUDIONOISE-001",
+          "normalized_key": "github:torvalds/audionoise",
+          "original_url": "https://github.com/torvalds/AudioNoise",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-NOISE-CANCELLATION-001",
+          "normalized_key": "github:topics/noise-cancellation",
+          "original_url": "https://github.com/topics/noise-cancellation",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-SAYAMPY-DEEPDENOISER-001",
+          "normalized_key": "github:sayampy/deepdenoiser",
+          "original_url": "https://github.com/sayampy/deepdenoiser",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-NOISE-REDUCTION-L-HTML-001",
+          "normalized_key": "github:topics/noise-reduction?l=html",
+          "original_url": "https://github.com/topics/noise-reduction?l=html",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-NOISE-SUPPRESSION-L-HTML-O-DESC-S-STARS-001",
+          "normalized_key": "github:topics/noise-suppression?l=html&o=desc&s=stars",
+          "original_url": "https://github.com/topics/noise-suppression?l=html&o=desc&s=stars",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-NOISE-REDUCTION-L-RUST-O-DESC-S-UPDATED-001",
+          "normalized_key": "github:topics/noise-reduction?l=rust&o=desc&s=updated",
+          "original_url": "https://github.com/topics/noise-reduction?l=rust&o=desc&s=updated",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-PROD-QUALITY-RIKOROSE-DEEPFILTERNET-001",
+          "normalized_key": "github:rikorose/deepfilternet",
+          "original_url": "https://github.com/rikorose/deepfilternet",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-NOISE-REDUCTION-L-SWIFT-O-ASC-S-STARS-001",
+          "normalized_key": "github:topics/noise-reduction?l=swift&o=asc&s=stars",
+          "original_url": "https://github.com/topics/noise-reduction?l=swift&o=asc&s=stars",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-INTEL-OPENVINO-PLUGINS-AI-AUDACITY-001",
+          "normalized_key": "github:intel/openvino-plugins-ai-audacity",
+          "original_url": "https://github.com/intel/openvino-plugins-ai-audacity",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-NOISE-CANCELLATION-L-C-2B-2B-O-ASC-S-STA-001",
+          "normalized_key": "github:topics/noise-cancellation?l=c%2b%2b&o=asc&s=stars",
+          "original_url": "https://github.com/topics/noise-cancellation?l=c%2B%2B&o=asc&s=stars",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-ENHANCER-001",
+          "normalized_key": "github:topics/video-enhancer",
+          "original_url": "https://github.com/topics/video-enhancer",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-DJDEFRAG-QUALITYSCALER-001",
+          "normalized_key": "github:djdefrag/qualityscaler",
+          "original_url": "https://github.com/Djdefrag/QualityScaler",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-SUPER-RESOLUTION-001",
+          "normalized_key": "github:topics/video-super-resolution",
+          "original_url": "https://github.com/topics/video-super-resolution",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-SCALER-L-COQ-001",
+          "normalized_key": "github:topics/video-scaler?l=coq",
+          "original_url": "https://github.com/topics/video-scaler?l=coq",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-ENHANCER-L-PYTHON-001",
+          "normalized_key": "github:topics/video-enhancer?l=python",
+          "original_url": "https://github.com/topics/video-enhancer?l=python",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-OFFLINE-VIDEO-UPSCALER-001",
+          "normalized_key": "github:topics/offline-video-upscaler",
+          "original_url": "https://github.com/topics/offline-video-upscaler",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-ENHANCEMENT-001",
+          "normalized_key": "github:topics/video-enhancement",
+          "original_url": "https://github.com/topics/video-enhancement",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-PROCESSING-001",
+          "normalized_key": "github:topics/video-processing",
+          "original_url": "https://github.com/topics/video-processing",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-K4YT3X-VIDEO2X-001",
+          "normalized_key": "github:k4yt3x/video2x",
+          "original_url": "https://github.com/k4yt3x/video2x",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-K4YT3X-001",
+          "normalized_key": "github:k4yt3x",
+          "original_url": "https://github.com/k4yt3x",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-SUPER-RESOLUTION-001",
+          "normalized_key": "github:topics/super-resolution",
+          "original_url": "https://github.com/topics/super-resolution",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-DJDEFRAG-NICESCALER-001",
+          "normalized_key": "github:djdefrag/nicescaler",
+          "original_url": "https://github.com/Djdefrag/NiceScaler",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-MEIGUANGJIN-SLOW-MOTION-001",
+          "normalized_key": "github:meiguangjin/slow-motion",
+          "original_url": "https://github.com/MeiguangJin/slow-motion",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-SLOWMOVIDEO-SLOWMOVIDEO-001",
+          "normalized_key": "github:slowmovideo/slowmovideo",
+          "original_url": "https://github.com/slowmoVideo/slowmoVideo",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-AVINASHPALIWAL-DEEP-SLOMO-001",
+          "normalized_key": "github:avinashpaliwal/deep-slomo",
+          "original_url": "https://github.com/avinashpaliwal/Deep-SloMo",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-VAIBHAV06891-SLOWMOTION-001",
+          "normalized_key": "github:vaibhav06891/slowmotion",
+          "original_url": "https://github.com/vaibhav06891/SlowMotion",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-CODEC-L-C-001",
+          "normalized_key": "github:topics/video-codec?l=c",
+          "original_url": "https://github.com/topics/video-codec?l=c",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-CODEC-L-PYTHON-001",
+          "normalized_key": "github:topics/video-codec?l=python",
+          "original_url": "https://github.com/topics/video-codec?l=python",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-CODEC-L-C-O-DESC-S-UPDATED-001",
+          "normalized_key": "github:topics/video-codec?l=c&o=desc&s=updated",
+          "original_url": "https://github.com/topics/video-codec?l=c&o=desc&s=updated",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-CODEC-L-PYTHON-O-DESC-S-UPDATED-001",
+          "normalized_key": "github:topics/video-codec?l=python&o=desc&s=updated",
+          "original_url": "https://github.com/topics/video-codec?l=python&o=desc&s=updated",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-CODEC-L-RUST-O-DESC-S-FORKS-001",
+          "normalized_key": "github:topics/video-codec?l=rust&o=desc&s=forks",
+          "original_url": "https://github.com/topics/video-codec?l=rust&o=desc&s=forks",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-MICROSOFT-MLVC-001",
+          "normalized_key": "github:microsoft/mlvc",
+          "original_url": "https://github.com/microsoft/MLVC",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-VIDEO-ENCODING-001",
+          "normalized_key": "github:topics/video-encoding",
+          "original_url": "https://github.com/topics/video-encoding",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-XENOMACHINA-DVDRIP-001",
+          "normalized_key": "github:xenomachina/dvdrip",
+          "original_url": "https://github.com/xenomachina/dvdrip",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-BLURAYRIP-O-DESC-S-STARS-001",
+          "normalized_key": "github:topics/blurayrip?o=desc&s=stars",
+          "original_url": "https://github.com/topics/blurayrip?o=desc&s=stars",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-DVDRIP-L-SHELL-001",
+          "normalized_key": "github:topics/dvdrip?l=shell",
+          "original_url": "https://github.com/topics/dvdrip?l=shell",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-CPITCHFORD-DISCRIPPER-001",
+          "normalized_key": "github:cpitchford/discripper",
+          "original_url": "https://github.com/cpitchford/discripper",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-LIBDVDCSS-L-SHELL-001",
+          "normalized_key": "github:topics/libdvdcss?l=shell",
+          "original_url": "https://github.com/topics/libdvdcss?l=shell",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-YT-DLP-YT-DLP-001",
+          "normalized_key": "github:yt-dlp/yt-dlp",
+          "original_url": "https://github.com/yt-dlp/yt-dlp",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-KESHAVBHATT-ULTIMATE-MEDIA-DOWNLOADER-LINUX-001",
+          "normalized_key": "github:keshavbhatt/ultimate-media-downloader-linux",
+          "original_url": "https://github.com/keshavbhatt/ultimate-media-downloader-linux",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-EKREMX25-LINUX-DOWNLOAD-MANAGER-001",
+          "normalized_key": "github:ekremx25/linux-download-manager",
+          "original_url": "https://github.com/ekremx25/linux-download-manager",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-STREAM-DOWNLOADER-001",
+          "normalized_key": "github:topics/stream-downloader",
+          "original_url": "https://github.com/topics/stream-downloader",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-CLITIC-VSD-001",
+          "normalized_key": "github:clitic/vsd",
+          "original_url": "https://github.com/clitic/vsd",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-STREAM-DOWNLOADER-L-SHELL-001",
+          "normalized_key": "github:topics/stream-downloader?l=shell",
+          "original_url": "https://github.com/topics/stream-downloader?l=shell",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-STREAM-DOWNLOADER-L-DART-001",
+          "normalized_key": "github:topics/stream-downloader?l=dart",
+          "original_url": "https://github.com/topics/stream-downloader?l=dart",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-STREAM-DOWNLOADER-L-PYTHON-O-DESC-S-FORK-001",
+          "normalized_key": "github:topics/stream-downloader?l=python&o=desc&s=forks",
+          "original_url": "https://github.com/topics/stream-downloader?l=python&o=desc&s=forks",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-STREAM-DOWNLOADER-L-AUTOIT-O-ASC-S-UPDAT-001",
+          "normalized_key": "github:topics/stream-downloader?l=autoit&o=asc&s=updated",
+          "original_url": "https://github.com/topics/stream-downloader?l=autoit&o=asc&s=updated",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-MEDIA-DOWNLOADER-001",
+          "normalized_key": "github:topics/media-downloader",
+          "original_url": "https://github.com/topics/media-downloader",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": null,
+          "archived_donor_id": "FA3-DONOR-GITHUB-BOOMAGA-001",
+          "normalized_key": "github:boomaga",
+          "original_url": "https://github.com/Boomaga",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        }
+      ],
+      "matched": 58
+    },
+    {
+      "pr": 620,
+      "pr_head": "4057fdaba0eaf9b60ec3acfb134527b1c42c6c8a",
+      "delta_blob": "66b3d17aec575ab04f8f3f0fa6733ce35b9129f1",
+      "type": "MATCHED_EXISTING_SOURCES",
+      "rows": [
+        {
+          "legacy_donor_id": "FA3-DONOR-HUGGINGFACE-DIFFUSERS-001",
+          "archived_donor_id": "FA3-DONOR-HUGGINGFACE-DIFFUSERS-001",
+          "normalized_key": "github:huggingface/diffusers",
+          "original_url": "https://github.com/huggingface/diffusers",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": "FA3-DONOR-XDIT-001",
+          "archived_donor_id": "FA3-DONOR-XDIT-001",
+          "normalized_key": "github:xdit-project/xdit",
+          "original_url": "https://github.com/xdit-project/xDiT",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": "FA3-DONOR-HUNYUANVIDEO-1-5-001",
+          "archived_donor_id": "FA3-DONOR-HUNYUANVIDEO-1-5-001",
+          "normalized_key": "github:tencent-hunyuan/hunyuanvideo-1.5",
+          "original_url": "https://github.com/Tencent-Hunyuan/HunyuanVideo-1.5",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": "FA3-DONOR-SKYREELS-V3-001",
+          "archived_donor_id": "FA3-DONOR-SKYREELS-V3-001",
+          "normalized_key": "github:skyworkai/skyreels-v3",
+          "original_url": "https://github.com/SkyworkAI/SkyReels-V3",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        },
+        {
+          "legacy_donor_id": "FA3-DONOR-VIDEOSYS-001",
+          "archived_donor_id": "FA3-DONOR-VIDEOSYS-001",
+          "normalized_key": "github:nus-hpc-ai-lab/videosys",
+          "original_url": "https://github.com/NUS-HPC-AI-Lab/VideoSys",
+          "approval_state": "HISTORICAL_ONLY_NO_NEW_APPROVAL"
+        }
+      ],
+      "matched": 5
+    },
+    {
+      "pr": 637,
+      "pr_head": "24917ff1071c508b496196513c86ce4ba7b2e3a4",
+      "delta_blob": "5b76e61510ddea7b197c344e04c41985b1379359",
+      "type": "SOURCE_URLS_PRESERVED_WITH_UNRESOLVED_TOPIC_COLLAPSE",
+      "rows": [
+        {
+          "proposed_donor_id": "FA3-DONOR-CHARACTER-AI-ORG-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-CHARACTER-AI-33D04D1C-001",
+          "proposed_normalized_key": "github:character-ai",
+          "archived_normalized_key": "github:character-ai",
+          "original_url": "https://github.com/character-ai",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-CHARACTERAI-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTERAI-O-DESC-S-UPDATED-32FC2DEF-001",
+          "proposed_normalized_key": "github:topics/characterai",
+          "archived_normalized_key": "github:topics/characterai?o=desc&s=updated",
+          "original_url": "https://github.com/topics/characterai?o=desc&s=updated",
+          "identity_match_kind": "EXACT_ORIGINAL_URL_VARIANT",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-CHARACTERAI-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTERAI-L-JAVASCRIPT-O-ASC-D687BF13-001",
+          "proposed_normalized_key": "github:topics/characterai",
+          "archived_normalized_key": "github:topics/characterai?l=javascript&o=asc&s=forks",
+          "original_url": "https://github.com/topics/characterai?l=javascript&o=asc&s=forks",
+          "identity_match_kind": "EXACT_ORIGINAL_URL_VARIANT",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-CHARACTERAI-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTERAI-L-TYPESCRIPT-O-ASC-04E1DEAF-001",
+          "proposed_normalized_key": "github:topics/characterai",
+          "archived_normalized_key": "github:topics/characterai?l=typescript&o=asc&s=stars",
+          "original_url": "https://github.com/topics/characterai?l=typescript&o=asc&s=stars",
+          "identity_match_kind": "EXACT_ORIGINAL_URL_VARIANT",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-CHARACTER-ENGINE-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTER-ENGINE-D0C4B2ED-001",
+          "proposed_normalized_key": "github:topics/character-engine",
+          "archived_normalized_key": "github:topics/character-engine",
+          "original_url": "https://github.com/topics/character-engine",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-HARMONY-AI-SOLUTIONS-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-HARMONY-AI-SOLUTIONS-D574B156-001",
+          "proposed_normalized_key": "github:harmony-ai-solutions",
+          "archived_normalized_key": "github:harmony-ai-solutions",
+          "original_url": "https://github.com/harmony-ai-solutions",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-AI-ROLEPLAY-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-AI-ROLEPLAY-132D5244-001",
+          "proposed_normalized_key": "github:topics/ai-roleplay",
+          "archived_normalized_key": "github:topics/ai-roleplay",
+          "original_url": "https://github.com/topics/ai-roleplay",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-DEVANIK21-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-DEVANIK21-252BD741-001",
+          "proposed_normalized_key": "github:devanik21",
+          "archived_normalized_key": "github:devanik21",
+          "original_url": "https://github.com/Devanik21",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-KONTEXTSO-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-KONTEXTSO-9ECB644D-001",
+          "proposed_normalized_key": "github:kontextso",
+          "archived_normalized_key": "github:kontextso",
+          "original_url": "https://github.com/kontextso",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-AI-CHARACTER-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-AI-CHARACTER-127CFCAD-001",
+          "proposed_normalized_key": "github:topics/ai-character",
+          "archived_normalized_key": "github:topics/ai-character",
+          "original_url": "https://github.com/topics/ai-character",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-AI-AVATAR-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-AI-AVATAR-C0922F0B-001",
+          "proposed_normalized_key": "github:topics/ai-avatar",
+          "archived_normalized_key": "github:topics/ai-avatar",
+          "original_url": "https://github.com/topics/ai-avatar",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-ROLEPLAY-AI-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-ROLEPLAY-AI-AE2363A8-001",
+          "proposed_normalized_key": "github:topics/roleplay-ai",
+          "archived_normalized_key": "github:topics/roleplay-ai",
+          "original_url": "https://github.com/topics/roleplay-ai",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-SAMURAIGPT-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-SAMURAIGPT-3A176C13-001",
+          "proposed_normalized_key": "github:samuraigpt",
+          "archived_normalized_key": "github:samuraigpt",
+          "original_url": "https://github.com/SamurAIGPT",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-MIXAR-AI-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-MIXAR-AI-B14B122E-001",
+          "proposed_normalized_key": "github:mixar-ai",
+          "archived_normalized_key": "github:mixar-ai",
+          "original_url": "https://github.com/Mixar-AI",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-CHARACTER-PLATFORM-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTER-PLATFORM-E92B5E6C-001",
+          "proposed_normalized_key": "github:topics/character-platform",
+          "archived_normalized_key": "github:topics/character-platform",
+          "original_url": "https://github.com/topics/character-platform",
+          "identity_match_kind": "CANONICAL_KEY",
+          "automatic_merge": false
+        }
+      ],
+      "matched": 15,
+      "topic_view_variants": 3
+    },
+    {
+      "pr": 545,
+      "pr_head": "3234ef6401125bc729d16867a0e2b7f8dff0de7b",
+      "delta_blob": "de73168d3f0cf4834ad0604f689d95cb4b5bf1fd",
+      "type": "UNMERGED_MAINTENANCE_PROPOSALS_UNVERIFIED",
+      "missing_from_1919": [
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-SIGNIFICANT-GRAVITAS-AUTOGPT-001",
+          "source_key": "github:significant-gravitas/autogpt",
+          "source_pr": 24,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-BFORARTISTS-BFORARTISTS-001",
+          "source_key": "github:bforartists/bforartists",
+          "source_pr": 52,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-RUDRABHA-WAV2LIP-001",
+          "source_key": "github:rudrabha/wav2lip",
+          "source_pr": 52,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-FACEBOOKRESEARCH-AUDIOCRAFT-001",
+          "source_key": "github:facebookresearch/audiocraft",
+          "source_pr": 52,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-SWIVID-F5-TTS-001",
+          "source_key": "github:swivid/f5-tts",
+          "source_pr": 52,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-PIXLCORE-XYOPS-001",
+          "source_key": "github:pixlcore/xyops",
+          "source_pr": 70,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-PIXLCORE-XYSAT-001",
+          "source_key": "github:pixlcore/xysat",
+          "source_pr": 70,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-CRISTIANOLIVERA1-OPENHERO-001",
+          "source_key": "github:cristianolivera1/openhero",
+          "source_pr": 71,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-KDE-KDENLIVE-001",
+          "source_key": "github:kde/kdenlive",
+          "source_pr": 125,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-ACADEMYSOFTWAREFOUNDATION-OPENFX-001",
+          "source_key": "github:academysoftwarefoundation/openfx",
+          "source_pr": 125,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-VAPOURSYNTH-VAPOURSYNTH-001",
+          "source_key": "github:vapoursynth/vapoursynth",
+          "source_pr": 245,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-TEMPORALIO-TEMPORAL-001",
+          "source_key": "github:temporalio/temporal",
+          "source_pr": 392,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-DAGSTER-IO-DAGSTER-001",
+          "source_key": "github:dagster-io/dagster",
+          "source_pr": 392,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-PREFECTHQ-PREFECT-001",
+          "source_key": "github:prefecthq/prefect",
+          "source_pr": 392,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-KESTRA-IO-KESTRA-001",
+          "source_key": "github:kestra-io/kestra",
+          "source_pr": 392,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-BACKSTAGE-BACKSTAGE-001",
+          "source_key": "github:backstage/backstage",
+          "source_pr": 392,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-LEGACY-OPEN-TELEMETRY-OPENTELEMETRY-SPECIFICATION-001",
+          "source_key": "github:open-telemetry/opentelemetry-specification",
+          "source_pr": 392,
+          "state": "UNMERGED_PROPOSAL_PENDING_OWNER_APPROVAL_EVIDENCE_NOT_ADMITTED"
+        }
+      ],
+      "proposed_rekeys": [
+        {
+          "id": "FA3-DONOR-OPENEXR-001",
+          "old_key": "project:openexr",
+          "proposed_new_key": "github:academysoftwarefoundation/openexr",
+          "archive_key": "project:openexr",
+          "state": "REKEY_NOT_APPLIED"
+        },
+        {
+          "id": "FA3-DONOR-AGENT-ROOM-ALKL-001",
+          "old_key": "project:agent-room-alkl",
+          "proposed_new_key": "github:agent-room-alkl/agent-room",
+          "archive_key": "project:agent-room-alkl",
+          "state": "REKEY_NOT_APPLIED"
+        },
+        {
+          "id": "FA3-DONOR-AGENT-ROOM-MSITARZEWSKI-001",
+          "old_key": "project:agent-room-msitarzewski",
+          "proposed_new_key": "github:msitarzewski/agent-room",
+          "archive_key": "project:agent-room-msitarzewski",
+          "state": "REKEY_NOT_APPLIED"
+        }
+      ],
+      "preexisting_enrichment_ids": [
+        {
+          "id": "FA3-DONOR-OPENTOONZ-001",
+          "key": "github:opentoonz/opentoonz",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        },
+        {
+          "id": "FA3-DONOR-TMELYRALAB-MUSETALK-001",
+          "key": "github:tmelyralab/musetalk",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        },
+        {
+          "id": "FA3-DONOR-PRODIMPORT-ACADEMYSOFTWAREFOUNDATION-OPENTIMELINEIO-001",
+          "key": "github:academysoftwarefoundation/opentimelineio",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        },
+        {
+          "id": "FA3-DONOR-ASWF-OPENCOLORIO-001",
+          "key": "github:academysoftwarefoundation/opencolorio",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        },
+        {
+          "id": "FA3-DONOR-STEVIEBUILDS-AGENT-ROOM-001",
+          "key": "github:steviebuilds/agent-room",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        },
+        {
+          "id": "FA3-DONOR-NIKO1221-STRATA-001",
+          "key": "github:niko1221/strata",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        },
+        {
+          "id": "FA3-DONOR-P4NDA0S-REVERSE-SKILLS-001",
+          "key": "github:p4nda0s/reverse-skills",
+          "archived": true,
+          "state": "NO_REANALYSIS"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "covered_preexisting_pr537": 58,
+    "covered_preexisting_pr620": 5,
+    "original_urls_pr637_preserved": 15,
+    "pr637_distinct_query_view_identities_pending_policy_resolution": 3,
+    "pr545_unmerged_missing_candidate_keys": 17,
+    "pr545_proposed_rekeys_not_applied": 3,
+    "pr545_previous_entries_enriched_no_reanalysis": 7
+  },
+  "all_owner_approvals_verifiable": false,
+  "frozen_original_L1_B": null,
+  "missing_approved_sources_zero_proven": false,
+  "unresolved_identity_conflicts_zero_proven": false,
+  "level_1_published_and_verified": false,
+  "conclusions_cannot_be_promoted": true
+}

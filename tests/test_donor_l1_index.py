@@ -14,9 +14,9 @@ spec.loader.exec_module(donor_l1)
 class DonorL1IndexTests(unittest.TestCase):
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
-        self.assertEqual(len(sources), 1948)
+        self.assertEqual(len(sources), 1978)
         self.assertEqual(sum(1 for _, _, canonical in sources if canonical), 1919)
-        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 29)
+        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 59)
 
     def test_staging_index_round_trip_and_no_false_publication(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -25,8 +25,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
-            self.assertEqual(receipt["index_evidence"]["rows"], 1948)
-            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1798)
+            self.assertEqual(receipt["index_evidence"]["rows"], 1978)
+            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1828)
             self.assertEqual(receipt["index_evidence"]["observed_non_http_source_locators"], 150)
             self.assertFalse(receipt["index_evidence"]["original_L1_link_record_count_B_verified"])
             self.assertEqual(
@@ -36,6 +36,9 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 23)
             self.assertEqual(receipt["index_evidence"]["additional_unreconciled_owner_sources"], 4)
             self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
+            self.assertEqual(receipt["index_evidence"]["historical_tripo_provenance"], "BOUNDED_48_PASS")
+            self.assertEqual(receipt["index_evidence"]["historical_tripo_pending_sources"], 30)
+            self.assertEqual(receipt["index_evidence"]["historical_tripo_url_occurrences"], 48)
             self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)
             sources = donor_l1.frozen_sources()
             entry = sources[0][0]
@@ -64,7 +67,10 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
                 self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
                 self.assertEqual(meta["additional_owner_source_leads"],"4")
-                self.assertEqual(meta["total_pending_owner_source_candidates"],"27")
+                self.assertEqual(meta["total_pending_owner_source_candidates"],"57")
+                self.assertEqual(meta["historical_tripo_new_pending_sources"],"30")
+                self.assertEqual(meta["historical_tripo_original_occurrences"],"48")
+                self.assertEqual(meta["historical_tripo_distinct_urls"],"46")
                 self.assertEqual(meta["all_owner_submissions_verified"],"FALSE")
                 self.assertEqual(meta["bounded_union_link_records"],"445")
                 self.assertEqual(meta["bounded_union_distinct_donor_ids"],"443")
@@ -122,11 +128,48 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(donor_l1.lookup(dbpath, sid, "id")[0]["status"], "BLOCKED")
                 self.assertEqual(donor_l1.lookup(dbpath, lead["source"]["locator"], "url")[0]["id"], sid)
 
+    def test_tripo_recovery_exact_occurrences_existing_ids_and_no_new_approval(self):
+        recovery = donor_l1.json_read(donor_l1.TRIPO_RECOVERY)
+        self.assertEqual(recovery["original_submitted_url_occurrences"], 48)
+        self.assertEqual(recovery["unique_submitted_urls"], 46)
+        self.assertEqual(len(recovery["entries"]), 30)
+        self.assertIsNone(recovery["original_L1_B"])
+        self.assertFalse(recovery["all_owner_approvals_exhaustively_verified"])
+        self.assertEqual(recovery["publication_gate"], "BLOCKED")
+        proposed_id = recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath = Path(tmp) / "tripo-readback.sqlite"
+            receipt = donor_l1.stage(dbpath, "tripo-no-admission")
+            self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
+            self.assertIsNone(receipt["B"])
+            with sqlite3.connect(dbpath) as db:
+                rows = list(db.execute(
+                    "SELECT occurrence_index,source_id,original_url FROM historical_link_occurrences "
+                    "ORDER BY occurrence_index"))
+                self.assertEqual(len(rows), 48)
+                self.assertEqual(len({row[2] for row in rows}), 46)
+                self.assertEqual([row[0] for row in rows], list(range(1, 49)))
+                self.assertFalse(db.execute("SELECT 1 FROM sources WHERE source_id=?",
+                                            (proposed_id,)).fetchone())
+                self.assertEqual(db.execute(
+                    "SELECT count(*) FROM sources WHERE source_origin=?",
+                    ("HISTORICAL_TRIPO_OWNER_APPROVAL_PENDING",)).fetchone()[0], 30)
+            for preserved in recovery["historical_aggregate_reconciliation"]["preserved_archive_identities"]:
+                expected = preserved["archived_donor_id"]
+                self.assertIn(expected,
+                              [row["id"] for row in donor_l1.lookup(
+                                  dbpath, preserved["original_url"], "url")])
+            for candidate in recovery["entries"]:
+                self.assertEqual(
+                    donor_l1.lookup(dbpath, candidate["donor_id"], "id")[0]["status"],
+                    "BLOCKED")
+                self.assertFalse(candidate["intake_provenance"]["canonical_approval_admitted"])
+
     def test_no_modification_to_original_archive(self):
         sources = donor_l1.frozen_sources()
         self.assertEqual(donor_l1.sha_blob(donor_l1.REGISTRY.read_bytes()),
                          donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
-        self.assertEqual(len(sources),1948)
+        self.assertEqual(len(sources),1978)
 
     def test_historical_missing_sources_recoverable_without_false_admission(self):
         supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)

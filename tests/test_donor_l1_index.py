@@ -14,9 +14,9 @@ spec.loader.exec_module(donor_l1)
 class DonorL1IndexTests(unittest.TestCase):
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
-        self.assertEqual(len(sources), 1944)
+        self.assertEqual(len(sources), 1948)
         self.assertEqual(sum(1 for _, _, canonical in sources if canonical), 1919)
-        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 25)
+        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 29)
 
     def test_staging_index_round_trip_and_no_false_publication(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -25,8 +25,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
-            self.assertEqual(receipt["index_evidence"]["rows"], 1944)
-            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1794)
+            self.assertEqual(receipt["index_evidence"]["rows"], 1948)
+            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1798)
             self.assertEqual(receipt["index_evidence"]["observed_non_http_source_locators"], 150)
             self.assertFalse(receipt["index_evidence"]["original_L1_link_record_count_B_verified"])
             self.assertEqual(
@@ -34,6 +34,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 + receipt["index_evidence"]["observed_non_http_source_locators"],
                 receipt["index_evidence"]["rows"])
             self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 23)
+            self.assertEqual(receipt["index_evidence"]["additional_unreconciled_owner_sources"], 4)
             self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
             self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)
             sources = donor_l1.frozen_sources()
@@ -62,6 +63,8 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["expansion_raw_limit"],"UNVERIFIED")
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
                 self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
+                self.assertEqual(meta["additional_owner_source_leads"],"4")
+                self.assertEqual(meta["total_pending_owner_source_candidates"],"27")
                 self.assertEqual(meta["all_owner_submissions_verified"],"FALSE")
                 self.assertEqual(meta["bounded_union_link_records"],"445")
                 self.assertEqual(meta["bounded_union_distinct_donor_ids"],"443")
@@ -90,11 +93,40 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertFalse(entry["submission_review"]["exact_submitted_URL_and_approval_pair_independently_verified"])
         self.assertFalse(supplement["verification_bounds"]["all_past_chats_exhaustively_audited"])
 
+    def test_additional_owner_approval_leads_staged_without_promotion(self):
+        leads = donor_l1.json_read(donor_l1.ADDITIONAL_LEADS)
+        self.assertEqual(leads["status"], "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED")
+        self.assertFalse(leads["all_user_approvals_exhaustively_verified"])
+        self.assertIsNone(leads["original_L1_B"])
+        self.assertFalse(leads["runtime_admission"])
+        self.assertEqual(len(leads["entries"]), 4)
+        originals = {
+            "https://github.com/getsentry/sentry",
+            "https://github.com/scrapegraphai/scrapegraph-ai",
+            "https://github.com/reconurge/flowsint",
+            "https://github.com/fabio-rovai/open-ontologies",
+        }
+        self.assertEqual({e["source"]["locator"] for e in leads["entries"]}, originals)
+        archive_keys = {e["source"]["normalized_key"] for e, origin, _ in donor_l1.frozen_sources()
+                        if origin == "OLD_MAIN_ARCHIVE"}
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath = Path(tmp) / "leads.sqlite"
+            receipt = donor_l1.stage(dbpath, "owner-leads-test")
+            self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
+            self.assertIsNone(receipt["B"])
+            for lead in leads["entries"]:
+                sid = lead["donor_id"]
+                self.assertNotIn(lead["source"]["normalized_key"], archive_keys)
+                self.assertFalse(lead["intake_provenance"]["canonical_approval_admitted"])
+                self.assertFalse(lead["submission_review"]["exact_submitted_URL_and_approval_pair_independently_verified"])
+                self.assertEqual(donor_l1.lookup(dbpath, sid, "id")[0]["status"], "BLOCKED")
+                self.assertEqual(donor_l1.lookup(dbpath, lead["source"]["locator"], "url")[0]["id"], sid)
+
     def test_no_modification_to_original_archive(self):
         sources = donor_l1.frozen_sources()
         self.assertEqual(donor_l1.sha_blob(donor_l1.REGISTRY.read_bytes()),
                          donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
-        self.assertEqual(len(sources),1944)
+        self.assertEqual(len(sources),1948)
 
     def test_historical_missing_sources_recoverable_without_false_admission(self):
         supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)

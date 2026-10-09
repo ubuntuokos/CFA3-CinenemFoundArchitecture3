@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CFA3 L1 archival-source importer and versioned searchable publication.
+"""CFA3 L1 archival-source importer and staged searchable reference index.
 
 No network activity, no source approval, no dependency/runtime admission.
 Requires explicit audited coverage evidence before publishing.
@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ARCH = ROOT / "archive/donor-source-migration/2026-10-09"
 REGISTRY = ARCH / "FA3-DONOR-REFERENCE-REGISTRY-001.json"
 EXTRAS = [ARCH / f"PR-{n}-ADDITIONAL-REFERENCE.json" for n in (744, 745)]
+UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
 EXPECTED = {
     "FA3-DONOR-REFERENCE-REGISTRY-001.json": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
 }
@@ -67,6 +68,48 @@ def frozen_sources():
         keys.add(key)
     return sources
 
+def register_historical_urls(db, sources):
+    """Index exact submitted URLs with source and alias provenance.
+
+    Preserve the documented Ascend supersession without deleting the legacy identity.
+    This is historical evidence, not completeness certification.
+    """
+    data = UNION.read_bytes()
+    if sha_blob(data) != "d22dce8bfe3d9697a1121033ff7b387d051a638a":
+        raise ValueError("Historical owner-source union blob mismatch")
+    union = json.loads(data)
+    coverage = union["source_coverage"]
+    if len(coverage) != 445:
+        raise ValueError("Unexpected bounded historical union")
+    by_id = {entry["donor_id"]: entry for entry, _, _ in sources}
+    supersession = union["superseded_resolution"]
+    archived = 0
+    for record in coverage:
+        sid = record["resolved_donor_id"]
+        entry = by_id.get(sid)
+        if not entry:
+            raise ValueError("Historical approval source missing: " + sid)
+        if entry["source"]["normalized_key"] != record["normalized_key"]:
+            allowed = (sid == supersession["replacement_donor_id"] and
+                       record["donor_id"] == supersession["historical_donor_id"] and
+                       record["normalized_key"] == "github:ascend/triton-ascend")
+            if not allowed:
+                raise ValueError("Unresolved source alias identity: " + sid)
+        for original in record["original_locators"]:
+            if not original:
+                raise ValueError("Empty historical source URL")
+            db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (original, sid))
+            for source_set in record["source_sets"]:
+                db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                           (sid, original, source_set, "2026-10-05-owner-source-union"))
+            archived += 1
+    db.execute("INSERT INTO metadata VALUES(?,?)",
+               ("bounded_union_unique_sources", str(len(coverage))))
+    db.execute("INSERT INTO metadata VALUES(?,?)",
+               ("bounded_union_original_url_records", str(archived)))
+    return archived
+
+
 def prepare(db, sources, run_id):
     db.executescript("""
       PRAGMA foreign_keys=ON;
@@ -87,6 +130,12 @@ def prepare(db, sources, run_id):
       CREATE TABLE relations(parent_id TEXT NOT NULL, child_id TEXT NOT NULL,
         evidence TEXT NOT NULL, PRIMARY KEY(parent_id,child_id,evidence));
       CREATE TABLE metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
+      CREATE TABLE source_provenance(
+        source_id TEXT NOT NULL REFERENCES sources(source_id),
+        original_url TEXT NOT NULL, source_set TEXT NOT NULL,
+        historical_evidence TEXT NOT NULL,
+        PRIMARY KEY(source_id,original_url,source_set,historical_evidence));
+      CREATE INDEX provenance_url_lookup ON source_provenance(original_url);
     """)
     for entry, origin, from_main in sources:
         sid = entry["donor_id"]
@@ -101,6 +150,7 @@ def prepare(db, sources, run_id):
             db.execute("INSERT INTO aliases VALUES(?,?)",(alias,sid))
         for klass in classify(entry):
             db.execute("INSERT INTO classes VALUES(?,?,?)",(sid,klass,"HINT_BASED_UNVERIFIED"))
+    register_historical_urls(db, sources)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
         ("run_id",run_id),
@@ -122,6 +172,8 @@ def verify(path, expected):
         classified_count = db.execute("SELECT count(DISTINCT source_id) FROM classes").fetchone()[0]
         if classified_count > expected:
             raise ValueError("Class index inconsistent")
+        if db.execute("SELECT count(DISTINCT source_id) FROM source_provenance").fetchone()[0] != 445:
+            raise ValueError("Historical URL provenance coverage mismatch")
         for sid, locator, key, content, digest in db.execute(
                 "SELECT source_id,locator,normalized_key,original_record,original_digest FROM sources"):
             if hashlib.sha256(content.encode("utf-8")).hexdigest() != digest:
@@ -131,7 +183,8 @@ def verify(path, expected):
                                  (alias,sid)).fetchone()
                 if row is None:
                     raise ValueError("Source lookup failure")
-    return {"rows":total,"locator_index":"PASS","hint_classified":classified_count,
+    return {"rows":total,"locator_index":"PASS","historical_url_provenance":"PASS",
+            "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}
 
 def stage(output, run_id):
@@ -157,7 +210,7 @@ def stage(output, run_id):
 def lookup(path, term, by):
     column = {"id":"source_id","key":"normalized_key","url":"locator"}[by] if by in ("id","key","url") else None
     with sqlite3.connect(path) as db:
-        if by == "alias":
+        if by in ("alias", "url"):
             query = "SELECT s.source_id,s.locator,s.current_status FROM sources s JOIN aliases a ON a.source_id=s.source_id WHERE a.alias=?"
         elif by == "class":
             query = "SELECT s.source_id,s.locator,s.current_status FROM sources s JOIN classes c ON c.source_id=s.source_id WHERE c.class=?"

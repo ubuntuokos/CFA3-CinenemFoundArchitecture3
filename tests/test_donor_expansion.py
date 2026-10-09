@@ -69,10 +69,18 @@ class NetNewExpansionTests(unittest.TestCase):
                                   previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=False)
         self.assertEqual(result["state"],"BLOCKED_INDEX_INCOMPLETE")
 
-    def test_l5_cannot_discover_l6(self):
+    def test_l4_to_l5_accepted_and_l6_forbidden(self):
         result=expansion.evaluate(entries(0,1),{},frozen_l1_b=445,level=5,
                                   previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
-        self.assertEqual(result["state"],"BLOCKED_L6_FORBIDDEN")
+        self.assertEqual(result["state"],"STAGED_NOT_PUBLISHED")
+        self.assertEqual(result["new_sources"][0]["global_level"],5)
+        self.assertEqual(result["publication_gate"],"PENDING")
+        exhausted=expansion.evaluate(entries(1,0),known(1),frozen_l1_b=445,level=5,
+                                     previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
+        self.assertEqual(exhausted["state"],"EARLY_EXHAUSTION_CANDIDATE")
+        with self.assertRaises(ValueError):
+            expansion.evaluate(entries(0,1),{},frozen_l1_b=445,level=6,
+                               previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
 
     def test_invalid_frozen_baseline_and_level(self):
         with self.assertRaises(ValueError):

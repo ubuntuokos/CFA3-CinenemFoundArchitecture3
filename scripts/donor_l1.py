@@ -219,7 +219,16 @@ def verify(path, expected):
             row = db.execute("SELECT current_status,locator FROM sources WHERE source_id=?", (donor_id,)).fetchone()
             if row != ("BLOCKED", url):
                 raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
+        url_locator_rows = db.execute(
+            "SELECT count(*) FROM sources WHERE locator LIKE 'http://%' OR locator LIKE 'https://%'"
+        ).fetchone()[0]
+        non_url_locator_rows = total - url_locator_rows
+        # These are stored canonical locator fields, NOT original user link occurrences.
+        # In particular, neither 1944 total source records nor these URL fields freeze B.
     return {"rows":total,"locator_index":"PASS","historical_url_provenance":"BOUNDED_445_PASS",
+            "observed_http_source_locators":url_locator_rows,
+            "observed_non_http_source_locators":non_url_locator_rows,
+            "original_L1_link_record_count_B_verified":False,
             "supplemental_unreconciled_owner_sources":23,
             "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,

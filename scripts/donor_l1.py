@@ -17,6 +17,7 @@ ARCH = ROOT / "archive/donor-source-migration/2026-10-09"
 REGISTRY = ARCH / "FA3-DONOR-REFERENCE-REGISTRY-001.json"
 EXTRAS = [ARCH / f"PR-{n}-ADDITIONAL-REFERENCE.json" for n in (744, 745)]
 UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
+SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURCES-001.json"
 EXPECTED = {
     "FA3-DONOR-REFERENCE-REGISTRY-001.json": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
 }
@@ -58,6 +59,18 @@ def frozen_sources():
         if record["pr"] != n or record["state"] != "UNMERGED_HISTORICAL_PR_PRESERVED_NOT_CFA3_CANONICAL_ADMITTED":
             raise ValueError("Unverified historical PR source")
         sources.append((record["entry"], f"UNMERGED_PR_{n}", False))
+    supplement = json_read(SUPPLEMENT)
+    if (supplement.get("schema") != "cfa3.donor-l1-unreconciled-owner-submissions.v1"
+            or supplement.get("status") != "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED"
+            or len(supplement.get("entries", [])) != 11
+            or supplement.get("verification_bounds", {}).get("all_past_chats_exhaustively_audited") is not False):
+        raise ValueError("Unreconciled owner-source supplement must remain bounded and non-admitted")
+    for record in supplement["entries"]:
+        if (record.get("status") != "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE"
+                or record.get("submission_review", {}).get("exact_submitted_URL_and_approval_pair_independently_verified") is not False
+                or record.get("intake_provenance", {}).get("canonical_approval_admitted") is not False):
+            raise ValueError("Unverified owner-source record must not be promoted")
+        sources.append((record, "HISTORICAL_OWNER_APPROVAL_RECONCILIATION_PENDING", False))
     ids, keys = set(), set()
     for record, _, _ in sources:
         ident = record["donor_id"]
@@ -159,6 +172,8 @@ def prepare(db, sources, run_id):
         ("input_link_occurrences_B","UNVERIFIED"),
         ("expansion_raw_limit","UNVERIFIED"),
         ("known_unique_source_identities",str(len(sources))),
+        ("supplemental_owner_source_candidates","11"),
+        ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),
         ("approval_completeness","UNVERIFIED"),
         ("publication_gate","PENDING"),
@@ -198,7 +213,14 @@ def verify(path, expected):
                                  (alias,sid)).fetchone()
                 if row is None:
                     raise ValueError("Source lookup failure")
+    supplement = json_read(SUPPLEMENT)
+        for entry in supplement["entries"]:
+            donor_id, url = entry["donor_id"], entry["source"]["locator"]
+            row = db.execute("SELECT current_status,locator FROM sources WHERE source_id=?", (donor_id,)).fetchone()
+            if row != ("BLOCKED", url):
+                raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
     return {"rows":total,"locator_index":"PASS","historical_url_provenance":"BOUNDED_445_PASS",
+            "supplemental_unreconciled_owner_sources":11,
             "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}

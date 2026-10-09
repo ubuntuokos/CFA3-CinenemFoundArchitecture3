@@ -1,0 +1,2748 @@
+{
+  "schema": "cfa3.donor-l1-historical-tripo-unity-dcc-pose-recovery.v1",
+  "id": "CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010",
+  "status": "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED",
+  "source_evidence_type": "IMMUTABLE_HISTORICAL_BRANCH_DELTA_OWNER_MARKER_REPORTED_RAW_CHAT_NOT_EXHAUSTIVELY_VERIFIED",
+  "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "archived_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "historical_branch": "fa3/donor-tripo-unity-dcc-pose-20261004",
+  "historical_head_sha": "ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed",
+  "historical_candidate_registry_blob_sha": "93e7aa211d4f1ddd1a6edcff69ff19063b6fcb7f",
+  "historical_delta_path": "canonical/deltas/FA3-DONOR-TRIPO-UNITY-DCC-POSE-SOURCES-2026-10-04.json",
+  "historical_delta_blob_sha": "668910c71dda1e83181a0113a06c8b14433ddbca",
+  "original_submitted_url_occurrences": 48,
+  "unique_submitted_urls": 46,
+  "historical_proposed_identities": 36,
+  "matched_preexisting_identities": 5,
+  "pending_unmatched_identities": 31,
+  "original_L1_B": null,
+  "all_owner_approvals_exhaustively_verified": false,
+  "missing_approved_sources_zero_proven": false,
+  "unresolved_identity_conflicts_zero_proven": false,
+  "publication_gate": "BLOCKED",
+  "runtime_admission": false,
+  "existing_identity_matches": [
+    {
+      "legacy_proposed_donor_id": "FA3-DONOR-VAST-AI-RESEARCH-TRIPO-3D-FOR-BLENDER-001",
+      "archived_donor_id": "FA3-DONOR-GITHUB-VAST-AI-RESEARCH-TRIPO-3D-FOR-BLENDER-41D8D52B-001",
+      "normalized_key": "github:vast-ai-research/tripo-3d-for-blender",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_proposed_donor_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO3D-001",
+      "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO3D-9E078F54-001",
+      "normalized_key": "github:topics/tripo3d",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_proposed_donor_id": "FA3-DONOR-M4RIO-TRELLIS-TRIPO-3D-001",
+      "archived_donor_id": "FA3-DONOR-GITHUB-M4RIO-TRELLIS-TRIPO-3D-3C875EE6-001",
+      "normalized_key": "github:m4rio/trellis-tripo-3d",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_proposed_donor_id": "FA3-DONOR-TIANYILT-FASTAPI-TRIPOSR-001",
+      "archived_donor_id": "FA3-DONOR-GITHUB-TIANYILT-FASTAPI-TRIPOSR-7E8E218B-001",
+      "normalized_key": "github:tianyilt/fastapi-triposr",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_proposed_donor_id": "FA3-DONOR-VAST-AI-RESEARCH-ORG-001",
+      "archived_donor_id": "FA3-DONOR-GITHUB-VAST-AI-RESEARCH-1110ECCF-001",
+      "normalized_key": "github:vast-ai-research",
+      "archived_status": "ACCEPTED_REFERENCE"
+    }
+  ],
+  "entries": [
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
+      "name": "GitHub tripo topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/tripo",
+        "normalized_key": "github:topics/tripo",
+        "discovery_urls": [
+          "https://github.com/topics/tripo?l=python",
+          "https://github.com/topics/tripo?o=desc&s=stars",
+          "https://github.com/topics/tripo?l=html"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "text-to-3d",
+        "image-to-3d",
+        "multiview-to-3d",
+        "3d-asset-generation",
+        "mesh-and-glb-handoff",
+        "generation-task-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "generative-media",
+        "dcc",
+        "asset-pipeline"
+      ],
+      "problem_hints": [
+        "3d-generation-provider-integration",
+        "asset-generation-handoff",
+        "model-task-tracking"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Blender-engine applications",
+        "3D Asset Manager",
+        "Generative Media Mesh"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "tripo",
+        "3d-generation",
+        "runtime-admission-separate"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-GAME-001",
+      "name": "GitHub unity-3d-game topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity-3d-game",
+        "normalized_key": "github:topics/unity-3d-game",
+        "discovery_urls": [
+          "https://github.com/topics/unity-3d-game"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-001",
+      "name": "GitHub unity-3d topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity-3d",
+        "normalized_key": "github:topics/unity-3d",
+        "discovery_urls": [
+          "https://github.com/topics/unity-3d?l=typescript&o=desc&s=forks",
+          "https://github.com/topics/unity-3d?l=html&o=desc&s=",
+          "https://github.com/topics/unity-3d?l=glsl&o=desc&s=forks"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAME-001",
+      "name": "GitHub unity3d-game topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity3d-game",
+        "normalized_key": "github:topics/unity3d-game",
+        "discovery_urls": [
+          "https://github.com/topics/unity3d-game"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-URP-001",
+      "name": "GitHub unity-3d-urp topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity-3d-urp",
+        "normalized_key": "github:topics/unity-3d-urp",
+        "discovery_urls": [
+          "https://github.com/topics/unity-3d-urp"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-001",
+      "name": "GitHub unity3d topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity3d",
+        "normalized_key": "github:topics/unity3d",
+        "discovery_urls": [
+          "https://github.com/topics/unity3d"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAMES-001",
+      "name": "GitHub unity3d-games topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity3d-games",
+        "normalized_key": "github:topics/unity3d-games",
+        "discovery_urls": [
+          "https://github.com/topics/unity3d-games?o=asc&s=stars",
+          "https://github.com/topics/unity3d-games?l=asp.net&o=desc&s=forks",
+          "https://github.com/topics/unity3d-games",
+          "https://github.com/topics/unity3d-games?l=shaderlab&o=asc&s=forks&utf8=%E2%9C%93"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-FRAMEWORK-001",
+      "name": "GitHub unity-framework topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity-framework",
+        "normalized_key": "github:topics/unity-framework",
+        "discovery_urls": [
+          "https://github.com/topics/unity-framework?o=desc&s="
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-001",
+      "name": "GitHub unity topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity",
+        "normalized_key": "github:topics/unity",
+        "discovery_urls": [
+          "https://github.com/topics/unity"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-SCRIPT-001",
+      "name": "GitHub unity3d-script topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity3d-script",
+        "normalized_key": "github:topics/unity3d-script",
+        "discovery_urls": [
+          "https://github.com/topics/unity3d-script?l=c%23"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-EXAMPLE-001",
+      "name": "GitHub unity-example topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/unity-example",
+        "normalized_key": "github:topics/unity-example",
+        "discovery_urls": [
+          "https://github.com/topics/unity-example"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "unity-editor-integration",
+        "runtime-3d-patterns",
+        "urp-and-shader-pipelines",
+        "game-asset-workflows",
+        "plugin-framework-patterns"
+      ],
+      "domain_hints": [
+        "rt3d",
+        "game-engine",
+        "3d",
+        "dcc-interoperability"
+      ],
+      "problem_hints": [
+        "engine-interoperability",
+        "asset-roundtrip",
+        "render-pipeline-integration",
+        "editor-extension"
+      ],
+      "target_hints": [
+        "FA3 RT3D/Game integration layer",
+        "Shared 3D/DCC interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "unity",
+        "rt3d",
+        "child-repositories-not-auto-admitted"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-ZBRUSH-PC-001",
+      "name": "GitHub zbrush-pc topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/zbrush-pc",
+        "normalized_key": "github:topics/zbrush-pc",
+        "discovery_urls": [
+          "https://github.com/topics/zbrush-pc"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-ZBRUSH-TOOL-PROFILE-001",
+      "name": "ZBrush-Tool GitHub profile discovery index",
+      "source": {
+        "kind": "GITHUB_PROFILE",
+        "locator": "https://github.com/ZBrush-Tool",
+        "normalized_key": "github:zbrush-tool",
+        "discovery_urls": [
+          "https://github.com/ZBrush-Tool"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MAXON-COMPUTER-ZBRUSH-PYTHON-API-EXAMPLES-001",
+      "name": "Maxon-Computer/ZBrush-Python-API-Examples",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/Maxon-Computer/ZBrush-Python-API-Examples",
+        "normalized_key": "github:maxon-computer/zbrush-python-api-examples",
+        "discovery_urls": [
+          "https://github.com/Maxon-Computer/ZBrush-Python-API-Examples"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "REFERENCE_IMPLEMENTATION",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "CC-BY-ND-4.0",
+        "status": "UPSTREAM_REPOSITORY_DECLARED_REFERENCE_ONLY_RESTRICTED"
+      },
+      "code_reuse_policy": "REFERENCE_ONLY_NO_DERIVATIVE_OR_SOURCE_COPY_WITHOUT_SEPARATE_RIGHTS_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-HARD-SURFACE-MODELING-001",
+      "name": "GitHub hard-surface-modeling topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/hard-surface-modeling",
+        "normalized_key": "github:topics/hard-surface-modeling",
+        "discovery_urls": [
+          "https://github.com/topics/hard-surface-modeling"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-3D-ASSET-MANAGEMENT-001",
+      "name": "GitHub 3d-asset-management topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/3d-asset-management",
+        "normalized_key": "github:topics/3d-asset-management",
+        "discovery_urls": [
+          "https://github.com/topics/3d-asset-management"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-CHARACTER-DESIGN-001",
+      "name": "GitHub character-design topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/character-design",
+        "normalized_key": "github:topics/character-design",
+        "discovery_urls": [
+          "https://github.com/topics/character-design?l=c%2B%2B"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-PACKTPUBLISHING-ZBRUSH-COOKBOOK-001",
+      "name": "PacktPublishing/ZBrush-Cookbook",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/PacktPublishing/ZBrush-Cookbook",
+        "normalized_key": "github:packtpublishing/zbrush-cookbook",
+        "discovery_urls": [
+          "https://github.com/PacktPublishing/ZBrush-Cookbook"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "REFERENCE_IMPLEMENTATION",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "MIT",
+        "status": "UPSTREAM_REPOSITORY_DECLARED"
+      },
+      "code_reuse_policy": "SOURCE_COPY_BLOCKED_PENDING_LICENSE_PROVENANCE_SECURITY_SOFTWARE_COEXISTENCE_HARDWARE_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MAXON-COMPUTER-ORG-001",
+      "name": "Maxon Computer GitHub organization discovery index",
+      "source": {
+        "kind": "GITHUB_ORGANIZATION",
+        "locator": "https://github.com/Maxon-Computer",
+        "normalized_key": "github:maxon-computer",
+        "discovery_urls": [
+          "https://github.com/Maxon-Computer"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "digital-sculpting-workflows",
+        "zbrush-python-api-patterns",
+        "hard-surface-modeling",
+        "character-design",
+        "3d-asset-management"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "sculpting",
+        "character",
+        "asset-management"
+      ],
+      "problem_hints": [
+        "sculpting-interoperability",
+        "dcc-automation",
+        "asset-handoff",
+        "character-modeling"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Sculpt/Modeling workflows",
+        "Character Studio",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "zbrush",
+        "sculpting",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-001",
+      "name": "GitHub cinema-4d topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/cinema-4d",
+        "normalized_key": "github:topics/cinema-4d",
+        "discovery_urls": [
+          "https://github.com/topics/cinema-4d"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "cinema4d-plugin-patterns",
+        "dcc-extension-patterns",
+        "asset-interchange",
+        "python-and-cpp-api-discovery"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "cinema4d",
+        "plugin"
+      ],
+      "problem_hints": [
+        "cinema4d-interoperability",
+        "dcc-extension",
+        "asset-roundtrip"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Cinema 4D interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "cinema4d",
+        "c4d",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-C4D-001",
+      "name": "GitHub c4d topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/c4d",
+        "normalized_key": "github:topics/c4d",
+        "discovery_urls": [
+          "https://github.com/topics/c4d?l=javascript&o=desc&s=updated",
+          "https://github.com/topics/c4d?l=c%2B%2B"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "cinema4d-plugin-patterns",
+        "dcc-extension-patterns",
+        "asset-interchange",
+        "python-and-cpp-api-discovery"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "cinema4d",
+        "plugin"
+      ],
+      "problem_hints": [
+        "cinema4d-interoperability",
+        "dcc-extension",
+        "asset-roundtrip"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Cinema 4D interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "cinema4d",
+        "c4d",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-PLUGIN-001",
+      "name": "GitHub cinema-4d-plugin topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/cinema-4d-plugin",
+        "normalized_key": "github:topics/cinema-4d-plugin",
+        "discovery_urls": [
+          "https://github.com/topics/cinema-4d-plugin?o=desc&s=stars"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "cinema4d-plugin-patterns",
+        "dcc-extension-patterns",
+        "asset-interchange",
+        "python-and-cpp-api-discovery"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "cinema4d",
+        "plugin"
+      ],
+      "problem_hints": [
+        "cinema4d-interoperability",
+        "dcc-extension",
+        "asset-roundtrip"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Cinema 4D interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "cinema4d",
+        "c4d",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-FREE-001",
+      "name": "GitHub cinema-4d-free topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/cinema-4d-free",
+        "normalized_key": "github:topics/cinema-4d-free",
+        "discovery_urls": [
+          "https://github.com/topics/cinema-4d-free?o=asc&s=updated",
+          "https://github.com/topics/cinema-4d-free?l=html",
+          "https://github.com/topics/cinema-4d-free"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "cinema4d-plugin-patterns",
+        "dcc-extension-patterns",
+        "asset-interchange",
+        "python-and-cpp-api-discovery"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "cinema4d",
+        "plugin"
+      ],
+      "problem_hints": [
+        "cinema4d-interoperability",
+        "dcc-extension",
+        "asset-roundtrip"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Cinema 4D interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "cinema4d",
+        "c4d",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-C4D-PLUGIN-001",
+      "name": "GitHub c4d-plugin topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/c4d-plugin",
+        "normalized_key": "github:topics/c4d-plugin",
+        "discovery_urls": [
+          "https://github.com/topics/c4d-plugin"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "cinema4d-plugin-patterns",
+        "dcc-extension-patterns",
+        "asset-interchange",
+        "python-and-cpp-api-discovery"
+      ],
+      "domain_hints": [
+        "3d",
+        "dcc",
+        "cinema4d",
+        "plugin"
+      ],
+      "problem_hints": [
+        "cinema4d-interoperability",
+        "dcc-extension",
+        "asset-roundtrip"
+      ],
+      "target_hints": [
+        "FA3 3D/DCC shared layer",
+        "Cinema 4D interoperability",
+        "3D Asset Manager",
+        "Plugin & Extension Fabric"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "cinema4d",
+        "c4d",
+        "dcc"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-POSER-LATEST-VERSION-001",
+      "name": "GitHub poser-latest-version topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/poser-latest-version",
+        "normalized_key": "github:topics/poser-latest-version",
+        "discovery_urls": [
+          "https://github.com/topics/poser-latest-version"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-PNM4SFIX-POSER-001",
+      "name": "pnm4sfix/PoseR",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/pnm4sfix/PoseR",
+        "normalized_key": "github:pnm4sfix/poser",
+        "discovery_urls": [
+          "https://github.com/pnm4sfix/PoseR"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "REFERENCE_IMPLEMENTATION",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required",
+        "cuda-portability-reviewed-2026-10-04"
+      ],
+      "license": {
+        "declared": "BSD-3-Clause",
+        "status": "UPSTREAM_REPOSITORY_DECLARED"
+      },
+      "code_reuse_policy": "SOURCE_COPY_BLOCKED_PENDING_LICENSE_PROVENANCE_SECURITY_SOFTWARE_COEXISTENCE_HARDWARE_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-SEVDEAWESOME-POSER-001",
+      "name": "sevdeawesome/POSER",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/sevdeawesome/POSER",
+        "normalized_key": "github:sevdeawesome/poser",
+        "discovery_urls": [
+          "https://github.com/sevdeawesome/POSER"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "REFERENCE_IMPLEMENTATION",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required"
+      ],
+      "license": {
+        "declared": "UNKNOWN",
+        "status": "NO_ROOT_LICENSE_OBSERVED"
+      },
+      "code_reuse_policy": "SOURCE_COPY_BLOCKED_PENDING_LICENSE_PROVENANCE_SECURITY_SOFTWARE_COEXISTENCE_HARDWARE_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-POSE-ESTIMATION-001",
+      "name": "GitHub pose-estimation topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/pose-estimation",
+        "normalized_key": "github:topics/pose-estimation",
+        "discovery_urls": [
+          "https://github.com/topics/pose-estimation?l=javascript"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-PNM4SFIX-PROFILE-001",
+      "name": "pnm4sfix GitHub profile discovery index",
+      "source": {
+        "kind": "GITHUB_PROFILE",
+        "locator": "https://github.com/pnm4sfix",
+        "normalized_key": "github:pnm4sfix",
+        "discovery_urls": [
+          "https://github.com/pnm4sfix"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-POSE-TRACKING-001",
+      "name": "GitHub pose-tracking topic discovery index",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/pose-tracking",
+        "normalized_key": "github:topics/pose-tracking",
+        "discovery_urls": [
+          "https://github.com/topics/pose-tracking?l=python"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_LICENSE_PROVENANCE_SECURITY_COEXISTENCE_HARDWARE_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-FLACK-PROFILE-001",
+      "name": "flack GitHub profile discovery index",
+      "source": {
+        "kind": "GITHUB_PROFILE",
+        "locator": "https://github.com/flack",
+        "normalized_key": "github:flack",
+        "discovery_urls": [
+          "https://github.com/flack"
+        ]
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "historical_staged_status": "ACCEPTED_REFERENCE",
+      "submission_review": {
+        "basis": "HISTORICAL_BRANCH_OWNER_MARKER_AND_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-04",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_BRANCH_EXACT_HEAD_DELTA_2026-10-04",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "donor_modes": [
+        "DISCOVERY_INDEX",
+        "RESEARCH_REFERENCE"
+      ],
+      "capability_hints": [
+        "pose-estimation",
+        "pose-tracking",
+        "behavior-decoding",
+        "character-motion-research",
+        "model-assurance-research"
+      ],
+      "domain_hints": [
+        "pose",
+        "animation",
+        "computer-vision",
+        "research"
+      ],
+      "problem_hints": [
+        "pose-tracking",
+        "motion-analysis",
+        "source-disambiguation"
+      ],
+      "target_hints": [
+        "Character/Animation shared layer",
+        "Motion analysis",
+        "Model assurance where source semantics apply"
+      ],
+      "tags": [
+        "2026-10-04-intake",
+        "explicit-owner-donornak",
+        "metadata-only",
+        "pose",
+        "semantic-disambiguation-required"
+      ],
+      "license": {
+        "declared": "NOT_APPLICABLE",
+        "status": "COLLECTION_INDEX"
+      },
+      "code_reuse_policy": "CHILD_REPOSITORY_REQUIRES_INDEPENDENT_OWNER_MARKED_DONOR_AND_ADMISSION_REVIEW",
+      "authority": false,
+      "automatic_fetch": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "automatic_model_selection": false,
+      "runtime_admission": false
+    }
+  ],
+  "url_provenance": [
+    {
+      "occurrence_index": 1,
+      "original_url": "https://github.com/VAST-AI-Research/tripo-3d-for-blender",
+      "normalized_key": "github:vast-ai-research/tripo-3d-for-blender",
+      "source_id": "FA3-DONOR-GITHUB-VAST-AI-RESEARCH-TRIPO-3D-FOR-BLENDER-41D8D52B-001",
+      "identity_resolution": "EXISTING_ARCHIVED_CANONICAL_KEY"
+    },
+    {
+      "occurrence_index": 2,
+      "original_url": "https://github.com/topics/tripo3d",
+      "normalized_key": "github:topics/tripo3d",
+      "source_id": "FA3-DONOR-GITHUB-TOPICS-TRIPO3D-9E078F54-001",
+      "identity_resolution": "EXISTING_ARCHIVED_CANONICAL_KEY"
+    },
+    {
+      "occurrence_index": 3,
+      "original_url": "https://github.com/m4rio/TRELLIS-Tripo-3D",
+      "normalized_key": "github:m4rio/trellis-tripo-3d",
+      "source_id": "FA3-DONOR-GITHUB-M4RIO-TRELLIS-TRIPO-3D-3C875EE6-001",
+      "identity_resolution": "EXISTING_ARCHIVED_CANONICAL_KEY"
+    },
+    {
+      "occurrence_index": 4,
+      "original_url": "https://github.com/topics/tripo?l=python",
+      "normalized_key": "github:topics/tripo",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 5,
+      "original_url": "https://github.com/topics/tripo?o=desc&s=stars",
+      "normalized_key": "github:topics/tripo",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 6,
+      "original_url": "https://github.com/topics/tripo?l=html",
+      "normalized_key": "github:topics/tripo",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-TRIPO-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 7,
+      "original_url": "https://github.com/m4rio/TRELLIS-Tripo-3D",
+      "normalized_key": "github:m4rio/trellis-tripo-3d",
+      "source_id": "FA3-DONOR-GITHUB-M4RIO-TRELLIS-TRIPO-3D-3C875EE6-001",
+      "identity_resolution": "EXISTING_ARCHIVED_CANONICAL_KEY"
+    },
+    {
+      "occurrence_index": 8,
+      "original_url": "https://github.com/tianyilt/FastAPI-TRIPOSR",
+      "normalized_key": "github:tianyilt/fastapi-triposr",
+      "source_id": "FA3-DONOR-GITHUB-TIANYILT-FASTAPI-TRIPOSR-7E8E218B-001",
+      "identity_resolution": "EXISTING_ARCHIVED_CANONICAL_KEY"
+    },
+    {
+      "occurrence_index": 9,
+      "original_url": "https://github.com/VAST-AI-Research",
+      "normalized_key": "github:vast-ai-research",
+      "source_id": "FA3-DONOR-GITHUB-VAST-AI-RESEARCH-1110ECCF-001",
+      "identity_resolution": "EXISTING_ARCHIVED_CANONICAL_KEY"
+    },
+    {
+      "occurrence_index": 10,
+      "original_url": "https://github.com/topics/unity-3d-game",
+      "normalized_key": "github:topics/unity-3d-game",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-GAME-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 11,
+      "original_url": "https://github.com/topics/unity-3d?l=typescript&o=desc&s=forks",
+      "normalized_key": "github:topics/unity-3d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 12,
+      "original_url": "https://github.com/topics/unity-3d?l=html&o=desc&s=",
+      "normalized_key": "github:topics/unity-3d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 13,
+      "original_url": "https://github.com/topics/unity3d-game",
+      "normalized_key": "github:topics/unity3d-game",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAME-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 14,
+      "original_url": "https://github.com/topics/unity-3d-urp",
+      "normalized_key": "github:topics/unity-3d-urp",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-URP-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 15,
+      "original_url": "https://github.com/topics/unity3d",
+      "normalized_key": "github:topics/unity3d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 16,
+      "original_url": "https://github.com/topics/unity-3d?l=glsl&o=desc&s=forks",
+      "normalized_key": "github:topics/unity-3d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 17,
+      "original_url": "https://github.com/topics/unity3d-games?o=asc&s=stars",
+      "normalized_key": "github:topics/unity3d-games",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAMES-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 18,
+      "original_url": "https://github.com/topics/unity-framework?o=desc&s=",
+      "normalized_key": "github:topics/unity-framework",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-FRAMEWORK-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 19,
+      "original_url": "https://github.com/topics/unity",
+      "normalized_key": "github:topics/unity",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 20,
+      "original_url": "https://github.com/topics/unity3d-script?l=c%23",
+      "normalized_key": "github:topics/unity3d-script",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-SCRIPT-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 21,
+      "original_url": "https://github.com/topics/unity-example",
+      "normalized_key": "github:topics/unity-example",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-EXAMPLE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 22,
+      "original_url": "https://github.com/topics/unity3d-games?l=asp.net&o=desc&s=forks",
+      "normalized_key": "github:topics/unity3d-games",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAMES-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 23,
+      "original_url": "https://github.com/topics/unity3d-games",
+      "normalized_key": "github:topics/unity3d-games",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAMES-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 24,
+      "original_url": "https://github.com/topics/unity3d-games?l=shaderlab&o=asc&s=forks&utf8=%E2%9C%93",
+      "normalized_key": "github:topics/unity3d-games",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAMES-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 25,
+      "original_url": "https://github.com/topics/zbrush-pc",
+      "normalized_key": "github:topics/zbrush-pc",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-ZBRUSH-PC-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 26,
+      "original_url": "https://github.com/ZBrush-Tool",
+      "normalized_key": "github:zbrush-tool",
+      "source_id": "FA3-DONOR-ZBRUSH-TOOL-PROFILE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 27,
+      "original_url": "https://github.com/Maxon-Computer/ZBrush-Python-API-Examples",
+      "normalized_key": "github:maxon-computer/zbrush-python-api-examples",
+      "source_id": "FA3-DONOR-MAXON-COMPUTER-ZBRUSH-PYTHON-API-EXAMPLES-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 28,
+      "original_url": "https://github.com/topics/hard-surface-modeling",
+      "normalized_key": "github:topics/hard-surface-modeling",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-HARD-SURFACE-MODELING-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 29,
+      "original_url": "https://github.com/topics/3d-asset-management",
+      "normalized_key": "github:topics/3d-asset-management",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-3D-ASSET-MANAGEMENT-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 30,
+      "original_url": "https://github.com/topics/3d-asset-management",
+      "normalized_key": "github:topics/3d-asset-management",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-3D-ASSET-MANAGEMENT-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 31,
+      "original_url": "https://github.com/topics/character-design?l=c%2B%2B",
+      "normalized_key": "github:topics/character-design",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CHARACTER-DESIGN-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 32,
+      "original_url": "https://github.com/PacktPublishing/ZBrush-Cookbook",
+      "normalized_key": "github:packtpublishing/zbrush-cookbook",
+      "source_id": "FA3-DONOR-PACKTPUBLISHING-ZBRUSH-COOKBOOK-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 33,
+      "original_url": "https://github.com/Maxon-Computer",
+      "normalized_key": "github:maxon-computer",
+      "source_id": "FA3-DONOR-MAXON-COMPUTER-ORG-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 34,
+      "original_url": "https://github.com/topics/cinema-4d",
+      "normalized_key": "github:topics/cinema-4d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 35,
+      "original_url": "https://github.com/topics/c4d?l=javascript&o=desc&s=updated",
+      "normalized_key": "github:topics/c4d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-C4D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 36,
+      "original_url": "https://github.com/topics/cinema-4d-plugin?o=desc&s=stars",
+      "normalized_key": "github:topics/cinema-4d-plugin",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-PLUGIN-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 37,
+      "original_url": "https://github.com/topics/c4d?l=c%2B%2B",
+      "normalized_key": "github:topics/c4d",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-C4D-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 38,
+      "original_url": "https://github.com/topics/cinema-4d-free?o=asc&s=updated",
+      "normalized_key": "github:topics/cinema-4d-free",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-FREE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 39,
+      "original_url": "https://github.com/topics/c4d-plugin",
+      "normalized_key": "github:topics/c4d-plugin",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-C4D-PLUGIN-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 40,
+      "original_url": "https://github.com/topics/cinema-4d-free?l=html",
+      "normalized_key": "github:topics/cinema-4d-free",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-FREE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 41,
+      "original_url": "https://github.com/topics/cinema-4d-free",
+      "normalized_key": "github:topics/cinema-4d-free",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-FREE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 42,
+      "original_url": "https://github.com/topics/poser-latest-version",
+      "normalized_key": "github:topics/poser-latest-version",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-POSER-LATEST-VERSION-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 43,
+      "original_url": "https://github.com/pnm4sfix/PoseR",
+      "normalized_key": "github:pnm4sfix/poser",
+      "source_id": "FA3-DONOR-PNM4SFIX-POSER-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 44,
+      "original_url": "https://github.com/sevdeawesome/POSER",
+      "normalized_key": "github:sevdeawesome/poser",
+      "source_id": "FA3-DONOR-SEVDEAWESOME-POSER-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 45,
+      "original_url": "https://github.com/topics/pose-estimation?l=javascript",
+      "normalized_key": "github:topics/pose-estimation",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-POSE-ESTIMATION-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 46,
+      "original_url": "https://github.com/pnm4sfix",
+      "normalized_key": "github:pnm4sfix",
+      "source_id": "FA3-DONOR-PNM4SFIX-PROFILE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 47,
+      "original_url": "https://github.com/topics/pose-tracking?l=python",
+      "normalized_key": "github:topics/pose-tracking",
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-POSE-TRACKING-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    },
+    {
+      "occurrence_index": 48,
+      "original_url": "https://github.com/flack",
+      "normalized_key": "github:flack",
+      "source_id": "FA3-DONOR-FLACK-PROFILE-001",
+      "identity_resolution": "PENDING_SOURCE_STAGED_NOT_PUBLISHED"
+    }
+  ]
+}

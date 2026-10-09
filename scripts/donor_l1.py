@@ -104,9 +104,10 @@ def register_historical_urls(db, sources):
                            (sid, original, source_set, "2026-10-05-owner-source-union"))
             archived += 1
     db.execute("INSERT INTO metadata VALUES(?,?)",
-               ("bounded_union_unique_sources", str(len(coverage))))
+               ("bounded_union_link_records", str(len(coverage))))
     db.execute("INSERT INTO metadata VALUES(?,?)",
-               ("bounded_union_original_url_records", str(archived)))
+               ("bounded_union_original_url_records", str(archived)),
+               ("bounded_union_distinct_donor_ids", str(len({e["resolved_donor_id"] for e in coverage}))))
     return archived
 
 
@@ -172,8 +173,21 @@ def verify(path, expected):
         classified_count = db.execute("SELECT count(DISTINCT source_id) FROM classes").fetchone()[0]
         if classified_count > expected:
             raise ValueError("Class index inconsistent")
-        if db.execute("SELECT count(DISTINCT source_id) FROM source_provenance").fetchone()[0] != 445:
+        union = json_read(UNION)
+        expected_urls = {url: record["resolved_donor_id"]
+                         for record in union["source_coverage"]
+                         for url in record["original_locators"]}
+        if len(expected_urls) != 445:
+            raise ValueError("Original owner URL count is not 445")
+        distinct_urls = db.execute("SELECT count(DISTINCT original_url) FROM source_provenance").fetchone()[0]
+        distinct_ids = db.execute("SELECT count(DISTINCT source_id) FROM source_provenance").fetchone()[0]
+        if distinct_urls != len(expected_urls) or distinct_ids != len(set(expected_urls.values())):
             raise ValueError("Historical URL provenance coverage mismatch")
+        for url, identity in expected_urls.items():
+            actual_ids = {item[0] for item in db.execute(
+                "SELECT source_id FROM source_provenance WHERE original_url=?", (url,))}
+            if identity not in actual_ids:
+                raise ValueError("Missing historical provenance mapping: " + url)
         for sid, locator, key, content, digest in db.execute(
                 "SELECT source_id,locator,normalized_key,original_record,original_digest FROM sources"):
             if hashlib.sha256(content.encode("utf-8")).hexdigest() != digest:
@@ -183,7 +197,8 @@ def verify(path, expected):
                                  (alias,sid)).fetchone()
                 if row is None:
                     raise ValueError("Source lookup failure")
-    return {"rows":total,"locator_index":"PASS","historical_url_provenance":"PASS",
+    return {"rows":total,"locator_index":"PASS","historical_url_provenance":"BOUNDED_445_PASS",
+            "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}
 
@@ -203,7 +218,7 @@ def stage(output, run_id):
         return {"state":"STAGED_NOT_PUBLISHED","run_id":run_id,"B":None,
                 "raw_link_limit":None,
                 "index_evidence":evidence,
-                "reason":"UNVERIFIED_ORIGINAL_L1_LINK_OCCURRENCES_AND_ALL_OWNER_APPROVED_SUBMISSIONS"}
+                "reason":"UNVERIFIED_FROZEN_L1_B_AND_ALL_OWNER_APPROVED_SUBMISSIONS"}
     finally:
         provisional.unlink(missing_ok=True)
 

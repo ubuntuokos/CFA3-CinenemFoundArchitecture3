@@ -1,0 +1,162 @@
+{
+  "schema": "cfa3.legacy-rule-source-ledger.v1",
+  "id": "CFA3-LEGACY-RULE-SOURCE-LEDGER-001",
+  "source_repository": "ubuntuokos/Final-Architecture-v3.0",
+  "source_main_commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "inventory_complete": false,
+  "legacy_tree_file_count_observed": 3159,
+  "records_reviewed_for_content": 21,
+  "source_records": [
+    {
+      "path": "AGENTS.md",
+      "blob_sha": "099dcbafbd9b341a9aca4d26a171fd64148e89a1",
+      "topic": "operational projection / global instructions",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": ".github/workflows/AGENTS.md",
+      "blob_sha": "40f643f01a90208da3c96fc668a0871cf54f1f11",
+      "topic": "CI scoped projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/AGENTS.md",
+      "blob_sha": "108be3f11ea14ad7f5fab7026e37b8c18c8ee067",
+      "topic": "canonical scoped projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "src/AGENTS.md",
+      "blob_sha": "d8fa77ce850b513b96b6259a40139a0354bc019e",
+      "topic": "implementation scoped projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "tests/AGENTS.md",
+      "blob_sha": "c538831db59c6143b71fb16722da316b54c0d103",
+      "topic": "test scoped projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "evidence/AGENTS.md",
+      "blob_sha": "5fa400dfff39276878c0ce2601a204b31a270de5",
+      "topic": "evidence scoped projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "bin/AGENTS.md",
+      "blob_sha": "b09a0719dcb46734bcd2c65cf5d31db4d992cf11",
+      "topic": "CLI scoped projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "config/fa3-dev-policy.json",
+      "blob_sha": "ee893066600ed8195ea6e88aa4bf9b0fe7d398ac",
+      "topic": "legacy development sandbox policy; incompatible fallback details require review",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "blob_sha": "622408f842d684f60de9590fddbf136110005675",
+      "topic": "canonical DEV/AI 01-11 policy source",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "docs/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-001.md",
+      "blob_sha": "e2feb8d0bedad5da246a04b31f2c5e86ac41eff7",
+      "topic": "development policy explanation",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "blob_sha": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
+      "topic": "task closure provenance and no silent expansion",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "docs/FA3-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.md",
+      "blob_sha": "1e7be2944d117d437dc5a1e65b4286c05822e92",
+      "topic": "task closure explanatory projection",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/FA3-CURRENT-HOST-STRUCTURAL-CHANGE-POLICY-001.json",
+      "blob_sha": "b1f2bc222512cd974934dbdf73e27f56c1e37118",
+      "topic": "structural current host impact rule; historic 175 must not transfer",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/FA3-DONOR-REGISTRY-V2-POLICY-001.json",
+      "blob_sha": "4e8cd437d00e4386f9497080b382aa8b1dc1f4d2",
+      "topic": "candidate donor storage policy, not current canonical authority",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/CFA3-RETROACTIVE-REDESIGN-COMPLIANCE-POLICY-001.json",
+      "blob_sha": "bad244e9b125026a750d5edaf1045ef6c9496fd1",
+      "topic": "retroactive redesign and provenance",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/FA3-INSPECTION-POLICY-001.json",
+      "blob_sha": "e558215af00de29b14907e57514361e362b07448",
+      "topic": "three-level inspection and genuine production proof",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/profiles/FA3-LANGUAGE-POLICY-001.json",
+      "blob_sha": "6679313c651aaf0f8ad04727a29deecf5ff2fc3f",
+      "topic": "machine English/two distinct operating languages",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/FA3-CUDA-PORTABILITY-SHARED-FUNCTION-POLICY-001.json",
+      "blob_sha": "178f42b7a747642b94ddd0813cde3f7d12df3490",
+      "topic": "staged CUDA portability shared-core policy",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "blob_sha": "106403d560fefc7d12ce2768e32926685e05dde4",
+      "topic": "quality rules registry",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/enforcement-policy.json",
+      "blob_sha": "fc508a2d2d247c8791dc3a55d9a00644eba123aa",
+      "topic": "legacy 175-capability enforcement; reference only",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    },
+    {
+      "path": "canonical/developer-agent-coordination-enforcement.json",
+      "blob_sha": "2329bb71ab4a3f3780b8906db9bc02b9889c31f4",
+      "topic": "legacy multi-agent coordination gate",
+      "review": "PENDING_NEW_CFA3_COMPATIBILITY_REVIEW",
+      "code_reuse_authorized": false
+    }
+  ],
+  "phase": "INITIAL_SEED_ONLY",
+  "no_automatic_authority": true,
+  "source_digest_type": "GIT_BLOB_SHA1",
+  "note": "This is only a verified seed list, not the complete legacy governance inventory. Rule-by-rule coverage and conflict resolution remain mandatory before full governance admission."
+}

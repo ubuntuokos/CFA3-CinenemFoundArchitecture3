@@ -1,0 +1,48 @@
+{
+  "schema": "cfa3.cpu-execution-policy.v1",
+  "id": "CFA3-CPU-EXECUTION-POLICY-001",
+  "status": "BOOTSTRAP_CANDIDATE",
+  "cpu_native_baseline_required": true,
+  "platform_base_must_boot_cpu_only": true,
+  "gpu_feature_requires_cpu_equivalent": false,
+  "environment": {
+    "development": {
+      "cpu_fallback": "ALLOW_WITH_PROVENANCE",
+      "automatic_switch": "PREAUTHORIZED_PROFILE_ONLY",
+      "cpu_backend_must_exist": true,
+      "resource_approval_required": true,
+      "gpu_test_may_pass_on_cpu": false,
+      "current_host_gpu_pass_may_pass_on_cpu": false
+    },
+    "production": {
+      "cpu_fallback": "EXPLICIT_POLICY_ONLY",
+      "automatic_switch": "DENY_UNLESS_PREAUTHORIZED",
+      "unavailable_cpu_feature": "UNSUPPORTED_OR_BLOCKED",
+      "resource_approval_required": true
+    },
+    "qualification": {
+      "requested_backend_must_be_executed": true,
+      "reference_ci_is_not_physical_pass": true,
+      "physical_accelerator_pass_requires_accelerator": true,
+      "missing_accelerator": "PENDING_OR_UNSUPPORTED"
+    }
+  },
+  "telemetry_required": [
+    "requested_backend",
+    "actual_backend",
+    "fallback_reason",
+    "profile_id",
+    "hardware_profile",
+    "authorization_receipt",
+    "correlation_id"
+  ],
+  "authorities": {
+    "resource": "HOST_RESOURCE_BROKER",
+    "ai_model_route": "MODEL_ROUTER",
+    "workload_mode": "WORKLOAD_MODE_FRAMEWORK",
+    "host_proof": "LAYER_BASED_CURRENT_HOST"
+  },
+  "no_silent_cpu_or_cloud_fallback": true,
+  "host_safety_over_performance": true,
+  "unsupported_function_must_be_visible": true
+}

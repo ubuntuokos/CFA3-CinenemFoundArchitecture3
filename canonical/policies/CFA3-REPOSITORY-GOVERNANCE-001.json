@@ -1,0 +1,153 @@
+{
+  "schema": "cfa3.repository-governance.v1",
+  "id": "CFA3-REPOSITORY-GOVERNANCE-001",
+  "status": "BOOTSTRAP_CANDIDATE",
+  "source": "RECONCILED_POLICY_DESIGN_NOT_BLIND_FILE_COPY",
+  "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "legacy_repository": "ubuntuokos/Final-Architecture-v3.0",
+  "legacy_main_snapshot": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "authority_precedence": [
+    "SAFETY_AND_PLATFORM",
+    "CURRENT_EXPLICIT_OWNER_SCOPE",
+    "SCOPED_OWNER_OVERRIDE",
+    "ADMITTED_CANONICAL_POLICY",
+    "APPROVED_TASK_PLAN",
+    "EARLIER_AUTONOMY"
+  ],
+  "development_rules": [
+    {
+      "id": "DEV-01",
+      "code": "STOP_ON_BLOCKER"
+    },
+    {
+      "id": "DEV-02",
+      "code": "NO_AUTONOMOUS_WORKAROUND"
+    },
+    {
+      "id": "DEV-03",
+      "code": "THREAD_SCOPE_LOCK"
+    },
+    {
+      "id": "DEV-04",
+      "code": "FRESH_STATE_BEFORE_WRITE"
+    },
+    {
+      "id": "DEV-05",
+      "code": "OVERLAP_IS_BLOCKER"
+    },
+    {
+      "id": "DEV-06",
+      "code": "NO_AUTOMATIC_WORKFLOW_OR_GATE_START"
+    },
+    {
+      "id": "DEV-07",
+      "code": "REPORT_AFTER_EVERY_MUTATION"
+    },
+    {
+      "id": "DEV-08",
+      "code": "EXACT_HEAD_BEFORE_MERGE"
+    },
+    {
+      "id": "DEV-09",
+      "code": "NO_SILENT_REDESIGN_OR_REPAIR"
+    },
+    {
+      "id": "DEV-10",
+      "code": "CURRENT_OWNER_RESTRICTION_WINS"
+    },
+    {
+      "id": "DEV-11",
+      "code": "NARROW_SELF_CORRECTION_EXCEPTION"
+    }
+  ],
+  "ai_behavior_rules": [
+    {
+      "id": "AI-01",
+      "code": "STOP_ON_BLOCKER"
+    },
+    {
+      "id": "AI-02",
+      "code": "NO_INFERRED_BYPASS"
+    },
+    {
+      "id": "AI-03",
+      "code": "EXPLICIT_SCOPE_BINDING"
+    },
+    {
+      "id": "AI-04",
+      "code": "FRESH_STATE_OVER_CACHE"
+    },
+    {
+      "id": "AI-05",
+      "code": "CROSS_AGENT_COLLISION_BLOCK"
+    },
+    {
+      "id": "AI-06",
+      "code": "EXPLICIT_SIDE_EFFECT_LEVEL"
+    },
+    {
+      "id": "AI-07",
+      "code": "MUTATION_AUDIT"
+    },
+    {
+      "id": "AI-08",
+      "code": "EXACT_STATE_AUTHORIZATION"
+    },
+    {
+      "id": "AI-09",
+      "code": "UNKNOWN_IS_BLOCKER"
+    },
+    {
+      "id": "AI-10",
+      "code": "LATEST_OWNER_CONSTRAINT_WINS"
+    },
+    {
+      "id": "AI-11",
+      "code": "NARROW_SELF_CORRECTION_EXCEPTION"
+    }
+  ],
+  "task_policy": {
+    "one_explicit_task_per_conversation": true,
+    "automatic_scope_expansion": false,
+    "one_active_implementation_pr": true,
+    "new_pr_requires_explicit_approval": true,
+    "main_direct_write_allowed": false,
+    "reviewed_merge_only": true,
+    "latest_owner_restriction_wins": true,
+    "blocker_means_stop": true,
+    "deterministic_self_correction_requires_notification": true,
+    "exact_main_and_head_check_before_mutation": true,
+    "overlap_means_stop": true,
+    "do_not_auto_start_workflows": true,
+    "report_each_mutation": true
+  },
+  "evidence_policy": {
+    "physical_current_host_evidence_only_from_physical_run": true,
+    "legacy_host_evidence_not_transferable": true,
+    "reference_ci_not_physical_pass": true,
+    "missing_evidence": "PENDING",
+    "fabricated_pass_forbidden": true
+  },
+  "legacy_policy_transfer": {
+    "rules_must_be_reconciled": true,
+    "implementation_reuse_automatic": false,
+    "unaltered_unchecked_transfer_forbidden": true,
+    "source_ledger_required": true,
+    "unreviewed_rules_do_not_gain_new_authority": true,
+    "rule_inventory_complete": false
+  },
+  "security": {
+    "deny_secret_commit": true,
+    "hardware_vendor_neutral": true,
+    "cpu_only_host_allowed": true,
+    "unknown_critical_state": "BLOCK",
+    "deny_silent_backend_fallback": true
+  },
+  "readiness": {
+    "repository_bootstrap_status": "IN_PROGRESS",
+    "full_development_governance_admission": "PENDING_RECONCILIATION",
+    "foundation_verified": false,
+    "application_development_admission": false,
+    "physical_current_host_pass": false
+  }
+}

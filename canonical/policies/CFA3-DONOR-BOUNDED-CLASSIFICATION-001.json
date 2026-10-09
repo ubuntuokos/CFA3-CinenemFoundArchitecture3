@@ -165,5 +165,15 @@
     "current_host_pass_claim": false,
     "separate_owner_approval_for_material_implementation": true,
     "no_main_merge_in_this_task": true
+  },
+  "plan_finalization": {
+    "state": "FINAL_OWNER_APPROVED_TECHNICAL_PLAN",
+    "date": "2026-10-09",
+    "scope": "DESIGN_DOCUMENTATION_AND_STRUCTURAL_GUARD_ONLY",
+    "implementation_status": "PENDING",
+    "migration_status": "PENDING",
+    "published_levels": [],
+    "source_index_complete": false,
+    "global_depth_and_raw_link_limit_included": true
   }
 }

@@ -1,12 +1,30 @@
-# CFA3 donor migration and bounded classification — approved implementation plan V2
+# CFA3 donor migration and bounded classification — FINAL owner-approved technical plan
 
 - **Plan ID:** `CFA3-DONOR-MIGRATION-AND-CLASSIFICATION-V2-001`
 - **Owner approval:** 2026-10-09. Design decision: `canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json`.
 - **New target:** `ubuntuokos/CFA3-CinenemFoundArchitecture3`
 - **Old source repository:** `ubuntuokos/Final-Architecture-v3.0` (read-only extraction; its repair, PR completion or main reconciliation is **not** a migration dependency).
-- **Status in GitHub:** OWNER APPROVED / PENDING PR REVIEW AND MERGE. **No donor records have been migrated by this plan commit.**
+- **Design status:** FINAL OWNER-APPROVED TECHNICAL PLAN. Only the design is final; the actual donor migration, L1 publication, L2–L5 execution and working search index remain PENDING.
+- **Repository status:** Owner-approved design in an open Draft PR, not merged into main. No donor records have been transferred by this change.
+- **Identifier continuity:** Existing V2-001 ID is retained; later owner clarifications are consolidated here without creating a competing or duplicated plan.
 - **Technical policy:** `canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json`.
 - **Related approved lifecycle:** `CFA3-SOURCE-LIFECYCLE-POLICY-001`.
+
+## Végleges műszaki összefoglaló (HU)
+
+**Feladat:** a régi repository összes felhasználó által jóváhagyott donoradatának veszteségmentes átmentése az új CFA3-ba, a régi repo javítása nélkül. A régi hibás konfiguráció, végrehajtási kód, felesleges alkalmazás és duplikáció nem örökölhető. Az eredeti rekordok és döntések megmaradnak, az új adatbázis tisztított.
+
+**Szigorúan egymás után:** L1 besorolás → publikálás és valódi visszakeresési teszt → L2 → L3 → L4 → L5. A következő szint csak az előző bizonyított PUBLISHED_AND_VERIFIED_PASS eredménye után indulhat. A már feldolgozott link korábbi döntését nem írjuk felül.
+
+**Egyetlen globális ötszintű lánc:** csak az eredeti L1-források alkotnak induló gyökeret. L2-ben talált donor 4 szintet (L2–L5), L3-ban 3-at, L4-ben 2-t, L5-ben 1-et (csak L5) érhet el az aktuális szinttel együtt. Egy új donor, új kapcsolat vagy jóváhagyás nem indíthat új öt szintet. L6 tilos.
+
+**Kibontási STOP:** az eredeti, rögzített L1 bemeneti linkrekordok száma B. Minden aktuális szinten a forrásaiban talált tényleges, nyers kimenő linkelőfordulásokat számláljuk még duplikációszűrés és új-donor-azonosítás előtt. Maximum floor(B × 1,15). B=1000 esetén 1150 megengedett, 1151 azonnali STOP. Minden szint a változatlan eredeti B-hez hasonlít, a szintek összege és a donoradatbázis mérete nem használható. A korábban ismert és duplikált hivatkozások is számítanak a nyers küszöbbe.
+
+**Szintenkénti érvényesítés:** csak az eredetileg jóváhagyott donor lesz elfogadott donor; a további feltárt technológiák osztályozott, külön státuszú források. A publikált rekordok kanonikus azonosító, eredeti URL, alias, besorolás és szülőkapcsolat szerint visszakereshetők. Következő szint csak sikeres ellenőrzés után.
+
+**Fontos állapothatár:** a végleges terv és a sikeres strukturális CI nem jelenti a donorok tényleges migrációját, hálózati kibontását, licencengedélyét vagy runtime-admissionjét.
+
+---
 
 ## Mandate, allowed scope and completion boundary
 
@@ -167,7 +185,66 @@ Neither background retries nor automatic rebase, admission, repair of old reposi
 | Network or CI completes without index read-back | Level publication gate fails |
 | Failed L3/limit STOP | Published L1/L2 persist, no L4 auto-run |
 
-## 9. Explicit non-deliverables of this design finalization
+## 9. Final implementation contract
+
+### 9.1 Deterministic order of execution
+
+The software implementation must obey the following sequence for one frozen migration run:
+
+1. Read-only recovery of every owner-approved historical donor submission and original URL; keep the original JSON/blobs, hashes and provenance immutable.
+2. Freeze the L1 input source-link **occurrences** and derive the audit baseline B from that exact immutable input. This initial input is the only source of L1 roots.
+3. For the active level, inspect the frozen parent queue; retain previous classifications and decisions for known sources.
+4. Extract actual outgoing links from the current level's inspected sources. **Increment the current level's raw outgoing occurrence count before deduplication or classification.** STOP immediately on count greater than floor(B × 115 / 100), without publishing the incomplete level.
+5. Where no STOP occurs, register parent-child evidence; deduplicate by canonical identity/alias; classify relevant new sources and retain earlier decisions. Children may enter **only the next global-level queue** and may not be processed early.
+6. Atomically publish the current level's admissible donor references and separate classified-source candidates. Build and activate the source, classification and relation indexes together.
+7. Independently query all published items by canonical ID, original URL/alias, classification and parent relation. Issue an immutable level PASS only after actual read-back, version matching and source-coverage checks.
+8. Only then begin the next global level. On L5, publish and finish without generating an L6 work queue. If no relevant further link exists earlier, finish with documented early exhaustion.
+
+Every failure freezes progress, leaves the latest verified published level intact, records the blocked stage and requires an explicit new instruction before further action.
+
+### 9.2 Required state and evidence interfaces
+
+| Interface | Minimum evidence |
+| --- | --- |
+| SourceArchive | Historical raw record/locator, origin commit and blob SHA, user approval or pre-existing status |
+| SourceIdentity | Stable canonical ID, normalized source key, URL aliases, last recorded decision |
+| DonorRegistry | Approved-reference status, evidence of owner's donor marker, source class, rights/admission state |
+| ClassifiedDiscovery | Source URL, global L1–L5 level, class, discovered-unregistered status if not approved |
+| ProvenanceEdge | Original L1 root ID, parent and child IDs, observed occurrence and source-evidence reference |
+| LevelQueue | One fixed B and immutable run ID, next global level, frozen input references and progress checkpoint |
+| LevelReceipt | Input count, raw outbound count, 115% threshold, duplicates, classified results, STOP status, output version |
+| PublishedSnapshot | Atomic registry and index versions, rollback ref, active snapshot digest |
+| PublishVerification | Independent read-back by identity, original/alias URL, type and parent relationship; PASS/FAIL receipt |
+
+Do not replace real publication read-back with a successful CLI unit test, HTTP ping or GitHub CI check.
+
+### 9.3 Fixed depth contract
+
+| Discovery level | Remaining levels, including this level | Last allowed level |
+| --- | ---: | --- |
+| L1 (original root) | 5 | L5 |
+| L2 | 4 | L5 |
+| L3 | 3 | L5 |
+| L4 | 2 | L5 |
+| L5 | 1 | L5 |
+
+Re-encountering a prior L1 source deeper creates only a provenance edge, not an additional root. Repeated/cyclic links and multi-parent paths do not confer extra expansion depth. A newly approved donor found at L4 stays at L4; its work cannot restart from L1.
+
+### 9.4 Acceptance criteria for the actual future implementation
+
+The final data-migration proof must show **zero** missing owner-approved original source URLs, unexplained canonical identity collisions, unjustified duplicate donor records, unclassified relevant processed sources, broken verified parent relations, unpublished approved donors, unauthorized legacy configurations or code imports, donor-specific depth restarts and global levels above L5.
+
+Each successfully completed level needs its own search-readback receipt; the next level's first operation must be blocked until it exists. B and the 115% threshold must be reproducible from the immutable input. The test matrix must include B=1000 → 1150 allowed; B=1000 → 1151 STOP; repeated known links still counted; L2=1100 and L3=1140 evaluated separately; L4-discovered donor cannot start a new five-level run; L5 never enqueues L6.
+
+If the 15% threshold trips, the previously published levels remain accessible, but the overall run is **STOPPED_EXPANSION_LIMIT**, **never FINAL PASS**. A run may successfully end early only on proven exhaustion of further relevant links and successful publication of its final processed level.
+
+### 9.5 Exact non-deliverables of this plan finalization
+
+No donor import, source-code adoption, network crawl, L1 publication, permission escalation, merge, runtime activation or Current Host PASS is performed by finalizing this document. The existing source index remains incomplete until independently proven otherwise.
+
+---
+
+## 10. Explicit non-deliverables of this design finalization
 
 - This commit **does not perform** donor migration, crawling, classification or indexing.
 - The new CFA3 active source index remains **incomplete** until the actual L1 import and reconciliation, and must not certify unmatched links as new.

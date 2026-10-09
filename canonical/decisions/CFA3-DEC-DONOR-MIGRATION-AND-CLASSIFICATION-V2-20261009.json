@@ -48,5 +48,14 @@
     },
     "absolute_max_level": 5,
     "status": "APPROVED_DESIGN_NOT_EXECUTED"
+  },
+  "plan_finalization": {
+    "state": "FINAL_OWNER_APPROVED_TECHNICAL_PLAN",
+    "date": "2026-10-09",
+    "design_complete": true,
+    "implementation_complete": false,
+    "donor_import_complete": false,
+    "published_levels": [],
+    "previous_approvals_untouched": true
   }
 }

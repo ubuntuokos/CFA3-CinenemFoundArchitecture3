@@ -80,6 +80,15 @@ class BootstrapPolicyTests(unittest.TestCase):
         broken_decision=copy.deepcopy(decision)
         broken_decision["depth_clarification"]["newly_discovered_donors_no_root_reset"]=False
         self.assertTrue(validate_donor_classification_plan(pol,broken_decision))
+        bad=copy.deepcopy(pol)
+        bad["plan_finalization"]["migration_status"]="COMPLETE"
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["plan_finalization"]["published_levels"]=["L1"]
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        changed_decision=copy.deepcopy(decision)
+        changed_decision["plan_finalization"]["donor_import_complete"]=True
+        self.assertTrue(validate_donor_classification_plan(pol,changed_decision))
         bad["boundaries"]["status_of_actual_migration"]="COMPLETED"
         self.assertTrue(validate_donor_classification_plan(bad,decision))
 

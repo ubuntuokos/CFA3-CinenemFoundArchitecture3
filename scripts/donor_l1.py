@@ -213,7 +213,7 @@ def verify(path, expected):
                                  (alias,sid)).fetchone()
                 if row is None:
                     raise ValueError("Source lookup failure")
-    supplement = json_read(SUPPLEMENT)
+        supplement = json_read(SUPPLEMENT)
         for entry in supplement["entries"]:
             donor_id, url = entry["donor_id"], entry["source"]["locator"]
             row = db.execute("SELECT current_status,locator FROM sources WHERE source_id=?", (donor_id,)).fetchone()

@@ -2,11 +2,12 @@
   "schema": "cfa3.donor-l1-unreconciled-owner-submissions.v1",
   "id": "CFA3-DONOR-L1-SUPPLEMENT-OWNER-20261009",
   "status": "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED",
-  "source_note": "11 sources identified in CFA3 owner conversation history as approved but not found by normalized repository identity in the archived 1919-source registry. Preserve URLs and approval markers without inventing exact message citations.",
+  "source_note": "11 sources identified in CFA3 owner conversation history as approved but not found by normalized repository identity in the archived 1919-source registry. Preserve URLs and approval markers without inventing exact message citations. Four additional reported character-domain owner-approved candidates (MakeHuman2, CharMorph, SMPL-X, DECA) added as non-admitted references.",
   "verification_bounds": {
     "archived_1919_checked": true,
     "historical_2_pr_sources_separate": true,
-    "all_past_chats_exhaustively_audited": false
+    "all_past_chats_exhaustively_audited": false,
+    "additional_character_domain_unverified_count": 4
   },
   "entries": [
     {
@@ -293,6 +294,114 @@
         "reported_owner_marker": "donornak",
         "reported_date": "2026-10-05",
         "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-MAKEHUMANCOMMUNITY-MAKEHUMAN2-001",
+      "name": "MakeHuman2",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/makehumancommunity/makehuman2",
+        "normalized_key": "github:makehumancommunity/makehuman2"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-UPLINER-CHARMORPH-001",
+      "name": "CharMorph",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/Upliner/CharMorph",
+        "normalized_key": "github:upliner/charmorph"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-VCHOUTAS-SMPLX-001",
+      "name": "SMPL-X",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/vchoutas/smplx",
+        "normalized_key": "github:vchoutas/smplx"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-YFENG95-DECA-001",
+      "name": "DECA",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/yfeng95/DECA",
+        "normalized_key": "github:yfeng95/deca"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
         "exact_submitted_URL_and_approval_pair_independently_verified": false
       },
       "intake_provenance": {

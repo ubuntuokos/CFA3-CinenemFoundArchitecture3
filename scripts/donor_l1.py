@@ -62,7 +62,7 @@ def frozen_sources():
     supplement = json_read(SUPPLEMENT)
     if (supplement.get("schema") != "cfa3.donor-l1-unreconciled-owner-submissions.v1"
             or supplement.get("status") != "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED"
-            or len(supplement.get("entries", [])) != 11
+            or len(supplement.get("entries", [])) != 15
             or supplement.get("verification_bounds", {}).get("all_past_chats_exhaustively_audited") is not False):
         raise ValueError("Unreconciled owner-source supplement must remain bounded and non-admitted")
     for record in supplement["entries"]:
@@ -172,7 +172,7 @@ def prepare(db, sources, run_id):
         ("input_link_occurrences_B","UNVERIFIED"),
         ("expansion_raw_limit","UNVERIFIED"),
         ("known_unique_source_identities",str(len(sources))),
-        ("supplemental_owner_source_candidates","11"),
+        ("supplemental_owner_source_candidates","15"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),
         ("approval_completeness","UNVERIFIED"),
@@ -220,7 +220,7 @@ def verify(path, expected):
             if row != ("BLOCKED", url):
                 raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
     return {"rows":total,"locator_index":"PASS","historical_url_provenance":"BOUNDED_445_PASS",
-            "supplemental_unreconciled_owner_sources":11,
+            "supplemental_unreconciled_owner_sources":15,
             "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}

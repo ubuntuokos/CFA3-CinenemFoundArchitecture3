@@ -14,9 +14,9 @@ spec.loader.exec_module(donor_l1)
 class DonorL1IndexTests(unittest.TestCase):
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
-        self.assertEqual(len(sources), 1932)
+        self.assertEqual(len(sources), 1936)
         self.assertEqual(sum(1 for _, _, canonical in sources if canonical), 1919)
-        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 13)
+        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 17)
 
     def test_staging_index_round_trip_and_no_false_publication(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -25,8 +25,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
-            self.assertEqual(receipt["index_evidence"]["rows"], 1932)
-            self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 11)
+            self.assertEqual(receipt["index_evidence"]["rows"], 1936)
+            self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 15)
             self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
             self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)
             sources = donor_l1.frozen_sources()
@@ -54,7 +54,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["input_link_occurrences_B"],"UNVERIFIED")
                 self.assertEqual(meta["expansion_raw_limit"],"UNVERIFIED")
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
-                self.assertEqual(meta["supplemental_owner_source_candidates"],"11")
+                self.assertEqual(meta["supplemental_owner_source_candidates"],"15")
                 self.assertEqual(meta["all_owner_submissions_verified"],"FALSE")
                 self.assertEqual(meta["bounded_union_link_records"],"445")
                 self.assertEqual(meta["bounded_union_distinct_donor_ids"],"443")
@@ -67,11 +67,11 @@ class DonorL1IndexTests(unittest.TestCase):
         sources = donor_l1.frozen_sources()
         self.assertEqual(donor_l1.sha_blob(donor_l1.REGISTRY.read_bytes()),
                          donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
-        self.assertEqual(len(sources),1932)
+        self.assertEqual(len(sources),1936)
 
     def test_historical_missing_sources_recoverable_without_false_admission(self):
         supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)
-        self.assertEqual(len(supplement["entries"]), 11)
+        self.assertEqual(len(supplement["entries"]), 15)
         existing = {(e["source"]["normalized_key"]) for e,origin,_ in donor_l1.frozen_sources()
                     if origin=="OLD_MAIN_ARCHIVE"}
         with tempfile.TemporaryDirectory() as tmp:

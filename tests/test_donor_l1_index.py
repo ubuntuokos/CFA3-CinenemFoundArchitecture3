@@ -26,6 +26,13 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
             self.assertEqual(receipt["index_evidence"]["rows"], 1944)
+            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1794)
+            self.assertEqual(receipt["index_evidence"]["observed_non_http_source_locators"], 150)
+            self.assertFalse(receipt["index_evidence"]["original_L1_link_record_count_B_verified"])
+            self.assertEqual(
+                receipt["index_evidence"]["observed_http_source_locators"]
+                + receipt["index_evidence"]["observed_non_http_source_locators"],
+                receipt["index_evidence"]["rows"])
             self.assertEqual(receipt["index_evidence"]["supplemental_unreconciled_owner_sources"], 23)
             self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
             self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)

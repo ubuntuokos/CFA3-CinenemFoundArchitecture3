@@ -62,9 +62,9 @@ def main(argv=None) -> int:
 
     if args.action == "settings-window":
         from PySide6.QtWidgets import QApplication
-        from .settings_panel import Qt6RuntimeSettingsPanel
+        from .control_center import CFA3RuntimeControlCenter
         app = QApplication([])
-        window = Qt6RuntimeSettingsPanel(workload_mode="UNKNOWN")
+        window = CFA3RuntimeControlCenter(workload_mode="UNKNOWN")
         window.show()
         return app.exec()
 

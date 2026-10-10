@@ -339,7 +339,7 @@ def prepare(db, sources, run_id):
         ("additional_owner_source_leads","4"),
         ("total_pending_owner_source_candidates","4"),
         ("legacy_owner_approved_pending_publication","53"),
-        ("legacy_owner_marker_without_primary_pair","23"),
+        ("supplement_and_additional_owner_markers_without_primary_pair","23"),
         ("historical_tripo_new_pending_sources","0"),
         ("historical_tripo_owner_approved_transfer_sources","30"),
         ("historical_supplement_owner_approved_transfer_sources","19"),

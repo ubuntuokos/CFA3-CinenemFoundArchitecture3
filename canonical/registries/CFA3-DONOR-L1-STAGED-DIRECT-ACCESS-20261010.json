@@ -13,8 +13,8 @@
   "distinct_identity_count": 1981,
   "approval_summary": {
     "historical_accepted_reference": 825,
-    "legacy_owner_approved_pending_publication": 57,
-    "unmerged_pr_sources_not_admitted": 2,
+    "legacy_owner_approved_pending_publication": 59,
+    "unmerged_pr_sources_not_admitted": 0,
     "reference_only_sources_blocked": 4,
     "legacy_candidate": 963,
     "legacy_analyzed": 130,
@@ -22,7 +22,8 @@
     "new_historical_owner_sources": 3,
     "existing_historical_candidate_override": 1,
     "historical_candidate_count_unmodified": 963,
-    "current_candidate_after_approved_override": 962
+    "current_candidate_after_approved_override": 962,
+    "historical_pr_owner_approved_transfer_sources": 2
   },
   "purpose": "DIRECT_SEARCHABLE_REPO_BRANCH_ACCESS_WITHOUT_FALSE_L1_PUBLICATION_PASS",
   "sources": [
@@ -19673,21 +19674,23 @@
       "id": "FA3-DONOR-AFFAAN-M-ECC-001",
       "key": "github:affaan-m/ecc",
       "url": "https://github.com/affaan-m/ECC",
-      "status": "BLOCKED",
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
       "legacy_status": "ACCEPTED_REFERENCE",
-      "origin": "UNMERGED_PR_744",
+      "origin": "HISTORICAL_PR_744_OWNER_APPROVED_TRANSFER",
       "level": 1,
-      "name": "affaan-m/ECC"
+      "name": "affaan-m/ECC",
+      "transfer_evidence": "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
     },
     {
       "id": "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
       "key": "github:mohamedelaassal/youtubevideogenerator",
       "url": "https://github.com/MohamedElaassal/youtubeVideoGenerator",
-      "status": "BLOCKED",
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
       "legacy_status": "ACCEPTED_REFERENCE",
-      "origin": "UNMERGED_PR_745",
+      "origin": "HISTORICAL_PR_745_OWNER_APPROVED_TRANSFER",
       "level": 1,
-      "name": "MohamedElaassal YouTube Video Generator"
+      "name": "MohamedElaassal YouTube Video Generator",
+      "transfer_evidence": "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
     },
     {
       "id": "CFA3-L1-RECONCILE-ARTISYNTH-ARTISYNTH-CORE-001",

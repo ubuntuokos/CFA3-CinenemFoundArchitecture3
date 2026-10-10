@@ -94,5 +94,27 @@ class CanonicalDonorRegistration1926Tests(unittest.TestCase):
         self.assertFalse(comfy["runtime_admission"])
 
 
+    def test_lookup_by_exact_donor_id_and_original_submitted_url(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "donor_reference_lookup", ROOT / "scripts/donor_reference_lookup.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+        occurrences = 0
+        for record in registry["records"]:
+            with self.subTest(donor=record["donor_id"]):
+                self.assertEqual(module.lookup(donor_id=record["donor_id"]), record)
+                for original in record["original_submitted_urls"]:
+                    self.assertEqual(module.lookup(original_url=original), record)
+                    occurrences += 1
+        self.assertEqual(occurrences, 83)
+        self.assertIsNone(module.lookup(donor_id="NOT_REGISTERED"))
+        self.assertIsNone(module.lookup(original_url="https://github.com/not-registered"))
+        with self.assertRaises(ValueError):
+            module.lookup(donor_id="FA3-DONOR-TAHOMA2D-001",
+                          original_url="https://github.com/tahoma2d/tahoma2d")
+
+
 if __name__ == "__main__":
     unittest.main()

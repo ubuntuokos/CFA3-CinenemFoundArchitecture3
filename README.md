@@ -195,6 +195,19 @@ CFA3 plans a central **Hardware & Peripherals → Digital Drawing Devices** pane
 
 > **Design preview only.** This illustration does not verify live hardware detection, driver installation, GUI test passes or physical Current Host admission.
 
+
+## Camera Connection & Device Manager — Control Center design preview
+
+The planned CFA3 **Hardware & Devices → Cameras** panel provides a unified interface for connecting and configuring digital cameras and memory-card readers. Inspired by KDE's camera settings, it is designed for USB/PTP and supported network connections, device detection, connection tests, diagnostics, camera profiles, RAW and media import, and model-dependent live view or remote capture. Integration with PhotoCraft, FilmCraft and the shared Capture & Inbox/import services is planned.
+
+<p align="center">
+  <img src="docs/assets/readme/cfa3-camera-control-panel.webp" alt="CFA3 Control Center — camera connection and device management GUI design preview" width="100%">
+  <br><sub>CFA3 Camera Connection & Device Manager — GUI design preview</sub>
+</p>
+
+> **Design preview only.** The illustration does not verify device compatibility, hardware operation, remote-control support, Qt GUI test passes or physical Current Host qualification.
+
+
 ---
 
 # Architecture at a glance

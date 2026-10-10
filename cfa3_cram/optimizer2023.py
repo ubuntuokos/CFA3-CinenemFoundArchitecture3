@@ -88,6 +88,19 @@ class TopkCrAM2023CPU:
             "source_commit": UPSTREAM_COMMIT,
         }
 
+    def load_state_dict(self, snapshot: dict) -> None:
+        """Restore optimizer/reproducibility state; model tensors are caller-owned."""
+        if snapshot.get("source_commit") != UPSTREAM_COMMIT:
+            raise ValueError("unverified optimizer source revision")
+        if (snapshot.get("rho") != self.rho or
+            tuple(snapshot.get("sparsities", ())) != self.sparsities or
+            snapshot.get("plus_version") != self.plus_version or
+            snapshot.get("sparse_grad") != self.sparse_grad):
+            raise ValueError("incompatible checkpoint optimizer configuration")
+        self.base_optimizer.load_state_dict(copy.deepcopy(snapshot["base_optimizer"]))
+        self._rng.setstate(snapshot["rng_state"])
+        self.last_sparsity = snapshot["last_sparsity"]
+
     def step(self, closure: Callable):
         if not callable(closure):
             raise ValueError("CrAM requires a forward/backward closure")

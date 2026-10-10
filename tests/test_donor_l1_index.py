@@ -24,16 +24,16 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertIsNone(catalog["global_baseline_B"])
         self.assertFalse(catalog["all_owner_submissions_exhaustively_verified"])
         self.assertFalse(catalog["runtime_admission"])
-        self.assertEqual(catalog["source_count"], 1978)
-        self.assertEqual(catalog["distinct_identity_count"], 1978)
-        self.assertEqual(catalog["approval_summary"]["legacy_owner_approved_pending_publication"], 53)
+        self.assertEqual(catalog["source_count"], 1981)
+        self.assertEqual(catalog["distinct_identity_count"], 1981)
+        self.assertEqual(catalog["approval_summary"]["legacy_owner_approved_pending_publication"], 57)
         self.assertEqual(catalog["approval_summary"]["historical_accepted_reference"], 825)
         self.assertEqual(catalog["approval_summary"]["legacy_candidate"], 963)
         self.assertEqual(catalog["approval_summary"]["legacy_analyzed"], 130)
         items = catalog["sources"]
-        self.assertEqual(len(items), 1978)
-        self.assertEqual(len({item["id"] for item in items}), 1978)
-        self.assertEqual(len({item["key"] for item in items}), 1978)
+        self.assertEqual(len(items), 1981)
+        self.assertEqual(len({item["id"] for item in items}), 1981)
+        self.assertEqual(len({item["key"] for item in items}), 1981)
         canonical = {item["id"]: item for item in items}
         for entry, origin, from_main in donor_l1.frozen_sources():
             item = canonical[entry["donor_id"]]
@@ -42,11 +42,13 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(item["level"], 1)
             self.assertEqual(item.get("discovery_urls", []), entry["source"].get("discovery_urls", []))
             approved_origin = origin in {
+                "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
                 "HISTORICAL_OWNER_APPROVED_TRANSFER",
                 "ADDITIONAL_OWNER_APPROVED_TRANSFER",
                 "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER",
             }
-            expected_status = (entry["status"] if from_main else
+            expected_status = ("OWNER_APPROVED_PENDING_PUBLICATION" if entry["donor_id"] == "FA3-DONOR-OPENCUT-001" else
+                entry["status"] if from_main else
                 "OWNER_APPROVED_PENDING_PUBLICATION" if approved_origin else "BLOCKED")
             self.assertEqual(item["status"], expected_status)
         recovery = donor_l1.json_read(donor_l1.TRIPO_RECOVERY)
@@ -95,13 +97,13 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertEqual(routing["state"],"STAGED_NOT_PUBLISHED")
         self.assertFalse(routing["canonical_level_published"])
         self.assertIsNone(routing["original_L1_B"])
-        self.assertEqual(routing["source_count"],1978)
-        self.assertEqual(routing["alias_count"],3930)
+        self.assertEqual(routing["source_count"],1981)
+        self.assertEqual(routing["alias_count"],3937)
         self.assertEqual(routing["multiple_related_identity_url_count"],5)
         self.assertEqual(routing["owner_baseline_original_urls"],445)
         self.assertEqual(routing["tripo_original_url_occurrences"],48)
-        self.assertEqual(len(routing["entries"]),3930)
-        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3930)
+        self.assertEqual(len(routing["entries"]),3937)
+        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3937)
         with tempfile.TemporaryDirectory() as tmp:
             dbpath=Path(tmp)/"url-routing-readback.sqlite"
             donor_l1.stage(dbpath,"url-routing-readback")
@@ -109,18 +111,50 @@ class DonorL1IndexTests(unittest.TestCase):
                 database_rows={a:(id_,authority,json.loads(ids)) for a,id_,authority,ids in db.execute(
                     "SELECT alias,preferred_source_id,authority,related_source_ids_json "
                     "FROM url_resolution ORDER BY alias")}
-            self.assertEqual(len(database_rows),3930)
+            self.assertEqual(len(database_rows),3937)
             for row in routing["entries"]:
                 self.assertEqual(database_rows[row["alias"]],
                                  (row["preferred_source_id"],row["authority"],row["related_source_ids"]))
                 self.assertIn(row["preferred_source_id"],row["related_source_ids"])
             self.assertEqual(sum(len(row["related_source_ids"]) > 1 for row in routing["entries"]),5)
 
+    def test_historical_20261007_owner_links_imported_without_duplicate_or_runtime_admission(self):
+        recovery = donor_l1.owner_message_recovery()
+        self.assertEqual(len(recovery["entries"]), 3)
+        self.assertEqual(len(recovery["existing_source_approval_overrides"]), 1)
+        original = [entry["source"]["locator"] for entry in recovery["entries"]]
+        self.assertEqual(set(original), {
+            "https://github.com/ExistentialAudio/BlackHole",
+            "https://github.com/ExistentialAudio",
+            "https://github.com/upstash",
+        })
+        self.assertFalse(recovery["canonical_level_published"])
+        self.assertFalse(recovery["runtime_admission"])
+        with tempfile.TemporaryDirectory() as temp:
+            dbpath = Path(temp) / "history-rescue.sqlite"
+            receipt = donor_l1.stage(dbpath, "history-rescue")
+            self.assertEqual(receipt["index_evidence"]["rows"], 1981)
+            self.assertEqual(receipt["index_evidence"]["additional_20261007_owner_approved_source_records"], 3)
+            self.assertEqual(receipt["index_evidence"]["historical_opencut_approval_overrides"], 1)
+            all_links = [(e["source"]["locator"],e["donor_id"]) for e in recovery["entries"]]
+            all_links.append(("https://github.com/opencut-app/opencut", "FA3-DONOR-OPENCUT-001"))
+            for url, source_id in all_links:
+                self.assertEqual([row["id"] for row in donor_l1.lookup(dbpath,url,"url")],[source_id])
+                self.assertEqual(donor_l1.lookup(dbpath,source_id,"id")[0]["status"],
+                                 "OWNER_APPROVED_PENDING_PUBLICATION")
+            with sqlite3.connect(dbpath) as db:
+                self.assertEqual(db.execute(
+                    "SELECT historical_status FROM sources WHERE source_id='FA3-DONOR-OPENCUT-001'").fetchone()[0],
+                    "CANDIDATE")
+                self.assertEqual(db.execute(
+                    "SELECT count(*) FROM source_provenance WHERE source_set='HISTORICAL_OWNER_MESSAGES_20261007'").fetchone()[0],4)
+                self.assertEqual(db.execute("SELECT value FROM metadata WHERE key='publication_gate'").fetchone()[0],"PENDING")
+
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
-        self.assertEqual(len(sources), 1978)
+        self.assertEqual(len(sources), 1981)
         self.assertEqual(sum(1 for _, _, canonical in sources if canonical), 1919)
-        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 59)
+        self.assertEqual(sum(1 for _, _, canonical in sources if not canonical), 62)
 
     def test_staging_index_round_trip_and_no_false_publication(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -129,8 +163,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"], "STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             self.assertIsNone(receipt["raw_link_limit"])
-            self.assertEqual(receipt["index_evidence"]["rows"], 1978)
-            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1828)
+            self.assertEqual(receipt["index_evidence"]["rows"], 1981)
+            self.assertEqual(receipt["index_evidence"]["observed_http_source_locators"], 1831)
             self.assertEqual(receipt["index_evidence"]["observed_non_http_source_locators"], 150)
             self.assertFalse(receipt["index_evidence"]["original_L1_link_record_count_B_verified"])
             self.assertEqual(
@@ -173,7 +207,9 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
                 self.assertEqual(meta["additional_owner_source_leads"],"4")
                 self.assertEqual(meta["total_pending_owner_source_candidates"],"4")
-                self.assertEqual(meta["legacy_owner_approved_pending_publication"],"53")
+                self.assertEqual(meta["legacy_owner_approved_pending_publication"],"57")
+                self.assertEqual(meta["additional_20261007_owner_approved_source_records"],"3")
+                self.assertEqual(meta["historical_opencut_approval_overrides"],"1")
                 self.assertEqual(meta["historical_supplement_owner_approved_transfer_sources"],"19")
                 self.assertEqual(meta["additional_owner_approved_transfer_sources"],"4")
                 self.assertEqual(meta["historical_tripo_new_pending_sources"],"0")
@@ -334,7 +370,7 @@ class DonorL1IndexTests(unittest.TestCase):
         sources = donor_l1.frozen_sources()
         self.assertEqual(donor_l1.sha_blob(donor_l1.REGISTRY.read_bytes()),
                          donor_l1.EXPECTED["FA3-DONOR-REFERENCE-REGISTRY-001.json"])
-        self.assertEqual(len(sources),1978)
+        self.assertEqual(len(sources),1981)
 
     def test_historical_missing_sources_recoverable_without_false_admission(self):
         supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)
@@ -368,7 +404,7 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"],"STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             with sqlite3.connect(dbpath) as db:
-                self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE current_status='OWNER_APPROVED_PENDING_PUBLICATION'").fetchone()[0],53)
+                self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE current_status='OWNER_APPROVED_PENDING_PUBLICATION'").fetchone()[0],57)
                 self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE source_origin='HISTORICAL_OWNER_APPROVAL_RECONCILIATION_PENDING'").fetchone()[0],4)
                 self.assertEqual(dict(db.execute("SELECT key,value FROM metadata"))["publication_gate"],"PENDING")
 

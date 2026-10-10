@@ -139,10 +139,15 @@ def observation_verified(observation):
 
 def evaluate(url, index, observation=None):
     try:
-        key = normalize_url(url)
         alias_map = validate_index(index)
         migrated = index.get("schema") == "cfa3.source-lifecycle-index.v2"
-        sid = resolve_migrated_url(url, alias_map) if migrated else alias_map.get(key)
+        if migrated:
+            # First preserve exact historical locators, including project:* identifiers.
+            sid = resolve_migrated_url(url, alias_map)
+            key = normalize_url(url) if sid is None else None
+        else:
+            key = normalize_url(url)
+            sid = alias_map.get(key)
     except (TypeError, ValueError, AttributeError) as exc:
         return result("BLOCKED_INDEX_CONFLICT", reason=str(exc))
     by_id = {x["source_id"]: x for x in index["source_records"]}

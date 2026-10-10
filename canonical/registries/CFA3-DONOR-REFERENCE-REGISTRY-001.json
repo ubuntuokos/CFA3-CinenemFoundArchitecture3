@@ -9,7 +9,7 @@
   "all_historical_sources_exhaustively_reconciled": false,
   "runtime_admission": false,
   "code_or_license_admission": false,
-  "donor_count": 80,
+  "donor_count": 81,
   "source_files_completed": [
     19,
     20,
@@ -17,9 +17,10 @@
     22,
     23,
     24,
-    25
+    25,
+    26
   ],
-  "original_url_occurrences": 82,
+  "original_url_occurrences": 83,
   "records": [
     {
       "donor_id": "FA3-DONOR-TAHOMA2D-001",
@@ -1302,6 +1303,22 @@
       "code_copy_authorized": false,
       "license_authorized": false,
       "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MAGGI-CHEN-INSPECTOR-001",
+      "normalized_key": "github:maggi-chen/inspector",
+      "original_url": "https://github.com/Maggi-Chen/Inspector",
+      "original_submitted_urls": [
+        "https://github.com/Maggi-Chen/Inspector"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-MAGGI-CHEN-INSPECTOR-2026-10-03.json",
+      "source_sequence": 26,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
     }
   ],
   "lookup_by_id": {
@@ -1384,7 +1401,8 @@
     "FA3-DONOR-LITELLM-AI-GATEWAY-GO-TOPIC-001": 76,
     "FA3-DONOR-H2OAI-ORG-001": 77,
     "FA3-DONOR-LITELLM-LABS-ORG-001": 78,
-    "FA3-DONOR-LOCAL-LLM-TOPIC-001": 79
+    "FA3-DONOR-LOCAL-LLM-TOPIC-001": 79,
+    "FA3-DONOR-MAGGI-CHEN-INSPECTOR-001": 80
   },
   "lookup_by_original_url": {
     "https://github.com/tahoma2d/tahoma2d": "FA3-DONOR-TAHOMA2D-001",
@@ -1468,6 +1486,7 @@
     "https://github.com/topics/litellm-ai-gateway?l=go": "FA3-DONOR-LITELLM-AI-GATEWAY-GO-TOPIC-001",
     "https://github.com/h2oai": "FA3-DONOR-H2OAI-ORG-001",
     "https://github.com/LiteLLM-Labs": "FA3-DONOR-LITELLM-LABS-ORG-001",
-    "https://github.com/topics/local-llm": "FA3-DONOR-LOCAL-LLM-TOPIC-001"
+    "https://github.com/topics/local-llm": "FA3-DONOR-LOCAL-LLM-TOPIC-001",
+    "https://github.com/Maggi-Chen/Inspector": "FA3-DONOR-MAGGI-CHEN-INSPECTOR-001"
   }
 }

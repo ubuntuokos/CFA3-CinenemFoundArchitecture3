@@ -1,5 +1,5 @@
 """Command-line integration tests for the non-admitting CFA3 Current Host tool."""
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 import io
 import json
 from pathlib import Path
@@ -75,6 +75,29 @@ class CommandLineTests(unittest.TestCase):
         self.capture(["plugin-build", "--root", str(folder), "--output", str(output)])
         with self.assertRaises(ValueError):
             self.capture(["plugin-build", "--root", str(folder), "--output", str(output)])
+
+    def test_catalog_check_rejects_missing_component_mapping(self):
+        catalog = self.root / "catalog.json"
+        catalog.write_text(json.dumps({
+            "schema": "cfa3.current-host.capabilities.v1",
+            "capabilities": [],
+        }), encoding="utf-8")
+        report = self.capture([
+            "catalog-check", "--catalog", str(catalog),
+            "--graph", str(self.graph),
+        ])
+        self.assertEqual(report["status"], "BLOCKED_CAPABILITY_GRAPH_MISMATCH")
+        self.assertFalse(report["physical_current_host_pass"])
+
+    def test_catalog_check_cannot_omit_real_graph(self):
+        catalog = self.root / "catalog.json"
+        catalog.write_text(json.dumps({
+            "schema": "cfa3.current-host.capabilities.v1",
+            "capabilities": [],
+        }), encoding="utf-8")
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as failed:
+            main(["catalog-check", "--catalog", str(catalog)])
+        self.assertEqual(failed.exception.code, 2)
 
     def test_unknown_trigger_fails_closed(self):
         with self.assertRaises(ValueError):

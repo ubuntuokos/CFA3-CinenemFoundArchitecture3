@@ -35,7 +35,7 @@ def _resource_limits():
     os.umask(0o077)
 
 
-def execute_plugin_cpu(
+def _execute_in_bwrap(
     registry: Registry, plugin_id: str, version: str, *,
     entrypoint: str, timeout_seconds: float = 8, argv: tuple[str, ...] = (),
 ) -> dict:
@@ -122,3 +122,39 @@ def execute_plugin_cpu(
         "plugin_product_qa": "DEVELOPER_RESPONSIBILITY",
         "security_certification": "PENDING_EXTERNAL_VALIDATION",
     }
+
+
+def execute_plugin_cpu(
+    registry: Registry, plugin_id: str, version: str, *,
+    entrypoint: str, foundation, session, timeout_seconds: float = 8,
+    argv: tuple[str, ...] = (),
+) -> dict:
+    """Require live CPU Foundation authority/HRB/mode and then confine a plugin.
+
+    The caller cannot substitute a plugin manifest for an actual Foundation
+    admission. Every branch releases the lease; no retry or unconfined fallback.
+    """
+    from .foundation_runtime import FoundationDenied, FoundationRuntime, Session
+    if not isinstance(foundation, FoundationRuntime) or not isinstance(session, Session):
+        raise FoundationDenied("LIVE_FOUNDATION_SESSION_REQUIRED")
+    try:
+        foundation.validate(session)
+        request = session.request
+        record = registry._records.get((plugin_id, version))
+        if (record is None
+                or request.actor != record.manifest.publisher
+                or request.component != "cfa3.plugin-host"
+                or request.operation != "plugin.execute"
+                or request.capability != "cfa3.community-plugin.run"
+                or request.artifact_digest != record.bundle_digest
+                or request.model_id is not None
+                or session.route != "NO_MODEL_REQUIRED"):
+            raise FoundationDenied("PLUGIN_SCOPE_OR_RIGHTS_MISMATCH")
+        return _execute_in_bwrap(
+            registry, plugin_id, version,
+            entrypoint=entrypoint, timeout_seconds=timeout_seconds, argv=argv
+        )
+    finally:
+        # Even if the external sandbox is unavailable or the token has expired,
+        # the CPU lease and Workload Mode must be returned.
+        foundation.finish(session)

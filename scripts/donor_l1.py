@@ -432,6 +432,7 @@ def prepare(db, sources, run_id):
         PRIMARY KEY(source_group,occurrence_index));
       CREATE INDEX historical_link_url_lookup ON historical_link_occurrences(original_url);
     """)
+    owner_override = owner_message_recovery()["existing_source_approval_overrides"][0]
     for entry, origin, from_main in sources:
         sid = entry["donor_id"]
         src = entry["source"]
@@ -443,7 +444,6 @@ def prepare(db, sources, run_id):
             "ADDITIONAL_OWNER_APPROVED_TRANSFER",
             "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
         }
-        owner_override = owner_message_recovery()["existing_source_approval_overrides"][0]
         is_override = (from_main and sid == owner_override["donor_id"]
                        and src["normalized_key"] == owner_override["normalized_key"]
                        and entry["status"] == owner_override["historical_status"])

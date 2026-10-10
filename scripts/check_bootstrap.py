@@ -67,12 +67,15 @@ def validate_source_lifecycle(policy, index):
         errors.append("source lifecycle policy identity mismatch")
     if policy.get("authority_status")!="OWNER_APPROVED_PENDING_REVIEW_AND_MERGE":
         errors.append("source lifecycle policy admission misrepresented")
-    if index.get("schema")!="cfa3.source-lifecycle-index.v1":
+    if index.get("schema") not in ("cfa3.source-lifecycle-index.v1", "cfa3.source-lifecycle-index.v2"):
         errors.append("source lifecycle index schema mismatch")
     if index.get("complete") is not False:
         errors.append("cannot claim complete donor/source migration")
-    if index.get("source_records")!=[]:
-        errors.append("bootstrap source index must remain empty pending migration")
+    from source_lifecycle import validate_index
+    try:
+        validate_index(index)
+    except (ValueError, TypeError, AttributeError) as exc:
+        errors.append("invalid source lifecycle index: " + str(exc))
     return errors
 
 def validate_donor_classification_plan(policy, decision):

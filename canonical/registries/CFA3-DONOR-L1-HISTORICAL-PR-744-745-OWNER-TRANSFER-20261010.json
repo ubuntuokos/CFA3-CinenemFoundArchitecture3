@@ -1,0 +1,50 @@
+{
+  "schema": "cfa3.donor-l1-historical-pr-owner-approved-transfer.v1",
+  "id": "CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010",
+  "status": "STAGED_NOT_PUBLISHED",
+  "target_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "old_repository_read_only": true,
+  "canonical_level_published": false,
+  "original_L1_B": null,
+  "scope": "TRANSFER_PREVIOUSLY_OWNER_APPROVED_HISTORICAL_DONORS_INTO_NEW_CFA3_AS_REFERENCE_ONLY",
+  "new_identity_count": 0,
+  "preexisting_staged_identity_count": 2,
+  "owner_approval_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+  "no_second_owner_approval_required": true,
+  "all_owner_approvals_exhaustively_verified": false,
+  "records": [
+    {
+      "old_pr": 744,
+      "old_head": "576a4e21866dcceb05d0a08cfa0926651a7e8628",
+      "source_path": "archive/donor-source-migration/2026-10-09/PR-744-ADDITIONAL-REFERENCE.json",
+      "source_blob": "f294c3eef3875990725b1f7150824bdade6bbbc6",
+      "id": "FA3-DONOR-AFFAAN-M-ECC-001",
+      "url": "https://github.com/affaan-m/ECC",
+      "normalized_key": "github:affaan-m/ecc",
+      "historical_owner_marker": "donornak",
+      "owner_approval_date": "2026-10-07",
+      "previous_staging_status": "BLOCKED",
+      "new_staging_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "sdk_input_state": "DESIGN_INPUT_ONLY"
+    },
+    {
+      "old_pr": 745,
+      "old_head": "2cdb6200d5ee20f5d1e40ae19e3bd8f59e3649eb",
+      "source_path": "archive/donor-source-migration/2026-10-09/PR-745-ADDITIONAL-REFERENCE.json",
+      "source_blob": "71d83d4bec340e08723cd94e8497d4058678be48",
+      "id": "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
+      "url": "https://github.com/MohamedElaassal/youtubeVideoGenerator",
+      "normalized_key": "github:mohamedelaassal/youtubevideogenerator",
+      "historical_owner_marker": "donornak",
+      "owner_approval_date": "2026-10-07",
+      "previous_staging_status": "BLOCKED",
+      "new_staging_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "additional_exact_search_aliases": [
+        "https://github.com/mohamedelaassal/youtubevideogenerator"
+      ]
+    }
+  ],
+  "no_code_import": true,
+  "no_sdk_adoption": true,
+  "no_runtime_admission": true
+}

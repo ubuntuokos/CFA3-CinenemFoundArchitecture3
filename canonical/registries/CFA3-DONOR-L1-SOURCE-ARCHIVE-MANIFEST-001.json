@@ -93,6 +93,24 @@
       ],
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json",
+      "archive_path": "archive/donor-source-migration/2026-10-09/CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json",
+      "source_blob_sha": "d22dce8bfe3d9697a1121033ff7b387d051a638a",
+      "old_blob_new_archive_exact_match": true,
+      "source_coverage_rows": 445,
+      "distinct_resolved_source_ids": 443,
+      "missing_l1_source_identities": 0,
+      "original_locator_aliases_verified": 445,
+      "missing_locator_aliases": 0,
+      "source_alias_resolved_related_id_loss": 0,
+      "legacy_superseded_resolution_count": 1,
+      "legacy_superseded_original_key_preserved_by_routing": true,
+      "raw_markdown_files_independently_replayed": false,
+      "original_B_assumed_from_union": false,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

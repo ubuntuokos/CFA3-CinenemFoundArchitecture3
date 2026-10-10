@@ -111,6 +111,22 @@
       "original_B_assumed_from_union": false,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/CFA3-DONOR-AGENTSCOPE-EMBABEL-SHGAF-BATCH-2026-10-06.json",
+      "original_source_sha": "879a173e4c2e342439e2d068563983d76c8e63e4",
+      "materialized_source_ids": 127,
+      "prior_registry_source_ids_matched": 127,
+      "missing_source_ids": 0,
+      "normalized_key_or_legacy_status_mismatches": 0,
+      "explicit_source_locators_in_delta": 48,
+      "explicit_source_locators_routed": 48,
+      "entries_without_direct_locator_in_delta": 79,
+      "locator_values_retained_in_full_historical_source_registry": true,
+      "source_delta_proof_kind": "HISTORICAL_ROLLING_BATCH_FINALIZER",
+      "legacy_source_pr_count": 9,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

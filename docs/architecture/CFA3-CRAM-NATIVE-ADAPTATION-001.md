@@ -69,3 +69,26 @@ Remaining blocker for **Rust verification**: access to a Rust toolchain. Remaini
 - `cargo test --workspace` remains **NOT_RUN** due unavailable local Rust toolchain; no GitHub CI on this branch yet. CPU unit tests are not physical Current Host PASS and do not validate model-level CrAM reproducibility.
 
 **Remaining work:** actual model-specific 2025 attention intervention with rights-compliant implementation and quantitative evaluation; 2026 adaptive-rank expert growth and real training/rollback with optional hardware adapters; full application/GUI authority bridge; Rust compilation/CI and physical-host gates. Work on disjoint CrAM files is independent of open parallel donor PR #7.
+
+## CRAM-04/05 additional CPU qualification code (2026-10-10)
+
+### CrAM 2025 — real bounded attention operation
+
+- `cfa3_cram/attention2025.py`: independently written, CPU-only PyTorch **scaled dot-product attention** operation applying token-level additive credibility log-bias. Explicitly requires 4-D `B,H,T,D` float32/float64 CPU tensors, matching Q/K/V shapes, finite inputs, bounded non-positive bias and unambiguous self-attention causal masking. No upstream 2025 code is copied and no model-hook injection is performed.
+- `tests/test_attention2025_cpu.py`: **8/8 actual local CPU PyTorch tests PASS**, including changed attention results, causal masking, strict input rejection and repeatability.
+- **Limits:** this is a restricted functional attention operator, **not** an automatically approved or model-qualified transformer integration; credibility values and source-to-token mappings must first be approved by existing CFA3 authorities. The upstream CrAM 2025 license is still unverified and no source-code admission occurs.
+
+### CRAM 2026 — bounded adaptive-rank expert training prototype
+
+- `cfa3_cram/training2026.py`: independently written CPU-only low-rank residual expert with explicitly scoped model/projection/expert IDs; rank proposal from a caller-supplied, finite bounded gap; isolated SGD training with a bounded step count, optional reference-delta orthogonality penalty, checkpoint revision checks and rollback of its **own parameters** on failures.
+- `tests/test_training2026_cpu.py`: **9/9 local Python/PyTorch CPU tests PASS**, including actual loss reduction on small synthetic data, unchanged previous expert tensors, checkpoint restoration, input validation and overflow rollback.
+- **Limits:** this is **not** the upstream multimodal CRAM 2026 training algorithm, dynamic expert admission, a complete continual instruction tuning model, or evidence of no catastrophic forgetting on production datasets. It is a qualified *building block* only. It has no authority to create or activate a production expert, select a model/provider, or publish a checkpoint.
+
+### Concrete local verification and GitHub readback
+
+- Test command `python3 -m unittest discover -s tests -v` run in an isolated directory containing the two above new test modules and their corresponding source modules: **17 tests run, 17 passed, 0 failures**; Python 3.13.5 and PyTorch 2.10.0+cpu.
+- Separate `python3 -m compileall -q cfa3_cram tests`: completed without Python syntax error.
+- GitHub independent readback verified the precise source bytes of all four new files by equality of `git hash-object` on the locally tested file and GitHub's corresponding blob SHA.
+- Feature branch last checked as a **disjoint development branch**; parallel donor PR #7 and documentation PR #8 are untouched. No extra CrAM PR opened and no writes to `main`.
+- Rust `cargo test --workspace` and GitHub CI: **NOT_RUN**; `cargo`/`rustc` unavailable in the local test environment and the existing CI triggers on PR or main, neither of which this staging branch uses.
+- Runtime rights/security/Model Router/HRB/Workload Mode/Temporal/Qt6 parent-consumer integration and physical Current Host evidence remain **PENDING**. The present tests are not runtime promotion or physical host PASS.

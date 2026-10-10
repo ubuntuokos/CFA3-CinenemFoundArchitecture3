@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from enum import Enum
 import hashlib
 import json
+import math
 import os
 import threading
 import time
@@ -52,6 +53,7 @@ class Request:
         if (type(self.cpu_threads) is not int or self.cpu_threads < 1
                 or type(self.mode) is not Mode or self.mode is Mode.NONE
                 or type(self.ttl_seconds) not in (float, int)
+                or not math.isfinite(self.ttl_seconds)
                 or not 0 < self.ttl_seconds <= 600):
             raise ValueError("bounded CPU request and explicit non-NONE mode required")
         if self.model_id is not None and (not isinstance(self.model_id, str)
@@ -108,6 +110,8 @@ class CpuResourceBroker:
 
     def acquire(self, threads: int) -> str:
         with self._lock:
+            if type(threads) is not int or threads < 1:
+                raise ValueError("CPU lease must request positive integer threads")
             if threads > self.total_threads - self._used:
                 raise FoundationDenied("HRB_CAPACITY_EXHAUSTED")
             lease = uuid.uuid4().hex
@@ -144,6 +148,8 @@ class WorkloadModeBroker:
 
     def acquire(self, mode: Mode) -> str:
         with self._lock:
+            if type(mode) is not Mode or mode == Mode.NONE:
+                raise FoundationDenied("INVALID_WORKLOAD_MODE")
             if self._active and any(m != mode for m in self._active.values()):
                 raise FoundationDenied("WORKLOAD_MODE_CONFLICT")
             token = uuid.uuid4().hex
@@ -221,7 +227,10 @@ class FoundationRuntime:
 
     def finish(self, session: Session):
         with self._lock:
-            self.validate(session)
+            # Cleanup must work even after TTL expiry, without restoring authority.
+            if (not isinstance(session, Session)
+                    or self._live.get(session.session_id) != session):
+                raise FoundationDenied("UNKNOWN_OR_CHANGED_SESSION")
             del self._live[session.session_id]
             self.hrb.release(session.hrb_lease)
             self.modes.release(session.mode_lease)
@@ -234,9 +243,9 @@ class FoundationRuntime:
         only. It cannot preempt hung user code or make physical PASS.
         """
         self.validate(session)
-        if not callable(operation):
-            raise FoundationDenied("INVALID_CFA3_TEST_OPERATION")
         try:
+            if not callable(operation):
+                raise FoundationDenied("INVALID_CFA3_TEST_OPERATION")
             result = operation()
             return {"result": "REFERENCE_COMPLETED", "value": result,
                     "physical_current_host_pass": False}

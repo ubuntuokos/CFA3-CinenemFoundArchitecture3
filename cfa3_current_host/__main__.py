@@ -26,7 +26,8 @@ def _jsonable(value):
     return value
 
 
-def plan_file(path, changed, trigger):
+def load_graph_file(path):
+    """Load only explicit CFA3-owned or external graph nodes and real edges."""
     source = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(source, dict) or set(source) != {"components", "handoffs"}:
         raise ValueError("graph JSON requires components and handoffs")
@@ -43,6 +44,11 @@ def plan_file(path, changed, trigger):
         ))
     for item in source["handoffs"]:
         graph.register_handoff(Handoff(**item))
+    return graph
+
+
+def plan_file(path, changed, trigger):
+    graph = load_graph_file(path)
     from .core import FULL_TRIGGERS
     if trigger not in ("CODE", "INTERFACE", "HOST_CONNECTOR", *sorted(FULL_TRIGGERS)):
         raise ValueError("unrecognized change trigger")
@@ -82,6 +88,8 @@ def main(argv=None):
     t.add_argument("--output", default=None)
     cc = commands.add_parser("catalog-check", help="check 200 CFA3 capabilities without physical PASS")
     cc.add_argument("--catalog", required=True)
+    cc.add_argument("--graph", required=True,
+                    help="actual component graph required for 200-capability verification")
     gg = commands.add_parser("gui", help="open actual Qt6 Current Host dashboard; never claims physical PASS")
     gg.add_argument("--graph", required=True)
     gg.add_argument("--changed", nargs="+", required=True)
@@ -121,7 +129,9 @@ def main(argv=None):
         return standalone(actual_plan, workload_mode="UNKNOWN")
     elif args.command == "catalog-check":
         from .capability_catalog import load_capability_catalog
-        result = load_capability_catalog(Path(args.catalog)).reconciliation()
+        registry = load_capability_catalog(Path(args.catalog))
+        result = registry.reconcile_graph(load_graph_file(args.graph),
+                                          global_scope=True)
     elif args.command == "selftest":
         from .local_runner import run_cfa3_owned_reference_tests
         result = run_cfa3_owned_reference_tests(Path(args.repo))

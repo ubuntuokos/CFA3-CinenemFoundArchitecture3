@@ -91,3 +91,37 @@ jobs:
           cargo test --workspace
       - name: Separate developer and end-user requirements
         run: echo "Cargo/Rust is required for building, not for running a packaged CFA3 GUI"
+
+  wheel-install-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build a clean portable-runtime wheel
+        run: |
+          python -m pip wheel --no-deps --wheel-dir "$RUNNER_TEMP/cfa3-wheels" .
+          python -m pip install --no-deps --force-reinstall "$RUNNER_TEMP"/cfa3-wheels/*.whl
+      - name: Verify console entrypoint from outside repository checkout
+        run: |
+          cd "$RUNNER_TEMP"
+          cfa3-runtime developer-tools
+          python - <<'PY'
+          from importlib.metadata import distribution
+          import json
+          import subprocess
+          from cfa3_runtime.qt6_environment import inspect_developer_tools
+          pkg = distribution("cfa3-portable-qt6-runtime")
+          console = [e for e in pkg.entry_points
+                     if e.group == "console_scripts" and e.name == "cfa3-runtime"]
+          assert len(console) == 1, console
+          report = inspect_developer_tools()
+          assert report["dev_env_ready"] is False
+          assert report["end_user_runtime_requires_cargo_or_rustc"] is False
+          print("Packaged CLI and dev/runtime separation verified; no physical PASS.")
+          PY
+      - name: Never advertise a wheel reference as packaged CFA3 distribution
+        if: always()
+        run: echo "This is a development wheel, not a signed CFA3 installer or physical GUI PASS"

@@ -6,6 +6,7 @@ sandbox authority must approve before enabling; absent authorities fail closed.
 """
 from __future__ import annotations
 
+import functools
 import hashlib
 import io
 import json
@@ -13,6 +14,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
+import threading
 import tempfile
 from dataclasses import dataclass
 from enum import Enum
@@ -150,6 +152,16 @@ class ExternalSandboxAuthority(Protocol):
     def verify_runtime_isolation(self, inspection: Inspection, package_path: Path) -> bool: ...
 
 
+def _locked_transition(operation):
+    @functools.wraps(operation)
+    def invoke(self, *args, **kwargs):
+        # Every state/activation mutation must be linearizable. In particular,
+        # an in-flight sandbox admission must not override a quarantine.
+        with self._lock:
+            return operation(self, *args, **kwargs)
+    return invoke
+
+
 class Registry:
     """Content-addressed, non-executing plugin package manager.
 
@@ -159,10 +171,12 @@ class Registry:
 
     def __init__(self, storage_root: Path):
         self.root = Path(storage_root)
+        self._lock = threading.RLock()
         self._records: dict[tuple[str, str], Inspection] = {}
         self._states: dict[tuple[str, str], State] = {}
         self._active: dict[str, tuple[str, str]] = {}
 
+    @_locked_transition
     def inspect(self, bundle: bytes) -> Inspection:
         report = inspect_package(bundle)
         key = (report.manifest.plugin_id, report.manifest.version)
@@ -177,9 +191,11 @@ class Registry:
         self._states[key] = State.INSPECTED
         return report
 
+    @_locked_transition
     def state(self, plugin_id: str, version: str) -> State:
         return self._states.get((plugin_id, version), State.DISCOVERED)
 
+    @_locked_transition
     def admit(self, plugin_id: str, version: str,
               authority: ExternalAdmissionAuthority | None = None):
         key = (plugin_id, version)
@@ -193,6 +209,7 @@ class Registry:
         # Path controlled entirely by SHA-256 digest, not by arbitrary names.
         return self.root / (inspection.bundle_digest[7:] + ".cfa3-plugin")
 
+    @_locked_transition
     def install(self, plugin_id: str, version: str, bundle: bytes) -> Path:
         key = (plugin_id, version)
         if self._states.get(key) != State.ADMITTED:
@@ -220,6 +237,7 @@ class Registry:
         self._states[key] = State.INSTALLED
         return destination
 
+    @_locked_transition
     def enable(self, plugin_id: str, version: str,
                sandbox: ExternalSandboxAuthority | None = None):
         key = (plugin_id, version)
@@ -236,6 +254,7 @@ class Registry:
         self._states[key] = State.ENABLED
         self._active[plugin_id] = key
 
+    @_locked_transition
     def disable(self, plugin_id: str, version: str):
         key = (plugin_id, version)
         if self._states.get(key) != State.ENABLED:
@@ -243,6 +262,7 @@ class Registry:
         self._states[key] = State.DISABLED
         self._active.pop(plugin_id, None)
 
+    @_locked_transition
     def quarantine(self, plugin_id: str, version: str):
         key = (plugin_id, version)
         if key not in self._records:
@@ -250,6 +270,7 @@ class Registry:
         self._active.pop(plugin_id, None)
         self._states[key] = State.QUARANTINED
 
+    @_locked_transition
     def remove(self, plugin_id: str, version: str):
         key = (plugin_id, version)
         if self._states.get(key) == State.ENABLED:
@@ -260,6 +281,7 @@ class Registry:
             self._storage_path(self._records[key]).unlink(missing_ok=True)
         self._states[key] = State.REMOVED
 
+    @_locked_transition
     def affected_consumers(self, plugin_id: str, version: str, available_apps: frozenset[str]):
         """Return only explicitly declared, existing application consumers."""
         report = self._records.get((plugin_id, version))

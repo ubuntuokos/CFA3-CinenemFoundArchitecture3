@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from source_lifecycle import normalize_url
 
 def evaluate(raw_links, known_aliases, *, frozen_l1_b, level, previous_gate,
-             index_complete):
+             index_complete, parent_levels=None):
     """Filter ordered {url,parent_id,evidence} links against complete known aliases.
 
     Identical novel normalized locators count only once. Identity beyond known
@@ -24,6 +24,17 @@ def evaluate(raw_links, known_aliases, *, frozen_l1_b, level, previous_gate,
         return {"state":"BLOCKED_PREVIOUS_LEVEL_UNVERIFIED","new_sources":[]}
     if index_complete is not True:
         return {"state":"BLOCKED_INDEX_INCOMPLETE","new_sources":[]}
+    # A child cannot exist at L2-L5 without a verified parent on the immediately
+    # preceding published global level. Missing parents never create new L1 roots.
+    if not isinstance(parent_levels, dict):
+        return {"state":"BLOCKED_PARENT_LEVEL_UNVERIFIED","new_sources":[]}
+    for record in raw_links:
+        if not isinstance(record, dict) or not record.get("parent_id") or not record.get("evidence"):
+            raise ValueError("Every discovered link requires a parent and evidence")
+        p_level = parent_levels.get(record["parent_id"])
+        if type(p_level) is not int or p_level != level - 1:
+            return {"state":"BLOCKED_PARENT_LEVEL_UNVERIFIED","new_sources":[],
+                    "parent_id":record["parent_id"],"required_parent_level":level - 1}
     # `level` is the destination level of links discovered from the prior level.
     # L4 -> L5 is allowed; L5 -> L6 is rejected by the 2..5 bound above.
     canonical = {}

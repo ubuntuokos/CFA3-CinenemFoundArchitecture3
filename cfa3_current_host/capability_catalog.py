@@ -134,11 +134,24 @@ class CapabilityCatalog:
                 "registered": self.registered, "mapped": len(observed),
                 "errors": tuple(mismatches), "physical_current_host_pass": False,
             }
+        if not observed:
+            return {
+                "status": "BLOCKED_EMPTY_CFA3_COMPONENT_SCOPE",
+                "registered": self.registered, "mapped": 0,
+                "physical_current_host_pass": False,
+            }
         if self.registered != CAPABILITY_TARGET:
             return {
                 "status": "BLOCKED_INCOMPLETE_200_CAPABILITY_CATALOG",
                 "registered": self.registered, "mapped": len(observed),
                 "missing": max(0, CAPABILITY_TARGET - self.registered),
+                "physical_current_host_pass": False,
+            }
+        if not global_scope:
+            return {
+                "status": "SCOPED_GRAPH_BINDINGS_VERIFIED_PENDING_GLOBAL_RECONCILIATION",
+                "registered": self.registered, "mapped": len(observed),
+                "minimum_scoped_obligations": len(observed) * len(CASES),
                 "physical_current_host_pass": False,
             }
         return {

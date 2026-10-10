@@ -93,3 +93,93 @@ jobs:
       - name: Never promote hosted GUI reference to physical PASS
         if: always()
         run: echo "Qt6 offscreen widget reference is not standalone/parent physical Current Host PASS"
+
+  real-bubblewrap-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install Linux namespace isolation tool
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends bubblewrap
+          command -v bwrap
+      - name: Execute admitted-test-fixture plugin inside real Linux bubblewrap
+        run: |
+          python - <<'PY'
+          import io
+          import json
+          import tempfile
+          from pathlib import Path
+          from zipfile import ZipFile
+          from cfa3_current_host.plugin_fabric import Registry, State
+          from cfa3_current_host.plugin_sandbox import execute_plugin_cpu
+          from cfa3_current_host.foundation_runtime import (
+              CpuResourceBroker, FoundationRuntime, Mode, ModelRouter,
+              Request, RightsAuthority, SecurityAuthority, WorkloadModeBroker,
+          )
+
+          class ReferenceRightsOnly:
+              def verify_plugin_admission(self, report):
+                  return True
+          class ReferenceSandboxOnly:
+              def verify_runtime_isolation(self, report, package):
+                  return package.is_file()
+
+          publisher = "CFA3 CI reference fixture only"
+          manifest = {
+              "plugin_id": "com.cfa3.ci-isolation", "version": "1.0.0",
+              "publisher": publisher, "license": "MIT", "api": "cfa3-plugin/v1",
+              "apps": ["cfa3.video"], "capabilities": [],
+              "permissions": ["plugin.run"], "dependencies": [], "gui": False,
+          }
+          source = io.BytesIO()
+          with ZipFile(source, "w") as archive:
+              archive.writestr("manifest.json", json.dumps(manifest))
+              archive.writestr(
+                  "plugin/main.py",
+                  'import os\nassert not os.path.exists("/etc/passwd")\nprint("CFA3_REAL_BWRAP_REFERENCE")\n',
+              )
+          with tempfile.TemporaryDirectory(prefix="cfa3-bwrap-reference-") as temporary:
+              registry = Registry(Path(temporary))
+              report = registry.inspect(source.getvalue())
+              registry.admit(manifest["plugin_id"], manifest["version"], ReferenceRightsOnly())
+              registry.install(manifest["plugin_id"], manifest["version"], source.getvalue())
+              registry.enable(manifest["plugin_id"], manifest["version"], ReferenceSandboxOnly())
+              foundation = FoundationRuntime(
+                  security=SecurityAuthority([(
+                      publisher, "cfa3.plugin-host", "plugin.execute",
+                      "cfa3.community-plugin.run"
+                  )]),
+                  rights=RightsAuthority([report.bundle_digest]),
+                  model_router=ModelRouter(),
+                  hrb=CpuResourceBroker(1),
+                  modes=WorkloadModeBroker(),
+              )
+              session = foundation.start(Request(
+                  actor=publisher, component="cfa3.plugin-host",
+                  operation="plugin.execute", capability="cfa3.community-plugin.run",
+                  artifact_digest=report.bundle_digest, cpu_threads=1,
+                  mode=Mode.INTERACTIVE, ttl_seconds=30,
+              ))
+              observed = execute_plugin_cpu(
+                  registry, manifest["plugin_id"], manifest["version"],
+                  foundation=foundation, session=session,
+                  entrypoint="plugin/main.py", timeout_seconds=10,
+              )
+              assert observed["status"] == "ISOLATED_EXECUTION_OBSERVED", observed
+              assert observed["stdout"].strip() == "CFA3_REAL_BWRAP_REFERENCE", observed
+              assert observed["physical_current_host_pass"] is False
+              assert foundation.hrb.allocated == 0
+              assert foundation.modes.indicator == "NONE"
+              registry.disable(manifest["plugin_id"], manifest["version"])
+              registry.remove(manifest["plugin_id"], manifest["version"])
+              assert registry.state(manifest["plugin_id"], manifest["version"]) == State.REMOVED
+              print("Real bubblewrap reference execution observed; physical acceptance PENDING.")
+          PY
+      - name: Hosted sandbox is not production certification
+        if: always()
+        run: echo "The Linux sandbox CI fixture does not verify a real user's physical Current Host."

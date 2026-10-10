@@ -165,6 +165,18 @@ For Linux desktops, portability through standard Linux/XDG interfaces is the des
 
 Each Windows or Android application must have its own platform support definition, installable package, supported feature matrix, native UI/interaction adaptations and relevant compatibility, security and GUI tests. Reduced or unavailable features must be made explicit. **Only tested releases may be described as available.**
 
+
+### RHEL AI & Systems Fabric — Generic Linux-first (planned)
+
+**CFA3 Systems Fabric** is a planned, modular Linux host-management and AI-infrastructure integration layer. **Generic Linux is the development target; Kubuntu is the primary development and testing environment**, not a mandatory runtime dependency. Debian, Fedora, openSUSE, RHEL and headless Linux remain validation targets rather than certified distributions.
+
+Optional RHEL adapters will connect **Red Hat AI Inference, Podman, SELinux, Ansible, bootc and OpenShift AI** to CFA3's existing Model Router, Host Resource Broker, Workload Mode Framework and security authorities. CPU-only operation and functionality without Red Hat subscriptions must remain available.
+
+<p align="center">
+  <img src="docs/assets/readme/cfa3-systems-fabric-gui.webp" alt="CFA3 Systems Fabric — planned Generic Linux and RHEL AI management dashboard" width="100%">
+  <br><sub>Systems Fabric interface concept, not a screenshot of implemented software. All depicted status values, distribution support indicators and Current Host PASS/VERIFIED labels are illustrative, not test evidence.</sub>
+</p>
+
 ---
 
 # Hardware and compute portability

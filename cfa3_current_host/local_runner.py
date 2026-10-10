@@ -15,6 +15,10 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
+from .foundation_runtime import (
+    CpuResourceBroker, FoundationRuntime, Mode, ModelRouter, Request,
+    RightsAuthority, SecurityAuthority, WorkloadModeBroker,
+)
 
 
 class LocalTestError(ValueError):
@@ -61,15 +65,40 @@ def run_cfa3_owned_reference_tests(repo_root: Path) -> dict:
         commit = None
     if not commit or len(commit) != 40 or not all(c in "0123456789abcdef" for c in commit):
         commit = "UNVERIFIED_CHECKOUT"
-    python_suite = _run([
-        sys.executable, "-m", "unittest", "discover", "-s", "tests",
-        "-p", "test_current_host*.py", "-v",
-    ], root)
-    cargo = shutil.which("cargo")
-    rust_suite = (_run([cargo, "test", "--package", "cfa3-current-host"],
-                       root, timeout=240) if cargo else
-                  {"result": "NOT_RUN_MISSING_CARGO", "returncode": None,
-                   "transcript_tail": "Rust verification pending (cargo not installed)"})
+    # The test runner itself operates under the locally enforced CPU
+    # Foundation mode/HRB/security/rights lease. These are explicit *reference*
+    # grants for CFA3-owned source, NOT production rights or physical PASS.
+    digest = "sha256:" + hashlib.sha256(
+        (root / "cfa3_current_host/core.py").read_bytes()
+    ).hexdigest()
+    foundation = FoundationRuntime(
+        security=SecurityAuthority([
+            ("current-host-selftest", "cfa3-current-host", "run", "cfa3.current-host"),
+        ]),
+        rights=RightsAuthority([digest]),
+        model_router=ModelRouter(),
+        hrb=CpuResourceBroker(1),
+        modes=WorkloadModeBroker(),
+    )
+    session = foundation.start(Request(
+        actor="current-host-selftest", component="cfa3-current-host",
+        operation="run", capability="cfa3.current-host",
+        artifact_digest=digest, cpu_threads=1, mode=Mode.INTERACTIVE,
+        ttl_seconds=600,
+    ))
+    active_mode = foundation.modes.indicator
+    try:
+        python_suite = _run([
+            sys.executable, "-m", "unittest", "discover", "-s", "tests",
+            "-p", "test_current_host*.py", "-v",
+        ], root)
+        cargo = shutil.which("cargo")
+        rust_suite = (_run([cargo, "test", "--package", "cfa3-current-host"],
+                           root, timeout=240) if cargo else
+                      {"result": "NOT_RUN_MISSING_CARGO", "returncode": None,
+                       "transcript_tail": "Rust verification pending (cargo not installed)"})
+    finally:
+        foundation.finish(session)
     # Deliberately no driver scanning, GPU probing or third-party binary runs.
     environment = {
         "system": platform.system(),
@@ -88,6 +117,12 @@ def run_cfa3_owned_reference_tests(repo_root: Path) -> dict:
         "source_revision": commit,
         "environment_digest": "sha256:" + hashlib.sha256(digest_input).hexdigest(),
         "environment": environment,
+        "local_foundation": {
+            "mode_during_tests": active_mode,
+            "mode_after_release": foundation.modes.indicator,
+            "cpu_threads_after_release": foundation.hrb.allocated,
+            "authority": "LOCAL_REFERENCE_ONLY",
+        },
         "python_tests": python_suite,
         "rust_tests": rust_suite,
         "evidence_status": "REFERENCE_ONLY_PENDING_EXTERNAL_AUTHORITY",

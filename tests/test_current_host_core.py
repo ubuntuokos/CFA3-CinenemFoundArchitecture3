@@ -3,7 +3,7 @@ import unittest
 
 from cfa3_current_host.core import (
     Component, ContractError, ExternalEvidenceVerifier, Graph, Handoff,
-    Level, Mode, Ownership, Proof, TestKind, assess_for_external_admission,
+    Level, Mode, Ownership, Plan, Obligation, Proof, TestKind, assess_for_external_admission,
 )
 
 
@@ -166,6 +166,43 @@ class CurrentHostPlanningTests(unittest.TestCase):
         )
         self.assertEqual(assess_for_external_admission(plan, self.g, claims)["status"],
                          "BLOCKED_UNQUALIFIED_PROOF")
+
+    def test_evidence_cannot_hide_missing_rollback_in_forged_plan(self):
+        legitimate = self.g.plan(["audio"])
+        bypass = Plan(legitimate.mode, legitimate.changed, legitimate.affected,
+                      legitimate.obligations[:1], legitimate.reason)
+        reports = (Proof(bypass.obligations[0], "r1", "host", "digest", "receipt", True, "PASS"),)
+        result = assess_for_external_admission(bypass, self.g, reports)
+        self.assertEqual(result["status"], "BLOCKED_NONCANONICAL_PLAN")
+        self.assertFalse(result["authority_pass"])
+
+    def test_evidence_cannot_claim_none_for_owned_change(self):
+        forged = Plan(Mode.NONE, ("audio",), (), (),
+                      "EXTERNAL_PRODUCT_OUTSIDE_CFA3_SCOPE")
+        result = assess_for_external_admission(forged, self.g, ())
+        self.assertEqual(result["status"], "BLOCKED_NONCANONICAL_PLAN")
+
+    def test_none_scope_rejects_unrequested_proofs(self):
+        plan = self.g.plan(["external-driver"])
+        extra = Proof(Obligation(Level.LAYER, "audio", TestKind.POSITIVE),
+                      "r1", "fake", "digest", "receipt", True, "PASS")
+        self.assertEqual(assess_for_external_admission(plan, self.g, (extra,))["status"],
+                         "BLOCKED_PROOFS_FOR_NONE_SCOPE")
+
+    def test_evidence_rejects_extraneous_component(self):
+        plan = self.g.plan(["audio"])
+        extra = Proof(Obligation(Level.FOUNDATION, "foundation", TestKind.POSITIVE),
+                      "r1", "host", "digest", "receipt", True, "PASS")
+        result = assess_for_external_admission(plan, self.g, (extra,))
+        self.assertEqual(result["status"], "BLOCKED_EXTRA_OR_UNKNOWN_PROOF")
+        self.assertFalse(result["authority_pass"])
+
+    def test_forged_unknown_scope_cannot_claim_physical_proof(self):
+        correct = self.g.plan(["audio"])
+        forged = Plan(Mode.SCOPED, ("missing",), correct.affected,
+                      correct.obligations, "REAL_EDGE_IMPACT")
+        result = assess_for_external_admission(forged, self.g, ())
+        self.assertEqual(result["status"], "BLOCKED_NONCANONICAL_PLAN")
 
     def test_duplicate_evidence_record_rejected(self):
         plan = self.g.plan(["audio"])

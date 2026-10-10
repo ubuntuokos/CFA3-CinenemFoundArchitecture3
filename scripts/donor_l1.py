@@ -21,6 +21,7 @@ SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURC
 ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
 TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
 SHGAF_SOURCE = ARCH / "CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json"
+CAST_SOURCE = ARCH / "FA3-DONOR-CAST-CHROMECAST-ORCHESTRATOR-2026-09-29.json"
 OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
 PR_OWNER_TRANSFER = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
@@ -434,6 +435,41 @@ def register_shgaf_original_urls(db):
     return len(bindings)
 
 
+
+def register_cast_original_urls(db):
+    """Preserve original CAST/Chromecast/Orchestrator filtered topic URLs."""
+    if sha_blob(CAST_SOURCE.read_bytes()) != "81d5890e38d70573f6a9a00f77ff14ed467cb59c":
+        raise ValueError("CAST historical source evidence changed")
+    delta = json_read(CAST_SOURCE)
+    if (delta.get("delta_id") != "FA3-DONOR-CAST-CHROMECAST-ORCHESTRATOR-2026-09-29"
+            or delta.get("source_count") != 9
+            or delta.get("unique_source_key_count") != 8
+            or len(delta.get("sources", [])) != 8):
+        raise ValueError("CAST donor source schema or identity count mismatch")
+    bindings = {}
+    for record in delta["sources"]:
+        sid = record["donor_id"]
+        stored = db.execute(
+            "SELECT normalized_key,historical_status,current_status FROM sources "
+            "WHERE source_id=?", (sid,)).fetchone()
+        if (stored != (record["normalized_source_key"], "CANDIDATE", "CANDIDATE")
+                or record["lifecycle_status"] != "CANDIDATE"
+                or record["source_code_copy_allowed"] is not False):
+            raise ValueError("CAST historical candidate identity or status mismatch: " + sid)
+        for url in record["urls"]:
+            if url in bindings and bindings[url] != sid:
+                raise ValueError("Conflicting CAST historical source URL: " + url)
+            bindings[url] = sid
+    if len(bindings) != 9:
+        raise ValueError("CAST historical source URL coverage mismatch")
+    for url, sid in bindings.items():
+        db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (url, sid))
+        db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                   (sid, url, "HISTORICAL_CAST_CHROMECAST_20260929",
+                    "HISTORICAL_SOURCE_DELTA"))
+    return len(bindings)
+
+
 def build_url_resolution(db):
     """Deterministic exact-URL lookup; never collapse multiple historical IDs.
 
@@ -568,6 +604,7 @@ def prepare(db, sources, run_id):
     register_owner_message_urls(db)
     register_historical_pr_owner_urls(db)
     register_shgaf_original_urls(db)
+    register_cast_original_urls(db)
     build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
@@ -589,6 +626,7 @@ def prepare(db, sources, run_id):
         ("additional_owner_approved_transfer_sources","4"),
         ("historical_tripo_original_occurrences","48"),
         ("historical_shgaf_submitted_urls","20"),
+        ("historical_cast_submitted_url_views","9"),
         ("historical_tripo_distinct_urls","46"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),

@@ -83,7 +83,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(entry["new_staging_status"],matched[0]["status"])
             with sqlite3.connect(dbpath) as db:
                 self.assertEqual(db.execute("SELECT count(*) FROM sources").fetchone()[0],1981)
-                self.assertEqual(db.execute("SELECT count(*) FROM url_resolution").fetchone()[0],3943)
+                self.assertEqual(db.execute("SELECT count(*) FROM url_resolution").fetchone()[0],3945)
                 self.assertEqual(db.execute("SELECT value FROM metadata WHERE key='publication_gate'").fetchone()[0],"PENDING")
 
     def test_five_owner_url_resolutions_preserve_all_original_identities(self):
@@ -144,7 +144,45 @@ class DonorL1IndexTests(unittest.TestCase):
                         (donor_id, url)).fetchone()
                     self.assertIsNotNone(provenance)
                 self.assertEqual(db.execute(
-                    "SELECT count(*) FROM url_resolution").fetchone()[0], 3943)
+                    "SELECT count(*) FROM url_resolution").fetchone()[0], 3945)
+
+    def test_historical_cast_filtered_topic_views_are_directly_searchable(self):
+        delta_path = ROOT / "archive/donor-source-migration/2026-10-09/FA3-DONOR-CAST-CHROMECAST-ORCHESTRATOR-2026-09-29.json"
+        delta = json.loads(delta_path.read_text(encoding="utf-8"))
+        self.assertEqual(delta["source_count"], 9)
+        self.assertEqual(len(delta["sources"]), 8)
+        bindings = {}
+        for entry in delta["sources"]:
+            self.assertEqual(entry["lifecycle_status"], "CANDIDATE")
+            for url in entry["urls"]:
+                self.assertEqual(bindings.get(url, entry["donor_id"]), entry["donor_id"])
+                bindings[url] = entry["donor_id"]
+        self.assertEqual(len(bindings), 9)
+        restored = {
+            "https://github.com/topics/chromecast?l=html&o=asc&s=forks": "FA3-DONOR-TOPICS-CHROMECAST-001",
+            "https://github.com/topics/orchestrator?l=powershell&o=desc&s=updated": "FA3-DONOR-TOPICS-ORCHESTRATOR-001",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath = Path(tmp) / "cast-original-urls.sqlite"
+            donor_l1.stage(dbpath, "cast-original-urls-readback")
+            with sqlite3.connect(dbpath) as db:
+                for url, sid in bindings.items():
+                    self.assertEqual(db.execute(
+                        "SELECT preferred_source_id FROM url_resolution WHERE alias=?",
+                        (url,)).fetchone(), (sid,))
+                    self.assertIsNotNone(db.execute(
+                        "SELECT 1 FROM source_provenance WHERE source_id=? AND original_url=? "
+                        "AND source_set='HISTORICAL_CAST_CHROMECAST_20260929'",
+                        (sid, url)).fetchone())
+                    self.assertEqual(donor_l1.lookup(dbpath, url, "url")[0]["status"], "CANDIDATE")
+                for url, sid in restored.items():
+                    self.assertEqual(db.execute(
+                        "SELECT preferred_source_id,authority FROM url_resolution WHERE alias=?",
+                        (url,)).fetchone(), (sid, "SINGLE_DISCOVERY_REFERENCE"))
+                self.assertEqual(db.execute(
+                    "SELECT value FROM metadata WHERE key='historical_cast_submitted_url_views'"
+                ).fetchone(), ("9",))
+                self.assertEqual(db.execute("SELECT count(*) FROM url_resolution").fetchone()[0], 3945)
 
     def test_direct_url_routing_exactly_matches_sqlite_and_preserves_all_relations(self):
         routing_path=ROOT/"canonical/registries/CFA3-DONOR-L1-URL-ROUTING-20261010.json"
@@ -153,12 +191,12 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertFalse(routing["canonical_level_published"])
         self.assertIsNone(routing["original_L1_B"])
         self.assertEqual(routing["source_count"],1981)
-        self.assertEqual(routing["alias_count"],3943)
+        self.assertEqual(routing["alias_count"],3945)
         self.assertEqual(routing["multiple_related_identity_url_count"],5)
         self.assertEqual(routing["owner_baseline_original_urls"],445)
         self.assertEqual(routing["tripo_original_url_occurrences"],48)
-        self.assertEqual(len(routing["entries"]),3943)
-        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3943)
+        self.assertEqual(len(routing["entries"]),3945)
+        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3945)
         with tempfile.TemporaryDirectory() as tmp:
             dbpath=Path(tmp)/"url-routing-readback.sqlite"
             donor_l1.stage(dbpath,"url-routing-readback")
@@ -166,7 +204,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 database_rows={a:(id_,authority,json.loads(ids)) for a,id_,authority,ids in db.execute(
                     "SELECT alias,preferred_source_id,authority,related_source_ids_json "
                     "FROM url_resolution ORDER BY alias")}
-            self.assertEqual(len(database_rows),3943)
+            self.assertEqual(len(database_rows),3945)
             for row in routing["entries"]:
                 self.assertEqual(database_rows[row["alias"]],
                                  (row["preferred_source_id"],row["authority"],row["related_source_ids"]))

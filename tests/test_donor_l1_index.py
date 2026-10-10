@@ -127,7 +127,7 @@ class DonorL1IndexTests(unittest.TestCase):
         bindings = {}
         for entry in delta["canonical_identities"]:
             for url in [entry["source"], *entry.get("submitted_views", [])]:
-                self.assertNotIn(url, bindings)
+                self.assertEqual(bindings.get(url, entry["donor_id"]), entry["donor_id"])
                 bindings[url] = entry["donor_id"]
         self.assertEqual(set(bindings), set(delta["submitted_urls"]))
         with tempfile.TemporaryDirectory() as tmp:

@@ -1,0 +1,45 @@
+# Hosted CI is only a reproducible *reference* check.
+# Never claim this run as CFA3 physical Current Host or Foundation PASS.
+name: CFA3 Current Host reference checks
+on:
+  push:
+    branches:
+      - feat/current-host-plugin-fabric-20261010
+    paths:
+      - 'cfa3_current_host/**'
+      - 'crates/cfa3-current-host/**'
+      - 'tests/test_current_host*.py'
+      - '.github/workflows/current-host-reference.yml'
+      - 'Cargo.toml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cfa3-current-host-reference-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  python-current-host:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify source syntax
+        run: python -m compileall -q cfa3_current_host tests
+      - name: Test CFA3-owned Current Host and community plugin interfaces
+        run: python -m unittest discover -s tests -p 'test_current_host*.py' -v
+      - name: Reference evidence boundary
+        if: always()
+        run: echo "Hosted CI result is not physical Current Host PASS"
+  rust-current-host:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify native CFA3 Current Host crate
+        run: cargo test --package cfa3-current-host
+      - name: Reference evidence boundary
+        if: always()
+        run: echo "Rust reference tests do not issue Current Host physical PASS"

@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 import sys
 
+from donor_delta_routes import delta_aliases
+
 REGISTRY = Path(__file__).resolve().parents[1] / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
 
 
@@ -32,13 +34,17 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
     if donor_id is None:
         position = data["lookup_by_locator"].get(original_url)
         if position is None:
-            return None
-        if type(position) is not int or not 0 <= position < len(data["locator_routes"]):
-            raise ValueError("Corrupted locator route index")
-        route = data["locator_routes"][position]
-        if route["alias"] != original_url or route["preferred_source_id"] not in route["related_source_ids"]:
-            raise ValueError("Inconsistent locator route")
-        donor_id = route["preferred_source_id"]
+            # Preserve original delta URL variants without introducing donor IDs.
+            donor_id = delta_aliases(data["records"]).get(original_url)
+            if donor_id is None:
+                return None
+        else:
+            if type(position) is not int or not 0 <= position < len(data["locator_routes"]):
+                raise ValueError("Corrupted locator route index")
+            route = data["locator_routes"][position]
+            if route["alias"] != original_url or route["preferred_source_id"] not in route["related_source_ids"]:
+                raise ValueError("Inconsistent locator route")
+            donor_id = route["preferred_source_id"]
     position = data["lookup_by_id"].get(donor_id)
     if position is None:
         return None
@@ -51,7 +57,8 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
             or envelope.get("runtime_admission") is not False
             or STATES.get(envelope.get("pre_transfer_status")) != envelope.get("reference_state")
             or record.get("donor_registration") != envelope.get("reference_state")
-            or (original_url is not None and original_url not in envelope["aliases"])):
+            or (original_url is not None and original_url not in envelope["aliases"]
+                and delta_aliases(data["records"]).get(original_url) != donor_id)):
         raise ValueError("Inconsistent donor identity or alias")
     if any(record.get(k) is not False for k in
            ("runtime_admission", "code_copy_authorized", "license_authorized", "model_provider_admission")):

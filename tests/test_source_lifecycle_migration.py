@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_source_lifecycle_index import build, OUTPUT
 from source_lifecycle import evaluate, validate_index, resolve_migrated_url
+from donor_delta_routes import delta_aliases
 
 
 class LifecycleMigrationTests(unittest.TestCase):
@@ -37,6 +38,15 @@ class LifecycleMigrationTests(unittest.TestCase):
         for route in project_routes[:10]:
             result = evaluate(route["alias"], self.index)
             self.assertEqual(result["source_id"], route["preferred_source_id"])
+            self.assertEqual(result["disposition"], "CHANGE_CHECK_REQUIRED")
+            self.assertFalse(result["automatic_donor_registration"])
+
+    def test_original_odbc_delta_urls_resolve_via_public_lifecycle_gate(self):
+        aliases = delta_aliases(self.index["source_records"])
+        self.assertEqual(len(aliases), 56)
+        for url, sid in aliases.items():
+            result = evaluate(url, self.index)
+            self.assertEqual(result["source_id"], sid)
             self.assertEqual(result["disposition"], "CHANGE_CHECK_REQUIRED")
             self.assertFalse(result["automatic_donor_registration"])
 

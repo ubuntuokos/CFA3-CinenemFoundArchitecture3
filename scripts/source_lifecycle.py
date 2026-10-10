@@ -7,6 +7,8 @@ import pathlib
 import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from donor_delta_routes import delta_aliases
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_INDEX = ROOT / "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json"
 TRACKING = {"fbclid", "gclid", "mc_cid", "mc_eid"}
@@ -104,6 +106,11 @@ def validate_migrated_index(index):
         exact[alias] = preferred
     if any(r["canonical_url"] not in exact for r in records):
         raise ValueError("Historical source locator is not routed")
+    if index.get("active_reference_snapshot") == "CFA3-DONOR-TRANSFER-SNAPSHOT-001":
+        for alias, sid in delta_aliases(records).items():
+            if alias in exact and exact[alias] != sid:
+                raise ValueError("Historical delta URL conflicts with canonical locator route")
+            exact[alias] = sid
     return exact
 
 def resolve_migrated_url(url, exact):

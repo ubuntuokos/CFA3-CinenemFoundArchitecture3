@@ -8,6 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from donor_reference_lookup import lookup_snapshot
+from donor_delta_routes import archived_delta, delta_aliases
 from transfer_donors import OUTPUT, build, digest
 
 
@@ -37,6 +38,19 @@ class DonorTransferTests(unittest.TestCase):
                              self.by_id[route["preferred_source_id"]]["reference_record"])
             self.assertTrue(set(route["related_source_ids"]) <= self.by_id.keys())
         self.assertEqual(len(self.snapshot["locator_routes"]), 3946)
+
+    def test_all_56_original_odbc_delta_urls_have_exact_donor_routes(self):
+        evidence = archived_delta()
+        self.assertEqual(evidence["source_count"], 56)
+        aliases = delta_aliases(self.snapshot["records"])
+        self.assertEqual(len(aliases), 56)
+        self.assertEqual(aliases["https://github.com/lurcher/unixODBC"],
+                         "FA3-DONOR-LURCHER-UNIXODBC-001")
+        self.assertEqual(aliases["https://github.com/topics/mp4-files?l=go&o=asc&s=forks"],
+                         "FA3-DONOR-MP4-FILES-CS-TOPIC-001")
+        for url, sid in aliases.items():
+            self.assertEqual(lookup_snapshot(self.snapshot, original_url=url),
+                             lookup_snapshot(self.snapshot, donor_id=sid))
 
     def test_existing_81_donor_views_are_unchanged(self):
         prior = json.loads((ROOT / "canonical/registries/CFA3-DONOR-REFERENCE-REGISTRY-001.json").read_text())

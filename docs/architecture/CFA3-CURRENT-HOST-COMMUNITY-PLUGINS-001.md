@@ -94,3 +94,20 @@ GitHub commits and independent branch readbacks can prove source files exist. Th
 - Parallel donor PR #7, documentation PR #8 and CrAM development branch remain outside this change.
 
 **The code is a scoped implementation, not a completed Current Host.** Final acceptance requires real runtime authority connections, working sandbox and Qt6 host integration, physical tests of CFA3-owned operations and externally verified evidence on the actual hardware.
+
+## Additional local runner and Qt6 panel
+
+- cfa3_current_host/local_runner.py: bounded local observer for CFA3-owned test modules only. Captures reported Python and Rust reference outcomes and environment metadata; never scans vendor drivers, calls external commercial binaries or issues a physical PASS.
+- The observer can be explicitly invoked **on the target user's actual CFA3 checkout**, but its report remains REFERENCE_ONLY_PENDING_EXTERNAL_AUTHORITY until the external Evidence authority validates actual host identity and scoped proofs.
+- cfa3_current_host/qt6_dashboard.py: optional PySide6 Qt6 standalone Current Host panel. Four tabs — Foundation, Layer, Global, Community Plugins — with persistent and per-panel mandatory Workload Mode indicator. Shows obligation evidence PENDING; cannot create PASS or pretend an actual parent GUI exists. If Qt6 is unavailable it raises GuiDependencyMissing.
+- tests/test_current_host_qt6.py and tests/test_current_host_runner.py add honest missing-toolkit, safe-runner and failure-mode cases. GUI execution and real Qt6 parent-integrated PASS remain **NOT_RUN**.
+- CFA3-owned inbound integration is also tested when its *upstream* source remains unchanged, including a vendor → CFA3-owned connector boundary. No third-party component itself is targeted for Current Host proof.
+- Run a local, self-contained scoped reference suite, emitting a single immutable JSON report (no redundant archives and no auto-upload):
+
+    python3 -m cfa3_current_host selftest --repo . --output ./current-host-local-candidate.json
+
+The CLI rejects overwriting an existing report, does not change OS drivers, and cannot generate Current Host PASS. If the Rust toolchain is missing, the Rust result is NOT_RUN_MISSING_CARGO.
+
+**Evidence limitation remains:** Current Host no physical authority service is implemented in this branch; the local observer is not a substitute for actual physical attestation. GitHub Actions run on pull_request or main only, and neither event was started for this branch. The source files are in a separate feature branch, not on main.
+
+**Current implementation closure:** Source materialization and independent GitHub readback will be recorded separately; full project closure requires successful runtime and physical proof from the real user environment and the existing central CFA3 authorities.

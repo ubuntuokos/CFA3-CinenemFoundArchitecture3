@@ -38,3 +38,5 @@ mod tests {
         assert!(!ObservedRoute { requested: BackendClass::Cpu, actual: BackendClass::Cpu, fallback_declared: true }.is_structurally_consistent());
     }
 }
+
+pub mod cram;

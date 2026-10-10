@@ -169,6 +169,10 @@ class Registry:
         old = self._records.get(key)
         if old is not None and old.bundle_digest != report.bundle_digest:
             raise PluginError("same plugin version cannot silently change digest")
+        # A repeat inspection must never downgrade ADMITTED, INSTALLED,
+        # ENABLED, DISABLED or QUARANTINED to a weaker lifecycle state.
+        if key in self._states and self._states[key] != State.INSPECTED:
+            raise PluginError("already processed plugin version requires lifecycle action")
         self._records[key] = report
         self._states[key] = State.INSPECTED
         return report

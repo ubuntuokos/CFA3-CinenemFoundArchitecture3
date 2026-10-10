@@ -9,13 +9,14 @@
   "all_historical_sources_exhaustively_reconciled": false,
   "runtime_admission": false,
   "code_or_license_admission": false,
-  "donor_count": 53,
+  "donor_count": 58,
   "source_files_completed": [
     19,
     20,
-    21
+    21,
+    22
   ],
-  "original_url_occurrences": 55,
+  "original_url_occurrences": 60,
   "records": [
     {
       "donor_id": "FA3-DONOR-TAHOMA2D-001",
@@ -866,6 +867,86 @@
       "code_copy_authorized": false,
       "license_authorized": false,
       "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GOOGLE-ANTIGRAVITY-SDK-PYTHON-001",
+      "normalized_key": "github:google-antigravity/antigravity-sdk-python",
+      "original_url": "https://github.com/google-antigravity/antigravity-sdk-python",
+      "original_submitted_urls": [
+        "https://github.com/google-antigravity/antigravity-sdk-python"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "source_sequence": 22,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-ANTIGRAVITY-TOOLS-TOPIC-001",
+      "normalized_key": "github:topics/antigravity-tools",
+      "original_url": "https://github.com/topics/antigravity-tools",
+      "original_submitted_urls": [
+        "https://github.com/topics/antigravity-tools"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "source_sequence": 22,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-ANTIGRAVITY-TOPIC-001",
+      "normalized_key": "github:topics/antigravity",
+      "original_url": "https://github.com/topics/antigravity",
+      "original_submitted_urls": [
+        "https://github.com/topics/antigravity"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "source_sequence": 22,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GOOGLE-ANTIGRAVITY-TOPIC-001",
+      "normalized_key": "github:topics/google-antigravity",
+      "original_url": "https://github.com/topics/google-antigravity",
+      "original_submitted_urls": [
+        "https://github.com/topics/google-antigravity"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "source_sequence": 22,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001",
+      "normalized_key": "github:google-antigravity",
+      "original_url": "https://github.com/google-antigravity",
+      "original_submitted_urls": [
+        "https://github.com/google-antigravity"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "source_sequence": 22,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
     }
   ],
   "lookup_by_id": {
@@ -921,7 +1002,12 @@
     "FA3-DONOR-COMFY-ORG-001": 49,
     "FA3-DONOR-COMFY-ORG-DESKTOP-ARCHIVED-001": 50,
     "FA3-DONOR-CODEC-EVALUATION-TOPIC-001": 51,
-    "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001": 52
+    "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001": 52,
+    "FA3-DONOR-GOOGLE-ANTIGRAVITY-SDK-PYTHON-001": 53,
+    "FA3-DONOR-ANTIGRAVITY-TOOLS-TOPIC-001": 54,
+    "FA3-DONOR-ANTIGRAVITY-TOPIC-001": 55,
+    "FA3-DONOR-GOOGLE-ANTIGRAVITY-TOPIC-001": 56,
+    "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001": 57
   },
   "lookup_by_original_url": {
     "https://github.com/tahoma2d/tahoma2d": "FA3-DONOR-TAHOMA2D-001",
@@ -978,6 +1064,11 @@
     "https://github.com/orgs/Comfy-Org/repositories": "FA3-DONOR-COMFY-ORG-001",
     "https://github.com/Comfy-Org/desktop": "FA3-DONOR-COMFY-ORG-DESKTOP-ARCHIVED-001",
     "https://github.com/topics/codec-evaluation": "FA3-DONOR-CODEC-EVALUATION-TOPIC-001",
-    "https://github.com/topics/quicktime?l=swift": "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001"
+    "https://github.com/topics/quicktime?l=swift": "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001",
+    "https://github.com/google-antigravity/antigravity-sdk-python": "FA3-DONOR-GOOGLE-ANTIGRAVITY-SDK-PYTHON-001",
+    "https://github.com/topics/antigravity-tools": "FA3-DONOR-ANTIGRAVITY-TOOLS-TOPIC-001",
+    "https://github.com/topics/antigravity": "FA3-DONOR-ANTIGRAVITY-TOPIC-001",
+    "https://github.com/topics/google-antigravity": "FA3-DONOR-GOOGLE-ANTIGRAVITY-TOPIC-001",
+    "https://github.com/google-antigravity": "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001"
   }
 }

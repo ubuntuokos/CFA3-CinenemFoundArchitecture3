@@ -1,0 +1,99 @@
+{
+  "schema": "cfa3.current-host.ownership-policy.v1",
+  "id": "CFA3-CURRENT-HOST-OWNERSHIP-001",
+  "decision_date": "2026-10-10",
+  "owner_approved": true,
+  "status": "IMPLEMENTATION_BRANCH_NOT_FOUNDATION_ADMITTED",
+  "scope": {
+    "qualified_component_owners": [
+      "CFA3_COMPONENT",
+      "CFA3_CONNECTOR",
+      "CFA3_PLUGIN_HOST"
+    ],
+    "excluded_product_qualification": [
+      "VENDOR_DRIVER",
+      "COMMERCIAL_SOFTWARE",
+      "COMMUNITY_PLUGIN"
+    ],
+    "driver_support_basis": "OFFICIAL_MANUFACTURER_DISTRO_COMPATIBILITY_STATEMENT",
+    "driver_implementation_qa_required": false,
+    "unavailable_hardware_physical_qa_required": false,
+    "third_party_commercial_product_qa_required": false,
+    "third_party_community_plugin_functional_qa_required": false,
+    "cfa3_owned_integration_connector_and_safety_qa_required": true
+  },
+  "levels": [
+    "FOUNDATION",
+    "LAYER",
+    "GLOBAL"
+  ],
+  "delta_modes": [
+    "NONE",
+    "SCOPED",
+    "FULL"
+  ],
+  "real_edge_only": true,
+  "handoff_fields": [
+    "producer",
+    "consumer",
+    "artifact_type",
+    "source_revision",
+    "processing_owner",
+    "acceptance_ref",
+    "rollback_ref"
+  ],
+  "capability_target_count": 200,
+  "capability_reconciliation_status": "PENDING",
+  "per_capability_cases": [
+    "POSITIVE",
+    "NEGATIVE",
+    "ROLLBACK"
+  ],
+  "gui": {
+    "toolkit": "QT6",
+    "standalone_required": true,
+    "real_parent_integration_required_if_parent_exists": true,
+    "synthetic_parent_pass_allowed": false
+  },
+  "plugin_lifecycle": [
+    "DISCOVERED",
+    "INSPECTED",
+    "ADMITTED",
+    "INSTALLED",
+    "ENABLED",
+    "DISABLED",
+    "QUARANTINED",
+    "REMOVED"
+  ],
+  "plugin_requirements": [
+    "SDK",
+    "TESTKIT",
+    "MANIFEST",
+    "CATALOG",
+    "RIGHTS",
+    "SECURITY",
+    "HOST_ISOLATION",
+    "FAIL_CLOSED",
+    "ROLLBACK",
+    "REAL_CONSUMER_MAP"
+  ],
+  "central_authorities": [
+    "SECURITY_IDENTITY",
+    "RIGHTS",
+    "HRB",
+    "MODEL_ROUTER",
+    "WORKLOAD_MODE",
+    "EVIDENCE",
+    "TEMPORAL"
+  ],
+  "duplicate_central_authority_forbidden": true,
+  "cpu_only_platform_required": true,
+  "no_silent_fallback": true,
+  "evidence": {
+    "physical_host_pass_only_from_real_device": true,
+    "reference_tests_are_not_physical_pass": true,
+    "cross_version_reuse_without_proof_forbidden": true,
+    "previous_legacy_host_pass_transfer_forbidden": true,
+    "current_physical_pass": false
+  }
+}

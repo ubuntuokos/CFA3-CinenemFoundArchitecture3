@@ -125,3 +125,50 @@ jobs:
       - name: Never advertise a wheel reference as packaged CFA3 distribution
         if: always()
         run: echo "This is a development wheel, not a signed CFA3 installer or physical GUI PASS"
+
+  qt6-x11-xcb-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: xcb
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install X11 reference display and Qt6 xcb dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            xvfb xauth libegl1 libopengl0 libgl1 \
+            libx11-xcb1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 \
+            libxcb-xkb1 libxkbcommon-x11-0
+      - name: Install Qt6 bridge
+        run: python -m pip install --disable-pip-version-check "PySide6-Essentials>=6.8,<7"
+      - name: Observe actual xcb Qt6 plugin on an Xvfb reference display
+        run: |
+          xvfb-run -a python - <<'PY'
+          from cfa3_runtime.qt6_environment import inspect_runtime
+          from cfa3_runtime.launcher import prepare_python_qt_launch
+          from cfa3_runtime.preferences import environment_for_next_launch
+          import os
+          import sys
+          report = inspect_runtime()
+          assert report["status"] == "APP_RUNTIME_READY", report
+          assert report["qt_platform"] == "xcb", report
+          assert len(report["screens"]) >= 1, report
+          assert report["physical_gui_pass"] is False, report
+          assert report["parent_integration_gui_pass"] is False, report
+          plan = prepare_python_qt_launch(
+              [sys.executable, "-m", "cfa3_runtime", "settings-window"],
+              preferences={"schema": "cfa3.runtime-preferences.v1", "qt_platform": "xcb"},
+          )
+          assert plan.platform == "xcb" and plan.physical_gui_pass is False, plan
+          print("Real Qt6 xcb plugin and CFA3 guarded launch observed on Xvfb; physical device GUI PASS is PENDING.")
+          PY
+      - name: Mount and show actual runtime shell with xcb plugin
+        run: xvfb-run -a python -m unittest discover -s tests -p 'test_portable_runtime_parent_app.py' -v
+      - name: Hosted X server cannot issue a physical GUI acceptance
+        if: always()
+        run: echo "Xvfb Qt6 xcb reference only; not the user's physical monitor or full CFA3 parent GUI"

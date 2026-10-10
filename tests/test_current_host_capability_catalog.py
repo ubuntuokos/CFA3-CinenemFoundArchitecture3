@@ -80,6 +80,94 @@ class CapabilityCatalogTests(unittest.TestCase):
             with self.assertRaises(CatalogError):
                 load_capability_catalog(path)
 
+    def test_catalog_incomplete_even_when_graph_agrees(self):
+        from types import SimpleNamespace as Node
+        c = catalog(2)
+        nodes = {}
+        for idx in range(2):
+            record = cap(idx)
+            nodes[record.component_id] = Node(
+                ownership=Node(value=record.owner), layer=record.layer,
+                revision=record.revision, capability_ids=(record.capability_id,),
+            )
+        result = c.reconcile_graph(Node(nodes=nodes))
+        self.assertEqual(result["status"], "BLOCKED_INCOMPLETE_200_CAPABILITY_CATALOG")
+        self.assertEqual(result["mapped"], 2)
+        self.assertFalse(result["physical_current_host_pass"])
+
+    def test_real_component_revision_mismatch_is_blocker(self):
+        from types import SimpleNamespace as Node
+        record = cap(0)
+        c = catalog(1)
+        graph = Node(nodes={record.component_id: Node(
+            ownership=Node(value=record.owner), layer=record.layer,
+            revision="older-revision", capability_ids=(record.capability_id,),
+        )})
+        result = c.reconcile_graph(graph)
+        self.assertEqual(result["status"], "BLOCKED_CAPABILITY_GRAPH_MISMATCH")
+        self.assertTrue(any("MISMATCHED_OWNER_LAYER_REVISION" in x
+                            for x in result["errors"]))
+
+    def test_unmapped_catalog_identity_is_not_silently_admitted(self):
+        from types import SimpleNamespace as Node
+        c = catalog(2)
+        record = cap(0)
+        graph = Node(nodes={record.component_id: Node(
+            ownership=Node(value=record.owner), layer=record.layer,
+            revision=record.revision, capability_ids=(record.capability_id,),
+        )})
+        self.assertEqual(c.reconcile_graph(graph)["status"],
+                         "BLOCKED_CAPABILITY_GRAPH_MISMATCH")
+        self.assertEqual(c.reconcile_graph(graph, global_scope=False)["status"],
+                         "BLOCKED_INCOMPLETE_200_CAPABILITY_CATALOG")
+
+    def test_duplicate_capability_mapping_detected(self):
+        from types import SimpleNamespace as Node
+        c = catalog(1)
+        record = cap(0)
+        graph = Node(nodes={
+            "component.000": Node(ownership=Node(value="CFA3_COMPONENT"),
+                                  layer=record.layer, revision=record.revision,
+                                  capability_ids=(record.capability_id,)),
+            "duplicate": Node(ownership=Node(value="CFA3_COMPONENT"),
+                              layer=record.layer, revision=record.revision,
+                              capability_ids=(record.capability_id,)),
+        })
+        result = c.reconcile_graph(graph)
+        self.assertEqual(result["status"], "BLOCKED_CAPABILITY_GRAPH_MISMATCH")
+        self.assertTrue(any("DUPLICATE_COMPONENT_MAPPING" in x for x in result["errors"]))
+
+    def test_vendor_driver_is_not_qualified_as_cfa3_component(self):
+        from types import SimpleNamespace as Node
+        c = catalog(1)
+        record = cap(0)
+        graph = Node(nodes={
+            record.component_id: Node(ownership=Node(value=record.owner),
+                                      layer=record.layer, revision=record.revision,
+                                      capability_ids=(record.capability_id,)),
+            "vendor-gpu-driver": Node(ownership=Node(value="VENDOR_DRIVER"),
+                                      layer="EXTERNAL", revision="vendor-defined",
+                                      capability_ids=()),
+        })
+        result = c.reconcile_graph(graph)
+        self.assertEqual(result["status"], "BLOCKED_INCOMPLETE_200_CAPABILITY_CATALOG")
+        self.assertEqual(result["mapped"], 1)
+
+    def test_exact_200_fixture_graph_is_structural_only_not_physical(self):
+        from types import SimpleNamespace as Node
+        c = catalog()
+        nodes = {}
+        for idx in range(200):
+            record = cap(idx)
+            nodes[record.component_id] = Node(
+                ownership=Node(value=record.owner), layer=record.layer,
+                revision=record.revision, capability_ids=(record.capability_id,),
+            )
+        result = c.reconcile_graph(Node(nodes=nodes))
+        self.assertEqual(result["status"], "GRAPH_200_STRUCTURALLY_RECONCILED_PENDING_PHYSICAL")
+        self.assertEqual(result["minimum_obligations"], 600)
+        self.assertFalse(result["physical_current_host_pass"])
+
     def test_duplicate_identifier_rejected(self):
         c = catalog(1)
         with self.assertRaises(CatalogError):

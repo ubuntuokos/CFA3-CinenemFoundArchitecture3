@@ -327,3 +327,44 @@ runner tests. They are **not a complete checkout of the GitHub branch**,
 therefore do not include the 10 newer canonical-plan tests. Rust, physical
 host, real Qt6 GUI, plugin sandbox containment and 200 real canonical
 capability reconciliation remain pending. The result is not physical PASS.
+
+### 2026-10-10 — capability ID, graph and CLI integration
+
+CapabilityCatalog now reconciles its 200 canonical identities against actual
+CFA3-owned graph consumers and checks exact component ID, layer, revision,
+ownership, missing mappings and duplicate capability consumers. Third-party
+drivers and commercial applications remain outside CFA3-owned product QA.
+
+A partial layer/SCOPED mapping cannot report GLOBAL 200 closure even with
+a full-size catalog fixture. An external-only graph also cannot claim CFA3
+mapping success. Complete global reconciliation requires the actual complete
+CFA3 component graph and its 200 approved capability records; no synthetic
+source identities were promoted into the canonical new-CFA3 registry.
+
+The CLI command catalog-check now REQUIRES both catalog and actual graph and
+calls the graph reconciliation gate rather than checking record count alone:
+
+    python3 -m cfa3_current_host catalog-check \
+      --catalog examples/current-host-capabilities.json \
+      --graph examples/current-host-graph.json
+
+New tests test_current_host_capability_catalog.py cover correct mappings,
+mismatched versions, duplicates, missing catalog members, vendor exclusions,
+partial versus global completion and a 200-fixture structural-only case.
+GitHub-only test definitions test_current_host_cli.py also verify that no
+catalog-check can omit the graph.
+
+**Independently executed local Python proof for exactly matching Git blobs**:
+- cfa3_current_host/capability_catalog.py:
+  88d6c84a50ad36605258cd7701c4291924e27512
+- tests/test_current_host_capability_catalog.py:
+  e951be00b8a7d0c9dd90f595fdadf4be36687ea0
+
+A partial materialization of the CPU/Plugin reference modules containing
+these two exact files and the previously verified local runner passed
+**91/91 unittest cases**, 0 failures, plus Python compileall.
+This is a *partial scope* local reference result, NOT the full GitHub branch
+suite and NOT a physical Current Host PASS. The new CLI parsing/integration
+tests and canonical-plan tests are present in GitHub but remain NOT_RUN in
+this local environment. Rust, Qt6, physical runtime and 200 real capabilities
+are still pending.

@@ -213,12 +213,14 @@ impl Graph {
             }
         }
         for e in self.handoffs.values() {
-            if affected.contains(&e.producer) && affected.contains(&e.consumer) {
+            // Changed CFA3 recipient means its actual inbound bridge is touched.
+            // External producer receives NO product-test obligations.
+            if affected.contains(&e.consumer) {
                 let from = self.components.get(&e.producer).ok_or(Error::UnknownComponent)?;
                 let to = self.components.get(&e.consumer).ok_or(Error::UnknownComponent)?;
-                let level = if from.layer != to.layer {
+                let level = if from.owner.cfa3_owned() && from.layer != to.layer {
                     Level::Global
-                } else if from.layer == "FOUNDATION" {
+                } else if to.layer == "FOUNDATION" {
                     Level::Foundation
                 } else {
                     Level::Layer

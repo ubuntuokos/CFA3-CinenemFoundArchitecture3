@@ -1,5 +1,6 @@
 """L1 staged source import and index read-back tests; not publication authorization."""
 import copy
+import json
 import importlib.util
 from pathlib import Path
 import sqlite3
@@ -15,6 +16,45 @@ spec.loader.exec_module(donor_l1)
 
 
 class DonorL1IndexTests(unittest.TestCase):
+    def test_direct_l1_access_catalog_has_full_stage_readback_and_never_claims_publication(self):
+        catalog_path = ROOT / "canonical/registries/CFA3-DONOR-L1-STAGED-DIRECT-ACCESS-20261010.json"
+        catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+        self.assertEqual(catalog["state"], "STAGED_NOT_PUBLISHED")
+        self.assertFalse(catalog["canonical_level_published"])
+        self.assertIsNone(catalog["global_baseline_B"])
+        self.assertFalse(catalog["all_owner_submissions_exhaustively_verified"])
+        self.assertFalse(catalog["runtime_admission"])
+        self.assertEqual(catalog["source_count"], 1978)
+        self.assertEqual(catalog["distinct_identity_count"], 1978)
+        self.assertEqual(catalog["approval_summary"]["legacy_owner_approved_pending_publication"], 53)
+        self.assertEqual(catalog["approval_summary"]["historical_accepted_reference"], 825)
+        self.assertEqual(catalog["approval_summary"]["legacy_candidate"], 963)
+        self.assertEqual(catalog["approval_summary"]["legacy_analyzed"], 130)
+        items = catalog["sources"]
+        self.assertEqual(len(items), 1978)
+        self.assertEqual(len({item["id"] for item in items}), 1978)
+        self.assertEqual(len({item["key"] for item in items}), 1978)
+        canonical = {item["id"]: item for item in items}
+        for entry, origin, from_main in donor_l1.frozen_sources():
+            item = canonical[entry["donor_id"]]
+            self.assertEqual(item["key"], entry["source"]["normalized_key"])
+            self.assertEqual(item["url"], entry["source"]["locator"])
+            self.assertEqual(item["level"], 1)
+            self.assertEqual(item.get("discovery_urls", []), entry["source"].get("discovery_urls", []))
+            approved_origin = origin in {
+                "HISTORICAL_OWNER_APPROVED_TRANSFER",
+                "ADDITIONAL_OWNER_APPROVED_TRANSFER",
+                "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER",
+            }
+            expected_status = (entry["status"] if from_main else
+                "OWNER_APPROVED_PENDING_PUBLICATION" if approved_origin else "BLOCKED")
+            self.assertEqual(item["status"], expected_status)
+        recovery = donor_l1.json_read(donor_l1.TRIPO_RECOVERY)
+        for occurrence in recovery["url_provenance"]:
+            item = canonical[occurrence["source_id"]]
+            self.assertIn(occurrence["original_url"],
+                          [item["url"]] + item.get("discovery_urls", []))
+
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
         self.assertEqual(len(sources), 1978)

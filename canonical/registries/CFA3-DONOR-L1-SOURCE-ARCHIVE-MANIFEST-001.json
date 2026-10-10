@@ -556,6 +556,28 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "05ac73685db38b84c549e763b5151bbe88a291ae",
+      "source_proof_kind": "HISTORICAL_EXPLICIT_LITELLM_H2O_LOCAL_LLM_DISCOVERY_DELTA",
+      "original_source_records": 6,
+      "original_exact_owner_urls": 6,
+      "source_ids_present_in_new_l1_stage": 6,
+      "original_urls_in_direct_routing": 6,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_or_legacy_status_mismatches": 0,
+      "historical_approval_ref": "docs/donor-litellm-h2o-local-llm-sources-2026-10-02.md",
+      "go_filtered_litellm_gateway_topic_preserved": true,
+      "org_topic_no_recursive_child_registration": true,
+      "model_provider_runtime_or_cloud_not_admitted": true,
+      "license_security_cpu_only_reuse_gates_not_bypassed": true,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

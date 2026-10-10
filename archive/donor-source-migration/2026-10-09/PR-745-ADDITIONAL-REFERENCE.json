@@ -1,0 +1,72 @@
+{
+  "pr": 745,
+  "source_commit": "2cdb6200d5ee20f5d1e40ae19e3bd8f59e3649eb",
+  "source_registry_blob_sha": "1af261ee4247b8f7293526022111b89bd64cf1ca",
+  "entry": {
+    "donor_id": "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
+    "name": "MohamedElaassal YouTube Video Generator",
+    "source": {
+      "kind": "GITHUB_REPOSITORY",
+      "locator": "https://github.com/MohamedElaassal/youtubeVideoGenerator",
+      "normalized_key": "github:mohamedelaassal/youtubevideogenerator"
+    },
+    "status": "ACCEPTED_REFERENCE",
+    "discovered_from": [
+      "conversation"
+    ],
+    "first_seen": "2026-10-07",
+    "last_seen": "2026-10-07",
+    "donor_modes": [
+      "REFERENCE_IMPLEMENTATION"
+    ],
+    "capability_hints": [
+      "automated-content-production",
+      "media-composition-workflow",
+      "publishing-connector-pattern"
+    ],
+    "domain_hints": [
+      "creative-media",
+      "workflow-automation"
+    ],
+    "problem_hints": [],
+    "target_hints": [
+      "CFA3 Creative / Media",
+      "Shared Media/Render Fabric",
+      "Shared Publishing/Distribution Connector",
+      "Shared Voice/Speech Fabric"
+    ],
+    "tags": [
+      "explicit-owner-donornak",
+      "ffmpeg",
+      "metadata-only",
+      "n8n",
+      "video-workflow",
+      "youtube-publishing"
+    ],
+    "license": {
+      "declared": "MIT",
+      "status": "UPSTREAM_REPOSITORY_DECLARED"
+    },
+    "code_reuse_policy": "SOURCE_COPY_BLOCKED_PENDING_LICENSE_AND_ADMISSION_REVIEW",
+    "discoverable_for_planning": true,
+    "authority": false,
+    "automatic_selection": false,
+    "automatic_fetch": false,
+    "automatic_install": false,
+    "automatic_activation": false,
+    "automatic_dependency": false,
+    "automatic_code_import": false,
+    "automatic_provider_admission": false,
+    "automatic_model_selection": false,
+    "submission_review": {
+      "basis": "OWNER_PRE_REVIEWED_DIRECT_DONOR_LINK",
+      "scope": "REFERENCE_REGISTRATION_ONLY",
+      "owner_donor_command": "donornak",
+      "second_registry_approval_required": false
+    },
+    "notes": [
+      "Reviewed upstream master head 2d56dddd540d5a4844617b0f1e19490037c599ed; donor registration is metadata/reference only and creates no runtime/provider/model/dependency/usage-edge admission."
+    ]
+  },
+  "state": "UNMERGED_HISTORICAL_PR_PRESERVED_NOT_CFA3_CANONICAL_ADMITTED"
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "cfa3.donor-l1-source-archive-manifest.v1",
+  "id": "CFA3-DONOR-L1-SOURCE-ARCHIVE-MANIFEST-001",
+  "status": "SOURCE_ARCHIVE_STAGED_L1_NOT_PUBLISHED",
+  "source_repo": "ubuntuokos/Final-Architecture-v3.0",
+  "source_main_commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "target_repo": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "source_metadata_only": true,
+  "source_registry": {
+    "path": "archive/donor-source-migration/2026-10-09/FA3-DONOR-REFERENCE-REGISTRY-001.json",
+    "historical_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+    "entries": 1919,
+    "unique_donor_ids": 1919,
+    "unique_source_keys": 1919,
+    "original_status_counts": {
+      "ACCEPTED_REFERENCE": 825,
+      "CANDIDATE": 963,
+      "ANALYZED": 130,
+      "SUPERSEDED": 1
+    },
+    "status_is_historical_not_new_admission": true
+  },
+  "historical_approved_union": {
+    "path": "archive/donor-source-migration/2026-10-09/CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json",
+    "historical_blob_sha": "d22dce8bfe3d9697a1121033ff7b387d051a638a",
+    "coverage_records": 445,
+    "source_key_missing_from_main": 0
+  },
+  "prior_missing_20": {
+    "path": "archive/donor-source-migration/2026-10-09/CFA3-DONOR-MISSING-BASELINE-SOURCES-2026-10-07.json",
+    "source_pr": 742,
+    "already_in_main": 20,
+    "additional_unique_record_delta": 0
+  },
+  "historical_application_links": {
+    "path": "archive/donor-source-migration/2026-10-09/FA3-APPLICATION-DONOR-LINKS-001.json",
+    "historical_blob_sha": "803b9d62062e6aaaeb9fc69301a6202e20279a93",
+    "application_count": 11,
+    "relationship_count": 19,
+    "usage_record_count": 29,
+    "active_application_uses_imported": 0
+  },
+  "separately_unmerged_pr_sources": [
+    {
+      "pr": 744,
+      "path": "archive/donor-source-migration/2026-10-09/PR-744-ADDITIONAL-REFERENCE.json",
+      "original_source_blob_sha": "6b7b0f3aa06e81b174c7a12e7f9d24ea089f2679",
+      "key": "github:affaan-m/ecc",
+      "donor_id": "FA3-DONOR-AFFAAN-M-ECC-001",
+      "proposed_status": "ACCEPTED_REFERENCE",
+      "canonical_status": "PENDING_RECONCILIATION"
+    },
+    {
+      "pr": 745,
+      "path": "archive/donor-source-migration/2026-10-09/PR-745-ADDITIONAL-REFERENCE.json",
+      "original_source_blob_sha": "1af261ee4247b8f7293526022111b89bd64cf1ca",
+      "key": "github:mohamedelaassal/youtubevideogenerator",
+      "donor_id": "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
+      "proposed_status": "ACCEPTED_REFERENCE",
+      "canonical_status": "PENDING_RECONCILIATION"
+    }
+  ],
+  "observed_distinct_historical_source_keys": 1921,
+  "not_proof_of_all_user_submissions": true,
+  "coverage_unknown_for_all_prior_conversations": true,
+  "classified_new_cfa3_l1_count": 0,
+  "published_new_cfa3_donor_count": 0,
+  "level_pass_receipts": [],
+  "source_lifecycle_index_complete": false,
+  "no_automatic_promotion": true,
+  "no_new_l2_crawl": true,
+  "physical_host_pass": false,
+  "current_stage": "A_IMMUTABLE_SOURCE_ARCHIVE",
+  "next_gate": "RECONCILE_ALL_OWNER_APPROVED_SUBMISSIONS_AND_CLASSIFY_L1_THEN_PUBLISH_WITH_READBACK",
+  "plan_id": "CFA3-DONOR-MIGRATION-AND-CLASSIFICATION-V2-001",
+  "policy_id": "CFA3-DONOR-BOUNDED-CLASSIFICATION-001"
+}

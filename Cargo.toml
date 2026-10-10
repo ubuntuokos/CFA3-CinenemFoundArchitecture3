@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/cfa3-execution-contracts"]
+resolver = "2"

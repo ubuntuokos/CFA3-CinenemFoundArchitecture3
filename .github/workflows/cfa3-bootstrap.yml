@@ -1,0 +1,24 @@
+name: CFA3 bootstrap reference checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: cfa3-bootstrap-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate new-CFA3 bootstrap candidate policies
+        run: python3 scripts/check_bootstrap.py
+      - name: Run positive and negative structural tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Verify Rust-first contract workspace
+        run: cargo test --workspace
+      - name: Evidence boundary
+        run: echo "Reference CI only; never physical Current Host or Foundation PASS"

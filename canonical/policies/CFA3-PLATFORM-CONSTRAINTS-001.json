@@ -1,0 +1,53 @@
+{
+  "schema": "cfa3.platform-bootstrap-constraints.v1",
+  "id": "CFA3-PLATFORM-CONSTRAINTS-001",
+  "status": "DESIGN_REQUIREMENTS_NOT_IMPLEMENTED",
+  "capability_target_count": 200,
+  "capability_registry_complete": false,
+  "capability_ids_must_be_individually_reconciled": true,
+  "foundation_required_before_layer_final": true,
+  "foundation_verified": false,
+  "gui": {
+    "technology": "Qt 6",
+    "mandatory_for_all_gui_apps": true,
+    "standalone_gui_pass_required": true,
+    "actual_parent_gui_pass_required_when_parent_exists": true,
+    "missing_parent_status": "NOT_APPLICABLE",
+    "global_workload_mode_indicator": true
+  },
+  "languages": {
+    "default_for_new_native_components": "Rust",
+    "qt_gui": "C++/Qt Quick QML and Rust interop as justified",
+    "preserve_upstream_language_if_rewrite_disproportionate": true,
+    "language_strength_and_abi_review_required": true
+  },
+  "hardware": {
+    "cpu_only_base": true,
+    "accelerator_cardinality": "0..N",
+    "vendor_lock_forbidden": true,
+    "physical_evidence_required": true
+  },
+  "host_verification": {
+    "levels": [
+      "PLATFORM_FOUNDATION_CURRENT_HOST",
+      "LAYER_CURRENT_HOST",
+      "GLOBAL_CURRENT_HOST"
+    ],
+    "actual_edges_only": true,
+    "handoff_contracts_required_for_real_edges": true,
+    "simulated_host_pass_forbidden": true
+  },
+  "development": {
+    "local_first": true,
+    "single_active_implementation_pr": true,
+    "full_application_catalog_before_app_build": true,
+    "layer_dossier_before_first_layer_app": true,
+    "external_licenses_reviewed_before_integration": true
+  },
+  "donors": {
+    "external_links_not_automatic_adoption": true,
+    "usage_edges_required_for_actual_use": true,
+    "five_level_assessment_target": true
+  },
+  "implementation_status": "NOT_STARTED"
+}

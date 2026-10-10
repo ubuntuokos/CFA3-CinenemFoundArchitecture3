@@ -648,6 +648,29 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-MENTOR-ENHANCEMENT-DELTA-001.json",
+      "archive_path": "archive/donor-source-migration/2026-10-09/FA3-DONOR-MENTOR-ENHANCEMENT-DELTA-001.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "6d9cc999b671297c9f1b009b0d429ee612916140",
+      "old_blob_new_archive_exact_match": true,
+      "source_proof_kind": "HISTORICAL_MENTOR_ENHANCEMENT_15_FULL_REUSE_ASSESSMENT_SOURCE_RECORDS",
+      "original_detailed_source_records": 15,
+      "original_exact_owner_source_urls": 15,
+      "source_ids_present_in_new_l1_stage": 15,
+      "original_urls_in_direct_routing": 15,
+      "original_independent_license_evidence_url_references": 4,
+      "license_and_reuse_details_preserved_in_immutable_archived_source": true,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_or_legacy_status_mismatches": 0,
+      "historical_governance_and_authority_exclusions_preserved_by_source_sha": true,
+      "candidate_only_no_code_execution_or_model_router_override": true,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

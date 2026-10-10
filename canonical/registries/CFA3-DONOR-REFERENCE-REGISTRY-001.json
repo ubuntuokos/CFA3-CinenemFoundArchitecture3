@@ -9,15 +9,16 @@
   "all_historical_sources_exhaustively_reconciled": false,
   "runtime_admission": false,
   "code_or_license_admission": false,
-  "donor_count": 73,
+  "donor_count": 74,
   "source_files_completed": [
     19,
     20,
     21,
     22,
-    23
+    23,
+    24
   ],
-  "original_url_occurrences": 75,
+  "original_url_occurrences": 76,
   "records": [
     {
       "donor_id": "FA3-DONOR-TAHOMA2D-001",
@@ -1188,6 +1189,22 @@
       "code_copy_authorized": false,
       "license_authorized": false,
       "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-HIDREAM-AI-ORG-001",
+      "normalized_key": "github:hidream-ai",
+      "original_url": "https://github.com/HiDream-ai",
+      "original_submitted_urls": [
+        "https://github.com/HiDream-ai"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HIDREAM-AI-ORG-2026-10-03.json",
+      "source_sequence": 24,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
     }
   ],
   "lookup_by_id": {
@@ -1263,7 +1280,8 @@
     "FA3-DONOR-YIMIN-PAN-001": 69,
     "FA3-DONOR-SKETCHHAIRSALON-001": 70,
     "FA3-DONOR-GITHUB-TOPIC-HAIR-COLOR-001": 71,
-    "FA3-DONOR-DEEPMANCER-001": 72
+    "FA3-DONOR-DEEPMANCER-001": 72,
+    "FA3-DONOR-HIDREAM-AI-ORG-001": 73
   },
   "lookup_by_original_url": {
     "https://github.com/tahoma2d/tahoma2d": "FA3-DONOR-TAHOMA2D-001",
@@ -1340,6 +1358,7 @@
     "https://github.com/yimin-pan": "FA3-DONOR-YIMIN-PAN-001",
     "https://chufengxiao.github.io/SketchHairSalon/": "FA3-DONOR-SKETCHHAIRSALON-001",
     "https://github.com/topics/hair-color": "FA3-DONOR-GITHUB-TOPIC-HAIR-COLOR-001",
-    "https://github.com/deepmancer": "FA3-DONOR-DEEPMANCER-001"
+    "https://github.com/deepmancer": "FA3-DONOR-DEEPMANCER-001",
+    "https://github.com/HiDream-ai": "FA3-DONOR-HIDREAM-AI-ORG-001"
   }
 }

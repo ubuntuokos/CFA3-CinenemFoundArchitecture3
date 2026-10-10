@@ -26,10 +26,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Validate new CFA3 baseline contracts
+        run: python scripts/check_bootstrap.py
       - name: Verify source syntax
         run: python -m compileall -q cfa3_current_host tests
-      - name: Test CFA3-owned Current Host and community plugin interfaces
-        run: python -m unittest discover -s tests -p 'test_current_host*.py' -v
+      - name: Test entire new CFA3 Python workspace
+        run: python -m unittest discover -s tests -v
       - name: Reference evidence boundary
         if: always()
         run: echo "Hosted CI result is not physical Current Host PASS"
@@ -38,8 +40,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Verify native CFA3 Current Host crate
-        run: cargo test --package cfa3-current-host
+      - name: Verify native CFA3 Rust workspace including Current Host
+        run: cargo test --workspace
       - name: Reference evidence boundary
         if: always()
         run: echo "Rust reference tests do not issue Current Host physical PASS"

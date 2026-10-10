@@ -1,0 +1,696 @@
+{
+  "schema": "cfa3.donor-l1-unreconciled-owner-submissions.v1",
+  "id": "CFA3-DONOR-L1-SUPPLEMENT-OWNER-20261009",
+  "status": "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED",
+  "source_note": "11 sources identified in CFA3 owner conversation history as approved but not found by normalized repository identity in the archived 1919-source registry. Preserve URLs and approval markers without inventing exact message citations. Four additional reported character-domain owner-approved candidates (MakeHuman2, CharMorph, SMPL-X, DECA) added as non-admitted references. Eight further distinct URLs matched to explicit 2026-10-07 donor approval conversation context (Anthropics org, Krater, six ontology sources); they are staged metadata only pending independently reproducible source evidence.",
+  "verification_bounds": {
+    "archived_1919_checked": true,
+    "historical_2_pr_sources_separate": true,
+    "all_past_chats_exhaustively_audited": false,
+    "additional_character_domain_unverified_count": 4,
+    "additional_exact_owner_marker_context_sources": 8
+  },
+  "entries": [
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ARTISYNTH-ARTISYNTH-CORE-001",
+      "name": "ArtiSynth Core",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/artisynth/artisynth_core",
+        "normalized_key": "github:artisynth/artisynth_core"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ARTISYNTH-ARTISYNTH-MODELS-001",
+      "name": "ArtiSynth Models",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/artisynth/artisynth_models",
+        "normalized_key": "github:artisynth/artisynth_models"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-SOFA-FRAMEWORK-SOFA-001",
+      "name": "SOFA",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/sofa-framework/sofa",
+        "normalized_key": "github:sofa-framework/sofa"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-EVELYNFAN-FACEFORMER-001",
+      "name": "FaceFormer",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/EvelynFan/FaceFormer",
+        "normalized_key": "github:evelynfan/faceformer"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-OPENSIM-ORG-OPENSIM-CORE-001",
+      "name": "OpenSim Core",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/opensim-org/opensim-core",
+        "normalized_key": "github:opensim-org/opensim-core"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-TADASBALTRUSAITIS-OPENFACE-001",
+      "name": "OpenFace",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/TadasBaltrusaitis/OpenFace",
+        "normalized_key": "github:tadasbaltrusaitis/openface"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-SLICER-SLICERSOFA-001",
+      "name": "SlicerSOFA",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/Slicer/SlicerSOFA",
+        "normalized_key": "github:slicer/slicersofa"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-KITWARE-IMSTK-001",
+      "name": "iMSTK",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/Kitware/iMSTK",
+        "normalized_key": "github:kitware/imstk"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-MAKEHUMANCOMMUNITY-MAKEHUMAN-001",
+      "name": "MakeHuman",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/makehumancommunity/makehuman",
+        "normalized_key": "github:makehumancommunity/makehuman"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ANIMATE1978-MB-LAB-001",
+      "name": "MB-Lab",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/animate1978/MB-Lab",
+        "normalized_key": "github:animate1978/mb-lab"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_WIDE_DONOR_COMMAND",
+        "reported_owner_marker": "all-links-in-conversation-donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ANONYMOUSNOMAD-COVERT-CODER-001",
+      "name": "Covert Coder",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/AnonymousNomad/covert-coder",
+        "normalized_key": "github:anonymousnomad/covert-coder"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "EXPLICIT_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false,
+      "historical_evidence_pointer": {
+        "legacy_pr": 720,
+        "source_document": "docs/donor-covert-coder-2026-10-05.md",
+        "source_blob_sha": "662285ce1d536dedefb24ed8446dba18c4d51d5d",
+        "prior_proposed_donor_id": "FA3-DONOR-ANONYMOUSNOMAD-COVERT-CODER-001",
+        "new_canonical_admission": "BLOCKED"
+      }
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-MAKEHUMANCOMMUNITY-MAKEHUMAN2-001",
+      "name": "MakeHuman2",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/makehumancommunity/makehuman2",
+        "normalized_key": "github:makehumancommunity/makehuman2"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-UPLINER-CHARMORPH-001",
+      "name": "CharMorph",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/Upliner/CharMorph",
+        "normalized_key": "github:upliner/charmorph"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-VCHOUTAS-SMPLX-001",
+      "name": "SMPL-X",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/vchoutas/smplx",
+        "normalized_key": "github:vchoutas/smplx"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-YFENG95-DECA-001",
+      "name": "DECA",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/yfeng95/DECA",
+        "normalized_key": "github:yfeng95/deca"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "REPORTED_OWNER_ACCEPTED_CHARACTER_DONOR_INTAKE",
+        "reported_owner_marker": "accepted donor/reference sources",
+        "reported_date": "2026-10-05",
+        "original_chat_evidence_location": "CFA3_CHARACTER_PLATFORM_REFERENCE_INTAKE_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "evidence_gap": "DIRECT_OWNER_DONORNAK_MARKER_NOT_VERIFIED_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ANTHROPICS-ORG-001",
+      "name": "Anthropics organization",
+      "source": {
+        "kind": "GITHUB_ORGANIZATION",
+        "locator": "https://github.com/anthropics",
+        "normalized_key": "github:anthropics"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "EXPLICIT_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:45:06Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_REFERENCE_SOURCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-KRATER-AI-001",
+      "name": "Krater AI",
+      "source": {
+        "kind": "WEBSITE",
+        "locator": "https://krater.ai/",
+        "normalized_key": "https://krater.ai/"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "EXPLICIT_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T11:51:01Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SDK_PROVIDER_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ONTOLOGY-DEVELOPMENT-TOPIC-001",
+      "name": "GitHub ontology-development topic",
+      "source": {
+        "kind": "GITHUB_TOPIC",
+        "locator": "https://github.com/topics/ontology-development",
+        "normalized_key": "github:topics/ontology-development"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_SET_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:35:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SET_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-MICROSOFT-ONTOLOGY-PLAYGROUND-001",
+      "name": "Microsoft Ontology Playground",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/microsoft/Ontology-Playground",
+        "normalized_key": "github:microsoft/ontology-playground"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_SET_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:35:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SET_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-OZEKIK-AWESOME-ONTOLOGY-001",
+      "name": "Ozekik awesome-ontology",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/ozekik/awesome-ontology",
+        "normalized_key": "github:ozekik/awesome-ontology"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_SET_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:35:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SET_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-INFRANODUS-ONTOLOGY-CREATOR-001",
+      "name": "InfraNodus ontology creator",
+      "source": {
+        "kind": "WEBSITE",
+        "locator": "https://infranodus.com/skills/ontology-creator",
+        "normalized_key": "https://infranodus.com/skills/ontology-creator"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_SET_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:35:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SET_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-NICOVLR-SMART-ONTOLOGY-GENERATOR-001",
+      "name": "Smart Ontology Generator",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/nicovlr/smart-ontology-generator",
+        "normalized_key": "github:nicovlr/smart-ontology-generator"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_SET_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:35:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SET_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-ARUNSR1NI-DATABRICKS-ONTOLOGY-GENERATOR-001",
+      "name": "Databricks Ontology Generator",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/arunsr1ni/databricks-ontology-generator",
+        "normalized_key": "github:arunsr1ni/databricks-ontology-generator"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "CONVERSATION_SET_DONORNAK",
+        "reported_owner_marker": "donornak",
+        "reported_date": "2026-10-07T13:35:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION_CONTEXT",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false,
+        "scope": "APPROVED_DONOR_SET_REFERENCE_ONLY"
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-09",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    }
+  ],
+  "rights_status": "UNVERIFIED_NO_CODE_REUSE",
+  "runtime_admission": false,
+  "approval_evidence_reconciliation": {
+    "evidence_window": "2026-10-09",
+    "historical_owner_conversation_status": "SECONDARY_CONVERSATION_CONTEXT_NOT_RAW_SOURCE_FILE",
+    "conversation_wide_approval_report": {
+      "date": "2026-10-05",
+      "scope": "ANATOMY_HUMAN_CHARACTER_RELATED_LINKS",
+      "owner_phrase": "minden a beszélgetésben szereplő link donornak",
+      "affected_entries": 10,
+      "exact_user_message_and_links_machine_auditable_in_repo": false
+    },
+    "explicit_covert_approval_historical_evidence": {
+      "entry": "Covert Coder",
+      "date": "2026-10-05",
+      "owner_phrase": "donornak vedd fel a linket",
+      "legacy_pr": 720,
+      "legacy_pr_merged": false,
+      "source_commit": "16818c0c823dec2bc117549f092f22bc9c446f50",
+      "source_document": "docs/donor-covert-coder-2026-10-05.md",
+      "document_blob_sha": "662285ce1d536dedefb24ed8446dba18c4d51d5d",
+      "historical_proposed_donor_id": "FA3-DONOR-ANONYMOUSNOMAD-COVERT-CODER-001",
+      "new_repository_canonical_admission": false
+    },
+    "remaining_unverified_suggested_references": [
+      "MakeHuman2",
+      "CharMorph",
+      "SMPL-X",
+      "DECA"
+    ],
+    "remaining_four_approval_evidence": "NO_DIRECT_USER_DONOR_MARKER_FOUND_IN_RETRIEVED_CONTEXT_REFERENCE_ONLY_PENDING_PRIMARY_EVIDENCE",
+    "promotion_permitted": false,
+    "source_index_complete": false,
+    "new_context_additions": {
+      "context_window": "2026-10-07",
+      "source_count": 8,
+      "original_user_message_and_exact_url_pair_reproducible_in_git": false,
+      "scope": "TWO_EXPLICIT_SINGLE_SOURCE_DONOR_MARKERS_AND_ONE_SIX_URL_CONVERSATION_SET",
+      "no_auto_admission": true
+    }
+  }
+}

@@ -18,7 +18,7 @@
 
 **Egyetlen globális ötszintű lánc:** csak az eredeti L1-források alkotnak induló gyökeret. L2-ben talált donor 4 szintet (L2–L5), L3-ban 3-at, L4-ben 2-t, L5-ben 1-et (csak L5) érhet el az aktuális szinttel együtt. Egy új donor, új kapcsolat vagy jóváhagyás nem indíthat új öt szintet. L6 tilos.
 
-**Kibontási STOP:** az eredeti, rögzített L1 bemeneti linkrekordok száma B. Minden aktuális szinten a forrásaiban talált tényleges, nyers kimenő linkelőfordulásokat számláljuk még duplikációszűrés és új-donor-azonosítás előtt. Maximum floor(B × 1,15). B=1000 esetén 1150 megengedett, 1151 azonnali STOP. Minden szint a változatlan eredeti B-hez hasonlít, a szintek összege és a donoradatbázis mérete nem használható. A korábban ismert és duplikált hivatkozások is számítanak a nyers küszöbbe.
+**Kibontási STOP (tulajdonosi felülírás 2026-10-09):** A befagyasztott eredeti L1 bemeneti linkrekordszám `B`. Az összes nyers URL és kapcsolati evidencia megmarad, de a 15%-os korlát kizárólag a teljes ismert donorindexszel és aliasokkal egyeztetett, **új, egyedi, korábban fel nem dolgozott forrásokra** vonatkozik. `LIMIT=floor(B×1,15)`, szintenként, nem kumulálva. Már feldolgozott donor nem elemzendő újra; 0 új forrásnál az ág kimerült (publikálási ellenőrzés még kötelező). Hiányos index = STOP.
 
 **Szintenkénti érvényesítés:** csak az eredetileg jóváhagyott donor lesz elfogadott donor; a további feltárt technológiák osztályozott, külön státuszú források. A publikált rekordok kanonikus azonosító, eredeti URL, alias, besorolás és szülőkapcsolat szerint visszakereshetők. Következő szint csak sikeres ellenőrzés után.
 
@@ -66,7 +66,7 @@ A **known link is not re-analyzed**. It may gain a newly observed parent relatio
 | Level | Input and permitted work | Closure |
 | --- | --- | --- |
 | **L1** | Frozen set of original donor source-link records. Preserve archive; identity/dedup; classify; register in appropriate status; identify further link-bearing roots. | **L1 PUBLISHED_AND_VERIFIED_PASS** |
-| **L2** | Extracted outbound link occurrences from L1 source references, subject to the raw expansion threshold; known sources reused, unknown references classified. | **L2 PUBLISHED_AND_VERIFIED_PASS** |
+| **L2** | Extract L1 outbound links; preserve raw URLs and provenance edges; resolve known IDs/aliases first; deduplicate and evaluate only truly new identities against the 15% net-new limit. | **L2 PUBLISHED_AND_VERIFIED_PASS** |
 | **L3** | Only sources forwarded from L2, with the same guards. | **L3 PUBLISHED_AND_VERIFIED_PASS** |
 | **L4** | Only sources forwarded from L3, with the same guards. | **L4 PUBLISHED_AND_VERIFIED_PASS** |
 | **L5** | Final permitted level; classify and publish; terminate expansion permanently after L5. | **L5 FINAL PASS** |
@@ -94,23 +94,22 @@ A child reached from a parent at global level `Li` belongs to global level `L(i+
 
 Within a level, inspect *only actual relevant sources*; classify every processed source at its correct destination. Parents stay where classified; only references requiring a subsequent stage enter the next queue. The queue is **not an automatic donor registration list**.
 
-**Order in each level:** identify → count potential outbound references for the next level (without processing next-level targets) → raw threshold check → prior-processing/alias check → dedup → relevance/classification → staged registration → indexed, reversible publication → independent read-back verification → level PASS → **only then** start next level.
+**Order in each level:** preserve all raw links and parent references → complete known-source/alias/supersession lookup → retain known-source decisions and edges → deduplicate novel identities → check net-new 15% threshold → classify novel sources only → reversible indexed publication → independent read-back → level PASS → only then start next level.
 
 If there are zero further relevant sources, end with documented `EARLY_EXHAUSTION_PASS` and no fabricated deeper levels. If a level fails any check, **STOP**, retain the last successfully published snapshot, do not start another level and do not silently skip sources.
 
-## 4. EXACT 15% rule — what is counted
+## 4. EXACT 15% rule — net-new unique-source count (owner revision 2026-10-09)
 
-Let `B` = the original, frozen number of **L1 input source-link records** before subsequent source deduplication; preserve the audited `B` and source snapshot. Define:
+**This section supersedes the previously approved raw outbound URL occurrence count.** Preserve every URL occurrence and every verified parent/child edge as evidence, but do not apply the quota to occurrences, known identities or within-level duplicates.
 
-`LIMIT = floor(B * 115 / 100)`.
-
-For each **current processing level**, count the **actual outbound hyperlink occurrences present in its inspected sources** that are being considered for the next level, **before** deduplicating or deciding that a link is already known. Count repeated links, and references to sources already in the donor registry. Do **not** count only net-new donor records or query the size of the active database. Do **not** add counts across L2–L5, and do **not** reset `B` between levels. Exclude non-links (anchors without HTTP(S) destinations, scripts not representing a source URL) deterministically; do not silently filter genuine link occurrences to avoid the limit.
-
-- `B=1000`, raw outgoing count `=1150`: allowed, subject to level PASS.
-- `B=1000`, raw outgoing count `=1151`: **STOPPED_EXPANSION_LIMIT**, even if 600 occurrences refer to existing donors.
-- The count is bounded **as occurrences are inspected**; stop immediately upon the `LIMIT + 1`th occurrence. Do not complete further extraction, truncate or hide the overage to report PASS.
-- A STOP is not an approved complete classification, not a signal to skip sources, not an invitation to increase the starting baseline. Capture an audit report with the exact source, link occurrence and checkpoint that crossed the threshold.
-- The last **successfully published and verified** level remains available. The incomplete level remains nonfinal; no subsequent level starts without an explicit owner-approved new decision.
+- Freeze `B` as the number of original L1 inbound **link records**, immutably identified. Do not infer B from the donor database size or count of unique identities.
+- `LIMIT = floor(B * 115 / 100)` for each global level, independently, without restarting the baseline and without summing levels.
+- Resolve the encountered URL against the **complete** historical/active identity index and verified aliases (including relocations and supersessions). Known sources retain their previous decisions; log each edge but do not re-analyze them.
+- Deduplicate the remaining truly new source identities within the level. Only **net-new unique identities** count toward the limit; discovered URLs remain unapproved candidates without rights/SDK/provider/model/runtime admission.
+- If the source index is incomplete, or identity conflict cannot be deterministically resolved, fail closed and do not call the unmatched links new.
+- STOP immediately when the count of new unique identities becomes `LIMIT+1`; never truncate the actual source set to force PASS. Keep the previously verified published level intact.
+- When zero new sources remain, record an `EARLY_EXHAUSTION_CANDIDATE`; it is not a final PASS until the applicable publication and independent read-back checks pass.
+- **Approved examples, B=445 → LIMIT=511:** 650 links with 445 known → 205 new, permitted; 512 links all known → zero new, branch exhausted; 800 links with 151 known → 649 new, STOP at the 512th new identity. Original raw URLs remain preserved in every case.
 
 ## 5. Mandatory publish-and-read-back gate
 
@@ -120,7 +119,7 @@ Publish only the original legitimately approved donor identities as approved. Un
 
 Successful level publication requires:
 1. Exhaustive accounted input and classification, resolved identity/dedup conflicts, prior decisions unchanged and all parent/child/root provenance preserved.
-2. No raw expansion-limit violation; raw count and fixed baseline present in the audit journal.
+2. No net-new unique-source limit violation; the frozen baseline B, raw URL audit count, known/duplicate count, net-new count and limit must be recorded.
 3. Staged data and indexes built under a versioned transaction or snapshot; no partial active indexes.
 4. Actual **independent query/read-back** of the published canonical IDs, original/alias locators, classification and relations through the user/developer-accessible search interface.
 5. Index and registry revision/digest agreement; no absent accepted donor or misrepresented statuses.
@@ -153,7 +152,7 @@ Neither background retries nor automatic rebase, admission, repair of old reposi
 
 **D – New sequential L2–L5 engine:** *new implementation* using the approved algorithm. Old PR #743 is a historical reference, **not code to copy unchanged**. The historical 16-shard rollout was cancelled; no complete historical crawl graph may be claimed.
 
-**E – Deterministic enforcement and tests:** threshold before dedup, STOP on count `LIMIT+1`, known-source skip, correct per-level counts, fixed absolute L1–L5 global depth, no new donor-specific roots or five-level restarts, no L6, no duplicate donor registration, no old decisions rewritten, no publication bypass, atomic rollback, rights-status gating.
+**E – Deterministic enforcement and tests:** prior identity lookup and novel dedup before threshold; STOP at net-new unique `LIMIT+1`; known-source skip, correct per-level counts, global L1–L5 depth, no new roots, no L6, no prior decision overwrite, publish/read-back and rights guards.
 
 **F – L2–L5 level-by-level execution:** each level runs only after verified published prior level. Stop on exhaustion or limit without fabricating complete results.
 
@@ -163,10 +162,10 @@ Neither background retries nor automatic rebase, admission, repair of old reposi
 
 | Condition | Expected |
 | --- | --- |
-| `B=1000`, raw `1150` | Within limit |
-| `B=1000`, raw `1151` | Immediate `STOPPED_EXPANSION_LIMIT` |
-| 1151 occurrences, many known/duplicated | STOP unchanged; no retroactive dedup adjustment |
-| L2 1100 occurrences; L3 1140 | Each compared only with frozen `B=1000`; no sum |
+| `B=445`, 650 found, 445 previously known, 205 new | Permitted (limit 511) |
+| `B=445`, 800 found, 151 known, 649 new | STOP at 512th new identity |
+| `B=445`, 512 found, all known | Zero new; early-exhaustion candidate |
+| L2 has 205 novel, L3 has 400 novel, B remains 445 | Each level independently below limit 511 |
 | L2 classification succeeds but read-back fails | L3 blocked; previous snapshot retained |
 | Same URL in two parent sources | One canonical identity; preserve both parent edges |
 | Previously accepted link reappears | Retain prior approved decision; no re-review |
@@ -194,8 +193,8 @@ The software implementation must obey the following sequence for one frozen migr
 1. Read-only recovery of every owner-approved historical donor submission and original URL; keep the original JSON/blobs, hashes and provenance immutable.
 2. Freeze the L1 input source-link **occurrences** and derive the audit baseline B from that exact immutable input. This initial input is the only source of L1 roots.
 3. For the active level, inspect the frozen parent queue; retain previous classifications and decisions for known sources.
-4. Extract actual outgoing links from the current level's inspected sources. **Increment the current level's raw outgoing occurrence count before deduplication or classification.** STOP immediately on count greater than floor(B × 115 / 100), without publishing the incomplete level.
-5. Where no STOP occurs, register parent-child evidence; deduplicate by canonical identity/alias; classify relevant new sources and retain earlier decisions. Children may enter **only the next global-level queue** and may not be processed early.
+4. Extract outbound links; preserve every raw occurrence and verified source edge. Check prior canonical identities, aliases and completed-source index; deduplicate novel identities, then STOP if the **net-new unique** count exceeds `floor(B × 115 / 100)`. Do not publish a truncated or unverified level.
+5. Where no STOP occurs, retain all parent-child evidence, classify **only new relevant sources** and preserve earlier decisions. Children enter only the next global queue, never early.
 6. Atomically publish the current level's admissible donor references and separate classified-source candidates. Build and activate the source, classification and relation indexes together.
 7. Independently query all published items by canonical ID, original URL/alias, classification and parent relation. Issue an immutable level PASS only after actual read-back, version matching and source-coverage checks.
 8. Only then begin the next global level. On L5, publish and finish without generating an L6 work queue. If no relevant further link exists earlier, finish with documented early exhaustion.
@@ -212,7 +211,7 @@ Every failure freezes progress, leaves the latest verified published level intac
 | ClassifiedDiscovery | Source URL, global L1–L5 level, class, discovered-unregistered status if not approved |
 | ProvenanceEdge | Original L1 root ID, parent and child IDs, observed occurrence and source-evidence reference |
 | LevelQueue | One fixed B and immutable run ID, next global level, frozen input references and progress checkpoint |
-| LevelReceipt | Input count, raw outbound count, 115% threshold, duplicates, classified results, STOP status, output version |
+| LevelReceipt | Original B, raw URL evidence count, previously known count, net-new unique identities, 115% threshold, repeated aliases, relations, STOP status, output version |
 | PublishedSnapshot | Atomic registry and index versions, rollback ref, active snapshot digest |
 | PublishVerification | Independent read-back by identity, original/alias URL, type and parent relationship; PASS/FAIL receipt |
 
@@ -234,7 +233,7 @@ Re-encountering a prior L1 source deeper creates only a provenance edge, not an 
 
 The final data-migration proof must show **zero** missing owner-approved original source URLs, unexplained canonical identity collisions, unjustified duplicate donor records, unclassified relevant processed sources, broken verified parent relations, unpublished approved donors, unauthorized legacy configurations or code imports, donor-specific depth restarts and global levels above L5.
 
-Each successfully completed level needs its own search-readback receipt; the next level's first operation must be blocked until it exists. B and the 115% threshold must be reproducible from the immutable input. The test matrix must include B=1000 → 1150 allowed; B=1000 → 1151 STOP; repeated known links still counted; L2=1100 and L3=1140 evaluated separately; L4-discovered donor cannot start a new five-level run; L5 never enqueues L6.
+Each successfully completed level needs its own search-readback receipt; the next level stays blocked until it exists. B must be reproducible from frozen original inputs; tests cover B=445 and limit=511, 650/445-known → 205 new, 512/512-known → 0 new, 800/151-known → 649 new STOP, repeated known URLs retained as edges without consuming quota, fixed global depth and L5 never starting L6.
 
 If the 15% threshold trips, the previously published levels remain accessible, but the overall run is **STOPPED_EXPANSION_LIMIT**, **never FINAL PASS**. A run may successfully end early only on proven exhaustion of further relevant links and successful publication of its final processed level.
 
@@ -251,4 +250,4 @@ No donor import, source-code adoption, network crawl, L1 publication, permission
 - A validated design policy is **not** a successful source crawl or an installed application, Foundation PASS, runtime provider admission or physical Current Host PASS.
 - This plan does not authorize new automatic implementation PRs, merges or modification of the old repository.
 
-**Approved design principle:** *Preserve all useful data; build clean canonical identity; process strictly level by level; publish and prove searchability before the next level; stop raw link expansion above 115% of the original L1 input — never attempt to index the entire internet.*
+**Approved design principle (2026-10-09 revision):** Preserve useful raw data and canonical identity; process strictly level-by-level; publish and prove searchability before the next level; stop **net-new unique source expansion** above 115% of the frozen original L1 link-record baseline; do not try to index the entire internet.

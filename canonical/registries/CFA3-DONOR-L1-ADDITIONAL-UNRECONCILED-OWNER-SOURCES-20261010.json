@@ -1,0 +1,296 @@
+{
+  "schema": "cfa3.donor-l1-supplemental-owner-approval-leads.v1",
+  "id": "CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010",
+  "status": "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED",
+  "source_evidence_type": "PRIOR_CONVERSATION_RETRIEVAL_NOT_IMMUTABLE_RAW_MESSAGE_EXPORT",
+  "archived_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "preexisting_staged_source_count": 1944,
+  "existing_23_supplement_preserved": true,
+  "original_L1_B": null,
+  "all_user_approvals_exhaustively_verified": false,
+  "missing_approved_sources_zero_proven": false,
+  "unresolved_identity_conflicts_zero_proven": false,
+  "publication_gate": "BLOCKED",
+  "runtime_admission": false,
+  "entries": [
+    {
+      "donor_id": "CFA3-L1-RECONCILE-SENTRY-001",
+      "name": "Sentry",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/getsentry/sentry",
+        "normalized_key": "github:getsentry/sentry"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T11:18:05Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-SCRAPEGRAPHAI-001",
+      "name": "ScrapeGraphAI",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/scrapegraphai/scrapegraph-ai",
+        "normalized_key": "github:scrapegraphai/scrapegraph-ai"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T10:59:35Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-FLOWSINT-001",
+      "name": "FlowSINT",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/reconurge/flowsint",
+        "normalized_key": "github:reconurge/flowsint"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T11:20:42Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    },
+    {
+      "donor_id": "CFA3-L1-RECONCILE-OPEN-ONTOLOGIES-001",
+      "name": "Open Ontologies",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/fabio-rovai/open-ontologies",
+        "normalized_key": "github:fabio-rovai/open-ontologies"
+      },
+      "status": "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE",
+      "submission_review": {
+        "basis": "PRIOR_CFA3_USER_CONVERSATION_RETRIEVAL",
+        "reported_owner_marker": "donornak és SDK-ba",
+        "reported_date": "2026-10-07T13:08:52Z",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_CFA3_CONVERSATION_RECONCILIATION_2026-10-10",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "automatic_install": false,
+      "automatic_activation": false,
+      "automatic_code_import": false,
+      "automatic_provider_admission": false
+    }
+  ],
+  "historical_20260930_proxy_security_named_donor_approval_gap": {
+    "status": "OPEN_HISTORICAL_APPROVAL_SOURCE_LOCATOR_RECONCILIATION",
+    "scope": "L1_LOSSLESS_LEGACY_DONOR_APPROVAL_TRANSFER_ONLY",
+    "historical_owner_instruction_date": "2026-09-30T14:09:42Z",
+    "historical_owner_instruction": "a megtalált donorokat add a donorlistához",
+    "instruction_semantics": "EXPLICIT_DONORLIST_ADDITION_ACCEPTED_BY_2026-10-10_OWNER_RULE",
+    "evidence_type": "PRIOR_CONVERSATION_RETRIEVAL_NOT_IMMUTABLE_RAW_USER_MESSAGE_EXPORT",
+    "named_historical_source_count": 14,
+    "existing_identity_count": 3,
+    "missing_original_source_locator_count": 11,
+    "existing_identities": [
+      {
+        "name": "Envoy",
+        "index_status": "EXISTING_IDENTITY_NO_DUPLICATE",
+        "source_id": "FA3-DONOR-GITHUB-ENVOYPROXY-ENVOY-9FD5CDA1-001",
+        "observed_locator": "https://github.com/envoyproxy/envoy",
+        "current_status": "ACCEPTED_REFERENCE",
+        "original_owner_submitted_url_pair_verified": false
+      },
+      {
+        "name": "SPIFFE / SPIRE",
+        "index_status": "EXISTING_IDENTITY_NO_DUPLICATE",
+        "source_id": "FA3-DONOR-SPIFFE-SPIRE-001",
+        "observed_locator": "https://github.com/spiffe/spire",
+        "current_status": "CANDIDATE",
+        "original_owner_submitted_url_pair_verified": false
+      },
+      {
+        "name": "Open Policy Agent",
+        "index_status": "EXISTING_IDENTITY_NO_DUPLICATE",
+        "source_id": "FA3-DONOR-GITHUB-OPEN-POLICY-AGENT-OPA-38D6EC18-001",
+        "observed_locator": "https://github.com/open-policy-agent/opa",
+        "current_status": "ACCEPTED_REFERENCE",
+        "original_owner_submitted_url_pair_verified": false
+      }
+    ],
+    "named_sources_without_reproducible_original_locator": [
+      {
+        "name": "Falco",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Tetragon",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Cilium",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "WireGuard",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Suricata",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Trivy",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Cosign",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "ClamAV",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "YARA",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "bubblewrap",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "OpenTelemetry",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      }
+    ],
+    "exact_submitted_url_and_approval_pairs_exhaustively_verified": false,
+    "no_duplicate_source_creation": true,
+    "no_guessed_original_urls": true,
+    "new_source_identities_registered_by_this_reconciliation": 0,
+    "no_existing_status_promotion_without_original_pair_evidence": true,
+    "original_L1_B": null,
+    "canonical_L1_published": false,
+    "runtime_admission": false
+  },
+  "legacy_l1_candidate_analyzed_verification_20261010": {
+    "status": "BOUNDED_HISTORICAL_REGISTRY_RECORD_SCAN_NO_GLOBAL_OWNER_APPROVAL_CLOSURE",
+    "historical_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+    "historical_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+    "checked_legacy_statuses": {
+      "CANDIDATE": 963,
+      "ANALYZED": 130
+    },
+    "inspected_records": 1093,
+    "explicit_owner_donor_marker_present_in_record_payload": 0,
+    "scan_pattern_scope": "CASE_INSENSITIVE_DONORNAK_OR_DONORLIST_OR_OWNER_EXPLICIT_DONOR_OR_OWNER_APPROVED_OR_OWNER_PRE_REVIEW_IN_WHOLE_HISTORICAL_RECORD_JSON",
+    "evidence_limit": "NO_MARKER_IN_REGISTRY_RECORD_DOES_NOT_PROVE_ABSENCE_OF_APPROVAL_IN_ORIGINAL_USER_CONVERSATIONS_OR_UNMERGED_PR_DISCUSSIONS",
+    "automatic_status_promotion": false,
+    "historical_20260930_named_source_identity_check": {
+      "missing_original_url_names_checked": 11,
+      "exact_matching_L1_source_identity_for_missing_names": 0,
+      "distinct_related_source_not_equivalent": {
+        "name": "OpenTelemetry semantic conventions for events",
+        "id": "FA3-DONOR-OPENTELEMETRY-EVENT-CONVENTIONS-001",
+        "url": "https://opentelemetry.io/docs/specs/semconv/general/events/",
+        "status": "ACCEPTED_REFERENCE"
+      },
+      "original_url_guesses_admitted": 0,
+      "named_sources_auto_registered": 0
+    },
+    "frozen_B_evidence": {
+      "known_partial_source_files": [
+        {
+          "name": "Beillesztett markdown.md",
+          "raw_url_count": 266,
+          "deduplicated_count": 133
+        },
+        {
+          "name": "Beillesztett markdown (2).md",
+          "raw_url_count": 625,
+          "deduplicated_count": 312
+        }
+      ],
+      "known_partial_raw_url_occurrences": 891,
+      "known_partial_normalized_union_count": 445,
+      "complete_original_L1_input_B": null,
+      "counts_are_not_the_full_B": true
+    },
+    "publication_gate": "BLOCKED_PENDING_EXHAUSTIVE_OWNER_APPROVAL_AND_ORIGINAL_INPUT_EVIDENCE",
+    "canonical_L1_published": false,
+    "runtime_admission": false
+  }
+}

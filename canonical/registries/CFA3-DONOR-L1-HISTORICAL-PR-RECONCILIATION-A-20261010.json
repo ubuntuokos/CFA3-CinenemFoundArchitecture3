@@ -1,0 +1,304 @@
+{
+  "schema": "cfa3.donor-l1-bounded-historical-pr-reconciliation.v1",
+  "id": "CFA3-DONOR-L1-HISTORICAL-PR-RECONCILIATION-A-20261010",
+  "status": "VERIFIED_BOUNDED_LEGACY_PR_IDENTITIES_NOT_L1_PUBLISHED",
+  "archived_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "legacy_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "method": "Read immutable historical PR head deltas; assert donor IDs and normalized source keys against preserved historical registry, retain submitted URL occurrences without re-analysis or new admission",
+  "groups": [
+    {
+      "historical_pr": 651,
+      "pr_head_sha": "cd34d7f7dacd992f41dbc650d239137233e7c781",
+      "delta_path": "canonical/deltas/FA3-DONOR-DIGITAL-SALON-HAIR-2026-10-03.json",
+      "delta_blob_sha": "684349d45326573e7298cbc9786d9c89e6d5a956",
+      "observed_submitted_url_count": 7,
+      "observed_original_submitted_urls": [
+        "https://github.com/digital-salon",
+        "https://github.com/zhoushiwei",
+        "https://github.com/KeyuWu-CS",
+        "https://github.com/tigerwash",
+        "https://digital-salon.github.io/",
+        "https://github.com/Jhonve",
+        "https://arxiv.org/"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-DIGITAL-SALON-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-DIGITAL-SALON-PROFILE-001",
+          "archived_normalized_key": "github:digital-salon",
+          "original_submitted_url": "https://github.com/digital-salon",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-ZHOUSHIWEI-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-ZHOUSHIWEI-PROFILE-001",
+          "archived_normalized_key": "github:zhoushiwei",
+          "original_submitted_url": "https://github.com/zhoushiwei",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-KEYUWU-CS-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-KEYUWU-CS-PROFILE-001",
+          "archived_normalized_key": "github:keyuwu-cs",
+          "original_submitted_url": "https://github.com/KeyuWu-CS",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-TIGERWASH-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-TIGERWASH-PROFILE-001",
+          "archived_normalized_key": "github:tigerwash",
+          "original_submitted_url": "https://github.com/tigerwash",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-DIGITAL-SALON-PROJECT-001",
+          "archived_donor_id": "FA3-DONOR-DIGITAL-SALON-PROJECT-001",
+          "archived_normalized_key": "https://digital-salon.github.io/",
+          "original_submitted_url": "https://digital-salon.github.io/",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-JHONVE-PROFILE-001",
+          "archived_donor_id": "FA3-DONOR-JHONVE-PROFILE-001",
+          "archived_normalized_key": "github:jhonve",
+          "original_submitted_url": "https://github.com/Jhonve",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-ARXIV-RESEARCH-INDEX-001",
+          "archived_donor_id": "FA3-DONOR-ARXIV-RESEARCH-INDEX-001",
+          "archived_normalized_key": "https://arxiv.org/",
+          "original_submitted_url": "https://arxiv.org/",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 7,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 657,
+      "pr_head_sha": "8ba0e90e646cd9fff73d5a566950d3b64b2712e4",
+      "delta_path": "canonical/deltas/FA3-DONOR-RENOISE-INTERACTION-SOURCES-2026-10-03.json",
+      "delta_blob_sha": "9f3665fac7b689049296d904f82b8201db301f68",
+      "observed_submitted_url_count": null,
+      "observed_original_submitted_urls": [
+        "https://github.com/renoise-ai",
+        "https://github.com/nickcent/Renoise-AI-Assistant",
+        "https://github.com/renoise",
+        "https://github.com/ArcoCodes",
+        "https://github.com/catppuccin/renoise"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-RENOISE-AI-ORG-001",
+          "archived_donor_id": "FA3-DONOR-RENOISE-AI-ORG-001",
+          "archived_normalized_key": "github:renoise-ai",
+          "original_submitted_url": "https://github.com/renoise-ai",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-NICKCENT-RENOISE-AI-ASSISTANT-001",
+          "archived_donor_id": "FA3-DONOR-NICKCENT-RENOISE-AI-ASSISTANT-001",
+          "archived_normalized_key": "github:nickcent/renoise-ai-assistant",
+          "original_submitted_url": "https://github.com/nickcent/Renoise-AI-Assistant",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-RENOISE-ORG-001",
+          "archived_donor_id": "FA3-DONOR-RENOISE-ORG-001",
+          "archived_normalized_key": "github:renoise",
+          "original_submitted_url": "https://github.com/renoise",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-ARCOCODES-ORG-001",
+          "archived_donor_id": "FA3-DONOR-ARCOCODES-ORG-001",
+          "archived_normalized_key": "github:arcocodes",
+          "original_submitted_url": "https://github.com/ArcoCodes",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-CATPPUCCIN-RENOISE-001",
+          "archived_donor_id": "FA3-DONOR-CATPPUCCIN-RENOISE-001",
+          "archived_normalized_key": "github:catppuccin/renoise",
+          "original_submitted_url": "https://github.com/catppuccin/renoise",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 5,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 663,
+      "pr_head_sha": "a9a89db1c0e29996d1e7b68790b1a5c69fabcbe5",
+      "delta_path": "canonical/deltas/FA3-DONOR-AI-STARTER-LEARNING-MARK3LABS-2026-10-03.json",
+      "delta_blob_sha": "50f872e5d05245a755618933e949aa95d70ce93a",
+      "observed_submitted_url_count": null,
+      "observed_original_submitted_urls": [
+        "https://github.com/topics/ai-starter-kit",
+        "https://github.com/mark3labs",
+        "https://github.com/topics/ai-starter",
+        "https://github.com/topics/ai-for-beginners",
+        "https://github.com/SixArm/ai-starter-guide",
+        "https://github.com/jbsoftware-io/gen-ai-starter"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-AI-STARTER-KIT-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-AI-STARTER-KIT-TOPIC-001",
+          "archived_normalized_key": "github:topics/ai-starter-kit",
+          "original_submitted_url": "https://github.com/topics/ai-starter-kit",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-MARK3LABS-ORG-001",
+          "archived_donor_id": "FA3-DONOR-MARK3LABS-ORG-001",
+          "archived_normalized_key": "github:mark3labs",
+          "original_submitted_url": "https://github.com/mark3labs",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-AI-STARTER-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-AI-STARTER-TOPIC-001",
+          "archived_normalized_key": "github:topics/ai-starter",
+          "original_submitted_url": "https://github.com/topics/ai-starter",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-AI-FOR-BEGINNERS-TOPIC-001",
+          "archived_donor_id": "FA3-DONOR-AI-FOR-BEGINNERS-TOPIC-001",
+          "archived_normalized_key": "github:topics/ai-for-beginners",
+          "original_submitted_url": "https://github.com/topics/ai-for-beginners",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-SIXARM-AI-STARTER-GUIDE-001",
+          "archived_donor_id": "FA3-DONOR-SIXARM-AI-STARTER-GUIDE-001",
+          "archived_normalized_key": "github:sixarm/ai-starter-guide",
+          "original_submitted_url": "https://github.com/SixArm/ai-starter-guide",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        },
+        {
+          "proposed_donor_id": "FA3-DONOR-JBSOFTWARE-GEN-AI-STARTER-001",
+          "archived_donor_id": "FA3-DONOR-JBSOFTWARE-GEN-AI-STARTER-001",
+          "archived_normalized_key": "github:jbsoftware-io/gen-ai-starter",
+          "original_submitted_url": "https://github.com/jbsoftware-io/gen-ai-starter",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 6,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 664,
+      "pr_head_sha": "0ea5b19c1028bcce009d17bf8dd72b6b7b96fd0c",
+      "delta_path": "canonical/deltas/FA3-DONOR-SIMONSOBS-SOOPERCOOL-2026-10-03.json",
+      "delta_blob_sha": "5f8e400d9ff1bd26ce32770bd3a6ea3a0fb87f6a",
+      "observed_submitted_url_count": 1,
+      "observed_original_submitted_urls": [
+        "https://github.com/simonsobs/SOOPERCOOL"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-SIMONSOBS-SOOPERCOOL-001",
+          "archived_donor_id": "FA3-DONOR-SIMONSOBS-SOOPERCOOL-001",
+          "archived_normalized_key": "github:simonsobs/soopercool",
+          "original_submitted_url": "https://github.com/simonsobs/SOOPERCOOL",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 1,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 671,
+      "pr_head_sha": "24a05f6f5e8f760ed05e80b89bccd3ceb699553b",
+      "delta_path": "canonical/deltas/FA3-DONOR-PHRESHOS-ORG-2026-10-04.json",
+      "delta_blob_sha": "ad01e4df189d922d00a9c3b55ec9eb9a19c8f3a9",
+      "observed_submitted_url_count": 1,
+      "observed_original_submitted_urls": [
+        "https://github.com/PhreshOS"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-PHRESHOS-ORG-001",
+          "archived_donor_id": "FA3-DONOR-PHRESHOS-ORG-001",
+          "archived_normalized_key": "github:phreshos",
+          "original_submitted_url": "https://github.com/PhreshOS",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 1,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 672,
+      "pr_head_sha": "bdfdc61e6814fd4d32d94f890f28658118dfbe98",
+      "delta_path": "canonical/deltas/FA3-DONOR-CLOUDFLARE-OS-2026-10-04.json",
+      "delta_blob_sha": "6ca8c7d9a9aa9fdd04a7838214136a9da4553f23",
+      "observed_submitted_url_count": 1,
+      "observed_original_submitted_urls": [
+        "https://github.com/cloudflare/cloudflare-os"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-CLOUDFLARE-OS-001",
+          "archived_donor_id": "FA3-DONOR-CLOUDFLARE-OS-001",
+          "archived_normalized_key": "github:cloudflare/cloudflare-os",
+          "original_submitted_url": "https://github.com/cloudflare/cloudflare-os",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 1,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 673,
+      "pr_head_sha": "716a154b076095c94c12e2eea973b8208ae01bc2",
+      "delta_path": "canonical/deltas/FA3-DONOR-ECOPASTEHUB-ORG-2026-10-04.json",
+      "delta_blob_sha": "f1d7939cb4f9f3a8a284ed764cb607c45e18bcb1",
+      "observed_submitted_url_count": 1,
+      "observed_original_submitted_urls": [
+        "https://github.com/EcoPasteHub"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-ECOPASTEHUB-ORG-001",
+          "archived_donor_id": "FA3-DONOR-ECOPASTEHUB-ORG-001",
+          "archived_normalized_key": "github:ecopastehub",
+          "original_submitted_url": "https://github.com/EcoPasteHub",
+          "source_url_provenance": "HISTORICAL_DELTA_SOURCES"
+        }
+      ],
+      "archive_match_count": 1,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    },
+    {
+      "historical_pr": 675,
+      "pr_head_sha": "4635a980ccf5c8291bb54d608953b6cd5faf128e",
+      "delta_path": "canonical/deltas/FA3-DONOR-API-EVANGELIST-ORG-2026-10-04.json",
+      "delta_blob_sha": "40be6dedbe7d3569902494b52ddbbac83efc6633",
+      "observed_submitted_url_count": 1,
+      "observed_original_submitted_urls": [
+        "https://github.com/api-evangelist"
+      ],
+      "archive_identities": [
+        {
+          "proposed_donor_id": "FA3-DONOR-API-EVANGELIST-ORG-001",
+          "archived_donor_id": "FA3-DONOR-API-EVANGELIST-ORG-001",
+          "archived_normalized_key": "github:api-evangelist",
+          "original_submitted_url": "https://github.com/api-evangelist",
+          "source_url_provenance": "ARCHIVED_PR_INTAKE_PROVENANCE"
+        }
+      ],
+      "archive_match_count": 1,
+      "match_scope": "BOUNDED_DELTA_ONLY_NOT_GLOBAL_COMPLETENESS"
+    }
+  ],
+  "total_groups": 8,
+  "total_matched_rows": 23,
+  "global_approved_submissions_complete": false,
+  "frozen_l1_B": null,
+  "canonical_level_published": false,
+  "runtime_admission": false
+}

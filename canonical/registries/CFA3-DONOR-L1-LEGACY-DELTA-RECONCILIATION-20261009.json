@@ -1,0 +1,690 @@
+{
+  "schema": "cfa3.donor-l1-bounded-delta-reconciliation.v1",
+  "id": "CFA3-DONOR-L1-LEGACY-DELTA-RECONCILIATION-20261009",
+  "state": "BOUNDED_75_VERIFIED_NOT_GLOBAL_COMPLETENESS",
+  "snapshot": "OLD_MAIN_ARCHIVE_1919_SHA_062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+  "description": "7 historical delta files from 6 closed-unmerged PRs; all 75 proposed source identities already present in immutable old main registry. Keep IDs and decisions; do not re-admit or analyze these sources. Does not prove every user approval/conversation is accounted for.",
+  "archive_reference": "archive/donor-source-migration/2026-10-09/FA3-DONOR-REFERENCE-REGISTRY-001.json",
+  "groups": [
+    {
+      "name": "731-web",
+      "legacy_pr": 731,
+      "source_commit": "3c379c5ded8e34576722a98b2d29d3c8d90495c2",
+      "source_path": "canonical/deltas/CFA3-DONOR-WEBDESIGN-CODE-ENGINEERING-BATCH-2026-10-06.json",
+      "source_blob_sha": "b17ce9c1f10aa7ac9bf580cdd45173792b208f30",
+      "input_source_count": 47,
+      "missing_from_archived_1919": 0
+    },
+    {
+      "name": "731-nvidia",
+      "legacy_pr": 731,
+      "source_commit": "3c379c5ded8e34576722a98b2d29d3c8d90495c2",
+      "source_path": "canonical/deltas/CFA3-DONOR-NVIDIA-PHYSICAL-AI-DATA-FACTORY-2026-10-06.json",
+      "source_blob_sha": "d91e3380170780d0e4940e1274fb53062e82b011",
+      "input_source_count": 1,
+      "missing_from_archived_1919": 0
+    },
+    {
+      "name": "735",
+      "legacy_pr": 735,
+      "source_commit": "29973baabe6cd8b09b5b537dc52b83c63cd4efb5",
+      "source_path": "canonical/deltas/CFA3-DONOR-OPTISCALER-NEURAL-RENDERING-2026-10-06.json",
+      "source_blob_sha": "a50f804dc24ec708278265dfca8b3db348ea2970",
+      "input_source_count": 6,
+      "missing_from_archived_1919": 0
+    },
+    {
+      "name": "737",
+      "legacy_pr": 737,
+      "source_commit": "6fbd5e809ec068747482f6eaa2dc485f12fbda05",
+      "source_path": "canonical/deltas/CFA3-DONOR-CLAIMS-IDENTITY-PROVENANCE-2026-10-06.json",
+      "source_blob_sha": "c74e4d0a04ef8673ef9f6673dec651d14dd9f047",
+      "input_source_count": 10,
+      "missing_from_archived_1919": 0
+    },
+    {
+      "name": "738",
+      "legacy_pr": 738,
+      "source_commit": "26b780f32a61645079af192796591c57bdfc63f6",
+      "source_path": "canonical/deltas/CFA3-DONOR-GROQ-REFERENCE-SOURCES-2026-10-06.json",
+      "source_blob_sha": "8144b1ebee53fe3a780879038511eae3bffecce0",
+      "input_source_count": 5,
+      "missing_from_archived_1919": 0
+    },
+    {
+      "name": "739",
+      "legacy_pr": 739,
+      "source_commit": "8143e63f0e7d4363be62f5b549f9c2a921222b17",
+      "source_path": "canonical/deltas/CFA3-DONOR-PERPLEXITY-REFERENCE-SOURCES-2026-10-07.json",
+      "source_blob_sha": "bd0d9c3659e33509e6ee7a78fce81849b53d5f2c",
+      "input_source_count": 5,
+      "missing_from_archived_1919": 0
+    },
+    {
+      "name": "740",
+      "legacy_pr": 740,
+      "source_commit": "92460387ed3539f2ab84c3e59d3c84630f17b44d",
+      "source_path": "canonical/deltas/CFA3-DONOR-MICROSOFT-CHAT-COPILOT-2026-10-07.json",
+      "source_blob_sha": "0c5df41b4f40e81896b3655fc7169283dcaa8a54",
+      "input_source_count": 1,
+      "missing_from_archived_1919": 0
+    }
+  ],
+  "records": [
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "https://www.quickandeasywebbuilder.com",
+      "donor_id": "FA3-DONOR-QUICK-N-EASY-WEB-BUILDER-001",
+      "submitted_url": "https://www.quickandeasywebbuilder.com",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:kde/kimagemapeditor",
+      "donor_id": "FA3-DONOR-KDE-KIMAGEMAPEDITOR-001",
+      "submitted_url": "https://github.com/KDE/kimagemapeditor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:kde/quanta",
+      "donor_id": "FA3-DONOR-KDE-QUANTA-001",
+      "submitted_url": "https://github.com/KDE/quanta",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "https://www.dyad.sh/docs",
+      "donor_id": "FA3-DONOR-DYAD-DOCUMENTATION-001",
+      "submitted_url": "https://www.dyad.sh/docs",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "https://getpublii.com/docs/",
+      "donor_id": "FA3-DONOR-PUBLII-DOCUMENTATION-001",
+      "submitted_url": "https://getpublii.com/docs/",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:wikimedia/visualeditor",
+      "donor_id": "FA3-DONOR-WIKIMEDIA-VISUALEDITOR-001",
+      "submitted_url": "https://github.com/wikimedia/VisualEditor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:jihong88/suneditor",
+      "donor_id": "FA3-DONOR-SUNEDITOR-001",
+      "submitted_url": "https://github.com/JiHong88/suneditor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:ckeditor/ckeditor4",
+      "donor_id": "FA3-DONOR-CKEDITOR-4-001",
+      "submitted_url": "https://github.com/ckeditor/ckeditor4",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/ai-editor?l=html",
+      "donor_id": "FA3-DONOR-GITHUB-AI-EDITOR-TOPIC-HTML-FILTER-001",
+      "submitted_url": "https://github.com/topics/ai-editor?l=html",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/ai-editor",
+      "donor_id": "FA3-DONOR-GITHUB-AI-EDITOR-TOPIC-001",
+      "submitted_url": "https://github.com/topics/ai-editor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/html-editor",
+      "donor_id": "FA3-DONOR-GITHUB-HTML-EDITOR-TOPIC-001",
+      "submitted_url": "https://github.com/topics/html-editor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/ai-code-editor",
+      "donor_id": "FA3-DONOR-GITHUB-AI-CODE-EDITOR-TOPIC-001",
+      "submitted_url": "https://github.com/topics/ai-code-editor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/ai-html",
+      "donor_id": "FA3-DONOR-GITHUB-AI-HTML-TOPIC-001",
+      "submitted_url": "https://github.com/topics/ai-html",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/offline-ai-logo-generation",
+      "donor_id": "FA3-DONOR-GITHUB-OFFLINE-AI-LOGO-GENERATION-TOPIC-001",
+      "submitted_url": "https://github.com/topics/offline-ai-logo-generation",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:topics/ai-image-editing",
+      "donor_id": "FA3-DONOR-GITHUB-AI-IMAGE-EDITING-TOPIC-001",
+      "submitted_url": "https://github.com/topics/ai-image-editing",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:nexu-io",
+      "donor_id": "FA3-DONOR-NEXU-IO-ORGANIZATION-001",
+      "submitted_url": "https://github.com/nexu-io",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:nexu-io/html-anything",
+      "donor_id": "FA3-DONOR-NEXU-IO-HTML-ANYTHING-001",
+      "submitted_url": "https://github.com/nexu-io/html-anything",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:nexu-io/open-design",
+      "donor_id": "FA3-DONOR-NEXU-IO-OPEN-DESIGN-001",
+      "submitted_url": "https://github.com/nexu-io/open-design",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:nexu-io/html-video",
+      "donor_id": "FA3-DONOR-NEXU-IO-HTML-VIDEO-001",
+      "submitted_url": "https://github.com/nexu-io/html-video",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:sayhi-bzb/agent-html",
+      "donor_id": "FA3-DONOR-SAYHI-BZB-AGENT-HTML-001",
+      "submitted_url": "https://github.com/Sayhi-bzb/Agent-HTML",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:components-ai/css.gui",
+      "donor_id": "FA3-DONOR-COMPONENTS-AI-CSS-GUI-001",
+      "submitted_url": "https://github.com/components-ai/css.gui",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:components-ai",
+      "donor_id": "FA3-DONOR-COMPONENTS-AI-ORGANIZATION-001",
+      "submitted_url": "https://github.com/components-ai",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:markrahq/markra",
+      "donor_id": "FA3-DONOR-MARKRAHQ-MARKRA-001",
+      "submitted_url": "https://github.com/markrahq/markra",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:arshad-yaseen/monacopilot",
+      "donor_id": "FA3-DONOR-ARSHAD-YASEEN-MONACOPILOT-001",
+      "submitted_url": "https://github.com/arshad-yaseen/monacopilot",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:inbharat-ai/codein.pro",
+      "donor_id": "FA3-DONOR-INBHARAT-AI-CODEIN-PRO-001",
+      "submitted_url": "https://github.com/inbharat-ai/codein.pro",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:graysonbannister/omni-code",
+      "donor_id": "FA3-DONOR-GRAYSONBANNISTER-OMNI-CODE-001",
+      "submitted_url": "https://github.com/GraysonBannister/omni-code",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:samuraigpt/ai-logo-studio",
+      "donor_id": "FA3-DONOR-SAMURAIGPT-AI-LOGO-STUDIO-001",
+      "submitted_url": "https://github.com/SamurAIGPT/ai-logo-studio",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:nutlope/logocreator",
+      "donor_id": "FA3-DONOR-NUTLOPE-LOGOCREATOR-001",
+      "submitted_url": "https://github.com/Nutlope/logocreator",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:centralpigeonnippers/ai-logo-maker",
+      "donor_id": "FA3-DONOR-CENTRALPIGEONNIPPERS-AI-LOGO-MAKER-001",
+      "submitted_url": "https://github.com/centralpigeonnippers/ai-logo-maker",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:nothing331/mirai-image-editor",
+      "donor_id": "FA3-DONOR-NOTHING331-MIRAI-IMAGE-EDITOR-001",
+      "submitted_url": "https://github.com/nothing331/mirai-image-editor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:howardrock88/semcanvas-ai",
+      "donor_id": "FA3-DONOR-HOWARDROCK88-SEMCANVAS-AI-001",
+      "submitted_url": "https://github.com/howardrock88/semcanvas-ai",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:xbastille/deepfx-studio",
+      "donor_id": "FA3-DONOR-XBASTILLE-DEEPFX-STUDIO-001",
+      "submitted_url": "https://github.com/XBastille/DeepFX-Studio",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:samuraigpt/clearmark-ai",
+      "donor_id": "FA3-DONOR-SAMURAIGPT-CLEARMARK-AI-001",
+      "submitted_url": "https://github.com/SamurAIGPT/clearmark-ai",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:apache/netbeans",
+      "donor_id": "FA3-DONOR-APACHE-NETBEANS-001",
+      "submitted_url": "https://github.com/apache/netbeans",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:eclipse-platform/eclipse.platform",
+      "donor_id": "FA3-DONOR-ECLIPSE-PLATFORM-001",
+      "submitted_url": "https://github.com/eclipse-platform/eclipse.platform",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:eclipse-jdt/eclipse.jdt.core",
+      "donor_id": "FA3-DONOR-ECLIPSE-JDT-CORE-001",
+      "submitted_url": "https://github.com/eclipse-jdt/eclipse.jdt.core",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:eclipse-lsp4e/lsp4e",
+      "donor_id": "FA3-DONOR-ECLIPSE-LSP4E-001",
+      "submitted_url": "https://github.com/eclipse-lsp4e/lsp4e",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:eclipse-theia/theia",
+      "donor_id": "FA3-DONOR-ECLIPSE-THEIA-001",
+      "submitted_url": "https://github.com/eclipse-theia/theia",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:microsoft/vscode",
+      "donor_id": "FA3-DONOR-VS-CODE-CODE-OSS-001",
+      "submitted_url": "https://github.com/microsoft/vscode",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:jetbrains/intellij-community",
+      "donor_id": "FA3-DONOR-INTELLIJ-COMMUNITY-001",
+      "submitted_url": "https://github.com/JetBrains/intellij-community",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:kde/kdevelop",
+      "donor_id": "FA3-DONOR-KDEVELOP-001",
+      "submitted_url": "https://github.com/KDE/kdevelop",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:qt-creator/qt-creator",
+      "donor_id": "FA3-DONOR-QT-CREATOR-001",
+      "submitted_url": "https://github.com/qt-creator/qt-creator",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "https://gitlab.gnome.org/gnome/gnome-builder",
+      "donor_id": "FA3-DONOR-GNOME-BUILDER-001",
+      "submitted_url": "https://gitlab.gnome.org/GNOME/gnome-builder",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:zed-industries/zed",
+      "donor_id": "FA3-DONOR-ZED-001",
+      "submitted_url": "https://github.com/zed-industries/zed",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:lapce/lapce",
+      "donor_id": "FA3-DONOR-LAPCE-001",
+      "submitted_url": "https://github.com/lapce/lapce",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:eclipse-che/che",
+      "donor_id": "FA3-DONOR-ECLIPSE-CHE-001",
+      "submitted_url": "https://github.com/eclipse-che/che",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-web",
+      "source_key": "github:microsoft/monaco-editor",
+      "donor_id": "FA3-DONOR-MONACO-EDITOR-001",
+      "submitted_url": "https://github.com/microsoft/monaco-editor",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 731,
+      "group": "731-nvidia",
+      "source_key": "github:nvidia/physical-ai-data-factory",
+      "donor_id": "FA3-DONOR-NVIDIA-PHYSICAL-AI-DATA-FACTORY-001",
+      "submitted_url": "https://github.com/NVIDIA/physical-ai-data-factory",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 735,
+      "group": "735",
+      "source_key": "github:optiscaler/optiscaler",
+      "donor_id": "FA3-DONOR-OPTISCALER-OPTISCALER-001",
+      "submitted_url": "https://github.com/optiscaler/OptiScaler",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 735,
+      "group": "735",
+      "source_key": "github:optiscaler",
+      "donor_id": "FA3-DONOR-OPTISCALER-ORGANIZATION-001",
+      "submitted_url": "https://github.com/optiscaler",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 735,
+      "group": "735",
+      "source_key": "github:topics/framegeneration?l=c%23",
+      "donor_id": "FA3-DONOR-GITHUB-FRAMEGENERATION-TOPIC-CSHARP-FILTER-001",
+      "submitted_url": "https://github.com/topics/framegeneration?l=c%23",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 735,
+      "group": "735",
+      "source_key": "github:ind4skylivey",
+      "donor_id": "FA3-DONOR-IND4SKYLIVEY-PROFILE-001",
+      "submitted_url": "https://github.com/ind4skylivey",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 735,
+      "group": "735",
+      "source_key": "github:wilsjo2/optiscaler-dlssnr-presr-multipass",
+      "donor_id": "FA3-DONOR-WILSJO2-OPTISCALER-DLSSNR-PRESR-MULTIPASS-001",
+      "submitted_url": "https://github.com/wilsjo2/OptiScaler-DLSSNR-PreSR-Multipass",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 735,
+      "group": "735",
+      "source_key": "github:dagherbou",
+      "donor_id": "FA3-DONOR-DAGHERBOU-PROFILE-001",
+      "submitted_url": "https://github.com/Dagherbou",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:claimed-framework",
+      "donor_id": "FA3-DONOR-CLAIMED-FRAMEWORK-ORG-001",
+      "submitted_url": "https://github.com/claimed-framework",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:topics/claims?l=html&o=desc&s=updated",
+      "donor_id": "FA3-DONOR-GITHUB-CLAIMS-TOPIC-HTML-UPDATED-001",
+      "submitted_url": "https://github.com/topics/claims?l=html&o=desc&s=updated",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:topics/file-claim",
+      "donor_id": "FA3-DONOR-GITHUB-FILE-CLAIM-TOPIC-001",
+      "submitted_url": "https://github.com/topics/file-claim",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:thunlp/claim",
+      "donor_id": "FA3-DONOR-THUNLP-CLAIM-001",
+      "submitted_url": "https://github.com/thunlp/CLAIM",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:marketplace/actions/actions-custom-oidc-claim",
+      "donor_id": "FA3-DONOR-GITHUB-MARKETPLACE-ACTIONS-CUSTOM-OIDC-CLAIM-001",
+      "submitted_url": "https://github.com/marketplace/actions/actions-custom-oidc-claim",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "https://github.blog/changelog/2026-04-23-immutable-subject-claims-for-github-actions-oidc-tokens/",
+      "donor_id": "FA3-DONOR-GITHUB-BLOG-IMMUTABLE-SUBJECT-CLAIMS-OIDC-2026-04-23-001",
+      "submitted_url": "https://github.blog/changelog/2026-04-23-immutable-subject-claims-for-github-actions-oidc-tokens/",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:gitcoinco/claim-tool",
+      "donor_id": "FA3-DONOR-GITCOINCO-CLAIM-TOOL-001",
+      "submitted_url": "https://github.com/gitcoinco/claim-tool",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:decentralized-identity/claim-format-registry",
+      "donor_id": "FA3-DONOR-DIF-CLAIM-FORMAT-REGISTRY-001",
+      "submitted_url": "https://github.com/decentralized-identity/claim-format-registry",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:decentralized-identity/claims-credentials",
+      "donor_id": "FA3-DONOR-DIF-CLAIMS-CREDENTIALS-001",
+      "submitted_url": "https://github.com/decentralized-identity/claims-credentials",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 737,
+      "group": "737",
+      "source_key": "github:netlify/deploy-and-claim",
+      "donor_id": "FA3-DONOR-NETLIFY-DEPLOY-AND-CLAIM-001",
+      "submitted_url": "https://github.com/netlify/deploy-and-claim",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 738,
+      "group": "738",
+      "source_key": "github:groq",
+      "donor_id": "FA3-DONOR-GROQ-ORGANIZATION-001",
+      "submitted_url": "https://github.com/groq",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 738,
+      "group": "738",
+      "source_key": "github:topics/groq-cloud?o=asc&s=updated",
+      "donor_id": "FA3-DONOR-GITHUB-GROQ-CLOUD-TOPIC-UPDATED-ASC-001",
+      "submitted_url": "https://github.com/topics/groq-cloud?o=asc&s=updated",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 738,
+      "group": "738",
+      "source_key": "github:topics/groq-ai",
+      "donor_id": "FA3-DONOR-GITHUB-GROQ-AI-TOPIC-001",
+      "submitted_url": "https://github.com/topics/groq-ai",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 738,
+      "group": "738",
+      "source_key": "github:topics/groq-api?l=go",
+      "donor_id": "FA3-DONOR-GITHUB-GROQ-API-TOPIC-GO-001",
+      "submitted_url": "https://github.com/topics/groq-api?l=go",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 738,
+      "group": "738",
+      "source_key": "github:topics/groq-ai-real-time",
+      "donor_id": "FA3-DONOR-GITHUB-GROQ-AI-REAL-TIME-TOPIC-001",
+      "submitted_url": "https://github.com/topics/groq-ai-real-time",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 739,
+      "group": "739",
+      "source_key": "github:perplexityai",
+      "donor_id": "FA3-DONOR-PERPLEXITYAI-ORGANIZATION-001",
+      "submitted_url": "https://github.com/perplexityai",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 739,
+      "group": "739",
+      "source_key": "github:helallao/perplexity-ai",
+      "donor_id": "FA3-DONOR-HELALLAO-PERPLEXITY-AI-001",
+      "submitted_url": "https://github.com/helallao/perplexity-ai",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 739,
+      "group": "739",
+      "source_key": "github:topics/perplexity-ai-api",
+      "donor_id": "FA3-DONOR-GITHUB-PERPLEXITY-AI-API-TOPIC-001",
+      "submitted_url": "https://github.com/topics/perplexity-ai-api",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 739,
+      "group": "739",
+      "source_key": "github:topics/perplexity-clone",
+      "donor_id": "FA3-DONOR-GITHUB-PERPLEXITY-CLONE-TOPIC-001",
+      "submitted_url": "https://github.com/topics/perplexity-clone",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 739,
+      "group": "739",
+      "source_key": "github:topics/perplexity?l=rust&o=desc&s=stars",
+      "donor_id": "FA3-DONOR-GITHUB-PERPLEXITY-TOPIC-RUST-STARS-DESC-001",
+      "submitted_url": "https://github.com/topics/perplexity?l=rust&o=desc&s=stars",
+      "archived_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "legacy_pr": 740,
+      "group": "740",
+      "source_key": "github:microsoft/chat-copilot",
+      "donor_id": "FA3-DONOR-MICROSOFT-CHAT-COPILOT-001",
+      "submitted_url": "https://github.com/microsoft/chat-copilot",
+      "archived_status": "ACCEPTED_REFERENCE"
+    }
+  ],
+  "checks": {
+    "delta_files": 7,
+    "donor_records": 75,
+    "unique_keys": 75,
+    "missing_from_archive": 0,
+    "donor_id_mismatch": 0,
+    "unjustified_duplicates": 0
+  },
+  "not_verified": {
+    "all_prior_chats": true,
+    "L1_publication": true,
+    "L2_to_L5": true,
+    "full_new_CFA3_admission": true
+  },
+  "runtime_authorization": false
+}

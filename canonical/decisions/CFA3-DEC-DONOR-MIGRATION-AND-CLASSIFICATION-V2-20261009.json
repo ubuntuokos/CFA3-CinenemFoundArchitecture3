@@ -25,7 +25,7 @@
     "NO_LOST_OWNER_APPROVED_LINKS",
     "FIVE_SEQUENTIAL_LEVELS",
     "LEVEL_PUBLICATION_BEFORE_NEXT_LEVEL",
-    "RAW_OUTBOUND_COUNT_LIMIT_FIXED_AT_115_PERCENT_OF_L1",
+    "NET_NEW_UNIQUE_SOURCE_LIMIT_FIXED_AT_115_PERCENT_OF_FROZEN_L1",
     "DUPLICATION_AND_PREVIOUS_DECISION_PRESERVATION",
     "STOP_WITHOUT_AUTO_EXPANSION",
     "GLOBAL_DISCOVERY_DEPTH_L1_TO_L5_NEVER_RESETS",
@@ -57,5 +57,32 @@
     "donor_import_complete": false,
     "published_levels": [],
     "previous_approvals_untouched": true
+  },
+  "expansion_rule_override": {
+    "owner_confirmed": "2026-10-09",
+    "approved": true,
+    "prior_rule": "RAW_OUTBOUND_OCCURRENCES_BEFORE_DEDUP",
+    "replacement": "NET_NEW_UNIQUE_IDENTITIES_AFTER_COMPLETE_REGISTRY_AND_ALIAS_LOOKUP",
+    "frozen_baseline": "ORIGINAL_L1_LINK_RECORDS_B",
+    "per_level_non_cumulative": true,
+    "allow_known_source_reanalysis": false,
+    "zero_new_sources": "EARLY_EXHAUSTION_CANDIDATE_REQUIRES_PUBLICATION_READBACK",
+    "cases": [
+      {
+        "raw_links": 650,
+        "known_links": 445,
+        "net_new_unique": 205
+      },
+      {
+        "raw_links": 512,
+        "known_links": 512,
+        "net_new_unique": 0
+      },
+      {
+        "raw_links": 800,
+        "known_links": 151,
+        "net_new_unique": 649
+      }
+    ]
   }
 }

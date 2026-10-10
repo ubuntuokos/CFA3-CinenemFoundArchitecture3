@@ -38,13 +38,19 @@ class BootstrapPolicyTests(unittest.TestCase):
         decision=load("canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json")
         self.assertEqual([], validate_donor_classification_plan(pol,decision))
         bad=copy.deepcopy(pol)
-        bad["expansion_limit"]["comparison"]="NET_NEW_DONORS_AFTER_DEDUPLICATION"
+        bad["expansion_limit"]["comparison"]="RAW_OUTBOUND_LINK_OCCURRENCES_FROM_CURRENT_LEVEL_BEFORE_DEDUPLICATION_OR_CLASSIFICATION"
         self.assertTrue(validate_donor_classification_plan(bad,decision))
         bad=copy.deepcopy(pol)
         bad["expansion_limit"]["per_level_not_cumulative"]=False
         self.assertTrue(validate_donor_classification_plan(bad,decision))
         bad=copy.deepcopy(pol)
-        bad["expansion_limit"]["count_previously_known_discovered_urls"]=False
+        bad["expansion_limit"]["count_previously_known_discovered_urls"]=True
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["expansion_limit"]["count_new_unique_sources_once_per_level"]=False
+        self.assertTrue(validate_donor_classification_plan(bad,decision))
+        bad=copy.deepcopy(pol)
+        bad["expansion_limit"]["index_incomplete_state"]="ASSUME_NEW"
         self.assertTrue(validate_donor_classification_plan(bad,decision))
         bad=copy.deepcopy(pol)
         bad["level_publish_gate"]["next_level_requires_prior_level"]="CLASSIFICATION_FINISHED"

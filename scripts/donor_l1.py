@@ -271,6 +271,52 @@ def register_tripo_historical_urls(db, sources):
     return len(seen)
 
 
+def build_url_resolution(db):
+    """Deterministic exact-URL lookup; never collapse multiple historical IDs.
+
+    Explicit prior-owner URL resolution wins over incidental discovery links.
+    Remaining multi-owner locators are a fail-closed conflict, not a guess.
+    """
+    preferred = {}
+    for row in json_read(UNION)["source_coverage"]:
+        for url in row["original_locators"]:
+            target = (row["resolved_donor_id"], "HISTORICAL_OWNER_BASELINE")
+            if url in preferred and preferred[url] != target:
+                raise ValueError("Conflicting historical owner URL resolution: " + url)
+            preferred[url] = target
+    for row in json_read(TRIPO_RECOVERY)["url_provenance"]:
+        url = row["original_url"]
+        target = (row["source_id"], "HISTORICAL_TRIPO_OWNER_URL")
+        if url in preferred and preferred[url][0] != target[0]:
+            raise ValueError("Conflicting historical Tripo URL resolution: " + url)
+        preferred.setdefault(url, target)
+    exact_locators = {}
+    exact_keys = {}
+    for sid, locator, key in db.execute(
+            "SELECT source_id,locator,normalized_key FROM sources"):
+        exact_locators.setdefault(locator, set()).add(sid)
+        exact_keys.setdefault(key, set()).add(sid)
+    mapping = {}
+    for url, sid in db.execute("SELECT alias,source_id FROM aliases ORDER BY alias,source_id"):
+        mapping.setdefault(url, []).append(sid)
+    for url, ids in mapping.items():
+        if url in preferred:
+            primary, reason = preferred[url]
+        elif url in exact_locators and len(exact_locators[url]) == 1:
+            primary, reason = next(iter(exact_locators[url])), "EXACT_SOURCE_LOCATOR"
+        elif url in exact_keys and len(exact_keys[url]) == 1:
+            primary, reason = next(iter(exact_keys[url])), "EXACT_NORMALIZED_SOURCE_KEY"
+        elif len(ids) == 1:
+            primary, reason = ids[0], "SINGLE_DISCOVERY_REFERENCE"
+        else:
+            raise ValueError("Unresolved multi-source URL; owner mapping required: " + url)
+        if primary not in ids:
+            raise ValueError("URL resolution target not indexed: " + url)
+        db.execute("INSERT INTO url_resolution VALUES(?,?,?,?)",
+                   (url,primary,reason,json.dumps(ids,ensure_ascii=False)))
+    return len(mapping)
+
+
 def prepare(db, sources, run_id):
     db.executescript("""
       PRAGMA foreign_keys=ON;
@@ -285,6 +331,12 @@ def prepare(db, sources, run_id):
       CREATE TABLE aliases(alias TEXT NOT NULL, source_id TEXT NOT NULL REFERENCES sources(source_id),
         PRIMARY KEY(alias,source_id));
       CREATE INDEX alias_lookup ON aliases(alias);
+      CREATE TABLE url_resolution(
+        alias TEXT PRIMARY KEY,
+        preferred_source_id TEXT NOT NULL REFERENCES sources(source_id),
+        authority TEXT NOT NULL,
+        related_source_ids_json TEXT NOT NULL);
+      CREATE INDEX url_resolution_preferred_idx ON url_resolution(preferred_source_id);
       CREATE TABLE classes(source_id TEXT NOT NULL REFERENCES sources(source_id),
         class TEXT NOT NULL, evidence_state TEXT NOT NULL, PRIMARY KEY(source_id,class));
       CREATE INDEX class_lookup ON classes(class);
@@ -323,12 +375,13 @@ def prepare(db, sources, run_id):
         db.execute("INSERT INTO sources VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
             (sid,src["normalized_key"],src["locator"],entry.get("name",""),entry["status"],
              status,src.get("kind"),origin,1,original,digest,run_id))
-        for alias in {src["normalized_key"],src["locator"]}:
+        for alias in {src["normalized_key"],src["locator"], *src.get("discovery_urls", [])}:
             db.execute("INSERT INTO aliases VALUES(?,?)",(alias,sid))
         for klass in classify(entry):
             db.execute("INSERT INTO classes VALUES(?,?,?)",(sid,klass,"HINT_BASED_UNVERIFIED"))
     register_historical_urls(db, sources)
     register_tripo_historical_urls(db, sources)
+    build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
         ("run_id",run_id),
@@ -425,6 +478,27 @@ def verify(path, expected):
         old_aggregate_id = recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]
         if db.execute("SELECT 1 FROM sources WHERE source_id=?", (old_aggregate_id,)).fetchone():
             raise ValueError("Non-canonical historical Tripo aggregate was improperly admitted")
+        alias_total = db.execute("SELECT count(DISTINCT alias) FROM aliases").fetchone()[0]
+        resolved_rows = list(db.execute(
+            "SELECT alias,preferred_source_id,related_source_ids_json FROM url_resolution"))
+        if len(resolved_rows) != alias_total:
+            raise ValueError("URL resolution index coverage incomplete")
+        ambiguous = sum(len(json.loads(ids)) > 1 for _,_,ids in resolved_rows)
+        if ambiguous != 5:
+            raise ValueError("Unexpected number of historical multi-source URL relations")
+        for rec in union["source_coverage"]:
+            for original in rec["original_locators"]:
+                actual = db.execute(
+                    "SELECT preferred_source_id FROM url_resolution WHERE alias=?",
+                    (original,)).fetchone()
+                if actual != (rec["resolved_donor_id"],):
+                    raise ValueError("Historical primary URL selection mismatch: " + original)
+        for rec in recovery["url_provenance"]:
+            actual = db.execute(
+                "SELECT preferred_source_id FROM url_resolution WHERE alias=?",
+                (rec["original_url"],)).fetchone()
+            if actual != (rec["source_id"],):
+                raise ValueError("Tripo primary URL selection mismatch")
         url_locator_rows = db.execute(
             "SELECT count(*) FROM sources WHERE locator LIKE 'http://%' OR locator LIKE 'https://%'"
         ).fetchone()[0]
@@ -447,7 +521,8 @@ def verify(path, expected):
             "historical_tripo_provenance":"BOUNDED_48_PASS",
             "historical_unique_source_ids":distinct_ids,
             "hint_classified":classified_count,
-            "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS"}
+            "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS",
+            "url_resolution_aliases":alias_total,"ambiguous_urls_with_preserved_relations":ambiguous}
 
 def stage(output, run_id):
     sources = frozen_sources()
@@ -472,8 +547,12 @@ def stage(output, run_id):
 def lookup(path, term, by):
     column = {"id":"source_id","key":"normalized_key","url":"locator"}[by] if by in ("id","key","url") else None
     with sqlite3.connect(path) as db:
-        if by in ("alias", "url"):
-            query = "SELECT s.source_id,s.locator,s.current_status FROM sources s JOIN aliases a ON a.source_id=s.source_id WHERE a.alias=?"
+        if by == "url":
+            query = ("SELECT s.source_id,s.locator,s.current_status FROM sources s "
+                     "JOIN url_resolution r ON r.preferred_source_id=s.source_id WHERE r.alias=?")
+        elif by == "alias":
+            query = ("SELECT s.source_id,s.locator,s.current_status FROM sources s "
+                     "JOIN aliases a ON a.source_id=s.source_id WHERE a.alias=? ORDER BY s.source_id")
         elif by == "class":
             query = "SELECT s.source_id,s.locator,s.current_status FROM sources s JOIN classes c ON c.source_id=s.source_id WHERE c.class=?"
         elif column:

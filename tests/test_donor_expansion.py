@@ -19,8 +19,10 @@ def known(n):
     return {"https://github.com/known/x"+str(i):"KNOWN-"+str(i) for i in range(n)}
 
 def run(items,index):
+    published_parent_levels = {item["parent_id"]: 1 for item in items}
     return expansion.evaluate(items,index,frozen_l1_b=445,level=2,
-                              previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
+                              previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True,
+                              parent_levels=published_parent_levels)
 
 class NetNewExpansionTests(unittest.TestCase):
     def test_650_links_445_known_205_new(self):
@@ -71,16 +73,36 @@ class NetNewExpansionTests(unittest.TestCase):
 
     def test_l4_to_l5_accepted_and_l6_forbidden(self):
         result=expansion.evaluate(entries(0,1),{},frozen_l1_b=445,level=5,
-                                  previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
+                                  previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True,
+                                  parent_levels={"root":4})
         self.assertEqual(result["state"],"STAGED_NOT_PUBLISHED")
         self.assertEqual(result["new_sources"][0]["global_level"],5)
         self.assertEqual(result["publication_gate"],"PENDING")
         exhausted=expansion.evaluate(entries(1,0),known(1),frozen_l1_b=445,level=5,
-                                     previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
+                                     previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True,
+                                     parent_levels={"root":4})
         self.assertEqual(exhausted["state"],"EARLY_EXHAUSTION_CANDIDATE")
         with self.assertRaises(ValueError):
             expansion.evaluate(entries(0,1),{},frozen_l1_b=445,level=6,
                                previous_gate="PUBLISHED_AND_VERIFIED_PASS",index_complete=True)
+
+    def test_child_requires_published_parent_at_immediately_previous_level(self):
+        links = [{"url":"https://github.com/new/dependent","parent_id":"root","evidence":"edge"}]
+        def check(level, parents):
+            return expansion.evaluate(links,{},frozen_l1_b=445,level=level,
+                                      previous_gate="PUBLISHED_AND_VERIFIED_PASS",
+                                      index_complete=True,parent_levels=parents)
+        for parents in (None,{},{"root":0},{"root":2},{"root":True}):
+            self.assertEqual(check(2,parents)["state"],"BLOCKED_PARENT_LEVEL_UNVERIFIED")
+        self.assertEqual(check(2,{"root":1})["state"],"STAGED_NOT_PUBLISHED")
+        self.assertEqual(check(3,{"root":1})["state"],"BLOCKED_PARENT_LEVEL_UNVERIFIED")
+        self.assertEqual(check(3,{"root":2})["state"],"STAGED_NOT_PUBLISHED")
+        self.assertEqual(check(5,{"root":4})["new_sources"][0]["global_level"],5)
+        with self.assertRaises(ValueError):
+            expansion.evaluate(
+                [{"url":"https://github.com/new/orphan","evidence":"edge"}],{},
+                frozen_l1_b=445,level=2,previous_gate="PUBLISHED_AND_VERIFIED_PASS",
+                index_complete=True,parent_levels={})
 
     def test_invalid_frozen_baseline_and_level(self):
         with self.assertRaises(ValueError):

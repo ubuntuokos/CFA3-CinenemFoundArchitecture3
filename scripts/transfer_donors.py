@@ -13,7 +13,7 @@ from pathlib import Path
 import sqlite3
 import tempfile
 
-from donor_l1 import ROOT, REGISTRY, frozen_sources, stage
+from donor_l1 import ROOT, REGISTRY, frozen_sources, stage, sha_blob
 
 REG = ROOT / "canonical/registries"
 OUTPUT = REG / "CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
@@ -37,6 +37,10 @@ def build():
     preserved = {r["donor_id"]: r for r in subset["records"]}
     originals = {r["donor_id"]: r for r, _, _ in frozen_sources()}
     gaps = json.loads((REG / "CFA3-DONOR-L1-HISTORICAL-PR-OPEN-GAPS-20261010.json").read_text())
+    rejection_raw = (REGISTRY.parent / "FA3-DONOR-REJECTION-AUDIT-001.json").read_bytes()
+    if sha_blob(rejection_raw) != "1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8":
+        raise ValueError("Historical rejection evidence changed")
+    rejection_audit = json.loads(rejection_raw)
     with tempfile.TemporaryDirectory() as tmp:
         dbpath = Path(tmp) / "transfer.sqlite"
         evidence = stage(dbpath, "CFA3-DONOR-TRANSFER-20261010")
@@ -77,6 +81,8 @@ def build():
     ids = {r["source_id"] for r in records}
     if not legacy_ids <= ids or len(ids) != len(records):
         raise ValueError("Historical donor loss or duplicate identity")
+    if any(r["donor"]["donor_id"] in ids for r in rejection_audit["entries"]):
+        raise ValueError("Rejected source must not reenter the active registry")
     proposed = [r for g in gaps["groups"] for r in g.get("missing_from_1919", [])]
     rekeys = [r for g in gaps["groups"] for r in g.get("proposed_rekeys", [])]
     return {
@@ -97,6 +103,8 @@ def build():
         "locator_routes": routes, "lookup_by_locator": {r["alias"]: i for i, r in enumerate(routes)},
         "unadmitted_historical_proposals": proposed,
         "unapplied_historical_rekeys": rekeys,
+        "rejection_audit": rejection_audit,
+        "rejection_audit_blob": "1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8",
         "staged_readback_evidence": evidence["index_evidence"],
         "remaining_scope": "Original conversation-only inputs, final L1 classification and L2-L5 discovery are not certified by this repository transfer.",
     }

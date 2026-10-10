@@ -25,6 +25,7 @@ A forrás donorjegyzékének Git blobja:
 | Eredeti locator-/aliaskapcsolat | 3946 |
 | Hiányzó régi főági rekord | 0 |
 | Módosult történeti rekord | 0 |
+| Külön megőrzött elutasított forrás | 1 |
 
 A 19–26. források már regisztrált 81 donorának és 83 eredeti URL-jének lekérdezési
 eredménye változatlan. A több történeti azonosítóhoz kapcsolódó URL-eknél az
@@ -75,6 +76,13 @@ Az átvitel nem módosít donorengedélyt licenc-, SDK-, modell-, provider- vagy
 runtime-engedéllyé. A jelölt és elemzett státusz nem lesz automatikusan
 jóváhagyott donor. A régi #545 PR 17 nem befogadott javaslata és 3 még nem
 alkalmazott kulcscseréje külön megőrzött függő tétel, nem eltüntetett adat.
+
+A régi repository 1499 kanonikus JSON-fájljának ellenőrzése egy további, a fő
+donorjegyzékből már eltávolított rekordot talált: DonutBrowser, `REJECTED`.
+Az eredeti elutasítási napló változatlanul archivált, a kereső az elutasítást
+visszaadja azonosító vagy történeti locator alapján; a forrás nem kerül vissza
+az aktív donorállományba. Az eredeti napló blobja:
+`1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8`.
 
 Ez a **rögzített repository-állomány átvitelének** lezárása. A kizárólag korábbi
 beszélgetésekben lévő, még vissza nem nyert beküldések teljes lefedettsége, az

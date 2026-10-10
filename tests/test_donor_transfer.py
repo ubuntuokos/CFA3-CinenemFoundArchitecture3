@@ -74,6 +74,18 @@ class DonorTransferTests(unittest.TestCase):
         self.assertEqual(build(), self.snapshot)
         self.assertEqual(digest(self.snapshot["records"]), self.snapshot["record_set_sha256"])
 
+    def test_rejection_history_survives_without_reactivating_source(self):
+        original = json.loads((ROOT / "archive/donor-source-migration/2026-10-09/FA3-DONOR-REJECTION-AUDIT-001.json").read_text())
+        self.assertEqual(self.snapshot["rejection_audit"], original)
+        for row in original["entries"]:
+            sid = row["donor"]["donor_id"]
+            self.assertNotIn(sid, self.by_id)
+            result = lookup_snapshot(self.snapshot, donor_id=sid)
+            self.assertEqual(result["donor_registration"], "REJECTED_REFERENCE_NOT_ACTIVE")
+            self.assertEqual(result["rejection_history"], row)
+            self.assertEqual(lookup_snapshot(self.snapshot, original_url=row["donor"]["source"]["locator"]), result)
+            self.assertFalse(result["runtime_admission"])
+
 
 if __name__ == "__main__":
     unittest.main()

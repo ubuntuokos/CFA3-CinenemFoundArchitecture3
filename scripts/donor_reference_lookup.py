@@ -19,6 +19,16 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
             or data.get("runtime_admission") is not False
             or data.get("code_or_license_admission") is not False):
         raise ValueError("Unsafe donor transfer snapshot")
+    for rejected in data["rejection_audit"]["entries"]:
+        original = rejected["donor"]
+        if (donor_id == original["donor_id"] or
+                original_url is not None and original_url in
+                (original["source"]["locator"], original["source"]["normalized_key"])):
+            if original["donor_id"] in data["lookup_by_id"] or original.get("status") != "REJECTED":
+                raise ValueError("Rejected source was reactivated")
+            return {"donor_id": original["donor_id"], "donor_registration": "REJECTED_REFERENCE_NOT_ACTIVE",
+                    "runtime_admission": False, "code_copy_authorized": False, "license_authorized": False,
+                    "model_provider_admission": False, "rejection_history": rejected}
     if donor_id is None:
         position = data["lookup_by_locator"].get(original_url)
         if position is None:

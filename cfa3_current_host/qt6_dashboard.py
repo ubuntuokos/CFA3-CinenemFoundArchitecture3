@@ -9,7 +9,7 @@ from .core import Level, Mode, Plan
 
 try:
     from PySide6.QtWidgets import (
-        QApplication, QLabel, QMainWindow, QTabWidget, QTableWidget,
+        QAbstractItemView, QApplication, QLabel, QMainWindow, QTabWidget, QTableWidget,
         QTableWidgetItem, QVBoxLayout, QWidget,
     )
 except ImportError:
@@ -67,7 +67,7 @@ if QApplication is not None:
                         obligation.handoff_id or "—", "PENDING",
                     ]):
                         table.setItem(i, col, QTableWidgetItem(value))
-                table.setEditTriggers(QTableWidget.NoEditTriggers)
+                table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
                 block.addWidget(table)
                 tabs.addTab(widget, title)
             plugin_tab = QWidget()
@@ -103,7 +103,9 @@ def standalone(plan: Plan, *, workload_mode: str = "UNKNOWN") -> int:
     own_app = app is None
     if own_app:
         app = QApplication([])
+    if not own_app:
+        raise GuiDependencyMissing("existing Qt6 application must manage its own dashboard instance")
     window = CurrentHostDashboard(plan, workload_mode=workload_mode)
     window.show()
     # Never treat a rendered window as a full Current Host acceptance proof.
-    return app.exec() if own_app else 0
+    return app.exec()

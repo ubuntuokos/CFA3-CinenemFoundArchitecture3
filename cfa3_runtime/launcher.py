@@ -14,6 +14,7 @@ from typing import Callable, Mapping, Sequence
 
 from .preferences import (
     RuntimeConfigurationError, environment_for_next_launch, load_preferences,
+    preference_path,
 )
 from .qt6_environment import inspect_runtime
 
@@ -57,7 +58,8 @@ def prepare_python_qt_launch(
     try:
         configured = environment_for_next_launch(
             environment=env,
-            preferences=load_preferences() if preferences is None else preferences,
+            preferences=(load_preferences(path=preference_path(env))
+                         if preferences is None else preferences),
         )
     except RuntimeConfigurationError as exc:
         raise RuntimeLaunchBlocked("QT6_CONFIGURATION_BLOCKED:" + str(exc)) from exc
@@ -68,6 +70,9 @@ def prepare_python_qt_launch(
         raise RuntimeLaunchBlocked("QT6_PREFLIGHT_BLOCKED:" + str(status))
     platform = report.get("qt_platform")
     version = report.get("qt_version")
+    requested = configured.get("QT_QPA_PLATFORM")
+    if requested in ("wayland", "xcb") and platform != requested:
+        raise RuntimeLaunchBlocked("QT6_REQUESTED_PLATFORM_NOT_LOADED")
     if (platform not in ("wayland", "xcb")
             or not isinstance(version, str) or not version
             or report.get("physical_gui_pass") is not False

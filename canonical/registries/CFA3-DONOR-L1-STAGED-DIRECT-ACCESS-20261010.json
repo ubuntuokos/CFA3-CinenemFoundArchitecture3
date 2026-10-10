@@ -3,22 +3,26 @@
   "id": "CFA3-DONOR-L1-STAGED-DIRECT-ACCESS-20261010",
   "state": "STAGED_NOT_PUBLISHED",
   "canonical_level_published": false,
-  "source_commit": "79a1a443f5b767c0a33bd16e025af68f6ec136c5",
+  "source_commit": "272565975bf267e8b6a8ff16634695c96ebaf833",
   "archive_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
   "level": 1,
   "global_baseline_B": null,
   "all_owner_submissions_exhaustively_verified": false,
   "runtime_admission": false,
-  "source_count": 1978,
-  "distinct_identity_count": 1978,
+  "source_count": 1981,
+  "distinct_identity_count": 1981,
   "approval_summary": {
     "historical_accepted_reference": 825,
-    "legacy_owner_approved_pending_publication": 53,
+    "legacy_owner_approved_pending_publication": 57,
     "unmerged_pr_sources_not_admitted": 2,
     "reference_only_sources_blocked": 4,
     "legacy_candidate": 963,
     "legacy_analyzed": 130,
-    "legacy_superseded": 1
+    "legacy_superseded": 1,
+    "new_historical_owner_sources": 3,
+    "existing_historical_candidate_override": 1,
+    "historical_candidate_count_unmodified": 963,
+    "current_candidate_after_approved_override": 962
   },
   "purpose": "DIRECT_SEARCHABLE_REPO_BRANCH_ACCESS_WITHOUT_FALSE_L1_PUBLICATION_PASS",
   "sources": [
@@ -13574,11 +13578,17 @@
       "id": "FA3-DONOR-OPENCUT-001",
       "key": "github:opencut-app/opencut",
       "url": "https://github.com/OpenCut-app/OpenCut",
-      "status": "CANDIDATE",
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
       "legacy_status": "CANDIDATE",
       "origin": "HISTORICAL_MAIN_ARCHIVE",
       "level": 1,
-      "name": "OpenCut"
+      "name": "OpenCut",
+      "historical_owner_approval_override": {
+        "original_owner_url": "https://github.com/opencut-app/opencut",
+        "evidence": "2026-10-07 explicit donornak és sdk-ba",
+        "original_status_preserved": "CANDIDATE",
+        "runtime_admission": false
+      }
     },
     {
       "id": "FA3-DONOR-OPENCV-001",
@@ -20346,6 +20356,42 @@
         "https://github.com/flack"
       ],
       "name": "flack GitHub profile discovery index"
+    },
+    {
+      "id": "CFA3-DONOR-EXISTENTIALAUDIO-BLACKHOLE-001",
+      "key": "github:existentialaudio/blackhole",
+      "url": "https://github.com/ExistentialAudio/BlackHole",
+      "name": "BlackHole macOS virtual audio driver",
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "legacy_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "origin": "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
+      "level": 1,
+      "submission_marker": "a beszélgetéshez tartozó linkeket donornak",
+      "reference_only": true
+    },
+    {
+      "id": "CFA3-DONOR-EXISTENTIALAUDIO-ORG-001",
+      "key": "github:existentialaudio",
+      "url": "https://github.com/ExistentialAudio",
+      "name": "ExistentialAudio GitHub organization",
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "legacy_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "origin": "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
+      "level": 1,
+      "submission_marker": "a beszélgetéshez tartozó linkeket donornak",
+      "reference_only": true
+    },
+    {
+      "id": "CFA3-DONOR-UPSTASH-ORG-001",
+      "key": "github:upstash",
+      "url": "https://github.com/upstash",
+      "name": "Upstash GitHub organization",
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "legacy_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "origin": "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
+      "level": 1,
+      "submission_marker": "donor:",
+      "reference_only": true
     }
   ]
 }

@@ -9,12 +9,13 @@
   "all_historical_sources_exhaustively_reconciled": false,
   "runtime_admission": false,
   "code_or_license_admission": false,
-  "donor_count": 41,
+  "donor_count": 53,
   "source_files_completed": [
     19,
-    20
+    20,
+    21
   ],
-  "original_url_occurrences": 43,
+  "original_url_occurrences": 55,
   "records": [
     {
       "donor_id": "FA3-DONOR-TAHOMA2D-001",
@@ -673,6 +674,198 @@
       "code_copy_authorized": false,
       "license_authorized": false,
       "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GGUF-TOPIC-001",
+      "normalized_key": "github:topics/gguf",
+      "original_url": "https://github.com/topics/gguf",
+      "original_submitted_urls": [
+        "https://github.com/topics/gguf"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GGUF-MODELS-TOPIC-001",
+      "normalized_key": "github:topics/gguf-models",
+      "original_url": "https://github.com/topics/gguf-models",
+      "original_submitted_urls": [
+        "https://github.com/topics/gguf-models"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-CITY96-COMFYUI-GGUF-001",
+      "normalized_key": "github:city96/comfyui-gguf",
+      "original_url": "https://github.com/city96/ComfyUI-GGUF",
+      "original_submitted_urls": [
+        "https://github.com/city96/ComfyUI-GGUF"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-IBM-GGUF-001",
+      "normalized_key": "github:ibm/gguf",
+      "original_url": "https://github.com/IBM/gguf",
+      "original_submitted_urls": [
+        "https://github.com/IBM/gguf"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-HUGGINGFACE-ORG-001",
+      "normalized_key": "github:huggingface",
+      "original_url": "https://github.com/huggingface",
+      "original_submitted_urls": [
+        "https://github.com/huggingface"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-CALCUIS-PROFILE-001",
+      "normalized_key": "github:calcuis",
+      "original_url": "https://github.com/calcuis",
+      "original_submitted_urls": [
+        "https://github.com/calcuis"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GGUF-GO-TOPIC-001",
+      "normalized_key": "github:topics/gguf?l=go&o=asc&s=stars",
+      "original_url": "https://github.com/topics/gguf?l=go&o=asc&s=stars",
+      "original_submitted_urls": [
+        "https://github.com/topics/gguf?l=go&o=asc&s=stars"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MITJAFELICIJAN-PROFILE-001",
+      "normalized_key": "github:mitjafelicijan",
+      "original_url": "https://github.com/mitjafelicijan",
+      "original_submitted_urls": [
+        "https://github.com/mitjafelicijan"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-COMFY-ORG-001",
+      "normalized_key": "github:comfy-org",
+      "original_url": "https://github.com/orgs/Comfy-Org/repositories",
+      "original_submitted_urls": [
+        "https://github.com/orgs/Comfy-Org/repositories"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-COMFY-ORG-DESKTOP-ARCHIVED-001",
+      "normalized_key": "github:comfy-org/desktop",
+      "original_url": "https://github.com/Comfy-Org/desktop",
+      "original_submitted_urls": [
+        "https://github.com/Comfy-Org/desktop"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-CODEC-EVALUATION-TOPIC-001",
+      "normalized_key": "github:topics/codec-evaluation",
+      "original_url": "https://github.com/topics/codec-evaluation",
+      "original_submitted_urls": [
+        "https://github.com/topics/codec-evaluation"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001",
+      "normalized_key": "github:topics/quicktime?l=swift",
+      "original_url": "https://github.com/topics/quicktime?l=swift",
+      "original_submitted_urls": [
+        "https://github.com/topics/quicktime?l=swift"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "source_sequence": 21,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
     }
   ],
   "lookup_by_id": {
@@ -716,7 +909,19 @@
     "FA3-DONOR-MESHCAPADE-DIFFLOCKS-001": 37,
     "FA3-DONOR-MESHCAPADE-ORG-001": 38,
     "FA3-DONOR-GITHUB-TOPIC-HAIR-SEGMENTATION-001": 39,
-    "FA3-DONOR-FIGHTING-ZHANG-STRANDDESIGNER-001": 40
+    "FA3-DONOR-FIGHTING-ZHANG-STRANDDESIGNER-001": 40,
+    "FA3-DONOR-GGUF-TOPIC-001": 41,
+    "FA3-DONOR-GGUF-MODELS-TOPIC-001": 42,
+    "FA3-DONOR-CITY96-COMFYUI-GGUF-001": 43,
+    "FA3-DONOR-IBM-GGUF-001": 44,
+    "FA3-DONOR-HUGGINGFACE-ORG-001": 45,
+    "FA3-DONOR-CALCUIS-PROFILE-001": 46,
+    "FA3-DONOR-GGUF-GO-TOPIC-001": 47,
+    "FA3-DONOR-MITJAFELICIJAN-PROFILE-001": 48,
+    "FA3-DONOR-COMFY-ORG-001": 49,
+    "FA3-DONOR-COMFY-ORG-DESKTOP-ARCHIVED-001": 50,
+    "FA3-DONOR-CODEC-EVALUATION-TOPIC-001": 51,
+    "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001": 52
   },
   "lookup_by_original_url": {
     "https://github.com/tahoma2d/tahoma2d": "FA3-DONOR-TAHOMA2D-001",
@@ -761,6 +966,18 @@
     "https://github.com/Meshcapade/difflocks": "FA3-DONOR-MESHCAPADE-DIFFLOCKS-001",
     "https://github.com/Meshcapade": "FA3-DONOR-MESHCAPADE-ORG-001",
     "https://github.com/topics/hair-segmentation?l=python&o=desc&s=updated": "FA3-DONOR-GITHUB-TOPIC-HAIR-SEGMENTATION-001",
-    "https://github.com/fighting-Zhang/StrandDesigner": "FA3-DONOR-FIGHTING-ZHANG-STRANDDESIGNER-001"
+    "https://github.com/fighting-Zhang/StrandDesigner": "FA3-DONOR-FIGHTING-ZHANG-STRANDDESIGNER-001",
+    "https://github.com/topics/gguf": "FA3-DONOR-GGUF-TOPIC-001",
+    "https://github.com/topics/gguf-models": "FA3-DONOR-GGUF-MODELS-TOPIC-001",
+    "https://github.com/city96/ComfyUI-GGUF": "FA3-DONOR-CITY96-COMFYUI-GGUF-001",
+    "https://github.com/IBM/gguf": "FA3-DONOR-IBM-GGUF-001",
+    "https://github.com/huggingface": "FA3-DONOR-HUGGINGFACE-ORG-001",
+    "https://github.com/calcuis": "FA3-DONOR-CALCUIS-PROFILE-001",
+    "https://github.com/topics/gguf?l=go&o=asc&s=stars": "FA3-DONOR-GGUF-GO-TOPIC-001",
+    "https://github.com/mitjafelicijan": "FA3-DONOR-MITJAFELICIJAN-PROFILE-001",
+    "https://github.com/orgs/Comfy-Org/repositories": "FA3-DONOR-COMFY-ORG-001",
+    "https://github.com/Comfy-Org/desktop": "FA3-DONOR-COMFY-ORG-DESKTOP-ARCHIVED-001",
+    "https://github.com/topics/codec-evaluation": "FA3-DONOR-CODEC-EVALUATION-TOPIC-001",
+    "https://github.com/topics/quicktime?l=swift": "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001"
   }
 }

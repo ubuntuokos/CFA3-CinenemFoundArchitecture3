@@ -89,6 +89,65 @@ class CapabilityCatalog:
             "physical_current_host_pass": False,
         }
 
+    def reconcile_graph(self, graph, *, global_scope: bool = True) -> dict:
+        """Cross-check actual CFA3-owned components against canonical identity.
+
+        This remains a STRUCTURAL check, never physical Current Host PASS.
+        For a scoped plan, global_scope=False permits unrelated registry
+        identities to remain outside the current graph.
+        """
+        nodes = getattr(graph, "nodes", None)
+        if not isinstance(nodes, dict):
+            raise CatalogError("typed component graph is required")
+        observed = {}
+        mismatches = []
+        for component_id, node in sorted(nodes.items()):
+            ownership = getattr(getattr(node, "ownership", None), "value", None)
+            if ownership not in _ALLOWED_OWNERS:
+                continue  # Vendor drivers and external apps are not CFA3 QA.
+            identities = getattr(node, "capability_ids", None)
+            if not isinstance(identities, tuple) or not identities:
+                mismatches.append(component_id + ":NO_DECLARED_CAPABILITY")
+                continue
+            for cap_id in identities:
+                if not isinstance(cap_id, str) or not cap_id:
+                    mismatches.append(component_id + ":INVALID_CAPABILITY_ID")
+                    continue
+                if cap_id in observed:
+                    mismatches.append(cap_id + ":DUPLICATE_COMPONENT_MAPPING")
+                    continue
+                observed[cap_id] = component_id
+                registered = self._items.get(cap_id)
+                if registered is None:
+                    mismatches.append(cap_id + ":NOT_IN_CATALOG")
+                elif (registered.component_id != component_id
+                      or registered.layer != node.layer
+                      or registered.revision != node.revision
+                      or registered.owner != ownership):
+                    mismatches.append(cap_id + ":MISMATCHED_OWNER_LAYER_REVISION")
+        if global_scope:
+            for missing in sorted(set(self._items) - set(observed)):
+                mismatches.append(missing + ":NO_REAL_GRAPH_CONSUMER")
+        if mismatches:
+            return {
+                "status": "BLOCKED_CAPABILITY_GRAPH_MISMATCH",
+                "registered": self.registered, "mapped": len(observed),
+                "errors": tuple(mismatches), "physical_current_host_pass": False,
+            }
+        if self.registered != CAPABILITY_TARGET:
+            return {
+                "status": "BLOCKED_INCOMPLETE_200_CAPABILITY_CATALOG",
+                "registered": self.registered, "mapped": len(observed),
+                "missing": max(0, CAPABILITY_TARGET - self.registered),
+                "physical_current_host_pass": False,
+            }
+        return {
+            "status": "GRAPH_200_STRUCTURALLY_RECONCILED_PENDING_PHYSICAL",
+            "registered": self.registered, "mapped": len(observed),
+            "minimum_obligations": self.registered * len(CASES),
+            "physical_current_host_pass": False,
+        }
+
     def required_cases(self):
         """Return exactly three minimal proof obligations per registered unit."""
         return tuple((cap, case) for cap in sorted(self._items) for case in CASES)

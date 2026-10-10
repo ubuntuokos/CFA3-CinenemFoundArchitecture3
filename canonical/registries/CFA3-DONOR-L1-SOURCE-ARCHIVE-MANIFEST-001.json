@@ -127,6 +127,21 @@
       "legacy_source_pr_count": 9,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/CFA3-DONOR-BACKLOG-CONSOLIDATION-2026-10-04.json",
+      "original_source_sha": "9c028d6bf0a7f9b4c1d08e75cafe4b3a45bc1947",
+      "materialized_source_ids": 121,
+      "all_source_ids_and_keys_matched": true,
+      "missing_source_ids": 0,
+      "source_field_mismatches": 0,
+      "source_locator_aliases_verified": 121,
+      "source_locator_aliases_missing": 0,
+      "reconciled_preexisting_identities_verified": 7,
+      "reconciled_preexisting_identity_missing": 0,
+      "legacy_source_pr_count": 18,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

@@ -168,6 +168,36 @@ class CapabilityCatalogTests(unittest.TestCase):
         self.assertEqual(result["minimum_obligations"], 600)
         self.assertFalse(result["physical_current_host_pass"])
 
+    def test_scoped_single_component_does_not_claim_global_200_closure(self):
+        from types import SimpleNamespace as Node
+        c = catalog()
+        one = cap(0)
+        graph = Node(nodes={
+            one.component_id: Node(
+                ownership=Node(value=one.owner), layer=one.layer,
+                revision=one.revision, capability_ids=(one.capability_id,),
+            )
+        })
+        result = c.reconcile_graph(graph, global_scope=False)
+        self.assertEqual(result["status"],
+                         "SCOPED_GRAPH_BINDINGS_VERIFIED_PENDING_GLOBAL_RECONCILIATION")
+        self.assertEqual(result["mapped"], 1)
+        self.assertEqual(result["minimum_scoped_obligations"], 3)
+        self.assertFalse(result["physical_current_host_pass"])
+
+    def test_vendor_only_graph_cannot_claim_any_cfa3_binding(self):
+        from types import SimpleNamespace as Node
+        c = catalog()
+        graph = Node(nodes={
+            "vendor": Node(
+                ownership=Node(value="VENDOR_DRIVER"), layer="EXTERNAL",
+                revision="vendor", capability_ids=(),
+            )
+        })
+        result = c.reconcile_graph(graph, global_scope=False)
+        self.assertEqual(result["status"], "BLOCKED_EMPTY_CFA3_COMPONENT_SCOPE")
+        self.assertFalse(result["physical_current_host_pass"])
+
     def test_duplicate_identifier_rejected(self):
         c = catalog(1)
         with self.assertRaises(CatalogError):

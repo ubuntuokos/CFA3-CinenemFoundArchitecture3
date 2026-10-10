@@ -737,6 +737,32 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-NVLABS-SANA-SOL-REFINER-2026-10-02.json",
+      "archive_path": "archive/donor-source-migration/2026-10-09/FA3-DONOR-NVLABS-SANA-SOL-REFINER-2026-10-02.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "2d4197ffeff8a9ab11a7fbab01be7f9b7da8c902",
+      "old_blob_new_archive_exact_match": true,
+      "source_proof_kind": "HISTORICAL_NVLABS_SANA_SOL_REFINER_COMPONENT_PROVENANCE_DEDUPLICATION",
+      "historical_owner_marked_url_count": 3,
+      "canonical_source_ids_present_in_l1_stage": 2,
+      "original_repository_and_org_urls_in_direct_routing": 2,
+      "component_original_branch_url_in_direct_routing": 1,
+      "original_component_provenance_url": "https://github.com/NVlabs/Sana/tree/sol-engine/models/sol-refiner",
+      "component_branch": "sol-engine",
+      "component_path": "models/sol-refiner",
+      "component_exact_commit": "670482d8a857d578ac8a2ea89b052d0fb47badba",
+      "component_tree_sha": "67717f3cf6e22ea280c258acef196f6c1b8a0ab2",
+      "component_readme_blob_sha": "6ecd584c2397bc3a2e44aca271aa4bc34cf094c5",
+      "component_is_not_separate_donor": true,
+      "org_child_repos_models_not_recursively_admitted": true,
+      "rights_model_router_cpu_only_and_runtime_gates_not_bypassed": true,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

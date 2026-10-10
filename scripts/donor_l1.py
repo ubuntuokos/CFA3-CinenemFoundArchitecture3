@@ -355,6 +355,14 @@ def build_url_resolution(db):
         if url in preferred and preferred[url][0] != target[0]:
             raise ValueError("Conflicting historical Tripo URL resolution: " + url)
         preferred.setdefault(url, target)
+    owner_new = owner_message_recovery()
+    approvals = [(e["source"]["locator"],e["donor_id"]) for e in owner_new["entries"]]
+    approvals.extend((e["original_owner_url"],e["donor_id"])
+                     for e in owner_new["existing_source_approval_overrides"])
+    for url,sid in approvals:
+        if url in preferred and preferred[url][0] != sid:
+            raise ValueError("Owner message vs historical registry URL conflict: " + url)
+        preferred[url] = (sid, "HISTORICAL_OWNER_MESSAGE")
     exact_locators = {}
     exact_keys = {}
     for sid, locator, key in db.execute(

@@ -166,6 +166,20 @@ class LifecycleTests(unittest.TestCase):
         with self.assertRaises(PluginError):
             self.registry.inspect(bundle(additions=[("extra.txt", "different")]))
 
+    def test_reinspection_cannot_downgrade_admitted_state(self):
+        self.registry.admit(self.name, self.version, FixtureAdmissionAuthority())
+        with self.assertRaises(PluginError):
+            self.registry.inspect(self.blob)
+        self.assertEqual(self.registry.state(self.name, self.version), State.ADMITTED)
+
+    def test_reinspection_cannot_downgrade_enabled_state(self):
+        self.registry.admit(self.name, self.version, FixtureAdmissionAuthority())
+        self.registry.install(self.name, self.version, self.blob)
+        self.registry.enable(self.name, self.version, FixtureSandboxAuthority())
+        with self.assertRaises(PluginError):
+            self.registry.inspect(self.blob)
+        self.assertEqual(self.registry.state(self.name, self.version), State.ENABLED)
+
     def test_no_plugin_execution_on_inspection(self):
         """An archive entry with source text must never be imported/executed."""
         self.registry.inspect(self.blob)

@@ -21,6 +21,7 @@ SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURC
 ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
 TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
 OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
+PR_OWNER_TRANSFER = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
 # ordered 48 original URL occurrences and sorted 36 proposed original donor IDs.
 TRIPO_URL_ORDER_SHA256 = "f78ba37406396b871e390f8619eff9c2d7b87d9b4db9e165ef6bff5ac742c433"
@@ -112,6 +113,60 @@ def owner_message_recovery():
     return record
 
 
+def historical_pr_owner_approvals():
+    """Historical owner decisions survive old unmerged PRs without old-repo writes."""
+    manifest = json_read(PR_OWNER_TRANSFER)
+    if (manifest.get("schema") != "cfa3.donor-l1-historical-pr-owner-approved-transfer.v1"
+            or manifest.get("status") != "STAGED_NOT_PUBLISHED"
+            or manifest.get("old_repository_read_only") is not True
+            or manifest.get("canonical_level_published") is not False
+            or manifest.get("original_L1_B") is not None
+            or manifest.get("new_identity_count") != 0
+            or manifest.get("preexisting_staged_identity_count") != 2
+            or manifest.get("owner_approval_status") != "OWNER_APPROVED_PENDING_PUBLICATION"
+            or manifest.get("no_second_owner_approval_required") is not True
+            or manifest.get("no_code_import") is not True
+            or manifest.get("no_sdk_adoption") is not True
+            or manifest.get("no_runtime_admission") is not True
+            or len(manifest.get("records", [])) != 2):
+        raise ValueError("Legacy PR donor approval transfer boundary mismatch")
+    expected = {
+        744: ("FA3-DONOR-AFFAAN-M-ECC-001", "github:affaan-m/ecc",
+              "f294c3eef3875990725b1f7150824bdade6bbbc6"),
+        745: ("FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
+              "github:mohamedelaassal/youtubevideogenerator",
+              "71d83d4bec340e08723cd94e8497d4058678be48"),
+    }
+    seen = set()
+    for row in manifest["records"]:
+        pr = row["old_pr"]
+        if pr not in expected or pr in seen:
+            raise ValueError("Unexpected or repeated historical owner-approved PR")
+        seen.add(pr)
+        ident, key, blob = expected[pr]
+        frozen = ARCH / ("PR-" + str(pr) + "-ADDITIONAL-REFERENCE.json")
+        actual = json_read(frozen)
+        if (sha_blob(frozen.read_bytes()) != blob or row["source_blob"] != blob
+                or actual["entry"]["donor_id"] != ident
+                or actual["entry"]["source"]["normalized_key"] != key
+                or actual["entry"]["source"]["locator"] != row["url"]
+                or row["id"] != ident or row["normalized_key"] != key
+                or actual["entry"]["status"] != "ACCEPTED_REFERENCE"
+                or actual["entry"]["submission_review"].get("owner_donor_command") != "donornak"
+                or row["historical_owner_marker"] != "donornak"
+                or row["new_staging_status"] != "OWNER_APPROVED_PENDING_PUBLICATION"
+                or row["previous_staging_status"] != "BLOCKED"):
+            raise ValueError("Historical donor approval or source identity changed")
+        aliases = row.get("additional_exact_search_aliases", [])
+        if pr == 745 and aliases != ["https://github.com/mohamedelaassal/youtubevideogenerator"]:
+            raise ValueError("Original GitHub path alias not preserved")
+        if pr == 744 and aliases:
+            raise ValueError("Unexpected ECC alias")
+    if seen != {744, 745}:
+        raise ValueError("Historical approved PRs not fully represented")
+    return manifest["records"]
+
+
 def frozen_sources():
     raw = REGISTRY.read_bytes()
     if sha_blob(raw) != EXPECTED[REGISTRY.name]:
@@ -120,11 +175,14 @@ def frozen_sources():
     if len(entries) != 1919:
         raise ValueError("Unexpected root source registry size")
     sources = [(e, "OLD_MAIN_ARCHIVE", True) for e in entries]
+    approved_prs = {row["old_pr"]: row for row in historical_pr_owner_approvals()}
     for n, file in zip((744, 745), EXTRAS):
         record = json_read(file)
-        if record["pr"] != n or record["state"] != "UNMERGED_HISTORICAL_PR_PRESERVED_NOT_CFA3_CANONICAL_ADMITTED":
+        if (record["pr"] != n or record["state"] !=
+                "UNMERGED_HISTORICAL_PR_PRESERVED_NOT_CFA3_CANONICAL_ADMITTED"
+                or n not in approved_prs):
             raise ValueError("Unverified historical PR source")
-        sources.append((record["entry"], f"UNMERGED_PR_{n}", False))
+        sources.append((record["entry"], f"HISTORICAL_PR_{n}_OWNER_APPROVED_TRANSFER", False))
     supplement = json_read(SUPPLEMENT)
     if (supplement.get("schema") != "cfa3.donor-l1-unreconciled-owner-submissions.v1"
             or supplement.get("status") != "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED"
@@ -336,6 +394,16 @@ def register_owner_message_urls(db):
     return len(pairs)
 
 
+def register_historical_pr_owner_urls(db):
+    """Preserve original mixed-case locator and user-submitted GitHub case alias."""
+    for record in historical_pr_owner_approvals():
+        for url in [record["url"], *record.get("additional_exact_search_aliases", [])]:
+            db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (url, record["id"]))
+            db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                       (record["id"],url,"HISTORICAL_OWNER_APPROVED_PR_"+str(record["old_pr"]),
+                        "EXPLICIT_DONORNAK_LEGACY_PR_MIGRATION"))
+
+
 def build_url_resolution(db):
     """Deterministic exact-URL lookup; never collapse multiple historical IDs.
 
@@ -355,6 +423,11 @@ def build_url_resolution(db):
         if url in preferred and preferred[url][0] != target[0]:
             raise ValueError("Conflicting historical Tripo URL resolution: " + url)
         preferred.setdefault(url, target)
+    for source in historical_pr_owner_approvals():
+        for url in [source["url"], *source.get("additional_exact_search_aliases", [])]:
+            if url in preferred and preferred[url][0] != source["id"]:
+                raise ValueError("Owner-approved PR URL resolution conflicts: " + url)
+            preferred[url] = (source["id"], "HISTORICAL_PR_OWNER_APPROVAL")
     owner_new = owner_message_recovery()
     approvals = [(e["source"]["locator"],e["donor_id"]) for e in owner_new["entries"]]
     approvals.extend((e["original_owner_url"],e["donor_id"])
@@ -443,6 +516,8 @@ def prepare(db, sources, run_id):
             "HISTORICAL_OWNER_APPROVED_TRANSFER",
             "ADDITIONAL_OWNER_APPROVED_TRANSFER",
             "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
+            "HISTORICAL_PR_744_OWNER_APPROVED_TRANSFER",
+            "HISTORICAL_PR_745_OWNER_APPROVED_TRANSFER",
         }
         is_override = (from_main and sid == owner_override["donor_id"]
                        and src["normalized_key"] == owner_override["normalized_key"]
@@ -461,6 +536,7 @@ def prepare(db, sources, run_id):
     register_historical_urls(db, sources)
     register_tripo_historical_urls(db, sources)
     register_owner_message_urls(db)
+    register_historical_pr_owner_urls(db)
     build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
@@ -471,7 +547,8 @@ def prepare(db, sources, run_id):
         ("supplemental_owner_source_candidates","23"),
         ("additional_owner_source_leads","4"),
         ("total_pending_owner_source_candidates","4"),
-        ("legacy_owner_approved_pending_publication","57"),
+        ("legacy_owner_approved_pending_publication","59"),
+        ("historical_pr_744_745_owner_approved_transfer_sources","2"),
         ("additional_20261007_owner_approved_source_records","3"),
         ("historical_opencut_approval_overrides","1"),
         ("supplement_and_additional_owner_markers_without_primary_pair","23"),
@@ -581,6 +658,16 @@ def verify(path, expected):
                 (rec["original_url"],)).fetchone()
             if actual != (rec["source_id"],):
                 raise ValueError("Tripo primary URL selection mismatch")
+        for item in historical_pr_owner_approvals():
+            sid = item["id"]
+            row = db.execute("SELECT current_status FROM sources WHERE source_id=?",
+                             (sid,)).fetchone()
+            if row != ("OWNER_APPROVED_PENDING_PUBLICATION",):
+                raise ValueError("Legacy PR owner donor must be approved: " + sid)
+            for url in [item["url"], *item.get("additional_exact_search_aliases", [])]:
+                if db.execute("SELECT preferred_source_id FROM url_resolution WHERE alias=?",
+                              (url,)).fetchone() != (sid,):
+                    raise ValueError("Historical PR URL not directly searchable: " + url)
         owner = owner_message_recovery()
         recovered = [(entry["donor_id"],entry["source"]["locator"]) for entry in owner["entries"]]
         recovered.append((owner["existing_source_approval_overrides"][0]["donor_id"],
@@ -612,7 +699,8 @@ def verify(path, expected):
             "historical_tripo_owner_approved_transfer_sources":30,
             "historical_supplement_owner_approved_transfer_sources":19,
             "additional_owner_approved_transfer_sources":4,
-            "legacy_owner_approved_pending_publication":57,
+            "legacy_owner_approved_pending_publication":59,
+            "historical_pr_owner_approved_transfer_sources":2,
             "additional_20261007_owner_approved_source_records":3,
             "historical_opencut_approval_overrides":1,
             "legacy_reference_only_pending_sources":4,

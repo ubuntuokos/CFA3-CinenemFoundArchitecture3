@@ -20,6 +20,10 @@ UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
 SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURCES-001.json"
 ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
 TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
+# SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
+# ordered 48 original URL occurrences and sorted 36 proposed original donor IDs.
+TRIPO_URL_ORDER_SHA256 = "f78ba37406396b871e390f8619eff9c2d7b87d9b4db9e165ef6bff5ac742c433"
+TRIPO_ORIGINAL_IDS_SHA256 = "dd1d422a7aa9c43a14eefd8aab91c2d91a49729c073d8fa9ef4bdb44fbe7e5a9"
 EXPECTED = {
     "FA3-DONOR-REFERENCE-REGISTRY-001.json": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
 }
@@ -39,6 +43,11 @@ def sha_blob(data):
 
 def json_read(path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def historical_digest(items):
+    """SHA256 of UTF-8 newline-separated historical values, including the final newline."""
+    return hashlib.sha256(("\n".join(items) + "\n").encode("utf-8")).hexdigest()
 
 def classify(entry):
     hints = " ".join(str(v) for key in ("donor_modes", "capability_hints", "domain_hints",
@@ -112,6 +121,15 @@ def frozen_sources():
             or recovery.get("publication_gate") != "BLOCKED"
             or recovery.get("runtime_admission") is not False):
         raise ValueError("Historical Tripo recovery must preserve bounded identity evidence without publication")
+    # Immutable historic 36-ID set: the collapsed Tripo topic remains an alias/reference,
+    # not a replacement for any of the three distinct archived URL identities.
+    historical_ids = ([e["donor_id"] for e in recovery["entries"]] +
+        [e["legacy_proposed_donor_id"] for e in recovery["existing_identity_matches"]] +
+        [aggregate["historical_proposed_donor_id"]])
+    if (len(historical_ids) != 36 or len(set(historical_ids)) != 36 or
+            recovery.get("historical_original_identity_set_sha256") != TRIPO_ORIGINAL_IDS_SHA256 or
+            historical_digest(sorted(historical_ids)) != TRIPO_ORIGINAL_IDS_SHA256):
+        raise ValueError("Tripo immutable historical donor identity set mismatch")
     for record in recovery["entries"]:
         if (record.get("status") != "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE"
                 or record.get("submission_review", {}).get("exact_submitted_URL_and_approval_pair_independently_verified") is not False
@@ -178,6 +196,12 @@ def register_tripo_historical_urls(db, sources):
     """Preserve every original occurrence, including repeated URLs, without new admission."""
     manifest = json_read(TRIPO_RECOVERY)
     by_id = {entry["donor_id"]: entry for entry, _, _ in sources}
+    ordered_urls = [record["original_url"] for record in manifest["url_provenance"]]
+    if (len(ordered_urls) != 48 or
+            manifest.get("historical_digest_encoding") != "SHA256_UTF8_NEWLINE_JOINED_WITH_TRAILING_NEWLINE" or
+            manifest.get("historical_url_order_sha256") != TRIPO_URL_ORDER_SHA256 or
+            historical_digest(ordered_urls) != TRIPO_URL_ORDER_SHA256):
+        raise ValueError("Tripo immutable historical URL sequence mismatch")
     seen = set()
     for record in manifest["url_provenance"]:
         i, url, sid = record["occurrence_index"], record["original_url"], record["source_id"]

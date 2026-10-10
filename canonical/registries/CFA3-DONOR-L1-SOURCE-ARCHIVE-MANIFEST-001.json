@@ -240,6 +240,26 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-AI-TEXT-MINDMAP-RENDER-SHADER-2026-09-29.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "c18710d41f48bc4bf542c2f591ab916ff65cd6c9",
+      "source_proof_kind": "HISTORICAL_OWNER_EXPLICIT_REFERENCE_INTAKE_MULTIVIEW_DELTA",
+      "original_submitted_url_occurrences": 50,
+      "unique_submitted_original_urls": 50,
+      "original_distinct_source_keys": 39,
+      "original_distinct_donor_ids": 39,
+      "source_ids_present_in_new_l1_stage": 39,
+      "original_url_occurrences_preserved": 50,
+      "topic_view_aliases_preserved": 11,
+      "missing_source_ids": 0,
+      "missing_original_url_views": 0,
+      "normalized_keys_or_legacy_status_mismatches": 0,
+      "new_donor_duplicates_created": 0,
+      "historical_unverified_license_status_preserved_in_original_source": true,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

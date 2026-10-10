@@ -1,8 +1,11 @@
 """200-target Current Host fixture tests. Synthetic evidence NEVER becomes PASS."""
 import unittest
+import json
+import tempfile
+from pathlib import Path
 
 from cfa3_current_host.capability_catalog import (
-    Capability, CapabilityCatalog, CatalogError, ScopedEvidence,
+    Capability, CapabilityCatalog, CatalogError, ScopedEvidence, load_capability_catalog,
 )
 
 DIGEST = "sha256:" + "a" * 64
@@ -49,6 +52,33 @@ class CapabilityCatalogTests(unittest.TestCase):
         for external in ("VENDOR_DRIVER", "COMMERCIAL_SOFTWARE", "COMMUNITY_PLUGIN"):
             with self.subTest(external=external), self.assertRaises(CatalogError):
                 Capability("external", "plugin", "VIDEO", "v1", external, "source")
+
+    def test_empty_input_is_explicitly_unreconciled(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "catalog.json"
+            path.write_text(json.dumps({"schema": "cfa3.current-host.capabilities.v1",
+                                        "capabilities": []}), encoding="utf-8")
+            result = load_capability_catalog(path).reconciliation()
+        self.assertEqual(result["missing"], 200)
+        self.assertFalse(result["physical_current_host_pass"])
+
+    def test_invalid_schema_fails_closed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "catalog.json"
+            path.write_text(json.dumps({"schema": "WRONG",
+                                        "capabilities": []}), encoding="utf-8")
+            with self.assertRaises(CatalogError):
+                load_capability_catalog(path)
+
+    def test_external_catalog_record_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "catalog.json"
+            item = dict(cap(0).__dict__)
+            item["owner"] = "VENDOR_DRIVER"
+            path.write_text(json.dumps({"schema": "cfa3.current-host.capabilities.v1",
+                                        "capabilities": [item]}), encoding="utf-8")
+            with self.assertRaises(CatalogError):
+                load_capability_catalog(path)
 
     def test_duplicate_identifier_rejected(self):
         c = catalog(1)

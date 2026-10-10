@@ -24,7 +24,20 @@
     "import_legacy_runtime_or_configuration": false,
     "import_old_classifier_unchanged": false,
     "preserve_provenance_and_prior_approvals": true,
-    "all_owner_approved_submissions_must_be_accounted_for": true
+    "all_owner_approved_submissions_must_be_accounted_for": true,
+    "legacy_repository_mode": "PERMANENT_READ_ONLY_FROZEN_SOURCE_NO_WRITE_BRANCH_PR_OR_DEVELOPMENT",
+    "historical_donor_approval_transfer": {
+      "owner_clarification": "2026-10-10",
+      "source_authority": "EXPLICIT_HISTORICAL_USER_DONOR_INSTRUCTION",
+      "examples": ["donornak", "vedd fel donornak", "add a donorlistához"],
+      "semantically_equivalent_explicit_donor_admission_instructions": true,
+      "scope": "IMPORT_APPROVED_DONORS_FROM_FROZEN_OLD_CFA3_TO_NEW_CFA3_ONLY",
+      "no_reapproval_of_proven_historical_donor_decision": true,
+      "approval_and_publication_are_independent": true,
+      "approval_and_runtime_admission_are_independent": true,
+      "missing_historical_approval_evidence_does_not_create_approval": true,
+      "missing_B_does_not_revoke_existing_owner_approval": true
+    }
   },
   "classification": {
     "levels": [

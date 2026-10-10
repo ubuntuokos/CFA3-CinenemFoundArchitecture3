@@ -221,6 +221,25 @@
       "topic_discovery_only_no_child_admission": true,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-AGENTSCOPE-EMBABEL-PLAN-2026-10-06.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "4c49bbaca5529261efa59a70280ab0fe1465732e",
+      "source_proof_kind": "HISTORICAL_OWNER_APPROVED_AGENTSCOPE_EMBABEL_PLAN_DELTA",
+      "original_source_record_count": 14,
+      "original_url_count": 14,
+      "source_ids_present_in_new_l1_stage": 14,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_and_historical_status_mismatches": 0,
+      "historical_approval_mode": "APPROVED_PLAN_PROCESSED_DONORS_ONLY",
+      "historical_approval_ref": "canonical/decisions/CFA3-DEC-AGENTSCOPE-EMBABEL-PLAN-APPROVAL-2026-10-06.json",
+      "original_approval_metadata_preserved_in_immutable_historical_source": true,
+      "organizational_discovery_is_not_child_runtime_admission": true,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

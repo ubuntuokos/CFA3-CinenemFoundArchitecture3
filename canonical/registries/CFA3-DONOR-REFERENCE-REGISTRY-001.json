@@ -1,0 +1,383 @@
+{
+  "schema": "cfa3.canonical-donor-reference-registry.v1",
+  "id": "CFA3-DONOR-REFERENCE-REGISTRY-001",
+  "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "registration_authority": "EXPLICIT_USER_DONOR_APPROVAL_2026-10-10",
+  "scope": "HISTORICAL_SOURCE_FILES_19_TO_26",
+  "registration_state": "PARTIAL_CANONICAL_REFERENCES_REGISTERED",
+  "global_l1_completed": false,
+  "all_historical_sources_exhaustively_reconciled": false,
+  "runtime_admission": false,
+  "code_or_license_admission": false,
+  "donor_count": 20,
+  "source_files_completed": [
+    19
+  ],
+  "original_url_occurrences": 20,
+  "records": [
+    {
+      "donor_id": "FA3-DONOR-TAHOMA2D-001",
+      "normalized_key": "github:tahoma2d/tahoma2d",
+      "original_url": "https://github.com/tahoma2d/tahoma2d",
+      "original_submitted_urls": [
+        "https://github.com/tahoma2d/tahoma2d"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-INOCHI2D-RUNTIME-001",
+      "normalized_key": "github:inochi2d/inochi2d",
+      "original_url": "https://github.com/Inochi2D/inochi2d",
+      "original_submitted_urls": [
+        "https://github.com/Inochi2D/inochi2d"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-INOCHI-CREATOR-001",
+      "normalized_key": "github:inochi2d/inochi-creator",
+      "original_url": "https://github.com/Inochi2D/inochi-creator",
+      "original_submitted_urls": [
+        "https://github.com/Inochi2D/inochi-creator"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-STRETCHY-STUDIO-001",
+      "normalized_key": "github:mangolion/stretchystudio",
+      "original_url": "https://github.com/MangoLion/stretchystudio",
+      "original_submitted_urls": [
+        "https://github.com/MangoLion/stretchystudio"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-SEE-THROUGH-001",
+      "normalized_key": "github:shitagaki-lab/see-through",
+      "original_url": "https://github.com/shitagaki-lab/see-through",
+      "original_submitted_urls": [
+        "https://github.com/shitagaki-lab/see-through"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-RIVE-RUNTIME-001",
+      "normalized_key": "github:rive-app/rive-runtime",
+      "original_url": "https://github.com/rive-app/rive-runtime",
+      "original_submitted_urls": [
+        "https://github.com/rive-app/rive-runtime"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-OZZ-ANIMATION-001",
+      "normalized_key": "github:guillaumeblanc/ozz-animation",
+      "original_url": "https://github.com/guillaumeblanc/ozz-animation",
+      "original_submitted_urls": [
+        "https://github.com/guillaumeblanc/ozz-animation"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-ANIMATION-COMPRESSION-LIBRARY-ACL-001",
+      "normalized_key": "github:nfrechette/acl",
+      "original_url": "https://github.com/nfrechette/acl",
+      "original_submitted_urls": [
+        "https://github.com/nfrechette/acl"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-O3DE-EMOTIONFX-001",
+      "normalized_key": "github:o3de/o3de",
+      "original_url": "https://github.com/o3de/o3de",
+      "original_submitted_urls": [
+        "https://github.com/o3de/o3de"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-VRM-SPECIFICATION-001",
+      "normalized_key": "github:vrm-c/vrm-specification",
+      "original_url": "https://github.com/vrm-c/vrm-specification",
+      "original_submitted_urls": [
+        "https://github.com/vrm-c/vrm-specification"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-UNIVRM-001",
+      "normalized_key": "github:vrm-c/univrm",
+      "original_url": "https://github.com/vrm-c/UniVRM",
+      "original_submitted_urls": [
+        "https://github.com/vrm-c/UniVRM"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-OPENSEEFACE-001",
+      "normalized_key": "github:emilianavt/openseeface",
+      "original_url": "https://github.com/emilianavt/OpenSeeFace",
+      "original_submitted_urls": [
+        "https://github.com/emilianavt/OpenSeeFace"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MEDIAPIPE-001",
+      "normalized_key": "github:google-ai-edge/mediapipe",
+      "original_url": "https://github.com/google-ai-edge/mediapipe",
+      "original_submitted_urls": [
+        "https://github.com/google-ai-edge/mediapipe"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MMPOSE-001",
+      "normalized_key": "github:open-mmlab/mmpose",
+      "original_url": "https://github.com/open-mmlab/mmpose",
+      "original_submitted_urls": [
+        "https://github.com/open-mmlab/mmpose"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-POSE2SIM-001",
+      "normalized_key": "github:perfanalytics/pose2sim",
+      "original_url": "https://github.com/perfanalytics/pose2sim",
+      "original_submitted_urls": [
+        "https://github.com/perfanalytics/pose2sim"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MOCAPANYTHING-001",
+      "normalized_key": "github:phongdaot/mocapanything",
+      "original_url": "https://github.com/phongdaot/MocapAnything",
+      "original_submitted_urls": [
+        "https://github.com/phongdaot/MocapAnything"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-SATA-001",
+      "normalized_key": "github:zzysteve/sata",
+      "original_url": "https://github.com/zzysteve/SATA",
+      "original_submitted_urls": [
+        "https://github.com/zzysteve/SATA"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-ANIMATED-DRAWINGS-001",
+      "normalized_key": "github:facebookresearch/animateddrawings",
+      "original_url": "https://github.com/facebookresearch/AnimatedDrawings",
+      "original_submitted_urls": [
+        "https://github.com/facebookresearch/AnimatedDrawings"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-UBISOFT-ZEROEGGS-001",
+      "normalized_key": "github:ubisoft/ubisoft-laforge-zeroeggs",
+      "original_url": "https://github.com/ubisoft/ubisoft-laforge-ZeroEGGS",
+      "original_submitted_urls": [
+        "https://github.com/ubisoft/ubisoft-laforge-ZeroEGGS"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-EASYMOCAP-001",
+      "normalized_key": "github:zju3dv/easymocap",
+      "original_url": "https://github.com/zju3dv/EasyMocap",
+      "original_submitted_urls": [
+        "https://github.com/zju3dv/EasyMocap"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "source_sequence": 19,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    }
+  ],
+  "lookup_by_id": {
+    "FA3-DONOR-TAHOMA2D-001": 0,
+    "FA3-DONOR-INOCHI2D-RUNTIME-001": 1,
+    "FA3-DONOR-INOCHI-CREATOR-001": 2,
+    "FA3-DONOR-STRETCHY-STUDIO-001": 3,
+    "FA3-DONOR-SEE-THROUGH-001": 4,
+    "FA3-DONOR-RIVE-RUNTIME-001": 5,
+    "FA3-DONOR-OZZ-ANIMATION-001": 6,
+    "FA3-DONOR-ANIMATION-COMPRESSION-LIBRARY-ACL-001": 7,
+    "FA3-DONOR-O3DE-EMOTIONFX-001": 8,
+    "FA3-DONOR-VRM-SPECIFICATION-001": 9,
+    "FA3-DONOR-UNIVRM-001": 10,
+    "FA3-DONOR-OPENSEEFACE-001": 11,
+    "FA3-DONOR-MEDIAPIPE-001": 12,
+    "FA3-DONOR-MMPOSE-001": 13,
+    "FA3-DONOR-POSE2SIM-001": 14,
+    "FA3-DONOR-MOCAPANYTHING-001": 15,
+    "FA3-DONOR-SATA-001": 16,
+    "FA3-DONOR-ANIMATED-DRAWINGS-001": 17,
+    "FA3-DONOR-UBISOFT-ZEROEGGS-001": 18,
+    "FA3-DONOR-EASYMOCAP-001": 19
+  },
+  "lookup_by_original_url": {
+    "https://github.com/tahoma2d/tahoma2d": "FA3-DONOR-TAHOMA2D-001",
+    "https://github.com/Inochi2D/inochi2d": "FA3-DONOR-INOCHI2D-RUNTIME-001",
+    "https://github.com/Inochi2D/inochi-creator": "FA3-DONOR-INOCHI-CREATOR-001",
+    "https://github.com/MangoLion/stretchystudio": "FA3-DONOR-STRETCHY-STUDIO-001",
+    "https://github.com/shitagaki-lab/see-through": "FA3-DONOR-SEE-THROUGH-001",
+    "https://github.com/rive-app/rive-runtime": "FA3-DONOR-RIVE-RUNTIME-001",
+    "https://github.com/guillaumeblanc/ozz-animation": "FA3-DONOR-OZZ-ANIMATION-001",
+    "https://github.com/nfrechette/acl": "FA3-DONOR-ANIMATION-COMPRESSION-LIBRARY-ACL-001",
+    "https://github.com/o3de/o3de": "FA3-DONOR-O3DE-EMOTIONFX-001",
+    "https://github.com/vrm-c/vrm-specification": "FA3-DONOR-VRM-SPECIFICATION-001",
+    "https://github.com/vrm-c/UniVRM": "FA3-DONOR-UNIVRM-001",
+    "https://github.com/emilianavt/OpenSeeFace": "FA3-DONOR-OPENSEEFACE-001",
+    "https://github.com/google-ai-edge/mediapipe": "FA3-DONOR-MEDIAPIPE-001",
+    "https://github.com/open-mmlab/mmpose": "FA3-DONOR-MMPOSE-001",
+    "https://github.com/perfanalytics/pose2sim": "FA3-DONOR-POSE2SIM-001",
+    "https://github.com/phongdaot/MocapAnything": "FA3-DONOR-MOCAPANYTHING-001",
+    "https://github.com/zzysteve/SATA": "FA3-DONOR-SATA-001",
+    "https://github.com/facebookresearch/AnimatedDrawings": "FA3-DONOR-ANIMATED-DRAWINGS-001",
+    "https://github.com/ubisoft/ubisoft-laforge-ZeroEGGS": "FA3-DONOR-UBISOFT-ZEROEGGS-001",
+    "https://github.com/zju3dv/EasyMocap": "FA3-DONOR-EASYMOCAP-001"
+  }
+}

@@ -111,3 +111,79 @@ The CLI rejects overwriting an existing report, does not change OS drivers, and 
 **Evidence limitation remains:** Current Host no physical authority service is implemented in this branch; the local observer is not a substitute for actual physical attestation. GitHub Actions run on pull_request or main only, and neither event was started for this branch. The source files are in a separate feature branch, not on main.
 
 **Current implementation closure:** Source materialization and independent GitHub readback will be recorded separately; full project closure requires successful runtime and physical proof from the real user environment and the existing central CFA3 authorities.
+
+## 2026-10-10 — CPU Foundation, plugin isolation and catalog implementation
+
+- Added **cfa3_current_host/foundation_runtime.py**: independently scoped
+  Security grants, artifact-rights digest admission, exact CPU Model Router,
+  HRB CPU leasing and mandatory Workload Mode arbitration in one composed
+  local Foundation runtime. Resources release on expiry and failure; no
+  silent model or workload fallback. This is an operational **local reference
+  Foundation**, NOT admitted production Security/Evidence authority.
+- Added **cfa3_current_host/foundation_pipeline.py**: connects actual Current
+  Host POSITIVE/NEGATIVE/ROLLBACK, GUI and handoff obligations to the CPU
+  Foundation, with fail-closed prerequisite binding and reference receipts.
+- Updated **cfa3_current_host/local_runner.py**: scoped selftests obtain and
+  release live local CPU HRB and Workload Mode leases.
+- Added **cfa3_current_host/plugin_sandbox.py**: bounded Linux bubblewrap
+  subprocess isolation, exact bundle digest and plugin.run permissions. A
+  live Foundation session with matching publisher/artifact rights and scope
+  is mandatory; no unconfined fallback. Real bubblewrap and vendor/security
+  certification are NOT VERIFIED in the current execution environment.
+- Added **cfa3_current_host/capability_catalog.py**: enforces **200 distinct
+  capability IDs** and exactly 3 minimum proof cases per ID (600 at the
+  required target), plus separately required GUI/handoff cases. An empty
+  example input lives at examples/current-host-capabilities.json because
+  the *real* canonical 200 records are NOT YET RECONCILED. Synthetic 200
+  IDs and 600 synthetic receipts never produce physical PASS.
+- The user-approved scope is explicitly staged as
+  canonical/policies/CFA3-CURRENT-HOST-OWNERSHIP-001.json: certify CFA3
+  code and our integration/host interfaces, not vendor drivers, commercial
+  software products or community-developed plugin internals.
+- Added pyproject.toml installable CLI with catalog-check and optional GUI
+  commands.
+
+### Local CPU test evidence — verified exact source bytes
+
+Four GitHub source/test blobs were materialized locally and matched by
+git hash-object, then tested with Python 3.13.5:
+
+- foundation_runtime.py: c38d16e6cba0233d251fcad7bf948c45dcbffbed
+- test_current_host_foundation_runtime.py: 20d83c1e78709ca627ea76dcfc97321b610f8c06
+- capability_catalog.py: 3cf2bbcf370cc592f22d4732a5d5a87b12f6d88e
+- test_current_host_capability_catalog.py: 6b33c33710046cf397819cf54104ac47f550d7a8
+
+Result: **29 local tests run, 29 PASS, 0 failures**. This is
+**REFERENCE EVIDENCE**, NOT physical Current Host PASS. This result does
+not claim that all previous Python/Rust/Qt6/plugin-sandbox tests ran.
+
+### User-facing commands, when this branch is checked out
+
+    python3 -m pip install --no-build-isolation -e .
+    python3 -m cfa3_current_host plan --graph examples/current-host-graph.json --changed video-editor
+    python3 -m cfa3_current_host catalog-check --catalog examples/current-host-capabilities.json
+    python3 -m cfa3_current_host selftest --repo . --output ./current-host-local-candidate.json
+    python3 -m cfa3_current_host gui --graph examples/current-host-graph.json --changed video-editor
+
+The last command requires actually installed PySide6/Qt6. It never marks
+standalone or parent GUI as PASS without the applicable actual tests.
+
+### Precise remaining acceptance gates
+
+1. Run the whole checked-out branch suite and cargo test --workspace; this
+   environment lacks rustc/cargo and Qt6. The actual plugin sandbox run is
+   also not yet performed: bubblewrap is absent here.
+2. Actual shared Foundation production Security/Rights/HRB/Model Router/
+   Workload Mode and Evidence authorities still require independent
+   admission/host integration. Local Foundation bootstrap is not a
+   substitute for those production trust roots.
+3. Reconcile 200 real capability records and the corresponding proof
+   obligations. Do not auto-invent identities to satisfy a count.
+4. Test real Qt6 parent application handoffs and actual plugin execution
+   on a supported Linux host without claiming vendor-product QA.
+5. Real physical host evidence and a separate Evidence authority review
+   are still required. The current local reference tests cannot certify
+   the user's actual hardware.
+
+**Status: IMPLEMENTATION_STAGED, not Current Host FINAL.** The parallel
+donor PR #7, RHEL README PR #8 and CrAM branch remain untouched.

@@ -89,6 +89,33 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(donor_l1.lookup(dbpath,"FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001","id")[0]["status"],"SUPERSEDED")
             self.assertEqual(donor_l1.lookup(dbpath,"FA3-DONOR-CLOVER-MOE-MM3D-001","id")[0]["status"],"ACCEPTED_REFERENCE")
 
+    def test_direct_url_routing_exactly_matches_sqlite_and_preserves_all_relations(self):
+        routing_path=ROOT/"canonical/registries/CFA3-DONOR-L1-URL-ROUTING-20261010.json"
+        routing=json.loads(routing_path.read_text(encoding="utf-8"))
+        self.assertEqual(routing["state"],"STAGED_NOT_PUBLISHED")
+        self.assertFalse(routing["canonical_level_published"])
+        self.assertIsNone(routing["original_L1_B"])
+        self.assertEqual(routing["source_count"],1978)
+        self.assertEqual(routing["alias_count"],3930)
+        self.assertEqual(routing["multiple_related_identity_url_count"],5)
+        self.assertEqual(routing["owner_baseline_original_urls"],445)
+        self.assertEqual(routing["tripo_original_url_occurrences"],48)
+        self.assertEqual(len(routing["entries"]),3930)
+        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3930)
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath=Path(tmp)/"url-routing-readback.sqlite"
+            donor_l1.stage(dbpath,"url-routing-readback")
+            with sqlite3.connect(dbpath) as db:
+                database_rows={a:(id_,authority,json.loads(ids)) for a,id_,authority,ids in db.execute(
+                    "SELECT alias,preferred_source_id,authority,related_source_ids_json "
+                    "FROM url_resolution ORDER BY alias")}
+            self.assertEqual(len(database_rows),3930)
+            for row in routing["entries"]:
+                self.assertEqual(database_rows[row["alias"]],
+                                 (row["preferred_source_id"],row["authority"],row["related_source_ids"]))
+                self.assertIn(row["preferred_source_id"],row["related_source_ids"])
+            self.assertEqual(sum(len(row["related_source_ids"]) > 1 for row in routing["entries"]),5)
+
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
         self.assertEqual(len(sources), 1978)

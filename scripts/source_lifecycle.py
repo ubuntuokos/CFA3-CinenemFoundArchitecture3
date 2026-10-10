@@ -44,6 +44,8 @@ def normalize_url(url):
                        host, path, urlencode(query), ""))
 
 def validate_index(index):
+    if isinstance(index, dict) and index.get("schema") == "cfa3.source-lifecycle-index.v2":
+        return validate_migrated_index(index)
     if not isinstance(index, dict) or index.get("schema") != "cfa3.source-lifecycle-index.v1":
         raise ValueError("Source index schema missing or wrong")
     if not isinstance(index.get("complete"), bool) or not isinstance(index.get("source_records"), list):
@@ -69,6 +71,57 @@ def validate_index(index):
             urls[key] = sid
     return urls
 
+def validate_migrated_index(index):
+    """Validate explicit historical routes without collapsing related identities."""
+    if index.get("complete") is not False or index.get("global_l1_completed") is not False:
+        raise ValueError("Migrated reference lookup cannot certify global completeness")
+    records, routes = index.get("source_records"), index.get("locator_routes")
+    if not isinstance(records, list) or not isinstance(routes, list):
+        raise ValueError("Missing migrated records or routes")
+    names = set()
+    for record in records:
+        sid, decision = record.get("source_id"), record.get("prior_decision")
+        if not isinstance(sid, str) or not sid or sid in names:
+            raise ValueError("Missing or duplicated source_id")
+        names.add(sid)
+        if not isinstance(record.get("canonical_url"), str) or not record["canonical_url"]:
+            raise ValueError("Missing historical source locator")
+        if not isinstance(decision, dict) or not all(decision.get(k) for k in ("decision_id", "revision", "outcome")):
+            raise ValueError("Missing prior decision provenance")
+        if record.get("runtime_admission") is not False:
+            raise ValueError("Lookup cannot grant runtime admission")
+    exact = {}
+    for route in routes:
+        alias, preferred = route.get("alias"), route.get("preferred_source_id")
+        related = route.get("related_source_ids")
+        if (not isinstance(alias, str) or not alias or alias in exact
+                or not isinstance(related, list) or not related
+                or any(sid not in names for sid in related)
+                or len(set(related)) != len(related) or preferred not in related
+                or not route.get("authority")):
+            raise ValueError("Invalid historical locator route")
+        exact[alias] = preferred
+    if any(r["canonical_url"] not in exact for r in records):
+        raise ValueError("Historical source locator is not routed")
+    return exact
+
+def resolve_migrated_url(url, exact):
+    # Original URL spelling is authoritative. Normalization may be used only
+    # when all matching historical routes select the same preferred identity.
+    if url in exact:
+        return exact[url]
+    key = normalize_url(url)
+    matches = set()
+    for alias, sid in exact.items():
+        try:
+            if normalize_url(alias) == key:
+                matches.add(sid)
+        except ValueError:
+            continue  # non-HTTP source keys are preserved, not fabricated URLs
+    if len(matches) > 1:
+        raise ValueError("Normalized URL matches different historical decisions")
+    return next(iter(matches), None)
+
 def result(state, *, source=None, **details):
     value = {"disposition": state, "automatic_code_import": False,
              "automatic_donor_registration": False, "prior_decision_overwritten": False}
@@ -88,10 +141,12 @@ def evaluate(url, index, observation=None):
     try:
         key = normalize_url(url)
         alias_map = validate_index(index)
+        migrated = index.get("schema") == "cfa3.source-lifecycle-index.v2"
+        sid = resolve_migrated_url(url, alias_map) if migrated else alias_map.get(key)
     except (TypeError, ValueError, AttributeError) as exc:
         return result("BLOCKED_INDEX_CONFLICT", reason=str(exc))
     by_id = {x["source_id"]: x for x in index["source_records"]}
-    source = by_id.get(alias_map[key]) if key in alias_map else None
+    source = by_id.get(sid)
     if observation is not None and not observation_verified(observation):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source)
     if source is None:

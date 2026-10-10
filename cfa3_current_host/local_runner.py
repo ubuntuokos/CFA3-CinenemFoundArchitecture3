@@ -57,14 +57,21 @@ def run_cfa3_owned_reference_tests(repo_root: Path) -> dict:
     ]
     if any(not (root / file).is_file() for file in required):
         raise LocalTestError("not a full CFA3 Current Host source checkout")
-    # This source locator is informational only, not an authority signature.
+    # An observed HEAD is NOT source provenance if local tracked or untracked
+    # files differ. Reject the checked-out revision label for dirty trees.
+    # The local command outputs cannot issue physical proof either way.
+    clean = False
     try:
         git = _run(["git", "rev-parse", "HEAD"], root, timeout=10)
         commit = git["transcript_tail"].strip() if git["result"] == "REFERENCE_PASS" else None
-    except FileNotFoundError:
+        status = _run(["git", "status", "--porcelain", "--untracked-files=all"],
+                      root, timeout=10)
+        clean = status["result"] == "REFERENCE_PASS" and not status["transcript_tail"].strip()
+    except (FileNotFoundError, OSError):
         commit = None
-    if not commit or len(commit) != 40 or not all(c in "0123456789abcdef" for c in commit):
-        commit = "UNVERIFIED_CHECKOUT"
+    if (not commit or len(commit) != 40
+            or not all(c in "0123456789abcdef" for c in commit) or not clean):
+        commit = "UNVERIFIED_DIRTY_OR_UNAVAILABLE_CHECKOUT"
     # The test runner itself operates under the locally enforced CPU
     # Foundation mode/HRB/security/rights lease. These are explicit *reference*
     # grants for CFA3-owned source, NOT production rights or physical PASS.
@@ -115,6 +122,11 @@ def run_cfa3_owned_reference_tests(repo_root: Path) -> dict:
         "schema": "cfa3.current-host.local-observation.v1",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_revision": commit,
+        "source_checkout_clean": clean,
+        "source_integrity_admission": (
+            "REFERENCE_CLEAN_CHECKOUT" if clean and len(commit) == 40
+            else "NOT_ADMITTED_SOURCE_PROVENANCE"
+        ),
         "environment_digest": "sha256:" + hashlib.sha256(digest_input).hexdigest(),
         "environment": environment,
         "local_foundation": {

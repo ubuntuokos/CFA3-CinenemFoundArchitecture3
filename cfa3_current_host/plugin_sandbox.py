@@ -137,8 +137,9 @@ def execute_plugin_cpu(
     from .foundation_runtime import FoundationDenied, FoundationRuntime, Session
     if not isinstance(foundation, FoundationRuntime) or not isinstance(session, Session):
         raise FoundationDenied("LIVE_FOUNDATION_SESSION_REQUIRED")
-    try:
-        foundation.validate(session)
+    # Pin the HRB/mode lease for the *entire* sandbox operation. Reapers must
+    # never reallocate these CPU resources while the plugin subprocess runs.
+    with foundation.bound_operation(session):
         request = session.request
         record = registry._records.get((plugin_id, version))
         if (record is None
@@ -154,7 +155,3 @@ def execute_plugin_cpu(
             registry, plugin_id, version,
             entrypoint=entrypoint, timeout_seconds=timeout_seconds, argv=argv
         )
-    finally:
-        # Even if the external sandbox is unavailable or the token has expired,
-        # the CPU lease and Workload Mode must be returned.
-        foundation.finish(session)

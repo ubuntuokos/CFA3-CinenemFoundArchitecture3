@@ -35,7 +35,8 @@ class DirectOwnerApproval1926Tests(unittest.TestCase):
         self.assertEqual(len(ledger["records"]), 82)
         self.assertEqual(len({x["id"] for x in ledger["records"]}), 82)
         historical = {x["source_path"]: x["source_blob_sha"]
-                      for x in manifest["per_file_completion_receipts"]}
+                      for x in manifest["per_file_completion_receipts"]
+                      if "source_blob_sha" in x}
         self.assertTrue(all(
             historical.get(x["source_path"]) == x["old_source_blob_sha"]
             for x in ledger["source_groups"]))

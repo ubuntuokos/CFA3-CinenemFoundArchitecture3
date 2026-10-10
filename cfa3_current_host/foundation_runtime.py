@@ -8,6 +8,7 @@ bootstrap and not itself security-certified or physical Current Host PASS.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from contextlib import contextmanager
 from enum import Enum
 import hashlib
 import json
@@ -185,6 +186,7 @@ class FoundationRuntime:
         self.hrb = hrb
         self.modes = modes
         self._live: dict[str, Session] = {}
+        self._running: set[str] = set()
         self._lock = threading.RLock()
         self._events: list[dict] = []
 
@@ -197,8 +199,30 @@ class FoundationRuntime:
         self._events.append({"event": event, "session_id": session,
                              "detail": detail, "monotonic": time.monotonic()})
 
+    def _reap_expired_locked(self) -> int:
+        now = time.monotonic()
+        stale = [session for session in self._live.values()
+                 if session.deadline_monotonic <= now
+                 and session.session_id not in self._running]
+        for session in stale:
+            self.hrb.release(session.hrb_lease)
+            self.modes.release(session.mode_lease)
+            del self._live[session.session_id]
+            self._record("EXPIRED_RECLAIMED", session.session_id, "NONE")
+        return len(stale)
+
+    def reap_expired(self) -> int:
+        """Reclaim expired *idle* leases; never free actively executing work.
+
+        Active expired work keeps its reservation until its execution scope
+        completes, so reclaim cannot silently oversubscribe CPU capacity.
+        """
+        with self._lock:
+            return self._reap_expired_locked()
+
     def start(self, request: Request) -> Session:
         with self._lock:
+            self._reap_expired_locked()
             self.security.check(request)
             self.rights.check(request)
             route = self.model_router.resolve(request)
@@ -231,10 +255,32 @@ class FoundationRuntime:
             if (not isinstance(session, Session)
                     or self._live.get(session.session_id) != session):
                 raise FoundationDenied("UNKNOWN_OR_CHANGED_SESSION")
-            del self._live[session.session_id]
+            if session.session_id in self._running:
+                raise FoundationDenied("RUNNING_SESSION_CANNOT_BE_RELEASED")
             self.hrb.release(session.hrb_lease)
             self.modes.release(session.mode_lease)
+            del self._live[session.session_id]
             self._record("RELEASED", session.session_id, "NONE")
+
+    @contextmanager
+    def bound_operation(self, session: Session):
+        """Pin a validated session for one operation; always release afterward.
+
+        This only manages the CPU lease. It does not make arbitrary callbacks
+        safe or establish real plugin security/physical Current Host PASS.
+        """
+        with self._lock:
+            self.validate(session)
+            if session.session_id in self._running:
+                raise FoundationDenied("SESSION_ALREADY_EXECUTING")
+            self._running.add(session.session_id)
+        try:
+            yield
+            self.validate(session)
+        finally:
+            with self._lock:
+                self._running.discard(session.session_id)
+                self.finish(session)
 
     def run_owned_callable(self, session: Session, operation):
         """Execute an explicitly supplied CFA3-owned callable; never plugin code.
@@ -242,15 +288,14 @@ class FoundationRuntime:
         This convenience path is for in-process CFA3 unit/reference operations
         only. It cannot preempt hung user code or make physical PASS.
         """
-        self.validate(session)
-        try:
-            if not callable(operation):
-                raise FoundationDenied("INVALID_CFA3_TEST_OPERATION")
-            result = operation()
-            return {"result": "REFERENCE_COMPLETED", "value": result,
-                    "physical_current_host_pass": False}
-        except BaseException:
-            self._record("REFERENCE_FAILED", session.session_id, "operation-error")
-            raise
-        finally:
-            self.finish(session)
+        with self.bound_operation(session):
+            try:
+                if not callable(operation):
+                    raise FoundationDenied("INVALID_CFA3_TEST_OPERATION")
+                result = operation()
+                # The bound_operation context validates TTL again at exit.
+            except BaseException:
+                self._record("REFERENCE_FAILED", session.session_id, "operation-error")
+                raise
+        return {"result": "REFERENCE_COMPLETED", "value": result,
+                "physical_current_host_pass": False}

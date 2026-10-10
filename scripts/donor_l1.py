@@ -20,6 +20,7 @@ UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
 SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURCES-001.json"
 ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
 TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
+OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
 # ordered 48 original URL occurrences and sorted 36 proposed original donor IDs.
 TRIPO_URL_ORDER_SHA256 = "f78ba37406396b871e390f8619eff9c2d7b87d9b4db9e165ef6bff5ac742c433"
@@ -65,6 +66,50 @@ def explicit_legacy_donor_marker(entry):
         "donornak", "vedd fel donornak", "add a donorlistához",
         "all-links-in-conversation-donornak", "donornak és sdk-ba",
     }
+
+
+def owner_message_recovery():
+    """Immutable historical owner-message L1 evidence; no runtime admission."""
+    record = json_read(OWNER_RECOVERY)
+    if (record.get("schema") != "cfa3.donor-l1-historical-owner-message-recovery.v1"
+            or record.get("status") != "STAGED_NOT_PUBLISHED"
+            or record.get("old_repository_read_only") is not True
+            or record.get("canonical_level_published") is not False
+            or record.get("original_L1_B") is not None
+            or record.get("runtime_admission") is not False
+            or record.get("novel_identity_count") != 3
+            or record.get("existing_identity_override_count") != 1
+            or record.get("total_approved_url_occurrences") != 4
+            or len(record.get("entries", [])) != 3
+            or len(record.get("existing_source_approval_overrides", [])) != 1):
+        raise ValueError("Historical L1 owner recovery coverage or admission boundary mismatch")
+    expected = {
+        "https://github.com/ExistentialAudio/BlackHole": ("CFA3-DONOR-EXISTENTIALAUDIO-BLACKHOLE-001", "github:existentialaudio/blackhole"),
+        "https://github.com/ExistentialAudio": ("CFA3-DONOR-EXISTENTIALAUDIO-ORG-001", "github:existentialaudio"),
+        "https://github.com/upstash": ("CFA3-DONOR-UPSTASH-ORG-001", "github:upstash"),
+    }
+    for entry in record["entries"]:
+        src = entry["source"]
+        if (expected.pop(src["locator"], None) != (entry["donor_id"], src["normalized_key"])
+                or entry.get("status") != "OWNER_APPROVED_PENDING_PUBLICATION"
+                or entry.get("submission_review", {}).get("reported_owner_marker") not in
+                   {"a beszélgetéshez tartozó linkeket donornak", "donor:"}
+                or entry.get("runtime_admission") is not False
+                or entry.get("intake_provenance", {}).get("canonical_approval_admitted") is not False):
+            raise ValueError("Historical owner source identity or marker tampered")
+    if expected:
+        raise ValueError("Historical approved source lost")
+    override = record["existing_source_approval_overrides"][0]
+    if (override.get("donor_id") != "FA3-DONOR-OPENCUT-001"
+            or override.get("normalized_key") != "github:opencut-app/opencut"
+            or override.get("historical_locator") != "https://github.com/OpenCut-app/OpenCut"
+            or override.get("original_owner_url") != "https://github.com/opencut-app/opencut"
+            or override.get("historical_status") != "CANDIDATE"
+            or override.get("new_status") != "OWNER_APPROVED_PENDING_PUBLICATION"
+            or override.get("owner_marker") != "donornak és sdk-ba"
+            or override.get("old_record_immutable") is not True):
+        raise ValueError("Historical OpenCut original status or owner decision changed")
+    return record
 
 
 def frozen_sources():
@@ -164,6 +209,14 @@ def frozen_sources():
                 or record.get("runtime_admission") is not False):
             raise ValueError("Historical Tripo candidate must remain blocked")
         sources.append((record, "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER", False))
+    owner = owner_message_recovery()
+    existing_opencut = [entry for entry, origin, previous in sources
+                        if entry["donor_id"] == "FA3-DONOR-OPENCUT-001"]
+    if (len(existing_opencut) != 1 or existing_opencut[0]["status"] != "CANDIDATE"
+            or existing_opencut[0]["source"]["normalized_key"] != "github:opencut-app/opencut"):
+        raise ValueError("Historical OpenCut identity or status mismatch")
+    for entry in owner["entries"]:
+        sources.append((entry, "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER", False))
     ids, keys = set(), set()
     for record, _, _ in sources:
         ident = record["donor_id"]
@@ -271,6 +324,18 @@ def register_tripo_historical_urls(db, sources):
     return len(seen)
 
 
+def register_owner_message_urls(db):
+    record = owner_message_recovery()
+    pairs = [(e["donor_id"], e["source"]["locator"]) for e in record["entries"]]
+    pairs.append((record["existing_source_approval_overrides"][0]["donor_id"],
+                  record["existing_source_approval_overrides"][0]["original_owner_url"]))
+    for sid, url in pairs:
+        db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (url,sid))
+        db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                   (sid,url,"HISTORICAL_OWNER_MESSAGES_20261007","EXPLICIT_DONOR_COMMAND"))
+    return len(pairs)
+
+
 def build_url_resolution(db):
     """Deterministic exact-URL lookup; never collapse multiple historical IDs.
 
@@ -368,8 +433,14 @@ def prepare(db, sources, run_id):
             "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER",
             "HISTORICAL_OWNER_APPROVED_TRANSFER",
             "ADDITIONAL_OWNER_APPROVED_TRANSFER",
+            "HISTORICAL_OWNER_MESSAGE_APPROVED_TRANSFER",
         }
-        status = (entry["status"] if from_main else
+        owner_override = owner_message_recovery()["existing_source_approval_overrides"][0]
+        is_override = (from_main and sid == owner_override["donor_id"]
+                       and src["normalized_key"] == owner_override["normalized_key"]
+                       and entry["status"] == owner_override["historical_status"])
+        status = ("OWNER_APPROVED_PENDING_PUBLICATION" if is_override else
+                  entry["status"] if from_main else
                   "OWNER_APPROVED_PENDING_PUBLICATION" if origin in approved_origins
                   else "BLOCKED")
         db.execute("INSERT INTO sources VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -381,6 +452,7 @@ def prepare(db, sources, run_id):
             db.execute("INSERT INTO classes VALUES(?,?,?)",(sid,klass,"HINT_BASED_UNVERIFIED"))
     register_historical_urls(db, sources)
     register_tripo_historical_urls(db, sources)
+    register_owner_message_urls(db)
     build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
@@ -391,7 +463,9 @@ def prepare(db, sources, run_id):
         ("supplemental_owner_source_candidates","23"),
         ("additional_owner_source_leads","4"),
         ("total_pending_owner_source_candidates","4"),
-        ("legacy_owner_approved_pending_publication","53"),
+        ("legacy_owner_approved_pending_publication","57"),
+        ("additional_20261007_owner_approved_source_records","3"),
+        ("historical_opencut_approval_overrides","1"),
         ("supplement_and_additional_owner_markers_without_primary_pair","23"),
         ("historical_tripo_new_pending_sources","0"),
         ("historical_tripo_owner_approved_transfer_sources","30"),
@@ -499,6 +573,21 @@ def verify(path, expected):
                 (rec["original_url"],)).fetchone()
             if actual != (rec["source_id"],):
                 raise ValueError("Tripo primary URL selection mismatch")
+        owner = owner_message_recovery()
+        recovered = [(entry["donor_id"],entry["source"]["locator"]) for entry in owner["entries"]]
+        recovered.append((owner["existing_source_approval_overrides"][0]["donor_id"],
+                          owner["existing_source_approval_overrides"][0]["original_owner_url"]))
+        for sid,url in recovered:
+            status = db.execute("SELECT current_status FROM sources WHERE source_id=?", (sid,)).fetchone()
+            if status != ("OWNER_APPROVED_PENDING_PUBLICATION",):
+                raise ValueError("Missing legacy owner approval transfer: " + sid)
+            if not db.execute("SELECT 1 FROM source_provenance WHERE source_id=? AND original_url=?",
+                              (sid,url)).fetchone():
+                raise ValueError("Historical owner URL provenance missing: " + url)
+            primary = db.execute("SELECT preferred_source_id FROM url_resolution WHERE alias=?",
+                                 (url,)).fetchone()
+            if primary != (sid,):
+                raise ValueError("Historical owner URL lookup missing: " + url)
         url_locator_rows = db.execute(
             "SELECT count(*) FROM sources WHERE locator LIKE 'http://%' OR locator LIKE 'https://%'"
         ).fetchone()[0]
@@ -515,7 +604,9 @@ def verify(path, expected):
             "historical_tripo_owner_approved_transfer_sources":30,
             "historical_supplement_owner_approved_transfer_sources":19,
             "additional_owner_approved_transfer_sources":4,
-            "legacy_owner_approved_pending_publication":53,
+            "legacy_owner_approved_pending_publication":57,
+            "additional_20261007_owner_approved_source_records":3,
+            "historical_opencut_approval_overrides":1,
             "legacy_reference_only_pending_sources":4,
             "historical_tripo_url_occurrences":48,
             "historical_tripo_provenance":"BOUNDED_48_PASS",

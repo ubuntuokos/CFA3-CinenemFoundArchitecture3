@@ -485,6 +485,29 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "b9fc7ee01faaa441194be3670ef64859d72bd9d4",
+      "source_proof_kind": "HISTORICAL_EXPLICIT_GOOGLE_ANTIGRAVITY_REFERENCE_INTAKE_DELTA",
+      "original_source_records": 5,
+      "original_exact_owner_urls": 5,
+      "source_ids_present_in_new_l1_stage": 5,
+      "original_urls_in_direct_routing": 5,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_or_legacy_status_mismatches": 0,
+      "historical_approval_ref": "docs/donor-google-antigravity-2026-10-02.md",
+      "antigravity_sdk_exact_repo_preserved": "FA3-DONOR-GOOGLE-ANTIGRAVITY-SDK-PYTHON-001",
+      "org_topic_indexes_discovery_only": true,
+      "unapproved_cli_or_compiled_runtime_not_admitted": true,
+      "model_provider_mcp_cloud_dependency_or_binary_admission": false,
+      "license_rights_and_hardware_review_required": true,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

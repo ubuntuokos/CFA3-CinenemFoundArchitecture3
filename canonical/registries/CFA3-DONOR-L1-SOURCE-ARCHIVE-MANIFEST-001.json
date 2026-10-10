@@ -142,6 +142,27 @@
       "legacy_source_pr_count": 18,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json",
+      "archive_path": "archive/donor-source-migration/2026-10-09/CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "3652f591b08acff0de53910a68c03cec84de9971",
+      "old_blob_new_archive_exact_match": true,
+      "canonical_identity_count": 18,
+      "original_submitted_url_count": 20,
+      "unique_original_submitted_urls": 20,
+      "source_ids_present_in_new_l1_stage": 18,
+      "missing_source_ids": 0,
+      "identity_key_and_historical_status_mismatches": 0,
+      "original_url_identity_bindings_preserved": 20,
+      "missing_original_url_identity_bindings": 0,
+      "historical_owner_approval_mode": "OWNER_APPROVED_ANALYSIS_AND_SHGAF_PLAN",
+      "historical_owner_approval_metadata_preserved": true,
+      "query_and_sort_views_preserved_as_aliases": true,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

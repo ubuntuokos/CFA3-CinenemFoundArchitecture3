@@ -50,6 +50,16 @@ class LifecycleMigrationTests(unittest.TestCase):
                 self.assertEqual(result["prior_decision"]["canonical_reference_registration"], row)
                 self.assertFalse(result["automatic_donor_registration"])
 
+    def test_historical_upstream_commit_is_exposed_without_current_version_claim(self):
+        recut = evaluate("https://github.com/6174/recut", self.index)
+        self.assertEqual(recut["source_id"], "FA3-DONOR-6174-RECUT-001")
+        historical = recut["prior_decision"]["historical_upstream_evidence"]
+        self.assertEqual(historical["upstream_snapshot"]["commit_sha"],
+                         "adc8b2583c872d78539ef87f8b179e9fde877113")
+        row = next(r for r in self.index["source_records"]
+                   if r["source_id"] == "FA3-DONOR-6174-RECUT-001")
+        self.assertIsNone(row["observed_revision"])
+
     def test_unknown_is_not_declared_new_and_no_upstream_version_is_invented(self):
         self.assertEqual(evaluate("https://unknown.invalid/unregistered", self.index)["disposition"],
                          "BLOCKED_INDEX_INCOMPLETE")

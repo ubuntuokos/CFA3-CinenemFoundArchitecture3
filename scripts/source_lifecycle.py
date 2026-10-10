@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Read-only CFA3 source-identity / prior-decision gate. Never fetches or registers."""
 import argparse
+from functools import lru_cache
 import json
 import pathlib
 import sys
@@ -122,12 +123,35 @@ def resolve_migrated_url(url, exact):
         raise ValueError("Normalized URL matches different historical decisions")
     return next(iter(matches), None)
 
+@lru_cache(maxsize=1)
+def historical_upstream_evidence():
+    """Use exact preserved records; never infer a current upstream revision."""
+    path = ROOT / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
+    transfer = json.loads(path.read_text(encoding="utf-8"))
+    if transfer.get("schema") != "cfa3.donor-transfer-snapshot.v1":
+        raise ValueError("Historical source snapshot schema is invalid")
+    keys = ("upstream_snapshot", "upstream_observation", "source_snapshot",
+            "observed_commit", "upstream_repository_references")
+    return {
+        row["source_id"]: (
+            row["historical_record_sha256"],
+            {key: row["historical_record"][key] for key in keys
+             if key in row["historical_record"]})
+        for row in transfer["records"]
+    }
+
+
 def result(state, *, source=None, **details):
     value = {"disposition": state, "automatic_code_import": False,
              "automatic_donor_registration": False, "prior_decision_overwritten": False}
     if source is not None:
         value["source_id"] = source["source_id"]
-        value["prior_decision"] = source["prior_decision"]
+        prior = source["prior_decision"]
+        if "reference_state" in source:  # migrated v2 source
+            archived = historical_upstream_evidence().get(source["source_id"])
+            if archived is not None and archived[0] == prior.get("revision"):
+                prior = {**prior, "historical_upstream_evidence": archived[1]}
+        value["prior_decision"] = prior
     value.update(details)
     return value
 

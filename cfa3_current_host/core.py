@@ -196,10 +196,17 @@ class Graph:
                     ordered.append(Obligation(level, name, TestKind.PARENT_GUI))
         # Only explicitly registered, genuinely affected handoffs are tested.
         for edge in sorted(self.edges.values(), key=lambda x: x.handoff_id):
-            if edge.consumer_id in affected and edge.producer_id in affected:
-                cross_layer = self.nodes[edge.producer_id].layer != self.nodes[edge.consumer_id].layer
-                ordered.append(Obligation(Level.GLOBAL if cross_layer else Level.LAYER,
-                                          edge.consumer_id, TestKind.HANDOFF, edge.handoff_id))
+            # A changed CFA3-owned recipient must prove its *inbound* bridge,
+            # even if its source is unchanged or an external vendor product.
+            # This tests the CFA3 interface, never the vendor's product.
+            if edge.consumer_id in affected:
+                source = self.nodes[edge.producer_id]
+                target = self.nodes[edge.consumer_id]
+                level = (Level.GLOBAL if source.ownership in CFA3_KINDS
+                         and source.layer != target.layer else
+                         Level.FOUNDATION if target.layer == "FOUNDATION" else Level.LAYER)
+                ordered.append(Obligation(level, edge.consumer_id,
+                                          TestKind.HANDOFF, edge.handoff_id))
         return Plan(mode, ids, tuple(sorted(affected)), tuple(ordered),
                     "GLOBAL_CONTRACT_CHANGED" if mode == Mode.FULL else "REAL_EDGE_IMPACT")
 

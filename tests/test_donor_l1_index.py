@@ -83,7 +83,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(entry["new_staging_status"],matched[0]["status"])
             with sqlite3.connect(dbpath) as db:
                 self.assertEqual(db.execute("SELECT count(*) FROM sources").fetchone()[0],1981)
-                self.assertEqual(db.execute("SELECT count(*) FROM url_resolution").fetchone()[0],3938)
+                self.assertEqual(db.execute("SELECT count(*) FROM url_resolution").fetchone()[0],3943)
                 self.assertEqual(db.execute("SELECT value FROM metadata WHERE key='publication_gate'").fetchone()[0],"PENDING")
 
     def test_five_owner_url_resolutions_preserve_all_original_identities(self):
@@ -120,6 +120,32 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(donor_l1.lookup(dbpath,"FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001","id")[0]["status"],"SUPERSEDED")
             self.assertEqual(donor_l1.lookup(dbpath,"FA3-DONOR-CLOVER-MOE-MM3D-001","id")[0]["status"],"ACCEPTED_REFERENCE")
 
+    def test_historical_shgaf_original_submitted_url_views_are_not_lost(self):
+        delta_path = ROOT / "archive/donor-source-migration/2026-10-09/CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json"
+        delta = json.loads(delta_path.read_text(encoding="utf-8"))
+        self.assertEqual(len(delta["submitted_urls"]), 20)
+        bindings = {}
+        for entry in delta["canonical_identities"]:
+            for url in [entry["source"], *entry.get("submitted_views", [])]:
+                self.assertNotIn(url, bindings)
+                bindings[url] = entry["donor_id"]
+        self.assertEqual(set(bindings), set(delta["submitted_urls"]))
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath = Path(tmp) / "shgaf-original-url-readback.sqlite"
+            donor_l1.stage(dbpath, "shgaf-original-url-readback")
+            with sqlite3.connect(dbpath) as db:
+                for url, donor_id in bindings.items():
+                    actual = db.execute("SELECT preferred_source_id FROM url_resolution WHERE alias=?",
+                                        (url,)).fetchone()
+                    self.assertEqual(actual, (donor_id,))
+                    provenance = db.execute(
+                        "SELECT 1 FROM source_provenance WHERE source_id=? AND original_url=? "
+                        "AND source_set='HISTORICAL_SHGAF_20261006'",
+                        (donor_id, url)).fetchone()
+                    self.assertIsNotNone(provenance)
+                self.assertEqual(db.execute(
+                    "SELECT count(*) FROM url_resolution").fetchone()[0], 3943)
+
     def test_direct_url_routing_exactly_matches_sqlite_and_preserves_all_relations(self):
         routing_path=ROOT/"canonical/registries/CFA3-DONOR-L1-URL-ROUTING-20261010.json"
         routing=json.loads(routing_path.read_text(encoding="utf-8"))
@@ -127,12 +153,12 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertFalse(routing["canonical_level_published"])
         self.assertIsNone(routing["original_L1_B"])
         self.assertEqual(routing["source_count"],1981)
-        self.assertEqual(routing["alias_count"],3938)
+        self.assertEqual(routing["alias_count"],3943)
         self.assertEqual(routing["multiple_related_identity_url_count"],5)
         self.assertEqual(routing["owner_baseline_original_urls"],445)
         self.assertEqual(routing["tripo_original_url_occurrences"],48)
-        self.assertEqual(len(routing["entries"]),3938)
-        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3938)
+        self.assertEqual(len(routing["entries"]),3943)
+        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3943)
         with tempfile.TemporaryDirectory() as tmp:
             dbpath=Path(tmp)/"url-routing-readback.sqlite"
             donor_l1.stage(dbpath,"url-routing-readback")
@@ -140,7 +166,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 database_rows={a:(id_,authority,json.loads(ids)) for a,id_,authority,ids in db.execute(
                     "SELECT alias,preferred_source_id,authority,related_source_ids_json "
                     "FROM url_resolution ORDER BY alias")}
-            self.assertEqual(len(database_rows),3938)
+            self.assertEqual(len(database_rows),3943)
             for row in routing["entries"]:
                 self.assertEqual(database_rows[row["alias"]],
                                  (row["preferred_source_id"],row["authority"],row["related_source_ids"]))

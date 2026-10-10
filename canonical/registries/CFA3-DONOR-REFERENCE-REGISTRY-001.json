@@ -9,14 +9,15 @@
   "all_historical_sources_exhaustively_reconciled": false,
   "runtime_admission": false,
   "code_or_license_admission": false,
-  "donor_count": 58,
+  "donor_count": 73,
   "source_files_completed": [
     19,
     20,
     21,
-    22
+    22,
+    23
   ],
-  "original_url_occurrences": 60,
+  "original_url_occurrences": 75,
   "records": [
     {
       "donor_id": "FA3-DONOR-TAHOMA2D-001",
@@ -947,6 +948,246 @@
       "code_copy_authorized": false,
       "license_authorized": false,
       "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-KYLEOLSZ-001",
+      "normalized_key": "github:kyleolsz",
+      "original_url": "https://github.com/kyleolsz",
+      "original_submitted_urls": [
+        "https://github.com/kyleolsz"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-FACEBOOKRESEARCH-IPHG-001",
+      "normalized_key": "github:facebookresearch/iphg",
+      "original_url": "https://github.com/facebookresearch/iphg",
+      "original_submitted_urls": [
+        "https://github.com/facebookresearch/iphg"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-SAMURAIGPT-AI-HAIR-STYLE-SIMULATOR-001",
+      "normalized_key": "github:samuraigpt/ai-hair-style-simulator",
+      "original_url": "https://github.com/SamurAIGPT/ai-hair-style-simulator",
+      "original_submitted_urls": [
+        "https://github.com/SamurAIGPT/ai-hair-style-simulator"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-FACEBOOKRESEARCH-CT2HAIR-001",
+      "normalized_key": "github:facebookresearch/ct2hair",
+      "original_url": "https://github.com/facebookresearch/CT2Hair",
+      "original_submitted_urls": [
+        "https://github.com/facebookresearch/CT2Hair"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-HAIRGPT-001",
+      "normalized_key": "https://haiminluo.github.io/hairgpt/",
+      "original_url": "https://haiminluo.github.io/hairgpt/",
+      "original_submitted_urls": [
+        "https://haiminluo.github.io/hairgpt/"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-C-HE-001",
+      "normalized_key": "github:c-he",
+      "original_url": "https://github.com/c-he",
+      "original_submitted_urls": [
+        "https://github.com/c-he"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-MENGZEPHYR-001",
+      "normalized_key": "github:mengzephyr",
+      "original_url": "https://github.com/MengZephyr",
+      "original_submitted_urls": [
+        "https://github.com/MengZephyr"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-XIAOJIU-Z-001",
+      "normalized_key": "github:xiaojiu-z",
+      "original_url": "https://github.com/Xiaojiu-z",
+      "original_submitted_urls": [
+        "https://github.com/Xiaojiu-z"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-CYCHUNGG-001",
+      "normalized_key": "github:cychungg",
+      "original_url": "https://github.com/cychungg",
+      "original_submitted_urls": [
+        "https://github.com/cychungg"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-AIRI-INSTITUTE-001",
+      "normalized_key": "github:airi-institute",
+      "original_url": "https://github.com/AIRI-Institute",
+      "original_submitted_urls": [
+        "https://github.com/AIRI-Institute"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-JIN-CAO-TMA-001",
+      "normalized_key": "github:jin-cao-tma",
+      "original_url": "https://github.com/jin-cao-tma",
+      "original_submitted_urls": [
+        "https://github.com/jin-cao-tma"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-YIMIN-PAN-001",
+      "normalized_key": "github:yimin-pan",
+      "original_url": "https://github.com/yimin-pan",
+      "original_submitted_urls": [
+        "https://github.com/yimin-pan"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-SKETCHHAIRSALON-001",
+      "normalized_key": "https://chufengxiao.github.io/sketchhairsalon/",
+      "original_url": "https://chufengxiao.github.io/SketchHairSalon/",
+      "original_submitted_urls": [
+        "https://chufengxiao.github.io/SketchHairSalon/"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-GITHUB-TOPIC-HAIR-COLOR-001",
+      "normalized_key": "github:topics/hair-color",
+      "original_url": "https://github.com/topics/hair-color",
+      "original_submitted_urls": [
+        "https://github.com/topics/hair-color"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
+    },
+    {
+      "donor_id": "FA3-DONOR-DEEPMANCER-001",
+      "normalized_key": "github:deepmancer",
+      "original_url": "https://github.com/deepmancer",
+      "original_submitted_urls": [
+        "https://github.com/deepmancer"
+      ],
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "source_sequence": 23,
+      "historical_status": "ACCEPTED_REFERENCE",
+      "donor_registration": "CANONICAL_REFERENCE_REGISTERED",
+      "runtime_admission": false,
+      "code_copy_authorized": false,
+      "license_authorized": false,
+      "model_provider_admission": false
     }
   ],
   "lookup_by_id": {
@@ -1007,7 +1248,22 @@
     "FA3-DONOR-ANTIGRAVITY-TOOLS-TOPIC-001": 54,
     "FA3-DONOR-ANTIGRAVITY-TOPIC-001": 55,
     "FA3-DONOR-GOOGLE-ANTIGRAVITY-TOPIC-001": 56,
-    "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001": 57
+    "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001": 57,
+    "FA3-DONOR-KYLEOLSZ-001": 58,
+    "FA3-DONOR-FACEBOOKRESEARCH-IPHG-001": 59,
+    "FA3-DONOR-SAMURAIGPT-AI-HAIR-STYLE-SIMULATOR-001": 60,
+    "FA3-DONOR-FACEBOOKRESEARCH-CT2HAIR-001": 61,
+    "FA3-DONOR-HAIRGPT-001": 62,
+    "FA3-DONOR-C-HE-001": 63,
+    "FA3-DONOR-MENGZEPHYR-001": 64,
+    "FA3-DONOR-XIAOJIU-Z-001": 65,
+    "FA3-DONOR-CYCHUNGG-001": 66,
+    "FA3-DONOR-AIRI-INSTITUTE-001": 67,
+    "FA3-DONOR-JIN-CAO-TMA-001": 68,
+    "FA3-DONOR-YIMIN-PAN-001": 69,
+    "FA3-DONOR-SKETCHHAIRSALON-001": 70,
+    "FA3-DONOR-GITHUB-TOPIC-HAIR-COLOR-001": 71,
+    "FA3-DONOR-DEEPMANCER-001": 72
   },
   "lookup_by_original_url": {
     "https://github.com/tahoma2d/tahoma2d": "FA3-DONOR-TAHOMA2D-001",
@@ -1069,6 +1325,21 @@
     "https://github.com/topics/antigravity-tools": "FA3-DONOR-ANTIGRAVITY-TOOLS-TOPIC-001",
     "https://github.com/topics/antigravity": "FA3-DONOR-ANTIGRAVITY-TOPIC-001",
     "https://github.com/topics/google-antigravity": "FA3-DONOR-GOOGLE-ANTIGRAVITY-TOPIC-001",
-    "https://github.com/google-antigravity": "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001"
+    "https://github.com/google-antigravity": "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001",
+    "https://github.com/kyleolsz": "FA3-DONOR-KYLEOLSZ-001",
+    "https://github.com/facebookresearch/iphg": "FA3-DONOR-FACEBOOKRESEARCH-IPHG-001",
+    "https://github.com/SamurAIGPT/ai-hair-style-simulator": "FA3-DONOR-SAMURAIGPT-AI-HAIR-STYLE-SIMULATOR-001",
+    "https://github.com/facebookresearch/CT2Hair": "FA3-DONOR-FACEBOOKRESEARCH-CT2HAIR-001",
+    "https://haiminluo.github.io/hairgpt/": "FA3-DONOR-HAIRGPT-001",
+    "https://github.com/c-he": "FA3-DONOR-C-HE-001",
+    "https://github.com/MengZephyr": "FA3-DONOR-MENGZEPHYR-001",
+    "https://github.com/Xiaojiu-z": "FA3-DONOR-XIAOJIU-Z-001",
+    "https://github.com/cychungg": "FA3-DONOR-CYCHUNGG-001",
+    "https://github.com/AIRI-Institute": "FA3-DONOR-AIRI-INSTITUTE-001",
+    "https://github.com/jin-cao-tma": "FA3-DONOR-JIN-CAO-TMA-001",
+    "https://github.com/yimin-pan": "FA3-DONOR-YIMIN-PAN-001",
+    "https://chufengxiao.github.io/SketchHairSalon/": "FA3-DONOR-SKETCHHAIRSALON-001",
+    "https://github.com/topics/hair-color": "FA3-DONOR-GITHUB-TOPIC-HAIR-COLOR-001",
+    "https://github.com/deepmancer": "FA3-DONOR-DEEPMANCER-001"
   }
 }

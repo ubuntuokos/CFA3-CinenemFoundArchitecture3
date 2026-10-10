@@ -121,3 +121,26 @@ class CapabilityCatalog:
         return {"status": "PENDING_EXTERNAL_PHYSICAL_EVIDENCE_AUTHORITY",
                 "received": len(supplied), "required": len(required),
                 "physical_current_host_pass": False}
+
+
+def load_capability_catalog(filename):
+    """Load canonical-format data WITHOUT inventing unregistered capability IDs."""
+    import json
+    from pathlib import Path
+    try:
+        payload = json.loads(Path(filename).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError) as exc:
+        raise CatalogError("capability catalog cannot be read as UTF-8 JSON") from exc
+    if (not isinstance(payload, dict)
+            or set(payload) != {"schema", "capabilities"}
+            or payload["schema"] != "cfa3.current-host.capabilities.v1"
+            or not isinstance(payload["capabilities"], list)):
+        raise CatalogError("capability manifest schema mismatch")
+    out = CapabilityCatalog()
+    required = {"capability_id", "component_id", "layer", "revision",
+                "owner", "source_ref"}
+    for record in payload["capabilities"]:
+        if not isinstance(record, dict) or set(record) != required:
+            raise CatalogError("incomplete capability record")
+        out.register(Capability(**record))
+    return out

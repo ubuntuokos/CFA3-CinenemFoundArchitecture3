@@ -1,0 +1,1404 @@
+{
+  "schema": "cfa3.new-owner-approved-historical-donor-references.v1",
+  "id": "CFA3-DONOR-OWNER-APPROVAL-19-26-20261010",
+  "date": "2026-10-10",
+  "authority": "EXPLICIT_CURRENT_USER_DONOR_REGISTRATION_DIRECTIVE",
+  "source_repo": "ubuntuokos/Final-Architecture-v3.0",
+  "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4",
+  "target_repo": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "approval_applies_to": "ALL_DISTINCT_REFERENCES_IN_HISTORICAL_SOURCE_FILES_19_THROUGH_26_WITH_HISTORICAL_VANESSIK_CORRECTION",
+  "registration_status": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+  "canonical_l1_published": false,
+  "runtime_or_code_admission": false,
+  "automatic_child_repo_admission": false,
+  "original_license_rights_and_security_gates_preserved": true,
+  "source_groups": [
+    {
+      "source_sequence": 19,
+      "source_path": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "old_source_blob_sha": "8afd4d274bc60bd37ebc9b8cfaef7a5e41275f5d",
+      "original_valid_url_occurrences": 20,
+      "unique_ids": 20
+    },
+    {
+      "source_sequence": 20,
+      "source_path": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "old_source_blob_sha": "22e44a7e9a76b63c772002567a871bb71b7840a4",
+      "original_valid_url_occurrences": 23,
+      "unique_ids": 21
+    },
+    {
+      "source_sequence": 21,
+      "source_path": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "old_source_blob_sha": "f5e9ac03b6371bda63c6a77e1c1e387b201e5324",
+      "original_valid_url_occurrences": 12,
+      "unique_ids": 12
+    },
+    {
+      "source_sequence": 22,
+      "source_path": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "old_source_blob_sha": "b9fc7ee01faaa441194be3670ef64859d72bd9d4",
+      "original_valid_url_occurrences": 5,
+      "unique_ids": 5
+    },
+    {
+      "source_sequence": 23,
+      "source_path": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "old_source_blob_sha": "ef5d9a229d7688ebd566b4fc3cddbcaf380d3ab8",
+      "original_valid_url_occurrences": 15,
+      "unique_ids": 15
+    },
+    {
+      "source_sequence": 24,
+      "source_path": "canonical/deltas/FA3-DONOR-HIDREAM-AI-ORG-2026-10-03.json",
+      "old_source_blob_sha": "b514045a9a3a913bdaaef3250b7d0a812d8bedd9",
+      "original_valid_url_occurrences": 1,
+      "unique_ids": 1
+    },
+    {
+      "source_sequence": 25,
+      "source_path": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "old_source_blob_sha": "05ac73685db38b84c549e763b5151bbe88a291ae",
+      "original_valid_url_occurrences": 6,
+      "unique_ids": 6
+    },
+    {
+      "source_sequence": 26,
+      "source_path": "canonical/deltas/FA3-DONOR-MAGGI-CHEN-INSPECTOR-2026-10-03.json",
+      "old_source_blob_sha": "5ab55d05e6dce3aadd0c62d65008e228f57e163e",
+      "original_valid_url_occurrences": 1,
+      "unique_ids": 1
+    }
+  ],
+  "owner_approved_donor_identity_count": 82,
+  "original_valid_url_occurrences_19_26": 83,
+  "corrected_separately_approved_vanessik_count": 1,
+  "historical_malformed_originals_preserved_count": 1,
+  "records": [
+    {
+      "id": "FA3-DONOR-TAHOMA2D-001",
+      "canonical_locator": "https://github.com/tahoma2d/tahoma2d",
+      "normalized_source_key": "github:tahoma2d/tahoma2d",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/tahoma2d/tahoma2d",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-INOCHI2D-RUNTIME-001",
+      "canonical_locator": "https://github.com/Inochi2D/inochi2d",
+      "normalized_source_key": "github:inochi2d/inochi2d",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Inochi2D/inochi2d",
+          "occurrence_index": 2
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-INOCHI-CREATOR-001",
+      "canonical_locator": "https://github.com/Inochi2D/inochi-creator",
+      "normalized_source_key": "github:inochi2d/inochi-creator",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Inochi2D/inochi-creator",
+          "occurrence_index": 3
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-STRETCHY-STUDIO-001",
+      "canonical_locator": "https://github.com/MangoLion/stretchystudio",
+      "normalized_source_key": "github:mangolion/stretchystudio",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/MangoLion/stretchystudio",
+          "occurrence_index": 4
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-SEE-THROUGH-001",
+      "canonical_locator": "https://github.com/shitagaki-lab/see-through",
+      "normalized_source_key": "github:shitagaki-lab/see-through",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/shitagaki-lab/see-through",
+          "occurrence_index": 5
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-RIVE-RUNTIME-001",
+      "canonical_locator": "https://github.com/rive-app/rive-runtime",
+      "normalized_source_key": "github:rive-app/rive-runtime",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/rive-app/rive-runtime",
+          "occurrence_index": 6
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-OZZ-ANIMATION-001",
+      "canonical_locator": "https://github.com/guillaumeblanc/ozz-animation",
+      "normalized_source_key": "github:guillaumeblanc/ozz-animation",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/guillaumeblanc/ozz-animation",
+          "occurrence_index": 7
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-ANIMATION-COMPRESSION-LIBRARY-ACL-001",
+      "canonical_locator": "https://github.com/nfrechette/acl",
+      "normalized_source_key": "github:nfrechette/acl",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/nfrechette/acl",
+          "occurrence_index": 8
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-O3DE-EMOTIONFX-001",
+      "canonical_locator": "https://github.com/o3de/o3de",
+      "normalized_source_key": "github:o3de/o3de",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/o3de/o3de",
+          "occurrence_index": 9
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-VRM-SPECIFICATION-001",
+      "canonical_locator": "https://github.com/vrm-c/vrm-specification",
+      "normalized_source_key": "github:vrm-c/vrm-specification",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/vrm-c/vrm-specification",
+          "occurrence_index": 10
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-UNIVRM-001",
+      "canonical_locator": "https://github.com/vrm-c/UniVRM",
+      "normalized_source_key": "github:vrm-c/univrm",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/vrm-c/UniVRM",
+          "occurrence_index": 11
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-OPENSEEFACE-001",
+      "canonical_locator": "https://github.com/emilianavt/OpenSeeFace",
+      "normalized_source_key": "github:emilianavt/openseeface",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/emilianavt/OpenSeeFace",
+          "occurrence_index": 12
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MEDIAPIPE-001",
+      "canonical_locator": "https://github.com/google-ai-edge/mediapipe",
+      "normalized_source_key": "github:google-ai-edge/mediapipe",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/google-ai-edge/mediapipe",
+          "occurrence_index": 13
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MMPOSE-001",
+      "canonical_locator": "https://github.com/open-mmlab/mmpose",
+      "normalized_source_key": "github:open-mmlab/mmpose",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/open-mmlab/mmpose",
+          "occurrence_index": 14
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-POSE2SIM-001",
+      "canonical_locator": "https://github.com/perfanalytics/pose2sim",
+      "normalized_source_key": "github:perfanalytics/pose2sim",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/perfanalytics/pose2sim",
+          "occurrence_index": 15
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MOCAPANYTHING-001",
+      "canonical_locator": "https://github.com/phongdaot/MocapAnything",
+      "normalized_source_key": "github:phongdaot/mocapanything",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/phongdaot/MocapAnything",
+          "occurrence_index": 16
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-SATA-001",
+      "canonical_locator": "https://github.com/zzysteve/SATA",
+      "normalized_source_key": "github:zzysteve/sata",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/zzysteve/SATA",
+          "occurrence_index": 17
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-ANIMATED-DRAWINGS-001",
+      "canonical_locator": "https://github.com/facebookresearch/AnimatedDrawings",
+      "normalized_source_key": "github:facebookresearch/animateddrawings",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/facebookresearch/AnimatedDrawings",
+          "occurrence_index": 18
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-UBISOFT-ZEROEGGS-001",
+      "canonical_locator": "https://github.com/ubisoft/ubisoft-laforge-ZeroEGGS",
+      "normalized_source_key": "github:ubisoft/ubisoft-laforge-zeroeggs",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/ubisoft/ubisoft-laforge-ZeroEGGS",
+          "occurrence_index": 19
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-EASYMOCAP-001",
+      "canonical_locator": "https://github.com/zju3dv/EasyMocap",
+      "normalized_source_key": "github:zju3dv/easymocap",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/zju3dv/EasyMocap",
+          "occurrence_index": 20
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-DEEP-LEARNING-PROJECTS-001",
+      "canonical_locator": "https://github.com/topics/deep-learning-projects",
+      "normalized_source_key": "github:topics/deep-learning-projects",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/deep-learning-projects?o=asc&s=stars",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-AI-DEEP-LEARNING-001",
+      "canonical_locator": "https://github.com/topics/ai-deep-learning",
+      "normalized_source_key": "github:topics/ai-deep-learning",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/ai-deep-learning",
+          "occurrence_index": 2
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-ANDREW-NG-DEEP-LEARNING-001",
+      "canonical_locator": "https://github.com/topics/andrew-ng-deep-learning",
+      "normalized_source_key": "github:topics/andrew-ng-deep-learning",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/andrew-ng-deep-learning",
+          "occurrence_index": 3
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-DEEP-LEARNING-THEORY-001",
+      "canonical_locator": "https://github.com/topics/deep-learning-theory",
+      "normalized_source_key": "github:topics/deep-learning-theory",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/deep-learning-theory",
+          "occurrence_index": 4
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-DEEP-LEARNING-TUTORIAL-001",
+      "canonical_locator": "https://github.com/topics/deep-learning-tutorial",
+      "normalized_source_key": "github:topics/deep-learning-tutorial",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/deep-learning-tutorial?o=desc&s=updated&utf8=%E2%9C%93",
+          "occurrence_index": 5
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-MACHINE-LEARNING-PROJECTS-001",
+      "canonical_locator": "https://github.com/topics/machine-learning-projects",
+      "normalized_source_key": "github:topics/machine-learning-projects",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/machine-learning-projects",
+          "occurrence_index": 6
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-HTTPS-DEEPLEARNING-AI-PROFILE-001",
+      "canonical_locator": "https://github.com/https-deeplearning-ai",
+      "normalized_source_key": "github:https-deeplearning-ai",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/https-deeplearning-ai",
+          "occurrence_index": 7
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-AI-MEMORY-SYSTEM-001",
+      "canonical_locator": "https://github.com/topics/ai-memory-system",
+      "normalized_source_key": "github:topics/ai-memory-system",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/ai-memory-system",
+          "occurrence_index": 8
+        },
+        {
+          "url": "https://github.com/topics/ai-memory-system?l=html&o=asc&s=stars",
+          "occurrence_index": 12
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-AI-MEMORIES-001",
+      "canonical_locator": "https://github.com/topics/ai-memories",
+      "normalized_source_key": "github:topics/ai-memories",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/ai-memories",
+          "occurrence_index": 9
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-AI-MEMORY-001",
+      "canonical_locator": "https://github.com/topics/ai-memory",
+      "normalized_source_key": "github:topics/ai-memory",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/ai-memory?o=desc&s=updated",
+          "occurrence_index": 10
+        },
+        {
+          "url": "https://github.com/topics/ai-memory?o=asc&s=forks",
+          "occurrence_index": 11
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-AI-MEMORY-SYSTEMS-001",
+      "canonical_locator": "https://github.com/topics/ai-memory-systems",
+      "normalized_source_key": "github:topics/ai-memory-systems",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/ai-memory-systems",
+          "occurrence_index": 13
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-MEMORY-ENGINE-001",
+      "canonical_locator": "https://github.com/topics/memory-engine",
+      "normalized_source_key": "github:topics/memory-engine",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/memory-engine",
+          "occurrence_index": 14
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-LIP-SYNC-001",
+      "canonical_locator": "https://github.com/topics/lip-sync",
+      "normalized_source_key": "github:topics/lip-sync",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/lip-sync?l=html",
+          "occurrence_index": 15
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-CL0UD-9-LIP-SYNC-VIDEO-GENERATOR-001",
+      "canonical_locator": "https://github.com/Cl0ud-9/Lip-Sync-Video-Generator",
+      "normalized_source_key": "github:cl0ud-9/lip-sync-video-generator",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Cl0ud-9/Lip-Sync-Video-Generator",
+          "occurrence_index": 16
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-EYE-TRACKING-001",
+      "canonical_locator": "https://github.com/topics/eye-tracking",
+      "normalized_source_key": "github:topics/eye-tracking",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/eye-tracking?l=matlab&o=asc&s=stars",
+          "occurrence_index": 17
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-PYMOVEMENTS-PYMOVEMENTS-001",
+      "canonical_locator": "https://github.com/pymovements/pymovements",
+      "normalized_source_key": "github:pymovements/pymovements",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/pymovements/pymovements",
+          "occurrence_index": 18
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-DEEPTI-96-EYE-MOVEMENT-DETECTION-001",
+      "canonical_locator": "https://github.com/deepti-96/Eye-movement-detection",
+      "normalized_source_key": "github:deepti-96/eye-movement-detection",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/deepti-96/Eye-movement-detection",
+          "occurrence_index": 19
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MESHCAPADE-DIFFLOCKS-001",
+      "canonical_locator": "https://github.com/Meshcapade/difflocks",
+      "normalized_source_key": "github:meshcapade/difflocks",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Meshcapade/difflocks",
+          "occurrence_index": 20
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MESHCAPADE-ORG-001",
+      "canonical_locator": "https://github.com/Meshcapade",
+      "normalized_source_key": "github:meshcapade",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Meshcapade",
+          "occurrence_index": 21
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-HAIR-SEGMENTATION-001",
+      "canonical_locator": "https://github.com/topics/hair-segmentation",
+      "normalized_source_key": "github:topics/hair-segmentation",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/hair-segmentation?l=python&o=desc&s=updated",
+          "occurrence_index": 22
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-FIGHTING-ZHANG-STRANDDESIGNER-001",
+      "canonical_locator": "https://github.com/fighting-Zhang/StrandDesigner",
+      "normalized_source_key": "github:fighting-zhang/stranddesigner",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/fighting-Zhang/StrandDesigner",
+          "occurrence_index": 23
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GGUF-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/gguf",
+      "normalized_source_key": "github:topics/gguf",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/gguf",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GGUF-MODELS-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/gguf-models",
+      "normalized_source_key": "github:topics/gguf-models",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/gguf-models",
+          "occurrence_index": 2
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-CITY96-COMFYUI-GGUF-001",
+      "canonical_locator": "https://github.com/city96/ComfyUI-GGUF",
+      "normalized_source_key": "github:city96/comfyui-gguf",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/city96/ComfyUI-GGUF",
+          "occurrence_index": 3
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-IBM-GGUF-001",
+      "canonical_locator": "https://github.com/IBM/gguf",
+      "normalized_source_key": "github:ibm/gguf",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/IBM/gguf",
+          "occurrence_index": 4
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-HUGGINGFACE-ORG-001",
+      "canonical_locator": "https://github.com/huggingface",
+      "normalized_source_key": "github:huggingface",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/huggingface",
+          "occurrence_index": 5
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-CALCUIS-PROFILE-001",
+      "canonical_locator": "https://github.com/calcuis",
+      "normalized_source_key": "github:calcuis",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/calcuis",
+          "occurrence_index": 6
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GGUF-GO-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/gguf?l=go&o=asc&s=stars",
+      "normalized_source_key": "github:topics/gguf?l=go&o=asc&s=stars",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/gguf?l=go&o=asc&s=stars",
+          "occurrence_index": 7
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MITJAFELICIJAN-PROFILE-001",
+      "canonical_locator": "https://github.com/mitjafelicijan",
+      "normalized_source_key": "github:mitjafelicijan",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/mitjafelicijan",
+          "occurrence_index": 8
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-COMFY-ORG-001",
+      "canonical_locator": "https://github.com/orgs/Comfy-Org/repositories",
+      "normalized_source_key": "github:comfy-org",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/orgs/Comfy-Org/repositories",
+          "occurrence_index": 9
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-COMFY-ORG-DESKTOP-ARCHIVED-001",
+      "canonical_locator": "https://github.com/Comfy-Org/desktop",
+      "normalized_source_key": "github:comfy-org/desktop",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Comfy-Org/desktop",
+          "occurrence_index": 10
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-CODEC-EVALUATION-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/codec-evaluation",
+      "normalized_source_key": "github:topics/codec-evaluation",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/codec-evaluation",
+          "occurrence_index": 11
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-QUICKTIME-SWIFT-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/quicktime?l=swift",
+      "normalized_source_key": "github:topics/quicktime?l=swift",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GGUF-COMFY-CODEC-2026-09-30.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/quicktime?l=swift",
+          "occurrence_index": 12
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GOOGLE-ANTIGRAVITY-SDK-PYTHON-001",
+      "canonical_locator": "https://github.com/google-antigravity/antigravity-sdk-python",
+      "normalized_source_key": "github:google-antigravity/antigravity-sdk-python",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/google-antigravity/antigravity-sdk-python",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-ANTIGRAVITY-TOOLS-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/antigravity-tools",
+      "normalized_source_key": "github:topics/antigravity-tools",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/antigravity-tools",
+          "occurrence_index": 2
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-ANTIGRAVITY-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/antigravity",
+      "normalized_source_key": "github:topics/antigravity",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/antigravity",
+          "occurrence_index": 3
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GOOGLE-ANTIGRAVITY-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/google-antigravity",
+      "normalized_source_key": "github:topics/google-antigravity",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/google-antigravity",
+          "occurrence_index": 4
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GOOGLE-ANTIGRAVITY-ORG-001",
+      "canonical_locator": "https://github.com/google-antigravity",
+      "normalized_source_key": "github:google-antigravity",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-GOOGLE-ANTIGRAVITY-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/google-antigravity",
+          "occurrence_index": 5
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-KYLEOLSZ-001",
+      "canonical_locator": "https://github.com/kyleolsz",
+      "normalized_source_key": "github:kyleolsz",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/kyleolsz",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-FACEBOOKRESEARCH-IPHG-001",
+      "canonical_locator": "https://github.com/facebookresearch/iphg",
+      "normalized_source_key": "github:facebookresearch/iphg",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/facebookresearch/iphg",
+          "occurrence_index": 2
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-SAMURAIGPT-AI-HAIR-STYLE-SIMULATOR-001",
+      "canonical_locator": "https://github.com/SamurAIGPT/ai-hair-style-simulator",
+      "normalized_source_key": "github:samuraigpt/ai-hair-style-simulator",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/SamurAIGPT/ai-hair-style-simulator",
+          "occurrence_index": 3
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-FACEBOOKRESEARCH-CT2HAIR-001",
+      "canonical_locator": "https://github.com/facebookresearch/CT2Hair",
+      "normalized_source_key": "github:facebookresearch/ct2hair",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/facebookresearch/CT2Hair",
+          "occurrence_index": 4
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-HAIRGPT-001",
+      "canonical_locator": "https://haiminluo.github.io/hairgpt/",
+      "normalized_source_key": "https://haiminluo.github.io/hairgpt/",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://haiminluo.github.io/hairgpt/",
+          "occurrence_index": 5
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-C-HE-001",
+      "canonical_locator": "https://github.com/c-he",
+      "normalized_source_key": "github:c-he",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/c-he",
+          "occurrence_index": 6
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MENGZEPHYR-001",
+      "canonical_locator": "https://github.com/MengZephyr",
+      "normalized_source_key": "github:mengzephyr",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/MengZephyr",
+          "occurrence_index": 7
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-XIAOJIU-Z-001",
+      "canonical_locator": "https://github.com/Xiaojiu-z",
+      "normalized_source_key": "github:xiaojiu-z",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Xiaojiu-z",
+          "occurrence_index": 8
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-CYCHUNGG-001",
+      "canonical_locator": "https://github.com/cychungg",
+      "normalized_source_key": "github:cychungg",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/cychungg",
+          "occurrence_index": 9
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-AIRI-INSTITUTE-001",
+      "canonical_locator": "https://github.com/AIRI-Institute",
+      "normalized_source_key": "github:airi-institute",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/AIRI-Institute",
+          "occurrence_index": 10
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-JIN-CAO-TMA-001",
+      "canonical_locator": "https://github.com/jin-cao-tma",
+      "normalized_source_key": "github:jin-cao-tma",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/jin-cao-tma",
+          "occurrence_index": 11
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-YIMIN-PAN-001",
+      "canonical_locator": "https://github.com/yimin-pan",
+      "normalized_source_key": "github:yimin-pan",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/yimin-pan",
+          "occurrence_index": 12
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-SKETCHHAIRSALON-001",
+      "canonical_locator": "https://chufengxiao.github.io/SketchHairSalon/",
+      "normalized_source_key": "https://chufengxiao.github.io/sketchhairsalon/",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://chufengxiao.github.io/SketchHairSalon/",
+          "occurrence_index": 13
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-GITHUB-TOPIC-HAIR-COLOR-001",
+      "canonical_locator": "https://github.com/topics/hair-color",
+      "normalized_source_key": "github:topics/hair-color",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/hair-color",
+          "occurrence_index": 14
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-DEEPMANCER-001",
+      "canonical_locator": "https://github.com/deepmancer",
+      "normalized_source_key": "github:deepmancer",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/deepmancer",
+          "occurrence_index": 15
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-HIDREAM-AI-ORG-001",
+      "canonical_locator": "https://github.com/HiDream-ai",
+      "normalized_source_key": "github:hidream-ai",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-HIDREAM-AI-ORG-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/HiDream-ai",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-BERRIAI-ORG-001",
+      "canonical_locator": "https://github.com/BerriAI",
+      "normalized_source_key": "github:berriai",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/BerriAI",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-LITELLM-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/litellm",
+      "normalized_source_key": "github:topics/litellm",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/litellm",
+          "occurrence_index": 2
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-LITELLM-AI-GATEWAY-GO-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/litellm-ai-gateway?l=go",
+      "normalized_source_key": "github:topics/litellm-ai-gateway?l=go",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/litellm-ai-gateway?l=go",
+          "occurrence_index": 3
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-H2OAI-ORG-001",
+      "canonical_locator": "https://github.com/h2oai",
+      "normalized_source_key": "github:h2oai",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/h2oai",
+          "occurrence_index": 4
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-LITELLM-LABS-ORG-001",
+      "canonical_locator": "https://github.com/LiteLLM-Labs",
+      "normalized_source_key": "github:litellm-labs",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/LiteLLM-Labs",
+          "occurrence_index": 5
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-LOCAL-LLM-TOPIC-001",
+      "canonical_locator": "https://github.com/topics/local-llm",
+      "normalized_source_key": "github:topics/local-llm",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-LITELLM-H2O-LOCAL-LLM-SOURCES-2026-10-02.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/topics/local-llm",
+          "occurrence_index": 6
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-MAGGI-CHEN-INSPECTOR-001",
+      "canonical_locator": "https://github.com/Maggi-Chen/Inspector",
+      "normalized_source_key": "github:maggi-chen/inspector",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-MAGGI-CHEN-INSPECTOR-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Maggi-Chen/Inspector",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "runtime_admission": false
+    },
+    {
+      "id": "FA3-DONOR-VANESSIK-001",
+      "canonical_locator": "https://github.com/Vanessik",
+      "normalized_source_key": "github:vanessik",
+      "previous_status": "ACCEPTED_REFERENCE",
+      "legacy_status": "ACCEPTED_REFERENCE",
+      "originating_historical_file": "canonical/deltas/FA3-DONOR-VANESSIK-2026-10-03.json",
+      "original_submitted_urls": [
+        {
+          "url": "https://github.com/Vanessik",
+          "occurrence_index": 1
+        }
+      ],
+      "owner_donor_approval": "OWNER_APPROVED_PENDING_L1_PUBLICATION",
+      "historical_resolution": {
+        "source_file": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+        "original_malformed_url": "https://github.com/Vanessi k",
+        "historical_separate_owner_marked_correction": true
+      },
+      "runtime_admission": false
+    }
+  ]
+}

@@ -23,6 +23,7 @@ TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNI
 SHGAF_SOURCE = ARCH / "CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json"
 CAST_SOURCE = ARCH / "FA3-DONOR-CAST-CHROMECAST-ORCHESTRATOR-2026-09-29.json"
 MEDIA_SOURCE = ARCH / "FA3-DONOR-MEDIA-INTAKE-2026-09-29.json"
+OWNER_APPROVAL_19_26 = ROOT / "canonical/registries/CFA3-DONOR-OWNER-APPROVAL-19-26-20261010.json"
 OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
 PR_OWNER_TRANSFER = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
@@ -512,6 +513,60 @@ def register_media_intake_original_urls(db):
     return len(seen_urls)
 
 
+
+def register_new_cfa3_owner_approvals(db):
+    """Register direct new-CFA3 donor approval independently of archived legacy status."""
+    if sha_blob(OWNER_APPROVAL_19_26.read_bytes()) != "de4d26675981859cef91ad845b668c56bdd3b84d":
+        raise ValueError("New CFA3 owner donor approval evidence changed")
+    doc = json_read(OWNER_APPROVAL_19_26)
+    if (doc.get("schema") != "cfa3.new-owner-approved-historical-donor-references.v1"
+            or doc.get("id") != "CFA3-DONOR-OWNER-APPROVAL-19-26-20261010"
+            or doc.get("authority") != "EXPLICIT_CURRENT_USER_DONOR_REGISTRATION_DIRECTIVE"
+            or doc.get("registration_status") != "OWNER_APPROVED_PENDING_L1_PUBLICATION"
+            or doc.get("canonical_l1_published") is not False
+            or doc.get("runtime_or_code_admission") is not False
+            or doc.get("owner_approved_donor_identity_count") != 82
+            or doc.get("original_valid_url_occurrences_19_26") != 83
+            or len(doc.get("source_groups", [])) != 8
+            or len(doc.get("records", [])) != 82):
+        raise ValueError("New CFA3 owner approval registry is incomplete")
+    seen = set()
+    url_occurrences = 0
+    for entry in doc["records"]:
+        sid = entry["id"]
+        if (sid in seen
+                or entry.get("owner_donor_approval") != "OWNER_APPROVED_PENDING_L1_PUBLICATION"
+                or entry.get("runtime_admission") is not False):
+            raise ValueError("Duplicate or invalid approved donor: " + sid)
+        seen.add(sid)
+        row = db.execute(
+            "SELECT normalized_key,locator,historical_status,current_status FROM sources WHERE source_id=?",
+            (sid,)).fetchone()
+        if (row != (entry["normalized_source_key"], entry["canonical_locator"],
+                    entry["legacy_status"], entry["previous_status"])
+                or row[3] != "ACCEPTED_REFERENCE"):
+            raise ValueError("New owner approval must preserve donor history: " + sid)
+        for original in entry["original_submitted_urls"]:
+            url = original["url"]
+            if not db.execute("SELECT 1 FROM aliases WHERE alias=? AND source_id=?",
+                              (url, sid)).fetchone():
+                raise ValueError("Approved donor's original URL is missing: " + url)
+            db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                       (sid, url, "NEW_CFA3_OWNER_APPROVAL_19_26_20261010",
+                        "EXPLICIT_USER_DONOR_DIRECTIVE_2026-10-10"))
+            url_occurrences += 1
+        db.execute("INSERT INTO donor_owner_approvals VALUES(?,?,?,?)",
+                   (sid, doc["id"], entry["owner_donor_approval"], doc["date"]))
+    corrected = next((x for x in doc["records"] if x["id"] == "FA3-DONOR-VANESSIK-001"), None)
+    if (not corrected
+            or corrected.get("historical_resolution", {}).get("original_malformed_url")
+            != "https://github.com/Vanessi k"
+            or corrected["canonical_locator"] != "https://github.com/Vanessik"
+            or url_occurrences != 84):
+        raise ValueError("Vanessik history or original source URL occurrence count lost")
+    return len(seen)
+
+
 def build_url_resolution(db):
     """Deterministic exact-URL lookup; never collapse multiple historical IDs.
 
@@ -597,6 +652,12 @@ def prepare(db, sources, run_id):
       CREATE TABLE relations(parent_id TEXT NOT NULL, child_id TEXT NOT NULL,
         evidence TEXT NOT NULL, PRIMARY KEY(parent_id,child_id,evidence));
       CREATE TABLE metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
+      CREATE TABLE donor_owner_approvals(
+        source_id TEXT PRIMARY KEY REFERENCES sources(source_id),
+        evidence_id TEXT NOT NULL,
+        approval_status TEXT NOT NULL,
+        approved_on TEXT NOT NULL);
+      CREATE INDEX owner_approvals_by_evidence ON donor_owner_approvals(evidence_id);
       CREATE TABLE source_provenance(
         source_id TEXT NOT NULL REFERENCES sources(source_id),
         original_url TEXT NOT NULL, source_set TEXT NOT NULL,
@@ -648,6 +709,7 @@ def prepare(db, sources, run_id):
     register_shgaf_original_urls(db)
     register_cast_original_urls(db)
     register_media_intake_original_urls(db)
+    register_new_cfa3_owner_approvals(db)
     build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
@@ -671,6 +733,8 @@ def prepare(db, sources, run_id):
         ("historical_shgaf_submitted_urls","20"),
         ("historical_cast_submitted_url_views","9"),
         ("historical_media_intake_original_urls","58"),
+        ("new_cfa3_explicit_owner_approved_donor_references_19_26","82"),
+        ("new_cfa3_owner_approved_source_url_occurrences","84"),
         ("historical_tripo_distinct_urls","46"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),
@@ -756,6 +820,9 @@ def verify(path, expected):
             "SELECT alias,preferred_source_id,related_source_ids_json FROM url_resolution"))
         if len(resolved_rows) != alias_total:
             raise ValueError("URL resolution index coverage incomplete")
+        approved = db.execute("SELECT count(*) FROM donor_owner_approvals").fetchone()[0]
+        if approved != 82:
+            raise ValueError("New CFA3 owner-approved reference registration incomplete")
         ambiguous = sum(len(json.loads(ids)) > 1 for _,_,ids in resolved_rows)
         if ambiguous != 5:
             raise ValueError("Unexpected number of historical multi-source URL relations")
@@ -821,6 +888,7 @@ def verify(path, expected):
             "historical_tripo_url_occurrences":48,
             "historical_tripo_provenance":"BOUNDED_48_PASS",
             "historical_unique_source_ids":distinct_ids,
+            "new_cfa3_owner_approved_donor_references":approved,
             "hint_classified":classified_count,
             "class_index":"PARTIAL_UNVERIFIED","record_integrity":"PASS",
             "url_resolution_aliases":alias_total,"ambiguous_urls_with_preserved_relations":ambiguous}

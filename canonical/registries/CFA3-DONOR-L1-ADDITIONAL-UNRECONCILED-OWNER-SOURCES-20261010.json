@@ -121,5 +121,129 @@
       "automatic_code_import": false,
       "automatic_provider_admission": false
     }
-  ]
+  ],
+  "historical_20260930_proxy_security_named_donor_approval_gap": {
+    "status": "OPEN_HISTORICAL_APPROVAL_SOURCE_LOCATOR_RECONCILIATION",
+    "scope": "L1_LOSSLESS_LEGACY_DONOR_APPROVAL_TRANSFER_ONLY",
+    "historical_owner_instruction_date": "2026-09-30T14:09:42Z",
+    "historical_owner_instruction": "a megtalált donorokat add a donorlistához",
+    "instruction_semantics": "EXPLICIT_DONORLIST_ADDITION_ACCEPTED_BY_2026-10-10_OWNER_RULE",
+    "evidence_type": "PRIOR_CONVERSATION_RETRIEVAL_NOT_IMMUTABLE_RAW_USER_MESSAGE_EXPORT",
+    "named_historical_source_count": 14,
+    "existing_identity_count": 3,
+    "missing_original_source_locator_count": 11,
+    "existing_identities": [
+      {
+        "name": "Envoy",
+        "index_status": "EXISTING_IDENTITY_NO_DUPLICATE",
+        "source_id": "FA3-DONOR-GITHUB-ENVOYPROXY-ENVOY-9FD5CDA1-001",
+        "observed_locator": "https://github.com/envoyproxy/envoy",
+        "current_status": "ACCEPTED_REFERENCE",
+        "original_owner_submitted_url_pair_verified": false
+      },
+      {
+        "name": "SPIFFE / SPIRE",
+        "index_status": "EXISTING_IDENTITY_NO_DUPLICATE",
+        "source_id": "FA3-DONOR-SPIFFE-SPIRE-001",
+        "observed_locator": "https://github.com/spiffe/spire",
+        "current_status": "CANDIDATE",
+        "original_owner_submitted_url_pair_verified": false
+      },
+      {
+        "name": "Open Policy Agent",
+        "index_status": "EXISTING_IDENTITY_NO_DUPLICATE",
+        "source_id": "FA3-DONOR-GITHUB-OPEN-POLICY-AGENT-OPA-38D6EC18-001",
+        "observed_locator": "https://github.com/open-policy-agent/opa",
+        "current_status": "ACCEPTED_REFERENCE",
+        "original_owner_submitted_url_pair_verified": false
+      }
+    ],
+    "named_sources_without_reproducible_original_locator": [
+      {
+        "name": "Falco",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Tetragon",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Cilium",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "WireGuard",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Suricata",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Trivy",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "Cosign",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "ClamAV",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "YARA",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "bubblewrap",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      },
+      {
+        "name": "OpenTelemetry",
+        "index_status": "NAMED_HISTORICAL_APPROVAL_PENDING_EXACT_SOURCE_LOCATOR",
+        "original_submitted_url": null,
+        "original_owner_submitted_url_pair_verified": false,
+        "new_canonical_donor_id_created": false
+      }
+    ],
+    "exact_submitted_url_and_approval_pairs_exhaustively_verified": false,
+    "no_duplicate_source_creation": true,
+    "no_guessed_original_urls": true,
+    "new_source_identities_registered_by_this_reconciliation": 0,
+    "no_existing_status_promotion_without_original_pair_evidence": true,
+    "original_L1_B": null,
+    "canonical_L1_published": false,
+    "runtime_admission": false
+  }
 }

@@ -354,7 +354,19 @@ mod tests {
     fn one_app_change_does_not_retest_upstream() {
         let p = graph().plan(&["audio"], Trigger::Cfa3Code).unwrap();
         assert_eq!(p.affected, vec!["audio"]);
-        assert_eq!(p.obligations.len(), 3);
+        assert_eq!(p.obligations.len(), 4); // own 3 cases + real inbound handoff
+        assert!(p.obligations.iter().any(|o| o.handoff_id.as_deref() == Some("video-audio")));
+    }
+
+    #[test]
+    fn external_source_does_not_need_driver_qa_but_own_connector_does() {
+        let mut g = graph();
+        g.register_handoff(edge("driver-input", "vendor-driver", "plugin-host")).unwrap();
+        let p = g.plan(&["plugin-host"], Trigger::Cfa3Interface).unwrap();
+        assert_eq!(p.affected, vec!["plugin-host"]);
+        assert!(p.obligations.iter().any(|o|
+            o.handoff_id.as_deref() == Some("driver-input") && o.level == Level::Layer));
+        assert_eq!(g.plan(&["vendor-driver"], Trigger::Cfa3Code).unwrap().mode, Mode::None);
     }
 
     #[test]

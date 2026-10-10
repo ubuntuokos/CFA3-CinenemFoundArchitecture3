@@ -143,3 +143,78 @@ https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/380879
   and physical STANDALONE_GUI_PASS/PARENT_INTEGRATION_GUI_PASS: PENDING.
 - Central Security/Identity/Workload Mode/Current Host real authority
   integration: PENDING; do not create substitute local authorities.
+
+
+## 2026-10-11 Qt6 generic Linux reference closure status
+
+**Reference implementation and X11 repair: complete, CI verified.**
+**Full physical/product acceptance: PENDING until actual device evidence and
+admitted full CFA3 application-parent/installer authority exist.**
+
+The actual X11/xcb failure in run 38090447780 was diagnosed via the Qt
+platform-loader, not guessed or bypassed. The missing library was
+libxcb-shape.so.0. The CI X11 reference environment now installs the
+required libxcb-shape0 plus xcb randr/render/xfixes/sync/xinput libraries.
+The application gate still fails closed when the Qt platform plugin cannot
+initialize; it does not fall back silently to Wayland or offscreen.
+
+CFA3 Runtime Control Center is a CFA3-owned Qt6 QMainWindow created by
+cfa3_runtime/control_center.py. Its real settings child is
+Qt6RuntimeSettingsPanel, and the console entrypoint uses a guarded
+separate-process preflight before opening the window. This is a functional
+standalone reference shell, **not** an admitted complete CFA3 Platform parent.
+
+The test matrix now verifies:
+
+| Check | Verified CI evidence | Formal physical acceptance |
+| --- | --- | --- |
+| Python-only runtime and closed failure paths | PASS, 54 tests, 9 Qt6 skips | PENDING |
+| Real Qt6 offscreen widget and CFA3 parent shell | PASS, 54 tests | PENDING |
+| Real Qt6 xcb plugin via Xvfb | PASS, 4 parent-app tests | PENDING |
+| Real Qt6 Wayland plugin via headless Weston | PASS, interactive surface creation in compositor | PENDING |
+| Built and installed wheel from a clean working directory | PASS | Installation/admission PENDING |
+| Installed wheel GUI opened via xcb/Xvfb outside source checkout | PASS | Physical device GUI PENDING |
+| Rust/Cargo workspace | PASS, 3 tests | Separate end-user runtime requirement: N/A |
+| Full CFA3 Platform shell and release installer | Not built/admitted | PENDING |
+
+Latest source-changing run:
+https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/38091001441
+
+All **six** jobs SUCCESS. No external simulator provides Current Host
+physical PASS.
+
+### Physical-machine verification handoff
+
+A machine running Linux with a graphical Wayland/X11 session can exercise the
+exact branch code locally. This does **not** require KDE, a project venv, a
+Rust compiler or Cargo if its Python PySide6/Qt6 bridge is already installed.
+Use an isolated disposable checkout of the feature branch and run from there:
+
+    python3 -m cfa3_runtime inspect
+    python3 -m cfa3_runtime settings
+
+The inspect result must show the actual platform and APP_RUNTIME_READY.
+The settings command must display the *CFA3 Runtime Control Center* window,
+containing the actual embedded "Grafikus környezet" panel. An authorized
+physical test must independently observe both the separate runtime GUI and
+the true parent integration in the actual target product, version and host.
+A CLI report, CI screenshot, synthetic parent, user text, or reference
+hosted runner cannot be promoted to formal Current Host physical PASS.
+
+No silent installation or modification of system Qt libraries is permitted
+by this component; a distribution installer will need explicit user-facing
+dependency resolution and a license/provenance review before RELEASE.
+No unknown Workload Mode value can be called an admitted mode.
+
+### Task-scope closure distinction
+
+- **Implemented within this branch:** Python Qt6 bridge detection and
+  fail-closed launch; Wayland/X11 selection, XDG settings, Qt6 settings UI,
+  standalone CFA3-owned runtime window, development wheel and tests.
+- **Proven by reproducible hosted Linux CI:** Python, Rust/Cargo,
+  offscreen, xcb, Wayland and wheel-based executable GUI reference checks.
+- **Not proven or admitted:** native Linux release installer, physical-host
+  full GUI and real complete CFA3 Platform parent. These are explicit
+  dependencies and require their actual artifact/host; do not invent PASS.
+- **Unaffected:** new main, donor transfer, the separate Current Host branch,
+  other open PRs, and the legacy repository.

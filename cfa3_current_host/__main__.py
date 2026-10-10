@@ -82,6 +82,10 @@ def main(argv=None):
     t.add_argument("--output", default=None)
     cc = commands.add_parser("catalog-check", help="check 200 CFA3 capabilities without physical PASS")
     cc.add_argument("--catalog", required=True)
+    gg = commands.add_parser("gui", help="open actual Qt6 Current Host dashboard; never claims physical PASS")
+    gg.add_argument("--graph", required=True)
+    gg.add_argument("--changed", nargs="+", required=True)
+    gg.add_argument("--trigger", default="CODE")
     args = parser.parse_args(argv)
     if args.command == "plan":
         result = plan_file(args.graph, args.changed, args.trigger)
@@ -103,6 +107,18 @@ def main(argv=None):
     elif args.command == "plugin-inspect":
         result = run_static_testkit(Path(args.bundle).read_bytes(),
                                     available_cfa3_apps=frozenset(args.available_app))
+    elif args.command == "gui":
+        from .core import Level, Mode, Obligation, Plan, TestKind
+        from .qt6_dashboard import standalone
+        raw = plan_file(args.graph, args.changed, args.trigger)
+        obligations = tuple(
+            Obligation(Level(x["level"]), x["component_id"],
+                       TestKind(x["test"]), x["handoff_id"])
+            for x in raw["obligations"]
+        )
+        actual_plan = Plan(Mode(raw["mode"]), tuple(raw["changed"]),
+                           tuple(raw["affected"]), obligations, raw["reason"])
+        return standalone(actual_plan, workload_mode="UNKNOWN")
     elif args.command == "catalog-check":
         from .capability_catalog import load_capability_catalog
         result = load_capability_catalog(Path(args.catalog)).reconciliation()

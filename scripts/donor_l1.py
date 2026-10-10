@@ -102,6 +102,17 @@ def frozen_sources():
             raise ValueError("Additional source lead must not be promoted")
         sources.append((record, "ADDITIONAL_OWNER_APPROVAL_RECONCILIATION_PENDING", False))
     recovery = json_read(TRIPO_RECOVERY)
+    transfer = recovery.get("legacy_owner_approval_transfer", {})
+    if (transfer.get("owner_confirmation_date") != "2026-10-10"
+            or transfer.get("historical_owner_marker") != "donornak"
+            or transfer.get("historical_delta_blob_sha") != "668910c71dda1e83181a0113a06c8b14433ddbca"
+            or transfer.get("new_unmatched_source_count") != 30
+            or transfer.get("current_stage_approval_state") != "OWNER_APPROVED_PENDING_PUBLICATION"
+            or transfer.get("no_second_donor_approval_required") is not True
+            or transfer.get("canonical_level_published") is not False
+            or transfer.get("runtime_admission") is not False
+            or transfer.get("old_repository_mutations_permitted") is not False):
+        raise ValueError("Legacy Tripo owner approval must transfer without premature publication")
     aggregate = recovery.get("historical_aggregate_reconciliation", {})
     if (recovery.get("schema") != "cfa3.donor-l1-historical-tripo-unity-dcc-pose-recovery.v1"
             or recovery.get("status") != "CANDIDATE_STAGED_NOT_CANONICAL_PUBLISHED"
@@ -132,12 +143,13 @@ def frozen_sources():
         raise ValueError("Tripo immutable historical donor identity set mismatch")
     for record in recovery["entries"]:
         if (record.get("status") != "OWNER_APPROVAL_REPORTED_PENDING_SOURCE_EVIDENCE"
+                or record.get("submission_review", {}).get("reported_owner_marker") != "donornak"
                 or record.get("submission_review", {}).get("exact_submitted_URL_and_approval_pair_independently_verified") is not False
                 or record.get("intake_provenance", {}).get("canonical_approval_admitted") is not False
                 or record.get("authority") is not False
                 or record.get("runtime_admission") is not False):
             raise ValueError("Historical Tripo candidate must remain blocked")
-        sources.append((record, "HISTORICAL_TRIPO_OWNER_APPROVAL_PENDING", False))
+        sources.append((record, "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER", False))
     ids, keys = set(), set()
     for record, _, _ in sources:
         ident = record["donor_id"]
@@ -286,7 +298,9 @@ def prepare(db, sources, run_id):
         src = entry["source"]
         original = json.dumps(entry, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
         digest = hashlib.sha256(original.encode("utf-8")).hexdigest()
-        status = entry["status"] if from_main else "BLOCKED"
+        status = (entry["status"] if from_main else
+                  "OWNER_APPROVED_PENDING_PUBLICATION" if origin == "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER"
+                  else "BLOCKED")
         db.execute("INSERT INTO sources VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
             (sid,src["normalized_key"],src["locator"],entry.get("name",""),entry["status"],
              status,src.get("kind"),origin,1,original,digest,run_id))
@@ -304,8 +318,9 @@ def prepare(db, sources, run_id):
         ("known_unique_source_identities",str(len(sources))),
         ("supplemental_owner_source_candidates","23"),
         ("additional_owner_source_leads","4"),
-        ("total_pending_owner_source_candidates","57"),
-        ("historical_tripo_new_pending_sources","30"),
+        ("total_pending_owner_source_candidates","27"),
+        ("historical_tripo_new_pending_sources","0"),
+        ("historical_tripo_owner_approved_transfer_sources","30"),
         ("historical_tripo_original_occurrences","48"),
         ("historical_tripo_distinct_urls","46"),
         ("all_owner_submissions_verified","FALSE"),
@@ -380,7 +395,7 @@ def verify(path, expected):
             sid = item["donor_id"]
             row = db.execute("SELECT current_status,normalized_key FROM sources WHERE source_id=?",
                              (sid,)).fetchone()
-            if row != ("BLOCKED", item["source"]["normalized_key"]):
+            if row != ("OWNER_APPROVED_PENDING_PUBLICATION", item["source"]["normalized_key"]):
                 raise ValueError("Historical Tripo source missing or improperly admitted")
         old_aggregate_id = recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]
         if db.execute("SELECT 1 FROM sources WHERE source_id=?", (old_aggregate_id,)).fetchone():
@@ -397,7 +412,8 @@ def verify(path, expected):
             "original_L1_link_record_count_B_verified":False,
             "supplemental_unreconciled_owner_sources":23,
             "additional_unreconciled_owner_sources":4,
-            "historical_tripo_pending_sources":30,
+            "historical_tripo_pending_sources":0,
+            "historical_tripo_owner_approved_transfer_sources":30,
             "historical_tripo_url_occurrences":48,
             "historical_tripo_provenance":"BOUNDED_48_PASS",
             "historical_unique_source_ids":distinct_ids,

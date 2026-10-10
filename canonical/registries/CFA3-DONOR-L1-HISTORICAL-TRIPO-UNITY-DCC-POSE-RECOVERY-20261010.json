@@ -2698,5 +2698,8 @@
         "archived_status": "ACCEPTED_REFERENCE"
       }
     ]
-  }
+  },
+  "historical_url_order_sha256": "f78ba37406396b871e390f8619eff9c2d7b87d9b4db9e165ef6bff5ac742c433",
+  "historical_original_identity_set_sha256": "dd1d422a7aa9c43a14eefd8aab91c2d91a49729c073d8fa9ef4bdb44fbe7e5a9",
+  "historical_digest_encoding": "SHA256_UTF8_NEWLINE_JOINED_WITH_TRAILING_NEWLINE"
 }

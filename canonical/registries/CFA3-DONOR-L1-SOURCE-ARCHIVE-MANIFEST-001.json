@@ -414,6 +414,31 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-CHARACTER-ANIMATION-2D3D-2026-10-02.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "8afd4d274bc60bd37ebc9b8cfaef7a5e41275f5d",
+      "source_proof_kind": "HISTORICAL_OWNER_APPROVED_CHARACTER_ANIMATION_2D3D_SOURCE_DELTA",
+      "original_source_records": 20,
+      "original_exact_owner_urls": 20,
+      "source_ids_present_in_new_l1_stage": 20,
+      "original_urls_in_direct_routing": 20,
+      "historical_new_record_count": 16,
+      "historical_enriched_existing_count": 3,
+      "historical_normalized_existing_count": 1,
+      "existing_reference_identities_reused_without_duplicate": 4,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_or_legacy_status_mismatches": 0,
+      "historical_approval_ref": "docs/donor-character-animation-2d3d-2026-10-02.md",
+      "reference_status": "ACCEPTED_REFERENCE",
+      "automatic_code_runtime_model_dataset_or_app_admission": false,
+      "usage_edges_automatically_created": false,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

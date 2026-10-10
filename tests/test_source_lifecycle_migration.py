@@ -60,6 +60,23 @@ class LifecycleMigrationTests(unittest.TestCase):
                    if r["source_id"] == "FA3-DONOR-6174-RECUT-001")
         self.assertIsNone(row["observed_revision"])
 
+    def test_verified_unchanged_historical_upstream_revision_reuses_prior_decision(self):
+        observation = {
+            "verification": "VERIFIED_BY_AUTHORIZED_REVIEW",
+            "evidence_ref": "verified-upstream-commit-20261011",
+            "checked_at": "2026-10-11",
+            "support_status": "SUPPORTED",
+            "observed_revision": "adc8b2583c872d78539ef87f8b179e9fde877113",
+        }
+        same = evaluate("https://github.com/6174/recut", self.index, observation)
+        self.assertEqual(same["disposition"], "REUSE_PRIOR_DECISION")
+        changed = dict(observation, observed_revision="0" * 40)
+        self.assertEqual(evaluate("https://github.com/6174/recut", self.index, changed)["disposition"],
+                         "CHANGE_REVIEW_REQUIRED")
+        unverified = dict(observation, verification="UNVERIFIED")
+        self.assertEqual(evaluate("https://github.com/6174/recut", self.index, unverified)["disposition"],
+                         "BLOCKED_UNVERIFIED_OBSERVATION")
+
     def test_unknown_is_not_declared_new_and_no_upstream_version_is_invented(self):
         self.assertEqual(evaluate("https://unknown.invalid/unregistered", self.index)["disposition"],
                          "BLOCKED_INDEX_INCOMPLETE")

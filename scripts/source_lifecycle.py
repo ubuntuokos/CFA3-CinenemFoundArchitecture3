@@ -214,8 +214,19 @@ def evaluate(url, index, observation=None):
         return result("CHANGE_CHECK_REQUIRED", source=source, reason="Upstream support remains unknown")
     if not isinstance(observation.get("observed_revision"), str) or not observation["observed_revision"]:
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source, reason="No upstream revision proof")
+    previous_revision = source.get("observed_revision")
+    if previous_revision is None and "reference_state" in source:
+        archived = historical_upstream_evidence().get(source["source_id"])
+        if archived is not None and archived[0] == source["prior_decision"].get("revision"):
+            old_snapshot = archived[1].get("upstream_snapshot")
+            if (isinstance(old_snapshot, dict) and old_snapshot.get("checked_at")
+                    and old_snapshot.get("source") == "GitHub repository API"):
+                old_commit = old_snapshot.get("commit_sha")
+                if isinstance(old_commit, str) and len(old_commit) == 40 and all(
+                        c in "0123456789abcdef" for c in old_commit.lower()):
+                    previous_revision = old_commit
     if observation.get("event") in ("VERSION_UPDATE", "FUNCTIONAL_MODERNIZATION") or (
-            observation["observed_revision"] != source.get("observed_revision")):
+            observation["observed_revision"] != previous_revision):
         return result("CHANGE_REVIEW_REQUIRED", source=source,
                       new_revision=observation["observed_revision"],
                       action="APPEND_ASSESSMENT_KEEP_PREVIOUS_DECISION")

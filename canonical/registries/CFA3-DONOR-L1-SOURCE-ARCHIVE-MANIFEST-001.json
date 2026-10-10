@@ -439,6 +439,30 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-DEEP-LEARNING-MEMORY-VISION-HAIR-2026-10-03.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "22e44a7e9a76b63c772002567a871bb71b7840a4",
+      "source_proof_kind": "HISTORICAL_EXPLICIT_DEEP_LEARNING_MEMORY_VISION_HAIR_MULTIVIEW_DELTA",
+      "original_submitted_url_occurrences": 23,
+      "original_exact_submitted_urls": 23,
+      "original_distinct_source_ids": 21,
+      "historical_canonical_alias_collapse_count": 2,
+      "source_ids_present_in_new_l1_stage": 21,
+      "original_urls_in_direct_routing": 23,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_or_legacy_status_mismatches": 0,
+      "historical_lip_sync_wav2lip_rights_gate_not_bypassed": true,
+      "historical_difflocks_cpu_only_runtime_gate_not_bypassed": true,
+      "historical_stranddesigner_release_rights_gate_not_bypassed": true,
+      "historical_deeplearning_profile_requires_revalidation": true,
+      "reference_only_no_child_repo_model_provider_or_runtime_admission": true,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

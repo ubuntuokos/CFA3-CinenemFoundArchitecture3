@@ -20,6 +20,7 @@ UNION = ARCH / "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
 SUPPLEMENT = ROOT / "canonical/registries/CFA3-DONOR-L1-UNRECONCILED-OWNER-SOURCES-001.json"
 ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECONCILED-OWNER-SOURCES-20261010.json"
 TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
+SHGAF_SOURCE = ARCH / "CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json"
 OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
 PR_OWNER_TRANSFER = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
@@ -404,6 +405,35 @@ def register_historical_pr_owner_urls(db):
                         "EXPLICIT_DONORNAK_LEGACY_PR_MIGRATION"))
 
 
+def register_shgaf_original_urls(db):
+    """Preserve the exact owner-approved SHGAF source URLs, including topic query views."""
+    if sha_blob(SHGAF_SOURCE.read_bytes()) != "3652f591b08acff0de53910a68c03cec84de9971":
+        raise ValueError("SHGAF historical source evidence changed")
+    delta = json_read(SHGAF_SOURCE)
+    if (delta.get("delta_id") != "CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06"
+            or delta.get("submitted_url_count") != 20
+            or len(delta.get("submitted_urls", [])) != 20
+            or delta.get("canonical_identity_count") != 18
+            or len(delta.get("canonical_identities", [])) != 18):
+        raise ValueError("SHGAF donor source schema or identity count mismatch")
+    bindings = {}
+    for record in delta["canonical_identities"]:
+        sid = record["donor_id"]
+        for url in [record["source"], *record.get("submitted_views", [])]:
+            if url in bindings and bindings[url] != sid:
+                raise ValueError("Conflicting historical SHGAF source URL: " + url)
+            bindings[url] = sid
+    if set(bindings) != set(delta["submitted_urls"]):
+        raise ValueError("Missing or extra historical SHGAF submitted URLs")
+    for url, sid in bindings.items():
+        if db.execute("SELECT 1 FROM sources WHERE source_id=?", (sid,)).fetchone() is None:
+            raise ValueError("SHGAF historical donor identity missing: " + sid)
+        db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (url, sid))
+        db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                   (sid, url, "HISTORICAL_SHGAF_20261006", "HISTORICAL_SOURCE_DELTA"))
+    return len(bindings)
+
+
 def build_url_resolution(db):
     """Deterministic exact-URL lookup; never collapse multiple historical IDs.
 
@@ -537,6 +567,7 @@ def prepare(db, sources, run_id):
     register_tripo_historical_urls(db, sources)
     register_owner_message_urls(db)
     register_historical_pr_owner_urls(db)
+    register_shgaf_original_urls(db)
     build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
@@ -557,6 +588,7 @@ def prepare(db, sources, run_id):
         ("historical_supplement_owner_approved_transfer_sources","19"),
         ("additional_owner_approved_transfer_sources","4"),
         ("historical_tripo_original_occurrences","48"),
+        ("historical_shgaf_submitted_urls","20"),
         ("historical_tripo_distinct_urls","46"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),

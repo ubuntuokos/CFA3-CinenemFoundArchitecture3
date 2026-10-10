@@ -84,3 +84,62 @@ No hosted result or mocked status issues physical Current Host PASS.
   PENDING; this component does not create parallel authorities.
 - The separate Current Host bubblewrap CI failure remains unresolved,
   and does not imply a Qt6 platform error.
+
+
+## 2026-10-10 continuation: actual guarded launch and installable adapter
+
+This branch now includes cfa3_runtime/launcher.py, a launcher adapter that
+prepares a Python/PySide6 Qt6 application process **before QApplication is
+constructed**. It resolves the user-scoped XDG configuration against the
+actual child environment and runs an isolated Qt6 frontend probe. If the
+selected Wayland/xcb plugin is not the observed plugin, or the probe cannot
+verify APP_RUNTIME_READY, the child is **not** started. The current shell
+environment is not mutated; process creation uses argv with shell=False.
+
+Available source checkout commands:
+
+    python3 -m cfa3_runtime inspect
+    python3 -m cfa3_runtime developer-tools
+    python3 -m cfa3_runtime settings
+    python3 -m cfa3_runtime launch-module cfa3.gui -- --example-argument
+
+The last launch-module example requires a real future installed Python Qt6
+module (the new CFA3 GUI application is not yet admitted or present on main).
+This command does not claim that such a module exists now.
+
+The settings command performs an isolated preflight, then starts its own Qt6
+settings-window child, applying the user preference before Qt initialization.
+The settings panel itself is still standalone/reference until it can be
+mounted inside a real CFA3 parent application. Launch failures are explicit
+nonzero exit codes, not silent Wayland/X11 fallbacks.
+
+pyproject.toml packages the adapter as cfa3-portable-qt6-runtime with
+a cfa3-runtime console entrypoint and optional Qt6 Python bridge. Python,
+Rust and Cargo **developer toolchains are not runtime requirements** of
+compiled CFA3 end-user applications; the optional Python GUI bridge must be
+included where that particular frontend is actually used.
+
+### Independent GitHub reference evidence
+
+Full workflow run:
+https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/38087980763
+
+- 50 Python test cases: **45 PASS + 5 Qt6-unavailable skips**, no failures.
+- 50 Qt6-enabled tests: **50 PASS**, no failures/skips, with actual offscreen
+  Qt6 QWidget settings controls.
+- Rust workspace: **3 PASS**, no failures.
+- Wheel built, installed into the GitHub runner and the installed
+  cfa3-runtime executable verified **outside the checkout directory**.
+- All four GitHub CI jobs: **SUCCESS**.
+- These are reference/hosted results; no actual physical Current Host PASS.
+
+### Still outside the current finished implementation
+
+- CFA3 production application parent GUI does not yet exist in the
+  admitted main repository: real parent integration remains PENDING.
+- Generic-Linux installer, signed application package and distribution
+  admission: PENDING. The wheel is only the reusable development adapter.
+- Real-user Wayland/X11 visible rendering, multi-desktop support matrix
+  and physical STANDALONE_GUI_PASS/PARENT_INTEGRATION_GUI_PASS: PENDING.
+- Central Security/Identity/Workload Mode/Current Host real authority
+  integration: PENDING; do not create substitute local authorities.

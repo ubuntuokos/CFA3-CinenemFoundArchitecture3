@@ -57,3 +57,15 @@ The independent Python implementation `cfa3_cram/optimizer2023.py` provides a **
 - **Rust build:** `NOT_RUN` because `cargo` and `rustc` are absent from the available local execution environment. The new Python adapter tests do not substitute for Rust checks or actual host evidence.
 
 Remaining blocker for **Rust verification**: access to a Rust toolchain. Remaining blocker for **production promotion**: live CFA3 runtime authorities, rights and dataset qualification, full adapter fidelity, consumer integration and required real-host checks. The parallel donor PR #7 is **not** a blocker for disjoint CrAM-file development.
+
+## CRAM-04/05 CPU-side structural prototypes — tested, NOT runtime-admitted
+
+- `cfa3_cram/reliability2025.py`: independent CFA3-developed CrAM 2025 *input and safety* primitive. Assessed source-ID/provenance digests, strict credibility validation, explicit non-overlapping source token spans, bounded finite additive log-bias proposals and safe temporary PyTorch-style pre-hook lifecycle. **This is not a working, model-qualified attention intervention, an automatic truth assessment or licensed upstream-code adoption.**
+- `cfa3_cram/continual2026.py`: independent CPU-only model-internal expert-centroid comparator. Strictly confines comparisons to one externally selected model revision/projection; returns a review-needed outcome instead of creating new experts when no match exists. **This is not adaptive-rank MoE training, model selection, a provider route or checkpoint admission.**
+- `tests/test_cram_2025_2026.py`: **15 local unit tests PASSED** (Python 3 and installed CPU PyTorch). These include real CPU PyTorch forward-pre-hook registration, behavior and restoration, plus negative/positive RAG-policy and centroid-ranking tests.
+- Independent GitHub readback of all three files: their blob SHAs equal the matching Git object hashes of the locally tested files. Python tests are therefore tied to exact staged source bytes.
+- CrAM 2025 upstream root-license verification remains missing; **no upstream 2025 source code was copied**.
+- The implementation deliberately does **not** bypass still-unbuilt CFA3 Model Router/HRB/Workload Mode/Security/License authorities. Real runtime calls and app-level admission remain disabled/pending.
+- `cargo test --workspace` remains **NOT_RUN** due unavailable local Rust toolchain; no GitHub CI on this branch yet. CPU unit tests are not physical Current Host PASS and do not validate model-level CrAM reproducibility.
+
+**Remaining work:** actual model-specific 2025 attention intervention with rights-compliant implementation and quantitative evaluation; 2026 adaptive-rank expert growth and real training/rollback with optional hardware adapters; full application/GUI authority bridge; Rust compilation/CI and physical-host gates. Work on disjoint CrAM files is independent of open parallel donor PR #7.

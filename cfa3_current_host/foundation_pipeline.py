@@ -62,6 +62,24 @@ class FoundationPipeline:
                 model_id: str | None = None) -> dict:
         if not isinstance(plan, Plan):
             raise TypeError("Current Host structural plan required")
+        # The caller must never select its own easier set of tests. Rebuild
+        # the *complete* proof plan from the registered graph and exact
+        # changed CFA3 nodes. This includes NEGATIVE, ROLLBACK, actual GUI
+        # parent and real inbound/outbound handoff obligations.
+        if plan.mode == PlanMode.FULL:
+            canonical_trigger = "GLOBAL_SECURITY_POLICY"
+        else:
+            canonical_trigger = "CODE"
+        try:
+            expected = self.graph.plan(plan.changed, trigger=canonical_trigger)
+        except (ValueError, TypeError, KeyError) as exc:
+            raise PipelineBlocked("UNRECONCILED_OR_STALE_CURRENT_HOST_PLAN") from exc
+        if plan != expected:
+            return {
+                "status": "BLOCKED_NONCANONICAL_CURRENT_HOST_PLAN",
+                "observations": (),
+                "physical_current_host_pass": False,
+            }
         if plan.mode == PlanMode.NONE:
             return {
                 "status": "NO_CFA3_TEST_REQUIRED", "observations": (),

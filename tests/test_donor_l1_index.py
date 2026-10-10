@@ -55,6 +55,40 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertIn(occurrence["original_url"],
                           [item["url"]] + item.get("discovery_urls", []))
 
+    def test_five_owner_url_resolutions_preserve_all_original_identities(self):
+        owner_pairs = {
+            "https://alternativeto.net/software/octane-render/?p=2": "FA3-DONOR-ALTERNATIVETO-NET-SOFTWARE-OCTANE-RENDER-P-2-DFF81B7B-001",
+            "https://alternativeto.net/software/octane-render/?p=3": "FA3-DONOR-ALTERNATIVETO-NET-SOFTWARE-OCTANE-RENDER-P-3-DEF819E8-001",
+            "https://alternativeto.net/software/octane-render/?p=4": "FA3-DONOR-ALTERNATIVETO-NET-SOFTWARE-OCTANE-RENDER-P-4-E5F824ED-001",
+            "https://github.com/Ascend/triton-ascend": "FA3-DONOR-TRITON-LANG-TRITON-ASCEND-001",
+            "https://clover.moe/mm3d": "FA3-DONOR-CLOVER-MOE-MM3D-A17787FE-001",
+        }
+        alternate_pairs = {
+            "https://alternativeto.net/software/octane-render/?p=2": "FA3-DONOR-ALTERNATIVETO-OCTANE-ALTERNATIVES-001",
+            "https://alternativeto.net/software/octane-render/?p=3": "FA3-DONOR-ALTERNATIVETO-OCTANE-ALTERNATIVES-001",
+            "https://alternativeto.net/software/octane-render/?p=4": "FA3-DONOR-ALTERNATIVETO-OCTANE-ALTERNATIVES-001",
+            "https://github.com/Ascend/triton-ascend": "FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001",
+            "https://clover.moe/mm3d": "FA3-DONOR-CLOVER-MOE-MM3D-001",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath=Path(tmp)/"url-resolution.sqlite"
+            receipt=donor_l1.stage(dbpath,"owner-resolution-test")
+            self.assertEqual(receipt["state"],"STAGED_NOT_PUBLISHED")
+            self.assertEqual(receipt["index_evidence"]["ambiguous_urls_with_preserved_relations"],5)
+            for url, expected_id in owner_pairs.items():
+                self.assertEqual([x["id"] for x in donor_l1.lookup(dbpath,url,"url")], [expected_id])
+                alias_ids={x["id"] for x in donor_l1.lookup(dbpath,url,"alias")}
+                self.assertEqual(alias_ids, {expected_id,alternate_pairs[url]})
+                with sqlite3.connect(dbpath) as db:
+                    row=db.execute("SELECT preferred_source_id,authority,related_source_ids_json "
+                                   "FROM url_resolution WHERE alias=?",(url,)).fetchone()
+                    self.assertEqual(row[0], expected_id)
+                    self.assertEqual(row[1], "HISTORICAL_OWNER_BASELINE")
+                    self.assertEqual(set(json.loads(row[2])), alias_ids)
+            self.assertEqual(donor_l1.lookup(dbpath,"https://github.com/Ascend/triton-ascend","id"),[])
+            self.assertEqual(donor_l1.lookup(dbpath,"FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001","id")[0]["status"],"SUPERSEDED")
+            self.assertEqual(donor_l1.lookup(dbpath,"FA3-DONOR-CLOVER-MOE-MM3D-001","id")[0]["status"],"ACCEPTED_REFERENCE")
+
     def test_archive_sources_have_distinct_identity(self):
         sources = donor_l1.frozen_sources()
         self.assertEqual(len(sources), 1978)

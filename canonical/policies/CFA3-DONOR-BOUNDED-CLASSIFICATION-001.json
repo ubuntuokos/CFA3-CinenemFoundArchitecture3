@@ -52,6 +52,7 @@
     "sequence": "STRICT_SEQUENTIAL",
     "source_states": [
       "ACCEPTED_REFERENCE",
+      "OWNER_APPROVED_PENDING_PUBLICATION",
       "ANALYZED",
       "CANDIDATE",
       "SUPERSEDED",

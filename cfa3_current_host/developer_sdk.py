@@ -35,7 +35,7 @@ def scaffold_plugin(destination: Path, *, plugin_id: str, app: str,
     readme_path = destination / "README.md"
     meta_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     readme_path.write_text(
-        "# Community Plugin SDK starter\n\n"
+        "# Community Plugin SDK developer starter\n\n"
         "Declare capabilities and permissions before requesting CFA3 host integration.\n"
         "Do not claim CFA3 admission from a locally passing testkit.\n"
         "Write and run your own plugin functional tests separately; supply licenses, "

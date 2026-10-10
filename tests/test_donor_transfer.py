@@ -55,7 +55,7 @@ class DonorTransferTests(unittest.TestCase):
     def test_mentor_delta_original_source_and_evidence_links(self):
         delta = archived_mentor_delta()
         self.assertEqual(len(delta["records"]), 15)
-        self.assertEqual(len(delta_aliases(self.snapshot["records"])), 75)
+        self.assertEqual(len(delta_aliases(self.snapshot["records"])), 574)
         for row in delta["records"]:
             for url in (row["source_url"], row["license_evidence_url"]):
                 matched = lookup_snapshot(self.snapshot, original_url=url)

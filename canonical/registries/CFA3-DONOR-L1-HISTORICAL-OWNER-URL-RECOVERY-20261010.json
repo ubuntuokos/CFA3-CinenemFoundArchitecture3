@@ -1,0 +1,111 @@
+{
+  "schema": "cfa3.donor-l1-historical-owner-message-recovery.v1",
+  "id": "CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010",
+  "source": "PRIOR_CFA3_OWNER_MESSAGES",
+  "historical_repo": "ubuntuokos/Final-Architecture-v3.0",
+  "old_repository_read_only": true,
+  "approved_reference_only": true,
+  "canonical_level_published": false,
+  "original_L1_B": null,
+  "source_message_pair_machine_auditable_in_git": false,
+  "entries": [
+    {
+      "donor_id": "CFA3-DONOR-EXISTENTIALAUDIO-BLACKHOLE-001",
+      "name": "BlackHole macOS virtual audio driver",
+      "source": {
+        "kind": "GITHUB_REPOSITORY",
+        "locator": "https://github.com/ExistentialAudio/BlackHole",
+        "normalized_key": "github:existentialaudio/blackhole"
+      },
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "submission_review": {
+        "reported_owner_marker": "a beszélgetéshez tartozó linkeket donornak",
+        "reported_date": "2026-10-07",
+        "basis": "EXPLICIT_USER_CONVERSATION_SET_DONOR_COMMAND",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_OWNER_MESSAGE_RETRIEVAL_20261010",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "runtime_admission": false,
+      "automatic_fetch": false,
+      "automatic_code_import": false
+    },
+    {
+      "donor_id": "CFA3-DONOR-EXISTENTIALAUDIO-ORG-001",
+      "name": "ExistentialAudio GitHub organization",
+      "source": {
+        "kind": "GITHUB_ORGANIZATION",
+        "locator": "https://github.com/ExistentialAudio",
+        "normalized_key": "github:existentialaudio"
+      },
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "submission_review": {
+        "reported_owner_marker": "a beszélgetéshez tartozó linkeket donornak",
+        "reported_date": "2026-10-07",
+        "basis": "EXPLICIT_USER_CONVERSATION_SET_DONOR_COMMAND",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_OWNER_MESSAGE_RETRIEVAL_20261010",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "runtime_admission": false,
+      "automatic_fetch": false,
+      "automatic_code_import": false
+    },
+    {
+      "donor_id": "CFA3-DONOR-UPSTASH-ORG-001",
+      "name": "Upstash GitHub organization",
+      "source": {
+        "kind": "GITHUB_ORGANIZATION",
+        "locator": "https://github.com/upstash",
+        "normalized_key": "github:upstash"
+      },
+      "status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "submission_review": {
+        "reported_owner_marker": "donor:",
+        "reported_date": "2026-10-07",
+        "basis": "EXPLICIT_USER_SINGLE_SOURCE_DONOR_COMMAND",
+        "original_chat_evidence_location": "PRIOR_CFA3_CONVERSATION",
+        "exact_submitted_URL_and_approval_pair_independently_verified": false
+      },
+      "intake_provenance": {
+        "source": "HISTORICAL_OWNER_MESSAGE_RETRIEVAL_20261010",
+        "imported_as": "METADATA_ONLY",
+        "canonical_approval_admitted": false
+      },
+      "authority": false,
+      "runtime_admission": false,
+      "automatic_fetch": false,
+      "automatic_code_import": false
+    }
+  ],
+  "existing_source_approval_overrides": [
+    {
+      "donor_id": "FA3-DONOR-OPENCUT-001",
+      "normalized_key": "github:opencut-app/opencut",
+      "historical_locator": "https://github.com/OpenCut-app/OpenCut",
+      "original_owner_url": "https://github.com/opencut-app/opencut",
+      "historical_status": "CANDIDATE",
+      "new_status": "OWNER_APPROVED_PENDING_PUBLICATION",
+      "owner_marker": "donornak és sdk-ba",
+      "owner_message_date": "2026-10-07",
+      "basis": "EXPLICIT_HISTORICAL_OWNER_APPROVAL",
+      "old_record_immutable": true,
+      "no_runtime_or_sdk_admission": true
+    }
+  ],
+  "total_approved_url_occurrences": 4,
+  "novel_identity_count": 3,
+  "existing_identity_override_count": 1,
+  "status": "STAGED_NOT_PUBLISHED",
+  "runtime_admission": false
+}

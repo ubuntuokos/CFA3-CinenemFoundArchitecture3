@@ -187,3 +187,30 @@ standalone or parent GUI as PASS without the applicable actual tests.
 
 **Status: IMPLEMENTATION_STAGED, not Current Host FINAL.** The parallel
 donor PR #7, RHEL README PR #8 and CrAM branch remain untouched.
+
+### 2026-10-10 local CPU expiry + plugin-lease regression delta
+
+The local CPU Foundation now reclaims expired **idle** CPU/Workload leases
+before admitting new work, but never reclaims or force-releases an in-flight
+operation. Each operation is bound to one session; duplicate concurrent runs
+fail closed and the session TTL is rechecked on completion. The Linux plugin
+sandbox wrapper now holds the Foundation CPU/Workload lease through its entire
+subprocess operation; an apparent sandbox success after expiry is rejected.
+
+**Independent local execution:** Python 3.13.5, 40/40 PASS, 0 failures,
+`python3 -m unittest discover -s tests -p 'test_current_host_*.py' -q`
+on the isolated CPU Foundation/capability test tree plus the exact sandbox
+wrapper and five additional mock-isolation tests. Syntax compilation PASS.
+The local `plugin_fabric.py` in this restricted test tree is explicitly a
+**test double**, not the full GitHub plugin registry. Hence this is not a
+claim of full branch tests or real bubblewrap sandbox execution.
+
+New exact GitHub-readback source hashes, equal to locally executed files:
+- Foundation runtime: `80fc6c01195e6d2df05b6fef88f10a020a748773`
+- Plugin sandbox wrapper: `ca1953be74a781f93028334d38ff09a030afe627`
+- Lease expiry test: `b5dcb4825395701b9425c48f63c09728a0b17f14`
+- Plugin lease pin test: `e829e8c6554ea8a1012cbcf37da4e09e4c8e7ff8`
+
+**Unchanged acceptance boundaries:** no physical Current Host PASS, no
+full Rust/Qt6 verification, no actual plugin security certification, no
+complete canonical 200-capability source reconciliation. All remain PENDING.

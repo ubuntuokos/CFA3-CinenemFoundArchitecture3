@@ -43,3 +43,47 @@ jobs:
       - name: Reference evidence boundary
         if: always()
         run: echo "Rust reference tests do not issue Current Host physical PASS"
+
+  qt6-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install Qt6 Widgets essentials for reference test only
+        run: python -m pip install --disable-pip-version-check "PySide6-Essentials>=6.8,<7"
+      - name: Run real Qt6 dashboard widget tests
+        run: python -m unittest discover -s tests -p 'test_current_host_qt6.py' -v
+      - name: Verify Qt6 actual widget containment and pending evidence
+        run: |
+          python - <<'PY'
+          from PySide6.QtWidgets import QApplication, QWidget
+          from cfa3_current_host.core import Component, Graph, Ownership
+          from cfa3_current_host.qt6_dashboard import CurrentHostDashboard
+          app = QApplication([])
+          graph = Graph()
+          graph.register_component(Component("platform", "FOUNDATION", "rev1", Ownership.CFA3_COMPONENT))
+          graph.register_component(Component("editor", "VIDEO", "rev1", Ownership.CFA3_COMPONENT,
+                                             gui=True, parent_id="platform"))
+          plan = graph.plan(["editor"])
+          parent = QWidget()
+          panel = CurrentHostDashboard(plan, workload_mode="REFERENCE_UNKNOWN", parent=parent)
+          assert panel.parent() is parent
+          assert panel.integrated_with_actual_parent
+          assert panel.tabs.count() == 4
+          assert "REFERENCE_UNKNOWN" in panel.workload_indicator.text()
+          layer = panel.tabs.widget(1)
+          table = layer.findChild(__import__("PySide6.QtWidgets", fromlist=["QTableWidget"]).QTableWidget)
+          assert table is not None and table.rowCount() == len(plan.obligations)
+          assert all(table.item(i, 3).text() == "PENDING" for i in range(table.rowCount()))
+          panel.close()
+          parent.close()
+          print("Qt6 reference widget mounted, evidence remains PENDING.")
+          PY
+      - name: Never promote hosted GUI reference to physical PASS
+        if: always()
+        run: echo "Qt6 offscreen widget reference is not standalone/parent physical Current Host PASS"

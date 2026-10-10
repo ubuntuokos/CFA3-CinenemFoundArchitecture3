@@ -16357,7 +16357,7 @@
     {
       "alias": "https://github.com/MohamedElaassal/youtubeVideoGenerator",
       "preferred_source_id": "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
-      "authority": "EXACT_SOURCE_LOCATOR",
+      "authority": "HISTORICAL_PR_OWNER_APPROVAL",
       "related_source_ids": [
         "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001"
       ]
@@ -18317,7 +18317,7 @@
     {
       "alias": "https://github.com/affaan-m/ECC",
       "preferred_source_id": "FA3-DONOR-AFFAAN-M-ECC-001",
-      "authority": "EXACT_SOURCE_LOCATOR",
+      "authority": "HISTORICAL_PR_OWNER_APPROVAL",
       "related_source_ids": [
         "FA3-DONOR-AFFAAN-M-ECC-001"
       ]

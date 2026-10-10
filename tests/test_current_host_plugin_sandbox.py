@@ -113,7 +113,10 @@ class SandboxTests(unittest.TestCase):
             self.assertIn("--unshare-all", command)
             self.assertIn("--die-with-parent", command)
             self.assertIn("--cap-drop", command)
-            return subprocess.CompletedProcess(command, 0, stdout=b"fixture\n", stderr=b"")
+            kwargs["stdout"].write(b"fixture\n")
+            kwargs["stderr"].write(b"")
+            self.assertNotIn("capture_output", kwargs)
+            return subprocess.CompletedProcess(command, 0)
         with patch("cfa3_current_host.plugin_sandbox.shutil.which", return_value="/usr/bin/python3"), \
              patch("cfa3_current_host.plugin_sandbox.subprocess.run", side_effect=fake_run):
             result = execute_plugin_cpu(self.registry, self.plugin_id, "1.0.0",

@@ -41,3 +41,19 @@ Root licenses do not cover all transitive dependencies, datasets or model weight
 7. **CRAM-07** run positive/negative, rollback, compatibility, lease/authority, security/rights and applicable physical Current Host verification, then seek explicit promotion.
 
 **Evidence currently available:** GitHub commit and independent source readback only. Rust test status: `NOT_RUN`. Runtime admission: `NONE`. Physical Current Host PASS: `NONE`. No claim of completed CrAM capability is made here.
+
+## CRAM-03 CPU optimization prototype — staged and locally exercised
+
+The independent Python implementation `cfa3_cram/optimizer2023.py` provides a **CPU-only** TopkCrAM-style two-pass PyTorch optimizer based on the pinned 2023 algorithm. It uses explicit local sparsity sampling, a closure evaluated with temporarily pruned parameters, restored original parameters before the SGD update, and per-step rollback of parameters and SGD optimizer state on error. The checkpoint includes the source pin, RNG and selected sparsity; incompatible source revisions or optimizer configurations are refused on load. The code contains **no copied upstream source files**.
+
+- Python module: `cfa3_cram/optimizer2023.py` and `cfa3_cram/__init__.py`.
+- Negative/positive test file: `tests/test_cram2023_optimizer.py` (**11 tests**).
+- **Local verification:** Python 3 with CPU-only PyTorch `2.10.0+cpu`; `python3 -m unittest discover -s tests -v` scoped to the isolated candidate package: **11 run / 11 PASS / 0 failures**. This is local targeted evidence, **not GitHub CI and not physical Current Host acceptance**.
+- **Independent GitHub readback:** all three new Python files were fetched from this feature branch. Their Git blob SHA-1s exactly match the separately executed local test files (`git hash-object` comparison), so the tested Python bytes are the staged GitHub bytes.
+- **Optional dependency:** the module imports without PyTorch, but constructing the optimizer requires PyTorch; on CI hosts without PyTorch, all eleven CPU tests are **SKIPPED and remain NOT_VERIFIED**, never counted as runtime qualification.
+- **Integration barrier:** this is a testable algorithmic adapter, **not runtime admitted**. It does not itself validate CFA3 Security, Model Router, HRB, Workload Mode, project permissions, dataset rights or admission receipts; application-level invocation **must remain disabled** until actual authorities are connected.
+- **Rollback scope:** parameter tensors, SGD optimizer state and sampling RNG are restored on step failures. Module buffers, external data iterators, file writes and other side effects inside a caller-provided closure are **not** rolled back. Full-model transactional behavior and immutable artifact registration remain future work.
+- **Implementation fidelity:** this CFA3-native TopkCrAM-style implementation currently uses a global quantile threshold over eligible multidimensional parameters and a seeded sparsity choice. Scientific fidelity versus the exact historical reference and additional TopkCrAM/N:M variations remains **UNVERIFIED**; no accuracy/performance claims.
+- **Rust build:** `NOT_RUN` because `cargo` and `rustc` are absent from the available local execution environment. The new Python adapter tests do not substitute for Rust checks or actual host evidence.
+
+Remaining blocker for **Rust verification**: access to a Rust toolchain. Remaining blocker for **production promotion**: live CFA3 runtime authorities, rights and dataset qualification, full adapter fidelity, consumer integration and required real-host checks. The parallel donor PR #7 is **not** a blocker for disjoint CrAM-file development.

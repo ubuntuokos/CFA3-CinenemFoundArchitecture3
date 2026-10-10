@@ -469,7 +469,7 @@
       "pr": 637,
       "pr_head": "24917ff1071c508b496196513c86ce4ba7b2e3a4",
       "delta_blob": "5b76e61510ddea7b197c344e04c41985b1379359",
-      "type": "SOURCE_URLS_PRESERVED_WITH_UNRESOLVED_TOPIC_COLLAPSE",
+      "type": "SOURCE_URLS_PRESERVED_DISTINCT_ARCHIVED_TOPIC_IDENTITIES_RECONCILED",
       "rows": [
         {
           "proposed_donor_id": "FA3-DONOR-CHARACTER-AI-ORG-001",
@@ -608,7 +608,35 @@
         }
       ],
       "matched": 15,
-      "topic_view_variants": 3
+      "topic_view_variants": 3,
+      "historical_topic_resolution": {
+        "historical_proposed_donor_id": "FA3-DONOR-CHARACTERAI-TOPIC-001",
+        "historical_proposed_normalized_key": "github:topics/characterai",
+        "state": "NON_ADMITTED_RECONCILIATION_REFERENCE_ONLY",
+        "decision": "RETAIN_THREE_DISTINCT_EXISTING_ARCHIVED_QUERY_VIEW_IDENTITIES",
+        "no_new_donor": true,
+        "no_canonical_merge": true,
+        "not_an_alias_to_single_donor": true,
+        "original_submitted_urls_preserved": 15,
+        "distinct_topic_query_view_identities": 3,
+        "preserved_archive_identities": [
+          {
+            "original_url": "https://github.com/topics/characterai?o=desc&s=updated",
+            "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTERAI-O-DESC-S-UPDATED-32FC2DEF-001",
+            "archived_normalized_key": "github:topics/characterai?o=desc&s=updated"
+          },
+          {
+            "original_url": "https://github.com/topics/characterai?l=javascript&o=asc&s=forks",
+            "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTERAI-L-JAVASCRIPT-O-ASC-D687BF13-001",
+            "archived_normalized_key": "github:topics/characterai?l=javascript&o=asc&s=forks"
+          },
+          {
+            "original_url": "https://github.com/topics/characterai?l=typescript&o=asc&s=stars",
+            "archived_donor_id": "FA3-DONOR-GITHUB-TOPICS-CHARACTERAI-L-TYPESCRIPT-O-ASC-04E1DEAF-001",
+            "archived_normalized_key": "github:topics/characterai?l=typescript&o=asc&s=stars"
+          }
+        ]
+      }
     },
     {
       "pr": 545,
@@ -792,10 +820,11 @@
     "covered_preexisting_pr537": 58,
     "covered_preexisting_pr620": 5,
     "original_urls_pr637_preserved": 15,
-    "pr637_distinct_query_view_identities_pending_policy_resolution": 3,
+    "pr637_distinct_query_view_identities_pending_policy_resolution": 0,
     "pr545_unmerged_missing_candidate_keys": 17,
     "pr545_proposed_rekeys_not_applied": 3,
-    "pr545_previous_entries_enriched_no_reanalysis": 7
+    "pr545_previous_entries_enriched_no_reanalysis": 7,
+    "pr637_distinct_query_view_identities_reconciled": 3
   },
   "all_owner_approvals_verifiable": false,
   "frozen_original_L1_B": null,

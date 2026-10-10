@@ -54,6 +54,24 @@ class CrAM2025PolicyTests(unittest.TestCase):
         self.assertEqual(m.hooks, [])
 
 
+    def test_real_torch_cpu_hook_is_removed_after_success(self):
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("CPU PyTorch not installed")
+        layer = torch.nn.Linear(1, 1, bias=False)
+        with torch.no_grad():
+            layer.weight.fill_(2.0)
+        x = torch.ones(1, 1)
+        original = layer(x)
+        def double_input(module, args, kwargs):
+            return ((args[0] * 2,), kwargs)
+        with temporary_attention_pre_hook(layer, double_input):
+            self.assertTrue(torch.equal(layer(x), original * 2))
+        self.assertTrue(torch.equal(layer(x), original))
+        self.assertEqual(len(layer._forward_pre_hooks), 0)
+
+
 class CrAM2026ExpertTests(unittest.TestCase):
     def expert(self, identity, vec, revision="m:v1"):
         return Expert(identity, revision, "projection:1", DIGEST, tuple(vec))

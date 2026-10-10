@@ -297,3 +297,33 @@ local partial materialization; that 78-PASS result DOES NOT verify the
 changed canonical planner or dirty-checkout runner. The full feature-branch
 Python tests, native Rust and Qt6 remain PENDING until the precise complete
 branch can be executed. No GitHub CI workflow was dispatched or PR opened.
+
+### 2026-10-10 — actual dirty-source runner test execution
+
+An independent local Python 3.13.5 materialization of the exact GitHub
+runner and runner-regression test files was created in the pre-existing
+Current Host CPU-only reference test directory. Both file contents
+**exactly matched their Git blob identifiers**:
+
+- cfa3_current_host/local_runner.py: d839a5ebefd8e19bc6f5d2724f7681b98cf61812
+- tests/test_current_host_runner.py: 8714bf05067b087baea7983f14b7aca590279ddd
+
+The first full targeted run of 83 local tests exposed 3 test-double errors:
+the fixture did not accept the default timeout parameter from the test
+runner. The fixture was corrected within existing task scope without
+changing its test intent or the runner's authority boundaries.
+
+After this correction, the same local collection was rerun:
+
+    python3 -m unittest discover -s tests -p 'test_current_host_*.py' -q
+
+**Result: 83 tests run / 83 PASS / 0 failures**, plus Python syntax
+compileall PASS. The corrected runner test's Git blob was independently
+read back from GitHub and matched the locally executed source exactly.
+
+**Coverage qualification:** these 83 tests are the existing partial CPU
+Foundation/capability/Community Plugin modules plus the source provenance
+runner tests. They are **not a complete checkout of the GitHub branch**,
+therefore do not include the 10 newer canonical-plan tests. Rust, physical
+host, real Qt6 GUI, plugin sandbox containment and 200 real canonical
+capability reconciliation remain pending. The result is not physical PASS.

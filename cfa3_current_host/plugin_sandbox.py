@@ -31,7 +31,7 @@ class SandboxExecutionFailed(RuntimeError):
 def _resource_limits():
     resource.setrlimit(resource.RLIMIT_CPU, (5, 6))
     resource.setrlimit(resource.RLIMIT_AS, (512 * 1024 * 1024, 512 * 1024 * 1024))
-    resource.setrlimit(resource.RLIMIT_FSIZE, (1024 * 1024, 1024 * 1024))
+    resource.setrlimit(resource.RLIMIT_FSIZE, (65536, 65536))
     os.umask(0o077)
 
 
@@ -80,6 +80,9 @@ def _execute_in_bwrap(
         workdir = Path(work)
         script = workdir / "entry.py"
         with ZipFile(package) as archive:
+            # Check the ZIP directory size before inflating into the host.
+            if archive.getinfo(entrypoint).file_size > 1024 * 1024:
+                raise PluginError("ENTRYPOINT_SIZE_LIMIT")
             raw = archive.read(entrypoint)
         if len(raw) > 1024 * 1024:
             raise PluginError("ENTRYPOINT_SIZE_LIMIT")
@@ -99,25 +102,36 @@ def _execute_in_bwrap(
             "--setenv", "PYTHONPATH", "",
             "--", "/usr/bin/python3", "-I", "-S", "/cfa3-plugin/entry.py", *argv
         ))
-        try:
-            result = subprocess.run(
-                command, shell=False, timeout=timeout_seconds, check=False,
-                stdin=subprocess.DEVNULL, capture_output=True,
-                env={"PATH": "/usr/bin:/bin", "LANG": "C", "LC_ALL": "C"},
-                preexec_fn=_resource_limits,
-            )
-        except subprocess.TimeoutExpired as exc:
-            raise SandboxExecutionFailed("SANDBOX_TIMEOUT") from exc
-        except OSError as exc:
-            raise SandboxUnavailable("BUBBLEWRAP_CANNOT_LAUNCH") from exc
+        # Do not use subprocess.run(capture_output=True): an untrusted plugin
+        # could exhaust the host process memory by writing unlimited output.
+        # Temporary files are backed by the child RLIMIT_FSIZE (64 KiB each),
+        # and the host reads at most 64 KiB + 1 from each file.
+        with tempfile.TemporaryFile(mode="w+b") as stdout_file, \
+             tempfile.TemporaryFile(mode="w+b") as stderr_file:
+            try:
+                result = subprocess.run(
+                    command, shell=False, timeout=timeout_seconds, check=False,
+                    stdin=subprocess.DEVNULL, stdout=stdout_file,
+                    stderr=stderr_file,
+                    env={"PATH": "/usr/bin:/bin", "LANG": "C", "LC_ALL": "C"},
+                    preexec_fn=_resource_limits,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise SandboxExecutionFailed("SANDBOX_TIMEOUT") from exc
+            except OSError as exc:
+                raise SandboxUnavailable("BUBBLEWRAP_CANNOT_LAUNCH") from exc
+            stdout_file.seek(0)
+            stderr_file.seek(0)
+            stdout = stdout_file.read(65537)
+            stderr = stderr_file.read(65537)
+    if len(stdout) > 65536 or len(stderr) > 65536:
+        raise SandboxExecutionFailed("SANDBOX_OUTPUT_LIMIT")
     if result.returncode:
         raise SandboxExecutionFailed("SANDBOX_PROCESS_FAILED")
-    if len(result.stdout) > 65536 or len(result.stderr) > 65536:
-        raise SandboxExecutionFailed("SANDBOX_OUTPUT_LIMIT")
     return {
         "status": "ISOLATED_EXECUTION_OBSERVED",
         "exit_code": result.returncode,
-        "stdout": result.stdout.decode("utf-8", errors="replace"),
+        "stdout": stdout.decode("utf-8", errors="replace"),
         "physical_current_host_pass": False,
         "plugin_product_qa": "DEVELOPER_RESPONSIBILITY",
         "security_certification": "PENDING_EXTERNAL_VALIDATION",

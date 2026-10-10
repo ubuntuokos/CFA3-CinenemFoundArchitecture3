@@ -115,9 +115,33 @@ class FoundationRuntimeTests(unittest.TestCase):
                    return_value=session.deadline_monotonic + 1):
             with self.assertRaisesRegex(FoundationDenied, "EXPIRED_SESSION"):
                 f.validate(session)
-        # Explicit cleanup is still allowed on an expired lease.
-        f.finish(session)
+        # Cleanup must also work WHILE the lease is expired.
+        with patch("cfa3_current_host.foundation_runtime.time.monotonic",
+                   return_value=session.deadline_monotonic + 1):
+            f.finish(session)
         self.assertEqual(f.hrb.allocated, 0)
+
+    def test_invalid_operation_still_releases_lease(self):
+        f = runtime()
+        session = f.start(request())
+        with self.assertRaisesRegex(FoundationDenied, "INVALID_CFA3_TEST_OPERATION"):
+            f.run_owned_callable(session, None)
+        self.assertEqual(f.hrb.allocated, 0)
+        self.assertEqual(f.modes.indicator, "NONE")
+
+    def test_invalid_raw_hrb_and_mode_acquisitions_denied(self):
+        broker = CpuResourceBroker(3)
+        with self.assertRaises(ValueError):
+            broker.acquire(0)
+        with self.assertRaises(ValueError):
+            broker.acquire(1.5)
+        modes = WorkloadModeBroker()
+        with self.assertRaises(FoundationDenied):
+            modes.acquire(Mode.NONE)
+
+    def test_nan_ttl_is_rejected(self):
+        with self.assertRaises(ValueError):
+            request(ttl_seconds=float("nan"))
 
     def test_audit_cannot_claim_physical_pass(self):
         f = runtime()

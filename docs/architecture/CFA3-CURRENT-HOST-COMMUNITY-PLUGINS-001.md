@@ -266,3 +266,34 @@ mechanism. Registry status locking is not a production process-kill service.
 The implementation remains STAGED until the full shared runtime, Qt6,
 process isolation, 200 real capability identities and physical evidence gates
 have been validated.
+
+### 2026-10-10 — canonical test plan and source provenance guards
+
+The physical evidence review boundary and the live Foundation test executor
+now **rebuild the Current Host delta plan from the registered real-edge graph**.
+Caller-supplied plans cannot omit NEGATIVE, ROLLBACK, actual parent GUI or
+actual affected handoff obligations to produce an apparently completed run.
+Mismatched NONE/SCOPED/FULL mode, fabricated changed component or forged
+plan contents are explicitly blocked. The evidence reviewer now also
+rejects extraneous/unknown proof records and proof supplied for genuine NONE
+scopes; it still NEVER issues physical Current Host PASS.
+
+New regression definitions were added in:
+- tests/test_current_host_core.py (5 evidence scope / provenance bypass cases).
+- tests/test_current_host_foundation_pipeline.py (5 canonical plan bypass cases).
+
+The local test runner no longer reports a trusted checkout revision based
+solely on Git HEAD. It also checks a clean Git working tree, including
+untracked files. Dirty or unverifiable checkouts are reported as
+UNVERIFIED_DIRTY_OR_UNAVAILABLE_CHECKOUT with provenance
+NOT_ADMITTED_SOURCE_PROVENANCE. A new regression case for untracked files
+was added in tests/test_current_host_runner.py, alongside updates to the
+existing clean/failure fixtures.
+
+**Execution status for this update:** independent GitHub mutation and
+readback are available; the **new 11 regression definitions are NOT_RUN**.
+The earlier 78/78 target-specific CPU tests were re-run from the pre-existing
+local partial materialization; that 78-PASS result DOES NOT verify the
+changed canonical planner or dirty-checkout runner. The full feature-branch
+Python tests, native Rust and Qt6 remain PENDING until the precise complete
+branch can be executed. No GitHub CI workflow was dispatched or PR opened.

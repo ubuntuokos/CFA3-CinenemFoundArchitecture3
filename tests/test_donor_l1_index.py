@@ -71,7 +71,10 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
                 self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
                 self.assertEqual(meta["additional_owner_source_leads"],"4")
-                self.assertEqual(meta["total_pending_owner_source_candidates"],"27")
+                self.assertEqual(meta["total_pending_owner_source_candidates"],"4")
+                self.assertEqual(meta["legacy_owner_approved_pending_publication"],"53")
+                self.assertEqual(meta["historical_supplement_owner_approved_transfer_sources"],"19")
+                self.assertEqual(meta["additional_owner_approved_transfer_sources"],"4")
                 self.assertEqual(meta["historical_tripo_new_pending_sources"],"0")
                 self.assertEqual(meta["historical_tripo_owner_approved_transfer_sources"],"30")
                 self.assertEqual(meta["historical_tripo_original_occurrences"],"48")
@@ -130,7 +133,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertNotIn(lead["source"]["normalized_key"], archive_keys)
                 self.assertFalse(lead["intake_provenance"]["canonical_approval_admitted"])
                 self.assertFalse(lead["submission_review"]["exact_submitted_URL_and_approval_pair_independently_verified"])
-                self.assertEqual(donor_l1.lookup(dbpath, sid, "id")[0]["status"], "BLOCKED")
+                self.assertEqual(donor_l1.lookup(dbpath, sid, "id")[0]["status"], "OWNER_APPROVED_PENDING_PUBLICATION")
                 self.assertEqual(donor_l1.lookup(dbpath, lead["source"]["locator"], "url")[0]["id"], sid)
 
     def test_tripo_recovery_exact_occurrences_with_owner_approved_transfer_unpublished(self):
@@ -243,9 +246,30 @@ class DonorL1IndexTests(unittest.TestCase):
             for entry in supplement["entries"]:
                 self.assertNotIn(entry["source"]["normalized_key"], existing)
                 sid = entry["donor_id"]
-                self.assertEqual(donor_l1.lookup(dbpath,sid,"id")[0]["status"],"BLOCKED")
+                expected_state = ("OWNER_APPROVED_PENDING_PUBLICATION" if donor_l1.explicit_legacy_donor_marker(entry)
+                                  else "BLOCKED")
+                self.assertEqual(donor_l1.lookup(dbpath,sid,"id")[0]["status"], expected_state)
                 self.assertEqual(donor_l1.lookup(dbpath,entry["source"]["locator"],"url")[0]["id"],sid)
                 self.assertFalse(entry["submission_review"]["exact_submitted_URL_and_approval_pair_independently_verified"])
+
+    def test_historical_owner_command_is_transfer_approval_not_runtime_admission(self):
+        assert donor_l1.explicit_legacy_donor_marker({"submission_review":{"reported_owner_marker":"donornak"}})
+        assert donor_l1.explicit_legacy_donor_marker({"submission_review":{"reported_owner_marker":"vedd fel donornak"}})
+        assert donor_l1.explicit_legacy_donor_marker({"submission_review":{"reported_owner_marker":"add a donorlistához"}})
+        self.assertFalse(donor_l1.explicit_legacy_donor_marker({"submission_review":{"reported_owner_marker":"accepted donor/reference sources"}}))
+        sources = donor_l1.frozen_sources()
+        self.assertEqual(sum(1 for _, origin, _ in sources if origin == "HISTORICAL_OWNER_APPROVED_TRANSFER"),19)
+        self.assertEqual(sum(1 for _, origin, _ in sources if origin == "ADDITIONAL_OWNER_APPROVED_TRANSFER"),4)
+        self.assertEqual(sum(1 for _, origin, _ in sources if origin == "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER"),30)
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath=Path(tmp)/"legacy-owner-markers.sqlite"
+            receipt=donor_l1.stage(dbpath,"legacy-marker-test")
+            self.assertEqual(receipt["state"],"STAGED_NOT_PUBLISHED")
+            self.assertIsNone(receipt["B"])
+            with sqlite3.connect(dbpath) as db:
+                self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE current_status='OWNER_APPROVED_PENDING_PUBLICATION'").fetchone()[0],53)
+                self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE source_origin='HISTORICAL_OWNER_APPROVAL_RECONCILIATION_PENDING'").fetchone()[0],4)
+                self.assertEqual(dict(db.execute("SELECT key,value FROM metadata"))["publication_gate"],"PENDING")
 
     def test_owner_approval_evidence_is_bounded_and_nonadmitting(self):
         supplementary = donor_l1.json_read(donor_l1.SUPPLEMENT)

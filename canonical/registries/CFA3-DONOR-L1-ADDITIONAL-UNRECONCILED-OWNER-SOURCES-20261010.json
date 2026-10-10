@@ -245,5 +245,52 @@
     "original_L1_B": null,
     "canonical_L1_published": false,
     "runtime_admission": false
+  },
+  "legacy_l1_candidate_analyzed_verification_20261010": {
+    "status": "BOUNDED_HISTORICAL_REGISTRY_RECORD_SCAN_NO_GLOBAL_OWNER_APPROVAL_CLOSURE",
+    "historical_registry_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+    "historical_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+    "checked_legacy_statuses": {
+      "CANDIDATE": 963,
+      "ANALYZED": 130
+    },
+    "inspected_records": 1093,
+    "explicit_owner_donor_marker_present_in_record_payload": 0,
+    "scan_pattern_scope": "CASE_INSENSITIVE_DONORNAK_OR_DONORLIST_OR_OWNER_EXPLICIT_DONOR_OR_OWNER_APPROVED_OR_OWNER_PRE_REVIEW_IN_WHOLE_HISTORICAL_RECORD_JSON",
+    "evidence_limit": "NO_MARKER_IN_REGISTRY_RECORD_DOES_NOT_PROVE_ABSENCE_OF_APPROVAL_IN_ORIGINAL_USER_CONVERSATIONS_OR_UNMERGED_PR_DISCUSSIONS",
+    "automatic_status_promotion": false,
+    "historical_20260930_named_source_identity_check": {
+      "missing_original_url_names_checked": 11,
+      "exact_matching_L1_source_identity_for_missing_names": 0,
+      "distinct_related_source_not_equivalent": {
+        "name": "OpenTelemetry semantic conventions for events",
+        "id": "FA3-DONOR-OPENTELEMETRY-EVENT-CONVENTIONS-001",
+        "url": "https://opentelemetry.io/docs/specs/semconv/general/events/",
+        "status": "ACCEPTED_REFERENCE"
+      },
+      "original_url_guesses_admitted": 0,
+      "named_sources_auto_registered": 0
+    },
+    "frozen_B_evidence": {
+      "known_partial_source_files": [
+        {
+          "name": "Beillesztett markdown.md",
+          "raw_url_count": 266,
+          "deduplicated_count": 133
+        },
+        {
+          "name": "Beillesztett markdown (2).md",
+          "raw_url_count": 625,
+          "deduplicated_count": 312
+        }
+      ],
+      "known_partial_raw_url_occurrences": 891,
+      "known_partial_normalized_union_count": 445,
+      "complete_original_L1_input_B": null,
+      "counts_are_not_the_full_B": true
+    },
+    "publication_gate": "BLOCKED_PENDING_EXHAUSTIVE_OWNER_APPROVAL_AND_ORIGINAL_INPUT_EVIDENCE",
+    "canonical_L1_published": false,
+    "runtime_admission": false
   }
 }

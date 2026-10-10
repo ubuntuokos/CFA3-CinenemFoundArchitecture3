@@ -68,3 +68,15 @@ entries; none of those numbers is independently established as the entire L1 B.
   presented as a clean resource audit.
 
 These are reference checks, not complete governance or physical-host acceptance.
+
+## Subsequent explicit donor-transfer instruction
+
+The owner subsequently requested execution of the old-to-new donor transfer.
+The active reference snapshot now contains all 1919 frozen old-main records plus
+62 recovered sources (1981 total), with all 3946 existing locator routes. 884
+records have preserved donor approval; candidates, analyzed, superseded and
+unapproved sources retain distinct states. See `DONOR-TRANSFER-20261010.md` for
+the exact completion boundary, readback proof and remaining discovery tasks.
+This completes the bounded repository metadata transfer, not the separate
+all-conversation reconciliation or L1–L5 discovery mandate. PR merge status must
+still be read from GitHub, not inferred from this document.

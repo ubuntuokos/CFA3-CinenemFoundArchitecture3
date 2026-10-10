@@ -182,3 +182,81 @@ jobs:
       - name: Hosted X server cannot issue a physical GUI acceptance
         if: always()
         run: echo "Xvfb Qt6 xcb reference only; not the user's physical monitor or full CFA3 parent GUI"
+
+  qt6-wayland-weston-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: wayland
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install independent Wayland compositor and Qt6 graphics dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            weston libegl1 libopengl0 libwayland-client0 libwayland-egl1 \
+            libxkbcommon0
+          python -m pip install --disable-pip-version-check "PySide6-Essentials>=6.8,<7"
+      - name: Start actual headless Weston Wayland compositor and Qt6 GUI
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/cfa3-wayland-run"
+          mkdir -p "$XDG_RUNTIME_DIR"
+          chmod 700 "$XDG_RUNTIME_DIR"
+          export WAYLAND_DISPLAY=cfa3-weston-0
+          weston --backend=headless-backend.so --socket="$WAYLAND_DISPLAY" \
+            --idle-time=0 --no-config --log="$RUNNER_TEMP/cfa3-weston.log" &
+          weston_pid=$!
+          trap 'kill "$weston_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 50); do
+            test -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" && break
+            if ! kill -0 "$weston_pid" 2>/dev/null; then
+              tail -n 40 "$RUNNER_TEMP/cfa3-weston.log"
+              exit 1
+            fi
+            sleep 0.2
+          done
+          test -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" || {
+            tail -n 40 "$RUNNER_TEMP/cfa3-weston.log"
+            exit 1
+          }
+          python - <<'PY'
+          from PySide6.QtWidgets import QApplication
+          from cfa3_runtime.qt6_environment import inspect_runtime
+          from cfa3_runtime.launcher import prepare_python_qt_launch
+          from cfa3_runtime.control_center import CFA3RuntimeControlCenter
+          from unittest.mock import patch
+          import os
+          import sys
+          report = inspect_runtime()
+          assert report["status"] == "APP_RUNTIME_READY", report
+          assert report["qt_platform"] == "wayland", report
+          assert report["physical_gui_pass"] is False, report
+          assert report["parent_integration_gui_pass"] is False, report
+          plan = prepare_python_qt_launch(
+              [sys.executable, "-m", "cfa3_runtime", "settings-window"],
+              preferences={"schema": "cfa3.runtime-preferences.v1", "qt_platform": "wayland"},
+          )
+          assert plan.platform == "wayland", plan
+          app = QApplication([])
+          with patch("cfa3_runtime.settings_panel.load_preferences",
+                     return_value={"schema": "cfa3.runtime-preferences.v1", "qt_platform": "auto"}):
+              shell = CFA3RuntimeControlCenter(workload_mode="UNKNOWN")
+          try:
+              shell.show()
+              app.processEvents()
+              assert shell.isVisible()
+              assert shell.tabs.widget(0) is shell.settings
+              assert shell.settings.window() is shell
+              assert "PENDING" in shell.status.text()
+          finally:
+              shell.close()
+          print("Wayland Weston and actual CFA3 Qt6 window visible in headless compositor; physical GUI PASS remains PENDING.")
+          PY
+      - name: Headless compositor never certifies a physical monitor
+        if: always()
+        run: echo "Hosted Wayland/Weston success is only a reference, not physical Current Host PASS"

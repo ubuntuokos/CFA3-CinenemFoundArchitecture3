@@ -181,6 +181,9 @@ def register_tripo_historical_urls(db, sources):
     seen = set()
     for record in manifest["url_provenance"]:
         i, url, sid = record["occurrence_index"], record["original_url"], record["source_id"]
+        # Parentless historical user submissions are L1 roots; never reset children.
+        if record.get("parent_id") is not None or record.get("global_level", 1) != 1:
+            raise ValueError("Historical Tripo input must be a parentless L1 root")
         if not isinstance(i, int) or isinstance(i, bool) or i < 1 or i > 48 or i in seen:
             raise ValueError("Historical Tripo occurrence index missing, duplicated or invalid")
         seen.add(i)
@@ -199,10 +202,11 @@ def register_tripo_historical_urls(db, sources):
         db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
                    (sid, url, "HISTORICAL_TRIPO_UNITY_DCC_POSE_20261004",
                     "historical-branch-ce8b8a88-submitted-links"))
-        db.execute("INSERT INTO historical_link_occurrences VALUES(?,?,?,?,?,?,?)",
+        db.execute("INSERT INTO historical_link_occurrences VALUES(?,?,?,?,?,?,?,?,?)",
                    ("HISTORICAL_TRIPO_UNITY_DCC_POSE_20261004", i, sid, url,
                     record["normalized_key"], record["identity_resolution"],
-                    "historical-head-ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed"))
+                    "historical-head-ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed",
+                    None, 1))
     if seen != set(range(1, 49)):
         raise ValueError("Historical Tripo occurrence coverage incomplete")
     if len({row["original_url"] for row in manifest["url_provenance"]}) != 46:
@@ -248,6 +252,8 @@ def prepare(db, sources, run_id):
         source_id TEXT NOT NULL REFERENCES sources(source_id),
         original_url TEXT NOT NULL, normalized_key TEXT NOT NULL,
         identity_resolution TEXT NOT NULL, evidence_ref TEXT NOT NULL,
+        parent_id TEXT CHECK(parent_id IS NULL),
+        global_level INTEGER NOT NULL CHECK(global_level=1),
         PRIMARY KEY(source_group,occurrence_index));
       CREATE INDEX historical_link_url_lookup ON historical_link_occurrences(original_url);
     """)
@@ -330,19 +336,19 @@ def verify(path, expected):
                     raise ValueError("Unreconciled owner source missing or wrongly admitted: " + donor_id)
         recovery = json_read(TRIPO_RECOVERY)
         actual = list(db.execute(
-            "SELECT occurrence_index,source_id,original_url,normalized_key,identity_resolution "
+            "SELECT occurrence_index,source_id,original_url,normalized_key,identity_resolution,parent_id,global_level "
             "FROM historical_link_occurrences WHERE source_group=? ORDER BY occurrence_index",
             ("HISTORICAL_TRIPO_UNITY_DCC_POSE_20261004",)))
         expected_occurrences = [
             (x["occurrence_index"], x["source_id"], x["original_url"],
-             x["normalized_key"], x["identity_resolution"])
+             x["normalized_key"], x["identity_resolution"], None, 1)
             for x in recovery["url_provenance"]
         ]
         if len(actual) != 48 or actual != expected_occurrences:
             raise ValueError("Historical Tripo exact occurrence read-back mismatch")
         if len({row[2] for row in actual}) != 46:
             raise ValueError("Historical Tripo duplicate URL occurrence count lost")
-        for occurrence_index, sid, url, key, resolution in actual:
+        for occurrence_index, sid, url, key, resolution, parent_id, global_level in actual:
             if not db.execute("SELECT 1 FROM aliases WHERE alias=? AND source_id=?",
                               (url, sid)).fetchone():
                 raise ValueError("Historical Tripo URL alias read-back missing")

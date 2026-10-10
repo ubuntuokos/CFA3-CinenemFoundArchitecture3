@@ -238,11 +238,27 @@ def assess_for_external_admission(plan: Plan, graph: Graph,
     returns READY_FOR_AUTHORITY_REVIEW, not Current Host PASS. Production
     admission remains exclusively with the external Evidence authority.
     """
+    # Never trust a caller-supplied reduced plan. Reconstruct the exact
+    # obligation set from the registered CFA3 ownership and handoff graph.
+    try:
+        trigger = "GLOBAL_SECURITY_POLICY" if plan.mode == Mode.FULL else "CODE"
+        canonical = graph.plan(plan.changed, trigger=trigger)
+    except (ValueError, TypeError, KeyError):
+        return {"status": "BLOCKED_NONCANONICAL_PLAN", "authority_pass": False}
+    if plan != canonical:
+        return {"status": "BLOCKED_NONCANONICAL_PLAN", "authority_pass": False}
     if plan.mode == Mode.NONE:
+        if proofs:
+            return {"status": "BLOCKED_PROOFS_FOR_NONE_SCOPE",
+                    "authority_pass": False}
         return {"status": "NO_TEST_REQUIRED", "authority_pass": False,
                 "checked": 0, "required": 0}
+    expected = set(plan.obligations)
     by_obligation: dict[Obligation, Proof] = {}
     for proof in proofs:
+        if proof.obligation not in expected:
+            return {"status": "BLOCKED_EXTRA_OR_UNKNOWN_PROOF",
+                    "authority_pass": False}
         if proof.obligation in by_obligation:
             return {"status": "BLOCKED_DUPLICATE_PROOF", "authority_pass": False}
         by_obligation[proof.obligation] = proof

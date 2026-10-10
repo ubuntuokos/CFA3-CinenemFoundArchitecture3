@@ -93,5 +93,48 @@ class CrAM2023CPUTests(unittest.TestCase):
             opt.step(self.make_closure())
 
 
+    def test_failed_base_optimizer_update_restores_weights(self):
+        opt = TopkCrAM2023CPU(self.model.parameters(), lr=0.1, sparsities=(0.5,))
+        opt.zero_grad(); self.make_closure()()
+        before = [p.detach().clone() for p in self.model.parameters()]
+        actual_step = opt.base_optimizer.step
+        def partial_then_fail(*args, **kwargs):
+            actual_step(*args, **kwargs)
+            raise RuntimeError("simulated update failure")
+        opt.base_optimizer.step = partial_then_fail
+        with self.assertRaisesRegex(RuntimeError, "update failure"):
+            opt.step(self.make_closure())
+        for p, old in zip(self.model.parameters(), before):
+            self.assertTrue(torch.equal(p, old))
+
+    def test_checkpoint_restores_rng_for_repeatable_choice(self):
+        first = TopkCrAM2023CPU(self.model.parameters(), sparsities=(0.2, 0.5, 0.8), seed=42)
+        first.zero_grad(); self.make_closure()()
+        first.step(self.make_closure())
+        snapshot = first.state_dict()
+        duplicate = torch.nn.Linear(4, 2)
+        duplicate.load_state_dict(self.model.state_dict())
+        second = TopkCrAM2023CPU(duplicate.parameters(), sparsities=(0.2, 0.5, 0.8), seed=1)
+        second.load_state_dict(snapshot)
+        first.zero_grad(); self.make_closure()()
+        first.step(self.make_closure())
+        second.zero_grad()
+        def other_closure():
+            loss = torch.nn.functional.mse_loss(duplicate(self.x), self.y)
+            loss.backward()
+            return loss
+        other_closure(); second.step(other_closure)
+        self.assertEqual(first.last_sparsity, second.last_sparsity)
+        for a, b in zip(self.model.parameters(), duplicate.parameters()):
+            self.assertTrue(torch.allclose(a, b, atol=1e-6))
+
+    def test_reject_checkpoint_different_source_revision(self):
+        opt = TopkCrAM2023CPU(self.model.parameters())
+        bad = opt.state_dict()
+        bad["source_commit"] = "unverified"
+        with self.assertRaisesRegex(ValueError, "source revision"):
+            opt.load_state_dict(bad)
+
+
 if __name__ == "__main__":
     unittest.main()

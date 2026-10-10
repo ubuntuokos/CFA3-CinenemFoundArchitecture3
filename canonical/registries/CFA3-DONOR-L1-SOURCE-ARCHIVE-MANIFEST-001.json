@@ -508,6 +508,32 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-HAIR-GROOM-SOURCES-2026-10-03.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "ef5d9a229d7688ebd566b4fc3cddbcaf380d3ab8",
+      "source_proof_kind": "HISTORICAL_HAIR_GROOM_VALID_SOURCES_AND_UNRESOLVED_OWNER_SUBMISSION",
+      "historical_submitted_url_count": 16,
+      "original_valid_exact_owner_urls": 15,
+      "original_distinct_source_ids": 15,
+      "valid_source_ids_present_in_new_l1_stage": 15,
+      "valid_original_urls_in_direct_routing": 15,
+      "historical_unresolved_submission_count": 1,
+      "historical_unresolved_original_submitted_url": "https://github.com/Vanessi k",
+      "historical_unresolved_status": "ANALYSIS_ONLY_UNRESOLVED_MALFORMED_LINK",
+      "historical_corrected_candidate": "https://github.com/Vanessik",
+      "corrected_candidate_separately_present_in_new_stage_as": "FA3-DONOR-VANESSIK-001",
+      "corrected_candidate_not_newly_admitted_by_this_file": true,
+      "missing_valid_source_ids": 0,
+      "missing_valid_original_urls": 0,
+      "source_identity_or_legacy_status_mismatches": 0,
+      "profile_org_topic_discovery_only": true,
+      "license_rights_and_cpu_only_gates_not_bypassed": true,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

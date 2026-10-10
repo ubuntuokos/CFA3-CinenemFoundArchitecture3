@@ -31,7 +31,7 @@ class RunnerBoundaryTests(unittest.TestCase):
             root = Path(directory)
             self.make_checkout(root)
             commands = []
-            def fake_run(args, cwd, timeout):
+            def fake_run(args, cwd, timeout=120):
                 commands.append(tuple(args))
                 if args[:3] == ["git", "rev-parse", "HEAD"]:
                     return {"result": "REFERENCE_PASS", "returncode": 0,
@@ -62,7 +62,7 @@ class RunnerBoundaryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self.make_checkout(root)
-            def fake_run(args, cwd, timeout):
+            def fake_run(args, cwd, timeout=120):
                 if args[0] == "git":
                     return {"result": "REFERENCE_FAIL", "returncode": 1, "transcript_tail": ""}
                 return {"result": "REFERENCE_FAIL", "returncode": 2, "transcript_tail": "FAILED"}
@@ -79,7 +79,7 @@ class RunnerBoundaryTests(unittest.TestCase):
             root = Path(directory)
             self.make_checkout(root)
 
-            def fake_run(args, cwd, timeout):
+            def fake_run(args, cwd, timeout=120):
                 if args[:3] == ["git", "rev-parse", "HEAD"]:
                     return {"result": "REFERENCE_PASS", "returncode": 0,
                             "transcript_tail": "a" * 40}

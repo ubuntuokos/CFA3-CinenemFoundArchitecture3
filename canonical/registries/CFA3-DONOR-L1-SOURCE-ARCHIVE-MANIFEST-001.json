@@ -692,6 +692,26 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-MOTION-VIDEO-EXECUTION-2026-10-02.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "66b3d17aec575ab04f8f3f0fa6733ce35b9129f1",
+      "source_proof_kind": "HISTORICAL_EXPLICIT_MOTION_VIDEO_EXECUTION_REFERENCE_DELTA",
+      "original_source_records": 5,
+      "original_exact_owner_urls": 5,
+      "source_ids_present_in_new_l1_stage": 5,
+      "original_urls_in_direct_routing": 5,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_or_legacy_status_mismatches": 0,
+      "historical_approval_ref": "docs/donor-motion-video-execution-2026-10-02.md",
+      "hunyuanvideo_and_skyreels_exact_license_review_gates_preserved": true,
+      "no_model_runtime_provider_or_distributed_execution_admission": true,
+      "capability_baseline_unchanged": 175,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

@@ -77,6 +77,9 @@ def main(argv=None):
     i = commands.add_parser("plugin-inspect", help="static host contract testkit")
     i.add_argument("--bundle", required=True)
     i.add_argument("--available-app", action="append", default=[])
+    t = commands.add_parser("selftest", help="run CFA3-only reference tests, never issue physical PASS")
+    t.add_argument("--repo", default=".")
+    t.add_argument("--output", default=None)
     args = parser.parse_args(argv)
     if args.command == "plan":
         result = plan_file(args.graph, args.changed, args.trigger)
@@ -98,6 +101,13 @@ def main(argv=None):
     elif args.command == "plugin-inspect":
         result = run_static_testkit(Path(args.bundle).read_bytes(),
                                     available_cfa3_apps=frozenset(args.available_app))
+    elif args.command == "selftest":
+        from .local_runner import run_cfa3_owned_reference_tests
+        result = run_cfa3_owned_reference_tests(Path(args.repo))
+        if args.output is not None:
+            output = Path(args.output)
+            with output.open("x", encoding="utf-8") as writer:
+                writer.write(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
     else:
         raise AssertionError("unreachable")
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))

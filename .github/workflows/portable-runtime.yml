@@ -179,6 +179,37 @@ jobs:
           PY
       - name: Mount and show actual runtime shell with xcb plugin
         run: xvfb-run -a python -m unittest discover -s tests -p 'test_portable_runtime_parent_app.py' -v
+      - name: Verify installed CFA3 wheel GUI in X11 without repository imports
+        run: |
+          set -euo pipefail
+          python -m pip wheel --no-deps --wheel-dir "$RUNNER_TEMP/cfa3-wheel" .
+          python -m pip install --no-deps --force-reinstall "$RUNNER_TEMP"/cfa3-wheel/*.whl
+          cd "$RUNNER_TEMP"
+          xvfb-run -a python - <<'PY'
+          from importlib.metadata import distribution
+          from PySide6.QtWidgets import QApplication
+          from cfa3_runtime.qt6_environment import inspect_runtime
+          from cfa3_runtime.control_center import CFA3RuntimeControlCenter
+          import os
+          assert os.getcwd() != os.environ["GITHUB_WORKSPACE"]
+          assert distribution("cfa3-portable-qt6-runtime").version == "0.1.0"
+          runtime = inspect_runtime()
+          assert runtime["qt_platform"] == "xcb", runtime
+          assert runtime["status"] == "APP_RUNTIME_READY", runtime
+          assert runtime["physical_gui_pass"] is False, runtime
+          app = QApplication([])
+          window = CFA3RuntimeControlCenter(workload_mode="UNKNOWN")
+          try:
+              window.show()
+              app.processEvents()
+              assert window.isVisible()
+              assert window.tabs.widget(0) is window.settings
+              assert window.settings.window() is window
+              assert "PENDING" in window.status.text()
+          finally:
+              window.close()
+          print("Installed wheel CFA3 Qt6 settings GUI observed on xcb; physical acceptance still PENDING.")
+          PY
       - name: Hosted X server cannot issue a physical GUI acceptance
         if: always()
         run: echo "Xvfb Qt6 xcb reference only; not the user's physical monitor or full CFA3 parent GUI"

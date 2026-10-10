@@ -353,6 +353,23 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-BROWSER-SOURCE-INDEXES-2026-10-02.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "391e9166a1b99c741f184edbd715d29ba4e0a610",
+      "source_proof_kind": "HISTORICAL_OWNER_EXPLICIT_BROWSER_INDEX_DELTA",
+      "original_source_records": 6,
+      "original_exact_owner_urls": 6,
+      "source_ids_present_in_new_l1_stage": 6,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_key_or_legacy_status_mismatches": 0,
+      "historical_parent_pr": 601,
+      "browser_organization_and_topic_discovery_only": true,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

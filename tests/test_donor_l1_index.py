@@ -1,9 +1,11 @@
 """L1 staged source import and index read-back tests; not publication authorization."""
+import copy
 import importlib.util
 from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("donor_l1", ROOT / "scripts/donor_l1.py")
@@ -132,6 +134,16 @@ class DonorL1IndexTests(unittest.TestCase):
         recovery = donor_l1.json_read(donor_l1.TRIPO_RECOVERY)
         self.assertEqual(recovery["original_submitted_url_occurrences"], 48)
         self.assertEqual(recovery["unique_submitted_urls"], 46)
+        self.assertEqual(recovery["historical_url_order_sha256"], donor_l1.TRIPO_URL_ORDER_SHA256)
+        self.assertEqual(recovery["historical_original_identity_set_sha256"], donor_l1.TRIPO_ORIGINAL_IDS_SHA256)
+        self.assertEqual(donor_l1.historical_digest(
+            [row["original_url"] for row in recovery["url_provenance"]]),
+            donor_l1.TRIPO_URL_ORDER_SHA256)
+        original_ids = ([entry["donor_id"] for entry in recovery["entries"]] +
+                        [entry["legacy_proposed_donor_id"] for entry in recovery["existing_identity_matches"]] +
+                        [recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]])
+        self.assertEqual(len(original_ids), 36)
+        self.assertEqual(donor_l1.historical_digest(sorted(original_ids)), donor_l1.TRIPO_ORIGINAL_IDS_SHA256)
         self.assertEqual(len(recovery["entries"]), 30)
         self.assertIsNone(recovery["original_L1_B"])
         self.assertFalse(recovery["all_owner_approvals_exhaustively_verified"])
@@ -167,6 +179,34 @@ class DonorL1IndexTests(unittest.TestCase):
                     donor_l1.lookup(dbpath, candidate["donor_id"], "id")[0]["status"],
                     "BLOCKED")
                 self.assertFalse(candidate["intake_provenance"]["canonical_approval_admitted"])
+
+    def test_tripo_immutable_historical_source_digest_fails_closed_on_tampering(self):
+        original_read = donor_l1.json_read
+        manifest = original_read(donor_l1.TRIPO_RECOVERY)
+
+        def read_with_manifest(replacement):
+            def reader(path):
+                if path == donor_l1.TRIPO_RECOVERY:
+                    return copy.deepcopy(replacement)
+                return original_read(path)
+            return reader
+
+        # Reordering complete records retains the count and URL multiset,
+        # but must fail the original 48-occurrence *ordered* evidence gate.
+        changed_urls = copy.deepcopy(manifest)
+        changed_urls["url_provenance"][0], changed_urls["url_provenance"][1] = (
+            changed_urls["url_provenance"][1], changed_urls["url_provenance"][0])
+        with mock.patch.object(donor_l1, "json_read", side_effect=read_with_manifest(changed_urls)):
+            with tempfile.TemporaryDirectory() as tmp:
+                with self.assertRaisesRegex(ValueError, "immutable historical URL sequence mismatch"):
+                    donor_l1.stage(Path(tmp) / "refuse.sqlite", "tripo-integrity-negative")
+
+        # Replacing even one proposed legacy identity must fail prior to staging.
+        changed_ids = copy.deepcopy(manifest)
+        changed_ids["entries"][0]["donor_id"] += "-UNAPPROVED-REPLACEMENT"
+        with mock.patch.object(donor_l1, "json_read", side_effect=read_with_manifest(changed_ids)):
+            with self.assertRaisesRegex(ValueError, "immutable historical donor identity set mismatch"):
+                donor_l1.frozen_sources()
 
     def test_no_modification_to_original_archive(self):
         sources = donor_l1.frozen_sources()

@@ -214,3 +214,55 @@ New exact GitHub-readback source hashes, equal to locally executed files:
 **Unchanged acceptance boundaries:** no physical Current Host PASS, no
 full Rust/Qt6 verification, no actual plugin security certification, no
 complete canonical 200-capability source reconciliation. All remain PENDING.
+
+### 2026-10-10 — plugin host bounded I/O and concurrent lifecycle regression
+
+The CFA3-owned community plugin sandbox now **never captures arbitrary plugin
+stdout/stderr into unbounded host-process memory**. Each output stream goes to
+a temporary file. The subprocess receives an RLIMIT_FSIZE of 64 KiB and the
+host reads no more than 64 KiB plus one sentinel byte per output stream;
+excessive output fails closed. Plugin entrypoint ZIP member size is checked
+against its directory metadata BEFORE inflation (1 MiB bound) and once again
+after reading, with no unsandboxed fallback.
+
+The Community Plugin Registry serializes all state/activation transitions
+under a reentrant per-registry lock, including static inspection, rights
+admission, package installation, activation, disablement, quarantine and
+removal. Specifically, an in-flight enable may not overwrite an explicitly
+applied quarantine. Simultaneous attempts to enable two versions are reduced
+to exactly one enabled version (the second is refused). Plugin internals,
+commercial applications and vendor drivers remain outside CFA3-owned QA.
+
+**Local Python 3.13.5 reference evidence:** 78 unit tests executed;
+78 PASS, 0 failures; syntax compilation PASS. The local test tree contained
+the EXACT following GitHub source/test blobs (independent git hash-object
+equality confirmed):
+
+- cfa3_current_host/plugin_sandbox.py: 92246bc56621f170d055155c8ad998bc43e61862
+- cfa3_current_host/plugin_fabric.py: 1b1a01c50bf0c1cff86cc80b38760b927831dd18
+- tests/test_current_host_sandbox_output.py: 9b8973bfda4e4b53c8f2a3035ef2a6f119180a71
+- tests/test_current_host_plugin_races.py: 93df04a5e05e646dbdef7fd1ae2f8bb3f9f83083
+- tests/test_current_host_plugin_sandbox.py: 816e8c6a41616583e420948765fa5defa50a3173
+- tests/test_current_host_plugins.py: db52162851e9394dc6cf8899a0e814ccff8675a4
+- cfa3_current_host/foundation_runtime.py: 80fc6c01195e6d2df05b6fef88f10a020a748773
+- cfa3_current_host/capability_catalog.py: 3cf2bbcf370cc592f22d4732a5d5a87b12f6d88e
+
+The local test tree additionally included the exact preexisting foundation,
+catalog, lease-expiry and sandbox-lease regression files. The command was:
+
+    python3 -m unittest discover -s tests -p 'test_current_host_*.py' -q
+
+These tests validate the selected CPU Foundation, capability and Community
+Plugin host functionality and simulated process-isolation boundary tests.
+**They are NOT a full branch test run.** The local test tree does not include
+the complete GitHub workspace; Rust, GUI, the remaining Python modules and
+genuine Linux bubblewrap isolation are still NOT_RUN. Simulated subprocess
+tests do not certify plugin isolation on a real host. No physical Current Host
+PASS is issued or inferred.
+
+**Known remaining security limit:** a plugin process already running at the
+instant of revocation still needs an admitted process-supervisor termination
+mechanism. Registry status locking is not a production process-kill service.
+The implementation remains STAGED until the full shared runtime, Qt6,
+process isolation, 200 real capability identities and physical evidence gates
+have been validated.

@@ -1,0 +1,41 @@
+{
+  "schema": "cfa3.branding.logo.v1",
+  "id": "CFA3-OFFICIAL-LOGO-001",
+  "status": "APPROVED_CANONICAL_VISUAL_IDENTITY",
+  "brand": {
+    "short_name": "CFA3",
+    "full_name": "Cinema Fund Architectura 3"
+  },
+  "approved_master": {
+    "media_type": "image/png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "515523fae79403d2e949dd4fabf87bf1cf029c6361175f6562c5601bdd204846",
+    "regeneration_is_equivalent": false
+  },
+  "repository_assets": [
+    {
+      "path": "docs/assets/branding/cfa3-logo-official-display.jpg",
+      "role": "OFFICIAL_DISPLAY_DERIVATIVE",
+      "media_type": "image/jpeg",
+      "width": 512,
+      "height": 512,
+      "sha256": "c6f290db5a287c0e08946215b949c40fbb95502c4f01ab503f9ad2ac6faab998",
+      "supersedes_master": false
+    }
+  ],
+  "mandatory_usage": {
+    "new_cfa3_main_applications": true,
+    "cfa3_gui_and_design_plans": true,
+    "startup_and_splash_branding": true,
+    "replacement_requires_explicit_owner_approval": true,
+    "application_specific_marks_may_coexist": true
+  },
+  "derivative_rules": {
+    "technical_resize_or_encoding_allowed": true,
+    "composition_change_allowed": false,
+    "wording_change_allowed": false,
+    "geometry_change_allowed": false,
+    "identity_redefinition_allowed": false
+  }
+}

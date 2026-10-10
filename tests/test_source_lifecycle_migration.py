@@ -43,12 +43,24 @@ class LifecycleMigrationTests(unittest.TestCase):
 
     def test_original_odbc_delta_urls_resolve_via_public_lifecycle_gate(self):
         aliases = delta_aliases(self.index["source_records"])
-        self.assertEqual(len(aliases), 56)
+        self.assertEqual(len(aliases), 75)
         for url, sid in aliases.items():
             result = evaluate(url, self.index)
             self.assertEqual(result["source_id"], sid)
             self.assertEqual(result["disposition"], "CHANGE_CHECK_REQUIRED")
             self.assertFalse(result["automatic_donor_registration"])
+
+    def test_mentor_evidence_urls_resolve_through_lifecycle_gate(self):
+        original_urls = {
+            "https://github.com/HKUDS/DeepTutor/blob/main/LICENSE": "FA3-DONOR-HKUDS-DEEPTUTOR-001",
+            "https://github.com/jupyterlab/jupyterlab/blob/main/LICENSE": "FA3-DONOR-JUPYTERLAB-001",
+            "https://github.com/h5p/h5p-interactive-book/blob/master/library.json": "FA3-DONOR-H5P-INTERACTIVE-BOOK-001",
+            "https://github.com/h5p/h5p-interactive-video/blob/master/package.json": "FA3-DONOR-H5P-INTERACTIVE-VIDEO-001",
+        }
+        for url, sid in original_urls.items():
+            response = evaluate(url, self.index)
+            self.assertEqual(response["source_id"], sid)
+            self.assertEqual(response["disposition"], "CHANGE_CHECK_REQUIRED")
 
     def test_all_81_registered_donors_return_their_original_83_urls_and_approval(self):
         registered = json.loads((ROOT / "canonical/registries/CFA3-DONOR-REFERENCE-REGISTRY-001.json").read_text())

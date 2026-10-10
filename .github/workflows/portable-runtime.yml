@@ -1,0 +1,93 @@
+name: CFA3 portable Qt6 runtime reference
+
+on:
+  push:
+    branches: [feat/portable-qt6-runtime-broker-20261010]
+    paths:
+      - 'cfa3_runtime/**'
+      - 'tests/test_portable_runtime*.py'
+      - '.github/workflows/portable-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cfa3-portable-runtime-reference
+  cancel-in-progress: false
+
+jobs:
+  pure-python-runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify Python syntax
+        run: python -m compileall -q cfa3_runtime tests
+      - name: Verify canonical CFA3 bootstrap guard
+        run: python scripts/check_bootstrap.py
+      - name: Test desktop-neutral runtime and fail-closed configuration
+        run: python -m unittest discover -s tests -p 'test_portable_runtime*.py' -v
+      - name: Reference-only evidence guard
+        if: always()
+        run: echo "Python diagnostics cannot issue physical Current Host or standalone GUI PASS"
+
+  qt6-offscreen-settings:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install Qt graphics loader dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libegl1 libopengl0
+      - name: Install Qt6 runtime Python bridge
+        run: python -m pip install --disable-pip-version-check "PySide6-Essentials>=6.8,<7"
+      - name: Run actual Qt6 settings widget and pref tests
+        run: python -m unittest discover -s tests -p 'test_portable_runtime*.py' -v
+      - name: Verify noninteractive Qt does not become user runtime-ready
+        run: |
+          python - <<'PY'
+          from cfa3_runtime.qt6_environment import inspect_runtime
+          from cfa3_runtime.settings_panel import Qt6RuntimeSettingsPanel
+          from PySide6.QtWidgets import QApplication, QWidget
+          report = inspect_runtime()
+          assert report["status"] == "REFERENCE_ONLY_NO_INTERACTIVE_DISPLAY", report
+          assert report["qt_platform"] == "offscreen"
+          assert not report["physical_gui_pass"]
+          assert not report["parent_integration_gui_pass"]
+          app = QApplication([])
+          parent = QWidget()
+          panel = Qt6RuntimeSettingsPanel(parent, workload_mode="UNKNOWN")
+          assert panel.parent() is parent
+          assert panel.platform_choice.count() == 3
+          assert "UNKNOWN" in panel.workload_mode_indicator.text()
+          assert "REFERENCE_ONLY" in panel.status_label.text()
+          panel.close()
+          parent.close()
+          print("Qt6 real widget reference only; no physical GUI admission.")
+          PY
+      - name: Reference-only GUI evidence guard
+        if: always()
+        run: echo "A hosted Qt6 offscreen widget is not a physical CFA3 parent GUI PASS"
+
+  rust-developer-workspace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify available Rust/Cargo developer toolchain
+        run: |
+          rustc --version
+          cargo --version
+          cargo test --workspace
+      - name: Separate developer and end-user requirements
+        run: echo "Cargo/Rust is required for building, not for running a packaged CFA3 GUI"

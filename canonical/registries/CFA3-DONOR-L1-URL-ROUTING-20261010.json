@@ -7,7 +7,7 @@
   "canonical_level_published": false,
   "original_L1_B": null,
   "source_count": 1981,
-  "alias_count": 3938,
+  "alias_count": 3943,
   "multiple_related_identity_url_count": 5,
   "preserve_related_ids": true,
   "owner_baseline_original_urls": 445,
@@ -25067,6 +25067,14 @@
       ]
     },
     {
+      "alias": "https://github.com/topics/ai-hallucination?l=javascript&o=desc&s=stars",
+      "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-AI-HALLUCINATION-001",
+      "authority": "SINGLE_DISCOVERY_REFERENCE",
+      "related_source_ids": [
+        "FA3-DONOR-GITHUB-TOPIC-AI-HALLUCINATION-001"
+      ]
+    },
+    {
       "alias": "https://github.com/topics/ai-home-decor",
       "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-AI-HOME-DECOR-001",
       "authority": "EXACT_SOURCE_LOCATOR",
@@ -26203,6 +26211,14 @@
       ]
     },
     {
+      "alias": "https://github.com/topics/hallucination-prevention?l=typescript",
+      "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-HALLUCINATION-PREVENTION-001",
+      "authority": "SINGLE_DISCOVERY_REFERENCE",
+      "related_source_ids": [
+        "FA3-DONOR-GITHUB-TOPIC-HALLUCINATION-PREVENTION-001"
+      ]
+    },
+    {
       "alias": "https://github.com/topics/hallucination-reduced-ai",
       "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-HALLUCINATION-REDUCED-AI-001",
       "authority": "EXACT_SOURCE_LOCATOR",
@@ -26216,6 +26232,14 @@
       "authority": "EXACT_SOURCE_LOCATOR",
       "related_source_ids": [
         "FA3-DONOR-GITHUB-TOPIC-HALLUCINATION-RESEARCH-001"
+      ]
+    },
+    {
+      "alias": "https://github.com/topics/hallucination?l=go&o=desc&s=updated",
+      "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-HALLUCINATION-001",
+      "authority": "SINGLE_DISCOVERY_REFERENCE",
+      "related_source_ids": [
+        "FA3-DONOR-GITHUB-TOPIC-HALLUCINATION-001"
       ]
     },
     {
@@ -26894,6 +26918,22 @@
       "alias": "https://github.com/topics/no-hallucination",
       "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-NO-HALLUCINATION-001",
       "authority": "EXACT_SOURCE_LOCATOR",
+      "related_source_ids": [
+        "FA3-DONOR-GITHUB-TOPIC-NO-HALLUCINATION-001"
+      ]
+    },
+    {
+      "alias": "https://github.com/topics/no-hallucination?l=python",
+      "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-NO-HALLUCINATION-001",
+      "authority": "SINGLE_DISCOVERY_REFERENCE",
+      "related_source_ids": [
+        "FA3-DONOR-GITHUB-TOPIC-NO-HALLUCINATION-001"
+      ]
+    },
+    {
+      "alias": "https://github.com/topics/no-hallucination?l=shell",
+      "preferred_source_id": "FA3-DONOR-GITHUB-TOPIC-NO-HALLUCINATION-001",
+      "authority": "SINGLE_DISCOVERY_REFERENCE",
       "related_source_ids": [
         "FA3-DONOR-GITHUB-TOPIC-NO-HALLUCINATION-001"
       ]
@@ -31526,5 +31566,7 @@
   "owner_message_url_occurrences": 4,
   "owner_message_new_aliases": 7,
   "historical_pr_744_745_owner_approved_sources": 2,
-  "historical_pr_745_case_insensitive_source_locator_aliases": 1
+  "historical_pr_745_case_insensitive_source_locator_aliases": 1,
+  "historical_shgaf_submitted_urls": 20,
+  "historical_shgaf_restored_exact_url_views": 5
 }

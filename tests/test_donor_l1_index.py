@@ -5,6 +5,7 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+import unittest.mock
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,7 +40,8 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["index_evidence"]["additional_unreconciled_owner_sources"], 4)
             self.assertEqual(receipt["index_evidence"]["historical_url_provenance"], "BOUNDED_445_PASS")
             self.assertEqual(receipt["index_evidence"]["historical_tripo_provenance"], "BOUNDED_48_PASS")
-            self.assertEqual(receipt["index_evidence"]["historical_tripo_pending_sources"], 30)
+            self.assertEqual(receipt["index_evidence"]["historical_tripo_pending_sources"], 0)
+            self.assertEqual(receipt["index_evidence"]["historical_tripo_owner_approved_transfer_sources"], 30)
             self.assertEqual(receipt["index_evidence"]["historical_tripo_url_occurrences"], 48)
             self.assertEqual(receipt["index_evidence"]["historical_unique_source_ids"], 443)
             sources = donor_l1.frozen_sources()
@@ -69,8 +71,9 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["approval_completeness"],"UNVERIFIED")
                 self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
                 self.assertEqual(meta["additional_owner_source_leads"],"4")
-                self.assertEqual(meta["total_pending_owner_source_candidates"],"57")
-                self.assertEqual(meta["historical_tripo_new_pending_sources"],"30")
+                self.assertEqual(meta["total_pending_owner_source_candidates"],"27")
+                self.assertEqual(meta["historical_tripo_new_pending_sources"],"0")
+                self.assertEqual(meta["historical_tripo_owner_approved_transfer_sources"],"30")
                 self.assertEqual(meta["historical_tripo_original_occurrences"],"48")
                 self.assertEqual(meta["historical_tripo_distinct_urls"],"46")
                 self.assertEqual(meta["all_owner_submissions_verified"],"FALSE")
@@ -130,7 +133,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(donor_l1.lookup(dbpath, sid, "id")[0]["status"], "BLOCKED")
                 self.assertEqual(donor_l1.lookup(dbpath, lead["source"]["locator"], "url")[0]["id"], sid)
 
-    def test_tripo_recovery_exact_occurrences_existing_ids_and_no_new_approval(self):
+    def test_tripo_recovery_exact_occurrences_with_owner_approved_transfer_unpublished(self):
         recovery = donor_l1.json_read(donor_l1.TRIPO_RECOVERY)
         self.assertEqual(recovery["original_submitted_url_occurrences"], 48)
         self.assertEqual(recovery["unique_submitted_urls"], 46)
@@ -148,6 +151,8 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertIsNone(recovery["original_L1_B"])
         self.assertFalse(recovery["all_owner_approvals_exhaustively_verified"])
         self.assertEqual(recovery["publication_gate"], "BLOCKED")
+        self.assertEqual(recovery["legacy_owner_approval_transfer"]["historical_owner_marker"], "donornak")
+        self.assertEqual(recovery["legacy_owner_approval_transfer"]["current_stage_approval_state"], "OWNER_APPROVED_PENDING_PUBLICATION")
         proposed_id = recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]
         with tempfile.TemporaryDirectory() as tmp:
             dbpath = Path(tmp) / "tripo-readback.sqlite"
@@ -168,7 +173,7 @@ class DonorL1IndexTests(unittest.TestCase):
                                             (proposed_id,)).fetchone())
                 self.assertEqual(db.execute(
                     "SELECT count(*) FROM sources WHERE source_origin=?",
-                    ("HISTORICAL_TRIPO_OWNER_APPROVAL_PENDING",)).fetchone()[0], 30)
+                    ("HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER",)).fetchone()[0], 30)
             for preserved in recovery["historical_aggregate_reconciliation"]["preserved_archive_identities"]:
                 expected = preserved["archived_donor_id"]
                 self.assertIn(expected,
@@ -177,8 +182,21 @@ class DonorL1IndexTests(unittest.TestCase):
             for candidate in recovery["entries"]:
                 self.assertEqual(
                     donor_l1.lookup(dbpath, candidate["donor_id"], "id")[0]["status"],
-                    "BLOCKED")
+                    "OWNER_APPROVED_PENDING_PUBLICATION")
                 self.assertFalse(candidate["intake_provenance"]["canonical_approval_admitted"])
+
+    def test_historical_tripo_transfer_approval_fails_closed_if_owner_marker_missing(self):
+        original_read = donor_l1.json_read
+        source = original_read(donor_l1.TRIPO_RECOVERY)
+        tampered = copy.deepcopy(source)
+        tampered["entries"][0]["submission_review"]["reported_owner_marker"] = "not-an-owner-approval"
+        def mocked(path):
+            if path == donor_l1.TRIPO_RECOVERY:
+                return tampered
+            return original_read(path)
+        with unittest.mock.patch.object(donor_l1, "json_read", side_effect=mocked):
+            with self.assertRaisesRegex(ValueError, "Historical Tripo"):
+                donor_l1.frozen_sources()
 
     def test_tripo_immutable_historical_source_digest_fails_closed_on_tampering(self):
         original_read = donor_l1.json_read

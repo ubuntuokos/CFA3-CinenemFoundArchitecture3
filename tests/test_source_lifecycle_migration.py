@@ -30,6 +30,16 @@ class LifecycleMigrationTests(unittest.TestCase):
         for route in routing["entries"]:
             self.assertEqual(resolve_migrated_url(route["alias"], exact), route["preferred_source_id"])
 
+    def test_project_locators_use_exact_historical_route_in_public_gate(self):
+        project_routes = [r for r in self.index["locator_routes"]
+                          if r["alias"].startswith("project:")]
+        self.assertTrue(project_routes, "Historical project: locators must be preserved")
+        for route in project_routes[:10]:
+            result = evaluate(route["alias"], self.index)
+            self.assertEqual(result["source_id"], route["preferred_source_id"])
+            self.assertEqual(result["disposition"], "CHANGE_CHECK_REQUIRED")
+            self.assertFalse(result["automatic_donor_registration"])
+
     def test_all_81_registered_donors_return_their_original_83_urls_and_approval(self):
         registered = json.loads((ROOT / "canonical/registries/CFA3-DONOR-REFERENCE-REGISTRY-001.json").read_text())
         for row in registered["records"]:

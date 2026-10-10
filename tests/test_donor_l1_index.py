@@ -26,7 +26,8 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertFalse(catalog["runtime_admission"])
         self.assertEqual(catalog["source_count"], 1981)
         self.assertEqual(catalog["distinct_identity_count"], 1981)
-        self.assertEqual(catalog["approval_summary"]["legacy_owner_approved_pending_publication"], 57)
+        self.assertEqual(catalog["approval_summary"]["legacy_owner_approved_pending_publication"], 59)
+        self.assertEqual(catalog["approval_summary"]["historical_pr_owner_approved_transfer_sources"], 2)
         self.assertEqual(catalog["approval_summary"]["historical_accepted_reference"], 825)
         self.assertEqual(catalog["approval_summary"]["legacy_candidate"], 963)
         self.assertEqual(catalog["approval_summary"]["legacy_analyzed"], 130)
@@ -46,6 +47,8 @@ class DonorL1IndexTests(unittest.TestCase):
                 "HISTORICAL_OWNER_APPROVED_TRANSFER",
                 "ADDITIONAL_OWNER_APPROVED_TRANSFER",
                 "HISTORICAL_TRIPO_OWNER_APPROVED_TRANSFER",
+                "HISTORICAL_PR_744_OWNER_APPROVED_TRANSFER",
+                "HISTORICAL_PR_745_OWNER_APPROVED_TRANSFER",
             }
             expected_status = ("OWNER_APPROVED_PENDING_PUBLICATION" if entry["donor_id"] == "FA3-DONOR-OPENCUT-001" else
                 entry["status"] if from_main else
@@ -56,6 +59,32 @@ class DonorL1IndexTests(unittest.TestCase):
             item = canonical[occurrence["source_id"]]
             self.assertIn(occurrence["original_url"],
                           [item["url"]] + item.get("discovery_urls", []))
+
+    def test_old_pr_744_745_explicit_donor_approvals_transfer_not_new_donors(self):
+        approved = donor_l1.historical_pr_owner_approvals()
+        self.assertEqual({r["old_pr"] for r in approved}, {744,745})
+        self.assertEqual(len({r["id"] for r in approved}),2)
+        self.assertTrue(all(r["historical_owner_marker"]=="donornak" for r in approved))
+        self.assertTrue(all(r["new_staging_status"]=="OWNER_APPROVED_PENDING_PUBLICATION"
+                            for r in approved))
+        with tempfile.TemporaryDirectory() as tmp:
+            dbpath=Path(tmp)/"historical-pr-donors.sqlite"
+            receipt=donor_l1.stage(dbpath,"historic-pr-approval")
+            self.assertEqual(receipt["state"],"STAGED_NOT_PUBLISHED")
+            self.assertIsNone(receipt["B"])
+            self.assertEqual(receipt["index_evidence"]["rows"],1981)
+            self.assertEqual(receipt["index_evidence"]["historical_pr_owner_approved_transfer_sources"],2)
+            for entry in approved:
+                matched=donor_l1.lookup(dbpath,entry["id"],"id")
+                self.assertEqual(len(matched),1)
+                self.assertEqual(matched[0]["status"],"OWNER_APPROVED_PENDING_PUBLICATION")
+                for url in [entry["url"],*entry.get("additional_exact_search_aliases",[])]:
+                    self.assertEqual(donor_l1.lookup(dbpath,url,"url")[0]["id"],entry["id"])
+                self.assertEqual(entry["new_staging_status"],matched[0]["status"])
+            with sqlite3.connect(dbpath) as db:
+                self.assertEqual(db.execute("SELECT count(*) FROM sources").fetchone()[0],1981)
+                self.assertEqual(db.execute("SELECT count(*) FROM url_resolution").fetchone()[0],3938)
+                self.assertEqual(db.execute("SELECT value FROM metadata WHERE key='publication_gate'").fetchone()[0],"PENDING")
 
     def test_five_owner_url_resolutions_preserve_all_original_identities(self):
         owner_pairs = {
@@ -98,12 +127,12 @@ class DonorL1IndexTests(unittest.TestCase):
         self.assertFalse(routing["canonical_level_published"])
         self.assertIsNone(routing["original_L1_B"])
         self.assertEqual(routing["source_count"],1981)
-        self.assertEqual(routing["alias_count"],3937)
+        self.assertEqual(routing["alias_count"],3938)
         self.assertEqual(routing["multiple_related_identity_url_count"],5)
         self.assertEqual(routing["owner_baseline_original_urls"],445)
         self.assertEqual(routing["tripo_original_url_occurrences"],48)
-        self.assertEqual(len(routing["entries"]),3937)
-        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3937)
+        self.assertEqual(len(routing["entries"]),3938)
+        self.assertEqual(len({x["alias"] for x in routing["entries"]}),3938)
         with tempfile.TemporaryDirectory() as tmp:
             dbpath=Path(tmp)/"url-routing-readback.sqlite"
             donor_l1.stage(dbpath,"url-routing-readback")
@@ -111,7 +140,7 @@ class DonorL1IndexTests(unittest.TestCase):
                 database_rows={a:(id_,authority,json.loads(ids)) for a,id_,authority,ids in db.execute(
                     "SELECT alias,preferred_source_id,authority,related_source_ids_json "
                     "FROM url_resolution ORDER BY alias")}
-            self.assertEqual(len(database_rows),3937)
+            self.assertEqual(len(database_rows),3938)
             for row in routing["entries"]:
                 self.assertEqual(database_rows[row["alias"]],
                                  (row["preferred_source_id"],row["authority"],row["related_source_ids"]))
@@ -207,7 +236,8 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["supplemental_owner_source_candidates"],"23")
                 self.assertEqual(meta["additional_owner_source_leads"],"4")
                 self.assertEqual(meta["total_pending_owner_source_candidates"],"4")
-                self.assertEqual(meta["legacy_owner_approved_pending_publication"],"57")
+                self.assertEqual(meta["legacy_owner_approved_pending_publication"],"59")
+                self.assertEqual(meta["historical_pr_744_745_owner_approved_transfer_sources"],"2")
                 self.assertEqual(meta["additional_20261007_owner_approved_source_records"],"3")
                 self.assertEqual(meta["historical_opencut_approval_overrides"],"1")
                 self.assertEqual(meta["historical_supplement_owner_approved_transfer_sources"],"19")
@@ -220,9 +250,11 @@ class DonorL1IndexTests(unittest.TestCase):
                 self.assertEqual(meta["bounded_union_link_records"],"445")
                 self.assertEqual(meta["bounded_union_distinct_donor_ids"],"443")
                 self.assertEqual(meta["bounded_union_original_url_records"],"445")
-                self.assertEqual(db.execute(
-                    "SELECT current_status FROM sources WHERE source_origin='UNMERGED_PR_744'").fetchone()[0],
-                    "BLOCKED")
+                for n in (744, 745):
+                    self.assertEqual(db.execute(
+                        "SELECT current_status FROM sources WHERE source_origin=?",
+                        (f"HISTORICAL_PR_{n}_OWNER_APPROVED_TRANSFER",)).fetchone()[0],
+                        "OWNER_APPROVED_PENDING_PUBLICATION")
 
     def test_additional_explicit_approved_links_are_preserved_but_not_auto_admitted(self):
         supplement = donor_l1.json_read(donor_l1.SUPPLEMENT)
@@ -404,7 +436,7 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertEqual(receipt["state"],"STAGED_NOT_PUBLISHED")
             self.assertIsNone(receipt["B"])
             with sqlite3.connect(dbpath) as db:
-                self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE current_status='OWNER_APPROVED_PENDING_PUBLICATION'").fetchone()[0],57)
+                self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE current_status='OWNER_APPROVED_PENDING_PUBLICATION'").fetchone()[0],59)
                 self.assertEqual(db.execute("SELECT count(*) FROM sources WHERE source_origin='HISTORICAL_OWNER_APPROVAL_RECONCILIATION_PENDING'").fetchone()[0],4)
                 self.assertEqual(dict(db.execute("SELECT key,value FROM metadata"))["publication_gate"],"PENDING")
 

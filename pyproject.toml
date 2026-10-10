@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cfa3-portable-qt6-runtime"
+version = "0.1.0"
+description = "CFA3 generic-Linux Qt6 runtime preflight and environment settings"
+requires-python = ">=3.10"
+license = {text = "Private CFA3 project code; distribution rights require owner review"}
+dependencies = []
+
+[project.optional-dependencies]
+qt6 = ["PySide6-Essentials>=6.8,<7"]
+
+[project.scripts]
+cfa3-runtime = "cfa3_runtime.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["cfa3_runtime*"]
+exclude = ["tests*", "archive*", "canonical*"]

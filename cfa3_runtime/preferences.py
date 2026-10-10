@@ -46,13 +46,15 @@ def load_preferences(*, path: Path | None = None) -> dict:
     except ValueError as exc:
         raise RuntimeConfigurationError("CONFIG_INVALID_JSON") from exc
     if (not isinstance(data, dict) or set(data) != {"schema", "qt_platform"}
-            or data["schema"] != _SCHEMA or data["qt_platform"] not in _VALID):
+            or data["schema"] != _SCHEMA
+            or not isinstance(data["qt_platform"], str)
+            or data["qt_platform"] not in _VALID):
         raise RuntimeConfigurationError("CONFIG_SCHEMA_OR_PLATFORM_INVALID")
     return data
 
 
 def save_preferences(qt_platform: str, *, path: Path | None = None) -> Path:
-    if qt_platform not in _VALID:
+    if not isinstance(qt_platform, str) or qt_platform not in _VALID:
         raise RuntimeConfigurationError("UNSUPPORTED_QT_PLATFORM_SELECTION")
     destination = Path(path) if path is not None else preference_path()
     if destination.is_symlink():
@@ -86,7 +88,9 @@ def environment_for_next_launch(
     env = dict(os.environ if environment is None else environment)
     selected = load_preferences() if preferences is None else preferences
     if (not isinstance(selected, dict) or set(selected) != {"schema", "qt_platform"}
-            or selected["schema"] != _SCHEMA or selected["qt_platform"] not in _VALID):
+            or selected["schema"] != _SCHEMA
+            or not isinstance(selected["qt_platform"], str)
+            or selected["qt_platform"] not in _VALID):
         raise RuntimeConfigurationError("CONFIG_SCHEMA_OR_PLATFORM_INVALID")
     requested = selected["qt_platform"]
     if requested == "auto":

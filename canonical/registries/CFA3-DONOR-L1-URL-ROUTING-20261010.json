@@ -7,7 +7,7 @@
   "canonical_level_published": false,
   "original_L1_B": null,
   "source_count": 1981,
-  "alias_count": 3937,
+  "alias_count": 3938,
   "multiple_related_identity_url_count": 5,
   "preserve_related_ids": true,
   "owner_baseline_original_urls": 445,
@@ -22571,6 +22571,14 @@
       ]
     },
     {
+      "alias": "https://github.com/mohamedelaassal/youtubevideogenerator",
+      "preferred_source_id": "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001",
+      "authority": "HISTORICAL_PR_OWNER_APPROVAL",
+      "related_source_ids": [
+        "FA3-DONOR-MOHAMEDELAASSAL-YOUTUBE-VIDEO-GENERATOR-001"
+      ]
+    },
+    {
       "alias": "https://github.com/monkilabs/opencastle",
       "preferred_source_id": "FA3-DONOR-GITHUB-MONKILABS-OPENCASTLE-809437B7-001",
       "authority": "HISTORICAL_OWNER_BASELINE",
@@ -31516,5 +31524,7 @@
     }
   ],
   "owner_message_url_occurrences": 4,
-  "owner_message_new_aliases": 7
+  "owner_message_new_aliases": 7,
+  "historical_pr_744_745_owner_approved_sources": 2,
+  "historical_pr_745_case_insensitive_source_locator_aliases": 1
 }

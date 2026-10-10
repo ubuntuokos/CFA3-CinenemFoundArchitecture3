@@ -84,6 +84,53 @@ class HistoricalDonorPrAuditTests(unittest.TestCase):
         self.assertEqual(total_rows, 109)
         self.assertEqual(len(observed_prs), 18)
 
+    def test_pr637_historical_topic_views_reuse_three_distinct_existing_archive_ids(self):
+        report = json.loads((REGISTRY / "CFA3-DONOR-L1-HISTORICAL-PR-OPEN-GAPS-20261010.json")
+                            .read_text(encoding="utf-8"))
+        group = next(g for g in report["groups"] if g["pr"] == 637)
+        resolution = group["historical_topic_resolution"]
+        self.assertEqual(group["type"],
+                         "SOURCE_URLS_PRESERVED_DISTINCT_ARCHIVED_TOPIC_IDENTITIES_RECONCILED")
+        self.assertEqual((len(group["rows"]), group["matched"], group["topic_view_variants"]),
+                         (15, 15, 3))
+        self.assertEqual(len({row["original_url"] for row in group["rows"]}), 15)
+        self.assertEqual(resolution["state"], "NON_ADMITTED_RECONCILIATION_REFERENCE_ONLY")
+        self.assertEqual(resolution["historical_proposed_donor_id"],
+                         "FA3-DONOR-CHARACTERAI-TOPIC-001")
+        self.assertTrue(resolution["no_new_donor"])
+        self.assertTrue(resolution["no_canonical_merge"])
+        self.assertTrue(resolution["not_an_alias_to_single_donor"])
+        self.assertEqual(resolution["original_submitted_urls_preserved"], 15)
+        expected_urls = {
+            "https://github.com/topics/characterai?o=desc&s=updated",
+            "https://github.com/topics/characterai?l=javascript&o=asc&s=forks",
+            "https://github.com/topics/characterai?l=typescript&o=asc&s=stars",
+        }
+        variants = [row for row in group["rows"] if row["proposed_donor_id"] ==
+                    "FA3-DONOR-CHARACTERAI-TOPIC-001"]
+        self.assertEqual({row["original_url"] for row in variants}, expected_urls)
+        self.assertEqual(len({row["archived_donor_id"] for row in variants}), 3)
+        self.assertEqual(len({row["archived_normalized_key"] for row in variants}), 3)
+        self.assertEqual(
+            {(row["original_url"], row["archived_donor_id"], row["archived_normalized_key"])
+             for row in variants},
+            {(row["original_url"], row["archived_donor_id"], row["archived_normalized_key"])
+             for row in resolution["preserved_archive_identities"]})
+        self.assertNotIn(resolution["historical_proposed_donor_id"], self.archive)
+        for row in group["rows"]:
+            self.assertFalse(row["automatic_merge"])
+            archived = self.archive[row["archived_donor_id"]]
+            self.assertEqual(archived["source"]["normalized_key"], row["archived_normalized_key"])
+            self.assertIn(row["original_url"],
+                          {archived["source"]["locator"]} |
+                          set(archived["source"].get("discovery_urls", [])))
+        self.assertEqual(report["summary"]["pr637_distinct_query_view_identities_reconciled"], 3)
+        self.assertEqual(report["summary"]["pr637_distinct_query_view_identities_pending_policy_resolution"], 0)
+        self.assertIsNone(report["frozen_original_L1_B"])
+        self.assertFalse(report["missing_approved_sources_zero_proven"])
+        self.assertFalse(report["unresolved_identity_conflicts_zero_proven"])
+        self.assertFalse(report["level_1_published_and_verified"])
+
     def test_one_explicit_legacy_alias_not_new_donor(self):
         rows = [r for g in self.reports[1]["groups"] for r in g["archive_identities"]
                 if r.get("legacy_donor_id_alias_only")]

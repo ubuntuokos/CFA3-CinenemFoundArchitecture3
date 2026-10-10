@@ -144,11 +144,14 @@ class DonorL1IndexTests(unittest.TestCase):
             self.assertIsNone(receipt["B"])
             with sqlite3.connect(dbpath) as db:
                 rows = list(db.execute(
-                    "SELECT occurrence_index,source_id,original_url FROM historical_link_occurrences "
-                    "ORDER BY occurrence_index"))
+                    "SELECT occurrence_index,source_id,original_url,parent_id,global_level "
+                    "FROM historical_link_occurrences ORDER BY occurrence_index"))
                 self.assertEqual(len(rows), 48)
                 self.assertEqual(len({row[2] for row in rows}), 46)
                 self.assertEqual([row[0] for row in rows], list(range(1, 49)))
+                self.assertTrue(all(row[3] is None and row[4] == 1 for row in rows))
+                self.assertEqual(db.execute(
+                    "SELECT count(*) FROM relations").fetchone()[0], 0)
                 self.assertFalse(db.execute("SELECT 1 FROM sources WHERE source_id=?",
                                             (proposed_id,)).fetchone())
                 self.assertEqual(db.execute(

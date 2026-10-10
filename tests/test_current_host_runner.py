@@ -36,6 +36,9 @@ class RunnerBoundaryTests(unittest.TestCase):
                 if args[:3] == ["git", "rev-parse", "HEAD"]:
                     return {"result": "REFERENCE_PASS", "returncode": 0,
                             "transcript_tail": "a" * 40}
+                if args[:2] == ["git", "status"]:
+                    return {"result": "REFERENCE_PASS", "returncode": 0,
+                            "transcript_tail": ""}
                 return {"result": "REFERENCE_PASS", "returncode": 0,
                         "transcript_tail": "Ran reference tests"}
             with patch("cfa3_current_host.local_runner._run", side_effect=fake_run), \
@@ -48,8 +51,12 @@ class RunnerBoundaryTests(unittest.TestCase):
             self.assertEqual(result["source_revision"], "a" * 40)
             self.assertFalse(result["environment"]["manufacturer_drivers_qualified"])
             self.assertFalse(result["environment"]["commercial_software_qualified"])
-            self.assertEqual(len(commands), 2)
-            self.assertEqual(commands[1][-1], "-v")
+            self.assertEqual(len(commands), 3)
+            self.assertEqual(commands[1][:2], ("git", "status"))
+            self.assertEqual(commands[2][-1], "-v")
+            self.assertTrue(result["source_checkout_clean"])
+            self.assertEqual(result["source_integrity_admission"],
+                             "REFERENCE_CLEAN_CHECKOUT")
 
     def test_reference_failure_not_converted_into_pass(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -63,7 +70,33 @@ class RunnerBoundaryTests(unittest.TestCase):
                  patch("cfa3_current_host.local_runner.shutil.which", return_value=None):
                 result = run_cfa3_owned_reference_tests(root)
             self.assertEqual(result["python_tests"]["result"], "REFERENCE_FAIL")
-            self.assertEqual(result["source_revision"], "UNVERIFIED_CHECKOUT")
+            self.assertEqual(result["source_revision"], "UNVERIFIED_DIRTY_OR_UNAVAILABLE_CHECKOUT")
+            self.assertFalse(result["source_checkout_clean"])
+            self.assertFalse(result["physical_current_host_pass"])
+
+    def test_dirty_worktree_cannot_claim_checked_out_commit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.make_checkout(root)
+
+            def fake_run(args, cwd, timeout):
+                if args[:3] == ["git", "rev-parse", "HEAD"]:
+                    return {"result": "REFERENCE_PASS", "returncode": 0,
+                            "transcript_tail": "a" * 40}
+                if args[:2] == ["git", "status"]:
+                    return {"result": "REFERENCE_PASS", "returncode": 0,
+                            "transcript_tail": "?? tests/extra-untracked.py"}
+                return {"result": "REFERENCE_PASS", "returncode": 0,
+                        "transcript_tail": "Ran reference tests"}
+
+            with patch("cfa3_current_host.local_runner._run", side_effect=fake_run), \
+                 patch("cfa3_current_host.local_runner.shutil.which", return_value=None):
+                result = run_cfa3_owned_reference_tests(root)
+            self.assertEqual(result["source_revision"],
+                             "UNVERIFIED_DIRTY_OR_UNAVAILABLE_CHECKOUT")
+            self.assertFalse(result["source_checkout_clean"])
+            self.assertEqual(result["source_integrity_admission"],
+                             "NOT_ADMITTED_SOURCE_PROVENANCE")
             self.assertFalse(result["physical_current_host_pass"])
 
     def test_timeout_is_not_a_pass(self):

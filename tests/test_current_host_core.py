@@ -49,7 +49,8 @@ class CurrentHostPlanningTests(unittest.TestCase):
     def test_no_unrelated_connections_are_inferred(self):
         plan = self.g.plan(["plugin-host"])
         self.assertEqual(plan.affected, ("plugin-host",))
-        self.assertEqual(sum(x.test == TestKind.HANDOFF for x in plan.obligations), 0)
+        self.assertEqual({x.handoff_id for x in plan.obligations if x.test == TestKind.HANDOFF},
+                         {"video-plugin-host"})
 
     def test_external_driver_software_and_plugin_product_are_not_tested(self):
         for item in ("external-driver", "vendor-app", "community-plugin"):
@@ -62,7 +63,7 @@ class CurrentHostPlanningTests(unittest.TestCase):
     def test_cfa3_owned_plugin_host_must_be_tested(self):
         plan = self.g.plan(["plugin-host"])
         self.assertEqual({x.test for x in plan.obligations},
-                         {TestKind.POSITIVE, TestKind.NEGATIVE, TestKind.ROLLBACK})
+                         {TestKind.POSITIVE, TestKind.NEGATIVE, TestKind.ROLLBACK, TestKind.HANDOFF})
 
     def test_gui_standalone_and_actual_parent_are_both_required(self):
         tests = {x.test for x in self.g.plan(["video"]).obligations if x.component_id == "video"}
@@ -93,7 +94,7 @@ class CurrentHostPlanningTests(unittest.TestCase):
     def test_local_cases_require_positive_negative_and_rollback(self):
         plan = self.g.plan(["audio"])
         self.assertEqual({x.test for x in plan.obligations},
-                         {TestKind.POSITIVE, TestKind.NEGATIVE, TestKind.ROLLBACK})
+                         {TestKind.POSITIVE, TestKind.NEGATIVE, TestKind.ROLLBACK, TestKind.HANDOFF})
 
     def test_stale_revision_or_unknown_target_fail_closed(self):
         with self.assertRaises(ContractError):
@@ -102,6 +103,21 @@ class CurrentHostPlanningTests(unittest.TestCase):
             self.g.plan(["nonexistent"])
         with self.assertRaises(ContractError):
             self.g.register_handoff(handoff("unknown", "3d", "missing"))
+
+    def test_inbound_handoff_is_tested_without_retesting_upstream_component(self):
+        plan = self.g.plan(["video"])
+        self.assertNotIn("3d", plan.affected)
+        self.assertIn("render-video", {x.handoff_id for x in plan.obligations
+                                        if x.test == TestKind.HANDOFF})
+
+    def test_vendor_product_is_not_certified_but_cfa3_connector_is(self):
+        self.g.register_handoff(handoff("external-to-host", "external-driver", "plugin-host"))
+        plan = self.g.plan(["plugin-host"])
+        self.assertEqual(plan.affected, ("plugin-host",))
+        self.assertIn("external-to-host",
+                      {x.handoff_id for x in plan.obligations if x.test == TestKind.HANDOFF})
+        self.assertNotIn("external-driver", plan.affected)
+        self.assertEqual(self.g.plan(["external-driver"]).mode, Mode.NONE)
 
     def test_duplicate_component_or_handoff_rejected(self):
         with self.assertRaises(ContractError):

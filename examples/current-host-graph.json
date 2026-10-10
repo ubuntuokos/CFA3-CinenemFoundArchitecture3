@@ -1,0 +1,104 @@
+{
+  "components": [
+    {
+      "component_id": "foundation",
+      "layer": "FOUNDATION",
+      "revision": "prototype-r1",
+      "ownership": "CFA3_COMPONENT",
+      "capability_ids": [
+        "cfa3.foundation.runtime"
+      ],
+      "gui": false
+    },
+    {
+      "component_id": "3d-render",
+      "layer": "3D",
+      "revision": "prototype-r1",
+      "ownership": "CFA3_COMPONENT",
+      "capability_ids": [
+        "cfa3.render.export"
+      ],
+      "gui": false
+    },
+    {
+      "component_id": "video-editor",
+      "layer": "VIDEO",
+      "revision": "prototype-r1",
+      "ownership": "CFA3_COMPONENT",
+      "capability_ids": [
+        "cfa3.video.import"
+      ],
+      "gui": true,
+      "parent_id": "foundation"
+    },
+    {
+      "component_id": "audio-editor",
+      "layer": "AUDIO",
+      "revision": "prototype-r1",
+      "ownership": "CFA3_COMPONENT",
+      "capability_ids": [
+        "cfa3.audio.separate"
+      ],
+      "gui": true,
+      "parent_id": "foundation"
+    },
+    {
+      "component_id": "plugin-host-video",
+      "layer": "VIDEO",
+      "revision": "prototype-r1",
+      "ownership": "CFA3_PLUGIN_HOST",
+      "capability_ids": [
+        "cfa3.plugin.host"
+      ],
+      "gui": false
+    },
+    {
+      "component_id": "vendor-driver",
+      "layer": "EXTERNAL",
+      "revision": "vendor-declared",
+      "ownership": "VENDOR_DRIVER",
+      "capability_ids": [],
+      "gui": false
+    },
+    {
+      "component_id": "vendor-commercial-app",
+      "layer": "EXTERNAL",
+      "revision": "vendor-declared",
+      "ownership": "COMMERCIAL_SOFTWARE",
+      "capability_ids": [],
+      "gui": false
+    }
+  ],
+  "handoffs": [
+    {
+      "handoff_id": "render-to-video",
+      "producer_id": "3d-render",
+      "consumer_id": "video-editor",
+      "artifact_kind": "video/frames",
+      "source_revision": "prototype-r1",
+      "processing_owner": "video-editor",
+      "acceptance_ref": "handoff:video-accept",
+      "rollback_ref": "handoff:3d-rollback"
+    },
+    {
+      "handoff_id": "separate-audio",
+      "producer_id": "video-editor",
+      "consumer_id": "audio-editor",
+      "artifact_kind": "audio/stems",
+      "source_revision": "prototype-r1",
+      "processing_owner": "audio-editor",
+      "acceptance_ref": "handoff:audio-accept",
+      "rollback_ref": "handoff:video-restore"
+    },
+    {
+      "handoff_id": "plugin-connect-video",
+      "producer_id": "video-editor",
+      "consumer_id": "plugin-host-video",
+      "artifact_kind": "application/plugin-host",
+      "source_revision": "prototype-r1",
+      "processing_owner": "plugin-host-video",
+      "acceptance_ref": "handoff:plugin-accept",
+      "rollback_ref": "handoff:plugin-detach"
+    }
+  ]
+}

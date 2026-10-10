@@ -80,6 +80,8 @@ def main(argv=None):
     t = commands.add_parser("selftest", help="run CFA3-only reference tests, never issue physical PASS")
     t.add_argument("--repo", default=".")
     t.add_argument("--output", default=None)
+    cc = commands.add_parser("catalog-check", help="check 200 CFA3 capabilities without physical PASS")
+    cc.add_argument("--catalog", required=True)
     args = parser.parse_args(argv)
     if args.command == "plan":
         result = plan_file(args.graph, args.changed, args.trigger)
@@ -101,6 +103,9 @@ def main(argv=None):
     elif args.command == "plugin-inspect":
         result = run_static_testkit(Path(args.bundle).read_bytes(),
                                     available_cfa3_apps=frozenset(args.available_app))
+    elif args.command == "catalog-check":
+        from .capability_catalog import load_capability_catalog
+        result = load_capability_catalog(Path(args.catalog)).reconciliation()
     elif args.command == "selftest":
         from .local_runner import run_cfa3_owned_reference_tests
         result = run_cfa3_owned_reference_tests(Path(args.repo))

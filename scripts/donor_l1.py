@@ -22,6 +22,7 @@ ADDITIONAL_LEADS = ROOT / "canonical/registries/CFA3-DONOR-L1-ADDITIONAL-UNRECON
 TRIPO_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-TRIPO-UNITY-DCC-POSE-RECOVERY-20261010.json"
 SHGAF_SOURCE = ARCH / "CFA3-DONOR-SHGAF-HALLUCINATION-ASSURANCE-2026-10-06.json"
 CAST_SOURCE = ARCH / "FA3-DONOR-CAST-CHROMECAST-ORCHESTRATOR-2026-09-29.json"
+MEDIA_SOURCE = ARCH / "FA3-DONOR-MEDIA-INTAKE-2026-09-29.json"
 OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
 PR_OWNER_TRANSFER = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
@@ -470,6 +471,47 @@ def register_cast_original_urls(db):
     return len(bindings)
 
 
+
+def register_media_intake_original_urls(db):
+    """Preserve exact media-intake URLs; reuse existing overlapped DeepFilterNet identity."""
+    if sha_blob(MEDIA_SOURCE.read_bytes()) != "8a5c8c2dd2f5429f9d11f2ffd35388bb2b346d17":
+        raise ValueError("Media-intake historical source evidence changed")
+    delta = json_read(MEDIA_SOURCE)
+    if (delta.get("delta_id") != "FA3-DONOR-MEDIA-INTAKE-2026-09-29"
+            or delta.get("source_count") != 58
+            or len(delta.get("sources", [])) != 58):
+        raise ValueError("Media-intake source schema or count mismatch")
+    seen_urls, seen_keys = set(), set()
+    for record in delta["sources"]:
+        original_url = record["url"]
+        key = record["normalized_source_key"]
+        if original_url in seen_urls or key in seen_keys:
+            raise ValueError("Media-intake URL or normalized key repeated")
+        seen_urls.add(original_url)
+        seen_keys.add(key)
+        match = db.execute(
+            "SELECT source_id,historical_status,current_status FROM sources "
+            "WHERE normalized_key=?", (key,)).fetchone()
+        if (match is None or match[1:] != ("CANDIDATE", "CANDIDATE")
+                or record["lifecycle_status"] != "CANDIDATE"
+                or record["source_copy_allowed"] is not False):
+            raise ValueError("Media-intake candidate identity or status mismatch: " + key)
+        sid = match[0]
+        if key == "github:rikorose/deepfilternet":
+            if (sid != "FA3-DONOR-PROD-QUALITY-RIKOROSE-DEEPFILTERNET-001"
+                    or record["overlap_pending_pr"] != 528):
+                raise ValueError("DeepFilterNet overlap identity or PR lineage mismatch")
+        prior = {x[0] for x in db.execute(
+            "SELECT source_id FROM aliases WHERE alias=?", (original_url,))}
+        if prior and prior != {sid}:
+            raise ValueError("Media-intake original URL aliases a different donor: " + original_url)
+        db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (original_url, sid))
+        db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
+                   (sid, original_url, "HISTORICAL_MEDIA_INTAKE_20260929",
+                    "HISTORICAL_SOURCE_DELTA"))
+    return len(seen_urls)
+
+
 def build_url_resolution(db):
     """Deterministic exact-URL lookup; never collapse multiple historical IDs.
 
@@ -605,6 +647,7 @@ def prepare(db, sources, run_id):
     register_historical_pr_owner_urls(db)
     register_shgaf_original_urls(db)
     register_cast_original_urls(db)
+    register_media_intake_original_urls(db)
     build_url_resolution(db)
     db.executemany("INSERT INTO metadata VALUES(?,?)",(
         ("schema","cfa3.donor-l1-index.v1"),
@@ -627,6 +670,7 @@ def prepare(db, sources, run_id):
         ("historical_tripo_original_occurrences","48"),
         ("historical_shgaf_submitted_urls","20"),
         ("historical_cast_submitted_url_views","9"),
+        ("historical_media_intake_original_urls","58"),
         ("historical_tripo_distinct_urls","46"),
         ("all_owner_submissions_verified","FALSE"),
         ("level","L1"),

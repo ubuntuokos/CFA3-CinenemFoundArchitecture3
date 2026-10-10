@@ -621,6 +621,33 @@
       "new_donor_duplicates_created": 0,
       "canonical_l1_published": false,
       "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+    },
+    {
+      "source_path": "canonical/deltas/FA3-DONOR-MEDIA-INTAKE-2026-09-29.json",
+      "archive_path": "archive/donor-source-migration/2026-10-09/FA3-DONOR-MEDIA-INTAKE-2026-09-29.json",
+      "old_main_sha": "a9c724da62bf49f3353c694990fc51443e634b4a",
+      "source_blob_sha": "8a5c8c2dd2f5429f9d11f2ffd35388bb2b346d17",
+      "old_blob_new_archive_exact_match": true,
+      "source_proof_kind": "HISTORICAL_MEDIA_INTAKE_58_ORIGINAL_URL_REPLAY_WITH_PRIOR_PR_528_OVERLAP",
+      "original_source_records": 58,
+      "original_exact_submitted_urls": 58,
+      "matched_existing_normalized_source_keys": 58,
+      "source_ids_present_in_new_l1_stage": 58,
+      "original_urls_in_direct_routing_after_repair": 58,
+      "previously_missing_lowercase_deepfilternet_url": "https://github.com/rikorose/deepfilternet",
+      "restored_original_url_views": 1,
+      "overlap_pr": 528,
+      "overlap_existing_source_id": "FA3-DONOR-PROD-QUALITY-RIKOROSE-DEEPFILTERNET-001",
+      "no_second_deepfilternet_donor_created": true,
+      "source_lifecycle_status": "CANDIDATE",
+      "license_unreviewed_not_code_permission": true,
+      "media_download_and_disc_references_do_not_authorize_drm_or_copyright_circumvention": true,
+      "missing_source_ids": 0,
+      "missing_original_urls": 0,
+      "source_identity_or_legacy_status_mismatches": 0,
+      "new_donor_duplicates_created": 0,
+      "canonical_l1_published": false,
+      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
     }
   ]
 }

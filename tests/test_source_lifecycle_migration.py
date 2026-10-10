@@ -43,7 +43,7 @@ class LifecycleMigrationTests(unittest.TestCase):
 
     def test_original_odbc_delta_urls_resolve_via_public_lifecycle_gate(self):
         aliases = delta_aliases(self.index["source_records"])
-        self.assertEqual(len(aliases), 75)
+        self.assertEqual(len(aliases), 574)
         for url, sid in aliases.items():
             result = evaluate(url, self.index)
             self.assertEqual(result["source_id"], sid)
@@ -61,6 +61,33 @@ class LifecycleMigrationTests(unittest.TestCase):
             response = evaluate(url, self.index)
             self.assertEqual(response["source_id"], sid)
             self.assertEqual(response["disposition"], "CHANGE_CHECK_REQUIRED")
+
+    def test_original_owner_union_raw_urls_are_searchable(self):
+        from donor_delta_routes import archived_baseline_union
+        rows = archived_baseline_union()["source_coverage"]
+        self.assertEqual(len(rows), 445)
+        indexed = validate_index(self.index)
+        for row in rows:
+            for url in (row["canonical_locator"], *row["original_locators"],
+                        row["canonical_locator_in_registry"]):
+                self.assertEqual(indexed[url], row["resolved_donor_id"])
+        # Original URL variants that were not in the initial transfer snapshot
+        # must also resolve through the public lifecycle entry point.
+        missing_variants = (
+            "https://humanaigc.github.io/animate-anyone",
+            "https://humanaigc.github.io/wan-animate",
+            "https://nilooy.github.io/character-animation-combiner",
+            "https://research.nvidia.com/labs/sil/projects/kimodo",
+            "http://www.misfitcode.com/misfitmodel3d",
+            "https://alternativeto.net/software/octane-render?p=1",
+            "https://haiminluo.github.io/hairgpt",
+            "https://chufengxiao.github.io/SketchHairSalon",
+            "https://devblogs.microsoft.com/directx/directx-heart-linux",
+        )
+        for url in missing_variants:
+            answer = evaluate(url, self.index)
+            self.assertEqual(answer["source_id"], indexed[url])
+            self.assertEqual(answer["disposition"], "CHANGE_CHECK_REQUIRED")
 
     def test_all_81_registered_donors_return_their_original_83_urls_and_approval(self):
         registered = json.loads((ROOT / "canonical/registries/CFA3-DONOR-REFERENCE-REGISTRY-001.json").read_text())

@@ -12,6 +12,8 @@ ARCHIVE = ROOT / "archive/donor-source-migration/2026-10-09/FA3-DONOR-ODBC-SQL-V
 EXPECTED_BLOB = "47c51315ab68339a85a3b720674f5e9734c0dc38"
 MENTOR_ARCHIVE = ROOT / "archive/donor-source-migration/2026-10-09/FA3-DONOR-MENTOR-ENHANCEMENT-DELTA-001.json"
 MENTOR_BLOB = "6d9cc999b671297c9f1b009b0d429ee612916140"
+UNION_ARCHIVE = ROOT / "archive/donor-source-migration/2026-10-09/CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
+UNION_BLOB = "d22dce8bfe3d9697a1121033ff7b387d051a638a"
 
 
 @lru_cache(maxsize=1)
@@ -40,6 +42,19 @@ def archived_mentor_delta():
             or len(doc.get("records", [])) != 15):
         raise ValueError("Invalid Mentor donor delta")
     return doc
+
+
+@lru_cache(maxsize=1)
+def archived_baseline_union():
+    raw = UNION_ARCHIVE.read_bytes()
+    sha = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+    if sha != UNION_BLOB:
+        raise ValueError("Historical owner baseline union blob changed")
+    data = json.loads(raw)
+    if (len(data.get("source_coverage", [])) != 445
+            or data.get("normalized_union_count") != 445):
+        raise ValueError("Owner baseline historical source coverage invalid")
+    return data
 
 
 def delta_aliases(records):
@@ -84,4 +99,17 @@ def delta_aliases(records):
             aliases[url] = sid
     if len(aliases) != 75:
         raise ValueError("Historical donor delta URL coverage incomplete")
+    for row in archived_baseline_union()["source_coverage"]:
+        sid = row["resolved_donor_id"]
+        if sid not in by_id:
+            raise ValueError("Historical owner-approved baseline donor identity is missing")
+        for url in (row["canonical_locator"], *row["original_locators"],
+                    row["canonical_locator_in_registry"]):
+            if not isinstance(url, str) or not url.startswith(("https://", "http://")):
+                raise ValueError("Historical owner-approved baseline URL invalid")
+            if url in aliases and aliases[url] != sid:
+                raise ValueError("Historical owner-approved baseline URL identity conflict")
+            aliases[url] = sid
+    if len(aliases) != 574:
+        raise ValueError("Historical original URL coverage incomplete")
     return aliases

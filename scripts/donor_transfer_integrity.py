@@ -1,6 +1,9 @@
 """Validated, read-only donor history inputs shared by lookup and lifecycle."""
 from functools import lru_cache
 from copy import deepcopy
+from collections import Counter
+from collections.abc import Mapping
+from types import MappingProxyType
 import hashlib
 import json
 import marshal
@@ -12,6 +15,7 @@ REG = Path(__file__).resolve().parents[1] / "canonical/registries"
 REJECTION_ARCHIVE = (Path(__file__).resolve().parents[1] /
     "archive/donor-source-migration/2026-10-09/FA3-DONOR-REJECTION-AUDIT-001.json")
 REJECTION_ARCHIVE_BLOB = "1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8"
+TRANSFER_SNAPSHOT_BLOB = "c863fe31d2c300bf15c9996432f86a70f9a18d74"
 
 
 def verified_rejection_audit():
@@ -38,12 +42,34 @@ def file_signature(path):
     return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
 
 
+def _freeze(value):
+    """Freeze the cached evidence recursively; do not expose mutable history."""
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze(child) for key, child in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(child) for child in value)
+    return value
+
+
+def _detach(value):
+    """Detach only caller-visible results from the internal immutable cache."""
+    if isinstance(value, Mapping):
+        return {key: _detach(child) for key, child in value.items()}
+    if isinstance(value, tuple):
+        return [_detach(child) for child in value]
+    return value
+
+
 @lru_cache(maxsize=4)
 def _read_snapshot(path, signature):
     raw = path.read_bytes()
+    git_blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+    if git_blob != TRANSFER_SNAPSHOT_BLOB:
+        raise ValueError("Preserved transfer snapshot Git blob changed")
     data = json.loads(raw)
     validate_snapshot(data)
-    return data, hashlib.sha256(raw).hexdigest()
+    return _freeze(data), hashlib.sha256(raw).hexdigest()
 
 
 def validate_snapshot(data):
@@ -64,13 +90,34 @@ def validate_snapshot(data):
 @lru_cache(maxsize=2)
 def _validate_snapshot_payload(payload, expected_audit_digest):
     data = marshal.loads(payload)
-    if (data.get("schema") != "cfa3.donor-transfer-snapshot.v1"
+    if (not isinstance(data, dict)
+            or data.get("schema") != "cfa3.donor-transfer-snapshot.v1"
+            or data.get("id") != "CFA3-DONOR-TRANSFER-SNAPSHOT-001"
+            or data.get("scope") != "FROZEN_OLD_MAIN_AND_PREVIOUSLY_RECOVERED_SOURCES"
+            or data.get("source_repository") != "ubuntuokos/Final-Architecture-v3.0"
+            or data.get("source_commit") != "a9c724da62bf49f3353c694990fc51443e634b4a"
+            or data.get("source_registry_blob") != "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b"
+            or data.get("rejection_audit_blob") != REJECTION_ARCHIVE_BLOB
+            or data.get("snapshot_transfer_complete") is not True
+            or data.get("global_l1_completed") is not False
+            or data.get("all_historical_submissions_complete") is not False
+            or data.get("legacy_main_records") != 1919
+            or data.get("additional_recovered_records") != 62
+            or data.get("record_count") != 1981
+            or data.get("missing_legacy_main_ids") != []
+            or data.get("remaining_scope") !=
+                "Original conversation-only inputs, final L1 classification and L2-L5 discovery are not certified by this repository transfer."
             or data.get("runtime_admission") is not False
             or data.get("code_or_license_admission") is not False):
-        raise ValueError("Historical source snapshot schema or authority is invalid")
+        raise ValueError("Historical source snapshot identity, completion claim or authority is invalid")
     records = data["records"]
     if data["record_count"] != len(records) or digest(records) != data["record_set_sha256"]:
         raise ValueError("Historical record set digest or count mismatch")
+    if (data.get("reference_state_counts") !=
+            dict(sorted(Counter(row["reference_state"] for row in records).items()))
+            or len(data.get("unadmitted_historical_proposals", [])) != 17
+            or len(data.get("unapplied_historical_rekeys", [])) != 3):
+        raise ValueError("Historical source counts or unresolved proposal evidence altered")
     ids = {}
     for position, row in enumerate(records):
         sid = row["source_id"]
@@ -126,20 +173,24 @@ def _validate_snapshot_payload(payload, expected_audit_digest):
         rejected_locators.update(locators_for_rejected)
 
 
-def verified_snapshot():
-    """Return an isolated snapshot; never expose the mutable cached object."""
+def _trusted_snapshot():
+    """Internal, deeply immutable evidence; archive is checked even on cache hits."""
     path = REG / TRANSFER_NAME
     cached, sha = _read_snapshot(path, file_signature(path))
-    # The rejected-history archive is a separate pinned evidence input;
-    # fail closed if it changes even if the file cache is warm.
     verified_rejection_audit()
-    return deepcopy(cached), sha
+    return cached, sha
+
+
+def verified_snapshot():
+    """Public callers receive an isolated, mutable copy, never cached evidence."""
+    cached, sha = _trusted_snapshot()
+    return _detach(cached), sha
 
 
 def confirmation_evidence():
     """Validate each current binding against the actual immutable history."""
     approvals = current_owner_confirmations()
-    data, _ = verified_snapshot()
+    data, _ = _trusted_snapshot()
     pending = {
         row["source_id"]: row for row in data["records"]
         if row["pre_transfer_status"] == "OWNER_APPROVED_PENDING_PUBLICATION"
@@ -202,9 +253,9 @@ def _expected_lifecycle_projection(reg, signatures):
     raw = {name: (reg / name).read_bytes() for name in PROJECTION_INPUTS}
     staged, routing, approvals, registered, transfer, confirmation = (
         json.loads(raw[name]) for name in PROJECTION_INPUTS)
-    validated, transfer_sha = verified_snapshot()
+    _, transfer_sha = _trusted_snapshot()
     confirmations, confirmation_sha = confirmation_evidence()
-    if (transfer != validated or hashlib.sha256(raw[TRANSFER_NAME]).hexdigest() != transfer_sha
+    if (hashlib.sha256(raw[TRANSFER_NAME]).hexdigest() != transfer_sha
             or hashlib.sha256(raw[CONFIRMATION_NAME]).hexdigest() != confirmation_sha):
         raise ValueError("Donor evidence changed during projection read")
     rows = {row["source_id"]: row for row in transfer["records"]}

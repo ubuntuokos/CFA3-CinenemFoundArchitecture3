@@ -299,5 +299,51 @@ class DonorLookupIntegrityTests(unittest.TestCase):
                          "BLOCKED_INDEX_CONFLICT")
 
 
+    def test_completion_and_transfer_identity_claims_fail_closed(self):
+        sid = self.snapshot["records"][0]["source_id"]
+        forged = {
+            "global_l1_completed": True,
+            "all_historical_submissions_complete": True,
+            "snapshot_transfer_complete": False,
+            "id": "forged-transfer-id",
+            "source_commit": "0" * 40,
+            "rejection_audit_blob": "0" * 40,
+            "legacy_main_records": 1981,
+            "missing_legacy_main_ids": ["missing"],
+        }
+        for field, value in forged.items():
+            with self.subTest(field=field):
+                bad = copy.deepcopy(self.snapshot)
+                bad[field] = value
+                with self.assertRaisesRegex(ValueError, "snapshot identity"):
+                    lookup_snapshot(bad, donor_id=sid)
+                with self.assertRaisesRegex(ValueError, "snapshot identity"):
+                    ValidatedSnapshot(bad)
+
+    def test_internal_verified_snapshot_is_deeply_immutable(self):
+        trusted, sha = integrity._trusted_snapshot()
+        self.assertEqual(sha, hashlib.sha256(transfer_donors.OUTPUT.read_bytes()).hexdigest())
+        with self.assertRaises(TypeError):
+            trusted["global_l1_completed"] = True
+        with self.assertRaises(TypeError):
+            trusted["rejection_audit"]["entries"][0]["donor"]["source"]["locator"] = "project:forged"
+        with self.assertRaises(AttributeError):
+            trusted["records"].append({"source_id": "forged"})
+        self.assertEqual(evaluate("project:donutbrowser", self.index)["disposition"],
+                         "BLOCKED_REJECTED_SOURCE")
+
+    def test_lifecycle_batch_does_not_deepcopy_full_transfer_or_projection(self):
+        url = "https://github.com/ExistentialAudio/BlackHole"
+        self.assertEqual(evaluate(url, self.index)["disposition"], "CHANGE_CHECK_REQUIRED")
+        # Internal consumers must avoid public defensive-copy accessors on every hit.
+        with patch("source_lifecycle.verified_snapshot",
+                   side_effect=AssertionError("full snapshot copy on lifecycle hit")), \\
+             patch.object(integrity, "expected_lifecycle_projection",
+                          side_effect=AssertionError("full projection copy on lifecycle hit")), \\
+             patch.object(integrity, "deepcopy",
+                          side_effect=AssertionError("full evidence copy on lifecycle hit")):
+            for _ in range(12):
+                self.assertEqual(evaluate(url, self.index)["disposition"], "CHANGE_CHECK_REQUIRED")
+
 if __name__ == "__main__":
     unittest.main()

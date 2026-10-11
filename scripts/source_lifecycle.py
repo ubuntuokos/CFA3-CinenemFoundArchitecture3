@@ -9,8 +9,9 @@ import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from donor_delta_routes import delta_aliases
-from donor_transfer_integrity import (verified_snapshot, confirmation_evidence,
-                                      TRANSFER_NAME, CONFIRMATION_NAME, expected_lifecycle_projection)
+import donor_transfer_integrity as integrity
+from donor_transfer_integrity import (verified_snapshot, _trusted_snapshot, _detach,
+                                      confirmation_evidence, TRANSFER_NAME, CONFIRMATION_NAME)
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_INDEX = ROOT / "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json"
@@ -84,14 +85,18 @@ def validate_migrated_index(index):
     records, routes = index.get("source_records"), index.get("locator_routes")
     if not isinstance(records, list) or not isinstance(routes, list):
         raise ValueError("Missing migrated records or routes")
-    transfer, transfer_sha = verified_snapshot()
+    transfer, transfer_sha = _trusted_snapshot()
     confirmations, confirmation_sha = confirmation_evidence()
     inputs = index.get("input_sha256", {})
     if inputs.get(TRANSFER_NAME) != transfer_sha:
         raise ValueError("Lifecycle transfer-file digest mismatch")
     if inputs.get(CONFIRMATION_NAME) != confirmation_sha:
         raise ValueError("Lifecycle owner-confirmation digest mismatch")
-    expected = expected_lifecycle_projection()
+    # Internal validation uses the cached projection without cloning all records.
+    # The public projection API remains defensively detached.
+    signatures = tuple(integrity.file_signature(integrity.REG / name)
+                       for name in integrity.PROJECTION_INPUTS)
+    expected = integrity._expected_lifecycle_projection(integrity.REG, signatures)
     for field in ("input_sha256", "source_records", "locator_routes"):
         if index.get(field) != expected[field]:
             raise ValueError("Lifecycle projection differs from authenticated inputs: " + field)
@@ -111,7 +116,7 @@ def validate_migrated_index(index):
         archived = history.get(sid)
         if (archived is None or decision["revision"] != archived["historical_record_sha256"]
                 or record.get("reference_state") != archived["reference_state"]
-                or decision.get("canonical_reference_registration") != archived["reference_record"]):
+                or decision.get("canonical_reference_registration") != _detach(archived["reference_record"])):
             raise ValueError("Lifecycle decision differs from preserved donor history")
         if sid in confirmations and decision.get("owner_approval") != confirmations[sid]:
             raise ValueError("Lifecycle decision lacks current owner confirmation")
@@ -161,7 +166,7 @@ def transferred_snapshot():
 
 def historical_rejections():
     """Exact rejected identities remain blocked but searchable as decisions."""
-    transfer = transferred_snapshot()
+    transfer, _ = _trusted_snapshot()
     routes = {}
     for history in transfer["rejection_audit"]["entries"]:
         item = history["donor"]
@@ -173,7 +178,7 @@ def historical_rejections():
             "prior_decision": {
                 "decision_id": "preserved-rejection:" + sid,
                 "outcome": "REJECTED",
-                "historical_rejection": history,
+                "historical_rejection": _detach(history),
             },
             "runtime_admission": False,
         }
@@ -184,18 +189,25 @@ def historical_rejections():
     return routes
 
 
-def historical_upstream_evidence():
-    """Use exact preserved records; never infer a current upstream revision."""
-    transfer = transferred_snapshot()
+def _historical_upstream_for(source_id):
+    """Constant-time internal access to one authenticated historical record."""
+    transfer, _ = _trusted_snapshot()
+    position = transfer["lookup_by_id"].get(source_id)
+    if position is None:
+        return None
+    row = transfer["records"][position]
     keys = ("upstream_snapshot", "upstream_observation", "source_snapshot",
             "observed_commit", "upstream_repository_references", "notes")
-    return {
-        row["source_id"]: (
-            row["historical_record_sha256"],
-            {key: row["historical_record"][key] for key in keys
+    return (row["historical_record_sha256"],
+            {key: _detach(row["historical_record"][key]) for key in keys
              if key in row["historical_record"]})
-        for row in transfer["records"]
-    }
+
+
+def historical_upstream_evidence():
+    """Detached full history when explicitly requested, not on every lookup."""
+    transfer, _ = _trusted_snapshot()
+    return {row["source_id"]: _historical_upstream_for(row["source_id"])
+            for row in transfer["records"]}
 
 
 def note_revisions(notes):
@@ -230,7 +242,7 @@ def result(state, *, source=None, **details):
         value["source_id"] = source["source_id"]
         prior = source["prior_decision"]
         if "reference_state" in source:  # migrated v2 source
-            archived = historical_upstream_evidence().get(source["source_id"])
+            archived = _historical_upstream_for(source["source_id"])
             if archived is not None and archived[0] == prior.get("revision"):
                 prior = {**prior, "historical_upstream_evidence": archived[1]}
         value["prior_decision"] = copy.deepcopy(prior)
@@ -302,7 +314,7 @@ def evaluate(url, index, observation=None):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source, reason="No upstream revision proof")
     previous_revision = source.get("observed_revision")
     if previous_revision is None and "reference_state" in source:
-        archived = historical_upstream_evidence().get(source["source_id"])
+        archived = _historical_upstream_for(source["source_id"])
         if archived is not None and archived[0] == source["prior_decision"].get("revision"):
             evidence = archived[1]
             versions = []

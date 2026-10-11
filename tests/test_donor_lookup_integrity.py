@@ -337,9 +337,9 @@ class DonorLookupIntegrityTests(unittest.TestCase):
         self.assertEqual(evaluate(url, self.index)["disposition"], "CHANGE_CHECK_REQUIRED")
         # Internal consumers must avoid public defensive-copy accessors on every hit.
         with patch("source_lifecycle.verified_snapshot",
-                   side_effect=AssertionError("full snapshot copy on lifecycle hit")), \\
+                   side_effect=AssertionError("full snapshot copy on lifecycle hit")), \
              patch.object(integrity, "expected_lifecycle_projection",
-                          side_effect=AssertionError("full projection copy on lifecycle hit")), \\
+                          side_effect=AssertionError("full projection copy on lifecycle hit")), \
              patch.object(integrity, "deepcopy",
                           side_effect=AssertionError("full evidence copy on lifecycle hit")):
             for _ in range(12):

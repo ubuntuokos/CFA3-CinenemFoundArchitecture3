@@ -1,0 +1,1029 @@
+{
+  "schema": "cfa3.capability-name-roster.v1",
+  "id": "CFA3-CAPABILITY-NAMES-200-001",
+  "scope": "CAPABILITY_IDENTIFIERS_AND_NAMES_ONLY_NO_APPLICATION_MIGRATION",
+  "target_count": 200,
+  "carried_legacy_names": 175,
+  "numbered_unassigned_slots": 25,
+  "source": {
+    "repository": "ubuntuokos/Final-Architecture-v3.0",
+    "commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+    "path": "canonical/conformance-matrix.csv",
+    "blob_sha": "4cfd9fcd13253f8430f8c91b326da3ac84bf39e7",
+    "fields_used": [
+      "capability_id",
+      "capability"
+    ]
+  },
+  "future_assignment": {
+    "selection": "LOWEST_NUMBERED_RESERVED_SLOT_FIRST",
+    "reserved_state": "RESERVED_NUMBER_ONLY",
+    "allocated_state": "NAMED_PENDING_DESIGN_AND_ACCEPTANCE",
+    "operation": "RENAME_NEXT_RESERVED_ID_WHEN_A_NEW_CFA3_CAPABILITY_IS_DEFINED_IN_ITS_OWN_APPROVED_TASK",
+    "stable_capability_ids": true,
+    "automatic_reuse_of_old_applications": false,
+    "application_transfer_by_this_roster": false
+  },
+  "names": [
+    {
+      "id": "CAP-001",
+      "name": "Host/Foundation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-002",
+      "name": "Network/Edge",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-003",
+      "name": "Identity/Policy/Secrets",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-004",
+      "name": "Data/Event/Workflow",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-005",
+      "name": "Model & Backend Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-006",
+      "name": "Resource Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-007",
+      "name": "Agent Runtime",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-008",
+      "name": "Agent Workspace",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-009",
+      "name": "Deliberation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-010",
+      "name": "Memory/Knowledge/RAG",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-011",
+      "name": "MCP/Skill/Tool Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-012",
+      "name": "Browser Automation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-013",
+      "name": "KDE/Wayland Computer Use",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-014",
+      "name": "Film Planning/Direction",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-015",
+      "name": "Animation Department",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-016",
+      "name": "Media Generation/DCC",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-017",
+      "name": "Speech/Audio/Music/Post",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-018",
+      "name": "Documents/Knowledge Authoring",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-019",
+      "name": "QA/Evals/Verification",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-020",
+      "name": "GEO/Publication Feedback",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-021",
+      "name": "Context Engineering",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-022",
+      "name": "Intelligent Cache",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-023",
+      "name": "Agent Skills",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-024",
+      "name": "Cybersecurity Skills",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-025",
+      "name": "Real-Time Graphics",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-026",
+      "name": "Web Security Analysis",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-027",
+      "name": "Realtime / Virtual Production Interchange",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-028",
+      "name": "Managed External Agent Runtime",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-029",
+      "name": "Creative Continuity",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-030",
+      "name": "Documentation & Publishing",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-031",
+      "name": "Prompt & Agent Behavior Engineering",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-032",
+      "name": "Metric 3D Reconstruction",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-033",
+      "name": "Presentation Generation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-034",
+      "name": "JS/TS Package Supply Chain",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-035",
+      "name": "File Intelligence & Safe Ingestion",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-036",
+      "name": "Structured Semantic Extraction",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-037",
+      "name": "Realtime Voice & Vision Front-End",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-038",
+      "name": "Deployment & Delivery Control Plane",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-039",
+      "name": "High-Concurrency Agent Harness",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-040",
+      "name": "Social Media Integration & Intelligence",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-041",
+      "name": "Visual Thinking & Spatial Storyboard",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-042",
+      "name": "Short-Form Content Repurposing",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-043",
+      "name": "Digital Human & Character Runtime",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-044",
+      "name": "Creative Input Devices",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-045",
+      "name": "Application Software Engineering Control Plane",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-046",
+      "name": "Threat Intelligence & Detection Content",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-047",
+      "name": "Agentic Design & Design Artifacts",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-048",
+      "name": "Model & Artifact Acquisition",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-049",
+      "name": "Workflow Automation & Integration",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-050",
+      "name": "Local AI Discovery & Runtime Integration",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-051",
+      "name": "AI Security Control Plane",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-052",
+      "name": "Continuous Adversarial Evaluation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-053",
+      "name": "OSINT Intelligence & Evidence",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-054",
+      "name": "External Asset Inventory",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-055",
+      "name": "Structured Transformation Chain",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-056",
+      "name": "GPU Kernel Optimization & Dispatch",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-057",
+      "name": "Local AI Workspace/App Launcher",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-058",
+      "name": "Heterogeneous Model Memory Tiering / Out-of-Core MoE",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-059",
+      "name": "AI Guardrail & Validation Runtime",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-060",
+      "name": "GPU Driver & Compute Runtime Integrity",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-061",
+      "name": "Display–Compute GPU Role Assignment",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-062",
+      "name": "Interactive Workstation QoS",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-063",
+      "name": "Kernel/VM/I/O Tuning",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-064",
+      "name": "Adaptive Memory Deduplication",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-065",
+      "name": "Tuning Change Control",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-066",
+      "name": "Unified Audio Processing & Generation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-067",
+      "name": "Multi-Agent Simulation & Scenario Forecasting",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-068",
+      "name": "Runtime Detection Capture & Rule Performance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-069",
+      "name": "Model Compression & Optimization",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-070",
+      "name": "Hybrid Orchestration Federation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-071",
+      "name": "Agentic Media Production & Creative Federation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-072",
+      "name": "Disaster Recovery & Recovery Control Plane",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-073",
+      "name": "Human Identity & Workload Trust Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-074",
+      "name": "Canonical Service Catalog & Dependency Graph",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-075",
+      "name": "API/Event/Schema Contract Registry",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-076",
+      "name": "Platform Acceptance, Resilience & Recovery Lab",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-077",
+      "name": "Storage Reliability, Integrity & Data Placement",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-078",
+      "name": "Local LLM Runtime Lifecycle & Constrained Generation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-079",
+      "name": "Agent Runtime Trajectory, Policy Relay & Observability",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-080",
+      "name": "Verified Agent Skill Supply Chain",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-081",
+      "name": "Accelerated Image Codec Provider",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-082",
+      "name": "NVIDIA Vendor Security Advisory Ingestion",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-083",
+      "name": "Open Standards Graphics/Compute/XR/3D",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-084",
+      "name": "Foundational Streaming Media Runtime",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-085",
+      "name": "Streaming Tensor Inference & Sensor/Media Graph",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-086",
+      "name": "Real-Time Multimodal Perception & Streaming Analytics",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-087",
+      "name": "Model Interchange, Graph IR & Backend Conformance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-088",
+      "name": "Agentic Video Intelligence & Production",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-089",
+      "name": "Cinematic Production Governance & Virtual Cinematography",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-090",
+      "name": "Design System / UI-UX Collaboration & Design-to-Code",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-091",
+      "name": "Agentic Creative Design & Campaign Production",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-092",
+      "name": "Human-Factor Security & Social Engineering Defense",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-093",
+      "name": "Personal/Workstation Data Organization & Lifecycle",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-094",
+      "name": "Learning & Knowledge Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-095",
+      "name": "Multimodal Generative Model Training & Adaptation Governance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-096",
+      "name": "Desktop Service Shell / Native Operations Console",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-097",
+      "name": "Engineering Efficiency, Minimal-Change & Complexity Governance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-098",
+      "name": "Unified AI Gateway / Model & Capability Routing",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-099",
+      "name": "KV Cache / Attention-State Memory Management",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-100",
+      "name": "Authorized Security Reconnaissance / Validation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-101",
+      "name": "Self-Hosted Operations Portal / Dashboard UI",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-102",
+      "name": "Unified Memory Gateway & Provider Interoperability",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-103",
+      "name": "Web Intelligence / Retrieval & Evidence",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-104",
+      "name": "Operational Design & Deterministic Runtime Composition",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-105",
+      "name": "AI Production Desktop 2026 Reference Profile",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-106",
+      "name": "Conversation/Application Gateway & Relay Service",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-107",
+      "name": "Agent Development Environment / Parallel Engineering Workspace",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-108",
+      "name": "Test Data Isolation & Evidence-Based Browser Verification",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-109",
+      "name": "Collaboration Action / Messaging Adapter",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-110",
+      "name": "Personal/Developer Activity Context Capture & Episodic Work Memory",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-111",
+      "name": "Generative Media Studio & Creative Workflow Control Surface",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-112",
+      "name": "Visual Intelligence Generation & Editing",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-113",
+      "name": "Programmable Web-to-Video / Deterministic Motion Graphics",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-114",
+      "name": "2D/Hybrid Animation & Stylized Motion",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-115",
+      "name": "Local Voice I/O Studio & Agent Voice Control Surface",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-116",
+      "name": "Real-Time Voice Interaction & Conversational Audio",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-117",
+      "name": "AI Voice & Vocal Production",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-118",
+      "name": "Human Motion Capture / Pose & Performance Capture",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-119",
+      "name": "Physical AI / World Model & Simulation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-120",
+      "name": "Experimental AI Application Discovery, Evaluation & Promotion",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-121",
+      "name": "Agentic Timeline Editing, Browser/Desktop Video Editing & Render Control",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-122",
+      "name": "Professional AI Photography, RAW Development, Generative Retouch & Photo Production",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-123",
+      "name": "Media Production Pipeline & Asset Coordination",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-124",
+      "name": "Audacity Native MCP Audio Editing, Repair & Utility Processing",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-125",
+      "name": "AI Prose Quality, Register-Aware Editing & Anti-Slop",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-126",
+      "name": "Autonomous AI Film Production, Shot Graph, Render, Post-Production & Quality Governance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-127",
+      "name": "GPU Ray Tracing, Hardware Traversal, Render Acceleration & Denoising Compatibility",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-128",
+      "name": "Generative Media Intra-Trajectory Cache, Step/Feature Reuse & Quality-Governed Inference Acceleration",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-129",
+      "name": "External Cloud AI, Volcengine Capability & Managed Service Integration",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-130",
+      "name": "Distributed High-Throughput Compute, Batch Scheduling & Opportunistic Resource",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-131",
+      "name": "AI Songwriting, Composition & Music Production",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-132",
+      "name": "Global Durable Orchestration & Workflow Lifecycle",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-133",
+      "name": "Endpoint Threat Detection, Malware Analysis, Host Telemetry & Containment",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-134",
+      "name": "Low-Latency State, Cache, Queue & Worker Coordination",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-135",
+      "name": "Local Generative Media Environment, Package, Model & Runtime Lifecycle",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-136",
+      "name": "GPU Direct Data Path, Low-Latency Copy & Storage Compatibility",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-137",
+      "name": "Heterogeneous AI/HPC Development Toolchain & Build Compatibility",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-138",
+      "name": "Remote Model API, Hosted AI Execution & Artifact Transfer",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-139",
+      "name": "Agent Team Architecture & Skill Factory",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-140",
+      "name": "AI Gateway Security, Multi-Provider Routing & Egress Governance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-141",
+      "name": "Software Supply Chain, Artifact Trust, Signing, SBOM & Promotion",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-142",
+      "name": "Workstation Adaptive Optimization & KDE6 Control Plane",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-143",
+      "name": "Diffusion Transformer Inference Acceleration & Quality-Governed Runtime Dispatch",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-144",
+      "name": "Agent Workload Isolation & Execution",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-145",
+      "name": "Decision Fabric & Policy-Governed Choice Lifecycle",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-146",
+      "name": "Application Intent & Reuse Assessment",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-147",
+      "name": "Capability Reuse Discovery & Admission",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-148",
+      "name": "Provider Admission & Runtime Discovery",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-149",
+      "name": "Model Provider Execution Admission",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-150",
+      "name": "Cross-Instance Model Synchronization & Artifact Exchange",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-151",
+      "name": "AI Asset Acquisition & Download Logistics",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-152",
+      "name": "Workspace & Artifact Exchange / Handoff",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-153",
+      "name": "Embedding & Vectorization Service Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-154",
+      "name": "Research Artifact Lifecycle & Reproducibility",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-155",
+      "name": "Knowledge Provenance & Citation Graph",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-156",
+      "name": "Evidence Reasoning & Claim Verification",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-157",
+      "name": "Browser Skill Composition Runtime",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-158",
+      "name": "Web Task Planning, Recovery & Deterministic Replay",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-159",
+      "name": "Motion & Video Generation Engine",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-160",
+      "name": "Video Generation Provider & Model Interchange",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-161",
+      "name": "Render Fabric & Job Dispatch",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-162",
+      "name": "External Render Service Adapter Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-163",
+      "name": "Neural Rendering & Reconstruction Enhancement",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-164",
+      "name": "Character Motion Synthesis, Retargeting & Performance Transfer",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-165",
+      "name": "VFX / Gaffer Automation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-166",
+      "name": "Scene / Shot / Camera / Rig Interchange",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-167",
+      "name": "Vision Detection, Tracking & Segmentation Fabric",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-168",
+      "name": "Caption, Subtitle & Narration Composition",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-169",
+      "name": "Credits / Stáblista Generation",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-170",
+      "name": "Story / Screenplay Authoring & AI-Notes Provenance",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-171",
+      "name": "Creative Native-Project Preservation & Round-Trip Interchange",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-172",
+      "name": "Media Review, Approval & Human Sign-Off",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-173",
+      "name": "Live / Broadcast Production Control",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-174",
+      "name": "Logistics / Transfer / Queue Management",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-175",
+      "name": "Software Coexistence & Host Non-Interference",
+      "state": "LEGACY_NAME_CARRIED_FORWARD"
+    },
+    {
+      "id": "CAP-176",
+      "name": "CAP-176",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-177",
+      "name": "CAP-177",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-178",
+      "name": "CAP-178",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-179",
+      "name": "CAP-179",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-180",
+      "name": "CAP-180",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-181",
+      "name": "CAP-181",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-182",
+      "name": "CAP-182",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-183",
+      "name": "CAP-183",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-184",
+      "name": "CAP-184",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-185",
+      "name": "CAP-185",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-186",
+      "name": "CAP-186",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-187",
+      "name": "CAP-187",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-188",
+      "name": "CAP-188",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-189",
+      "name": "CAP-189",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-190",
+      "name": "CAP-190",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-191",
+      "name": "CAP-191",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-192",
+      "name": "CAP-192",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-193",
+      "name": "CAP-193",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-194",
+      "name": "CAP-194",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-195",
+      "name": "CAP-195",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-196",
+      "name": "CAP-196",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-197",
+      "name": "CAP-197",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-198",
+      "name": "CAP-198",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-199",
+      "name": "CAP-199",
+      "state": "RESERVED_NUMBER_ONLY"
+    },
+    {
+      "id": "CAP-200",
+      "name": "CAP-200",
+      "state": "RESERVED_NUMBER_ONLY"
+    }
+  ]
+}

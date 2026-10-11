@@ -105,6 +105,230 @@
     "AI-12": {
       "code": "NO_ASSUMPTIONS_AND_MANDATORY_CFA3_COMPLIANCE",
       "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CORE-001": {
+      "code": "CORE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CORE-002": {
+      "code": "CORE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CORE-003": {
+      "code": "CORE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CORE-004": {
+      "code": "CORE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-UI-001": {
+      "code": "UI",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-UI-002": {
+      "code": "UI",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-UI-003": {
+      "code": "UI",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-UI-004": {
+      "code": "UI",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-COPY-001": {
+      "code": "COPY",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-COPY-002": {
+      "code": "COPY",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-COPY-003": {
+      "code": "COPY",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-COPY-004": {
+      "code": "COPY",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-HUMAN-001": {
+      "code": "HUMAN",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-HUMAN-002": {
+      "code": "HUMAN",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-HUMAN-003": {
+      "code": "HUMAN",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-HUMAN-004": {
+      "code": "HUMAN",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-RESP-001": {
+      "code": "RESPONSIVE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-RESP-002": {
+      "code": "RESPONSIVE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-RESP-003": {
+      "code": "RESPONSIVE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-RESP-004": {
+      "code": "RESPONSIVE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CODE-001": {
+      "code": "CODE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CODE-002": {
+      "code": "CODE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CODE-003": {
+      "code": "CODE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-CODE-004": {
+      "code": "CODE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-FA3-001": {
+      "code": "FA3",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-FA3-002": {
+      "code": "FA3",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-FA3-003": {
+      "code": "FA3",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-FA3-004": {
+      "code": "FA3",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "Q-FA3-005": {
+      "code": "FA3",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "one_task_session_one_explicit_task": {
+      "code": "one_task_session_one_explicit_task",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "goal_scope_bound_to_exact_goal_revision_and_digest": {
+      "code": "goal_scope_bound_to_exact_goal_revision_and_digest",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "in_scope_and_out_of_scope_overlap": {
+      "code": "in_scope_and_out_of_scope_overlap",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "automatic_scope_expansion": {
+      "code": "automatic_scope_expansion",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "out_of_scope_work": {
+      "code": "out_of_scope_work",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "max_same_blocker_attempts": {
+      "code": "max_same_blocker_attempts",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "fourth_same_blocker_attempt": {
+      "code": "fourth_same_blocker_attempt",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "third_same_blocker_failure": {
+      "code": "third_same_blocker_failure",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "automatic_retry_after_human_block": {
+      "code": "automatic_retry_after_human_block",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "automatic_replan_after_human_block": {
+      "code": "automatic_replan_after_human_block",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "automatic_alternative_route_after_human_block": {
+      "code": "automatic_alternative_route_after_human_block",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "start_and_resume_require_fresh_task_scope_admission": {
+      "code": "start_and_resume_require_fresh_task_scope_admission",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "cached_execution_plan_may_not_bypass_newer_control_revision": {
+      "code": "cached_execution_plan_may_not_bypass_newer_control_revision",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "closed_task_execution": {
+      "code": "closed_task_execution",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "verified_closure": {
+      "code": "verified_closure",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "automatic_followup_execution": {
+      "code": "automatic_followup_execution",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "followup_handoff_must_be_persisted_in_task_control": {
+      "code": "followup_handoff_must_be_persisted_in_task_control",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "user_closure_states": {
+      "code": "user_closure_states",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "all_executable_scope_origins_require_immutable_binding": {
+      "code": "all_executable_scope_origins_require_immutable_binding",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "all_executable_scope_origins_require_task_control": {
+      "code": "all_executable_scope_origins_require_task_control",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "scope_origin_provenance_preserved_end_to_end": {
+      "code": "scope_origin_provenance_preserved_end_to_end",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "active_main_task_identity_immutable": {
+      "code": "active_main_task_identity_immutable",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "main_task_switch_authority": {
+      "code": "main_task_switch_authority",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "new_runtime_rule_is_constraint_not_automatic_main_task": {
+      "code": "new_runtime_rule_is_constraint_not_automatic_main_task",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task": {
+      "code": "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "blocker_may_stop_but_not_reassign_main_task": {
+      "code": "blocker_may_stop_but_not_reassign_main_task",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control": {
+      "code": "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
     }
   },
   "historical": {
@@ -140,7 +364,6 @@
     "GITHUB_REST_BYPASS_ACTORS_REQUIRE_RULESET_WRITE_PERMISSION_TO_READ",
     "RULE_RECEIPTS_REQUIRE_A_REAL_INDEPENDENT_ATTESTER_NOT_SYNTHETIC_TEST_KEYS",
     "SIGNED_HASH_WITHOUT_INDEPENDENT_CONTENT_READBACK_IS_NOT_AN_ADMISSIBLE_RULE_PROOF",
-    "HISTORICAL_3159_FILE_AUTHORITY_AND_APPLICABILITY_DISPOSITIONS_UNRESOLVED",
     "INDEPENDENT_OWNER_GRANT_SIGNER_AND_PROTECTED_GRANT_STORE_NOT_YET_DEPLOYED",
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
@@ -167,10 +390,9 @@
     "schema": "cfa3.execution-guard-rule-receipt.v1",
     "validator": "scripts/check_execution_rule_evidence.py",
     "testing": "tests/test_execution_rule_evidence.py",
-    "known_current_governance_rule_count": 24,
+    "known_current_governance_rule_count": 80,
     "receipt_signature": "INDEPENDENT_HMAC_SHA256",
     "task_source_binding": "CANONICAL_REQUEST_DIGEST_AND_GOVERNANCE_SHA256",
-    "require_all_24_verdicts": "MANDATORY",
     "current_trusted_attester_deployed": false,
     "state": "IMPLEMENTED_RECEIPT_VALIDATION_NOT_INDEPENDENT_RUNTIME_RULE_PROOFS",
     "content_evidence": {
@@ -180,7 +402,8 @@
       "independent_evidence_resolver_deployed": false,
       "evaluator_implementation_runtime_verified": false,
       "trusted_content_store_deployed": false
-    }
+    },
+    "require_all_active_verdicts": "MANDATORY"
   },
   "task_source_provenance_binding": {
     "status": "CODED_AND_NEGATIVE_TESTED_NOT_DEPLOYED",
@@ -236,49 +459,6 @@
       "status": "STRUCTURALLY_IMPLEMENTED_WITH_SYNTHETIC_TESTS_NO_LIVE_OWNER_ISSUER"
     }
   },
-  "historical_execution_exclusion": {
-    "scope": "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY",
-    "owner_instruction_date": "2026-10-11",
-    "excluded_historical_candidate_count": 78,
-    "historical_candidate_groups": {
-      "DEV_AI": 22,
-      "QUALITY": 29,
-      "TASK_SCOPE": 27
-    },
-    "history_completeness_required_for_active_gate": false,
-    "candidates_admitted_to_current_rule_set": false,
-    "current_required_rule_count": 24,
-    "current_rule_ids": [
-      "AI-01",
-      "AI-02",
-      "AI-03",
-      "AI-04",
-      "AI-05",
-      "AI-06",
-      "AI-07",
-      "AI-08",
-      "AI-09",
-      "AI-10",
-      "AI-11",
-      "AI-12",
-      "DEV-01",
-      "DEV-02",
-      "DEV-03",
-      "DEV-04",
-      "DEV-05",
-      "DEV-06",
-      "DEV-07",
-      "DEV-08",
-      "DEV-09",
-      "DEV-10",
-      "DEV-11",
-      "DEV-12"
-    ],
-    "reference_register": "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
-    "export_json": "docs/governance/exports/CFA3-EXECUTION-GUARD-RULES-AND-CANDIDATES-20261011.json",
-    "still_requires_current_rule_proofs": true,
-    "note": "Explicit owner-scoped removal from Execution Guard active evaluation only. Historical source data remains unreviewed and cannot become new-CFA3 authority. No global full-governance PASS."
-  },
   "audit_receipt_gate": {
     "schema": "cfa3.execution-guard-audit-receipt.v1",
     "validator": "scripts/check_execution_guard_audit.py",
@@ -297,21 +477,32 @@
   "owner_rule_specification": {
     "path": "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "validator": "scripts/check_execution_guard_rule_spec.py",
-    "active_texts": 24,
-    "archived_excluded_texts": 78,
+    "active_texts": 80,
     "owner_amendments": 5,
     "description_finalized": true,
     "independent_runtime_proofs_verified": false,
-    "status": "OWNER_TEXT_CANONICAL_MAPPING_IMPLEMENTED_BUT_RUNTIME_PROOFS_PENDING"
+    "status": "OWNER_80_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS",
+    "current_historical_source_texts": 78
   },
   "runtime_preflight_separation": {
     "static_contract_validation": "policy_issues(require_prior_runtime_proofs=False)",
     "independent_service_prerequisites": "trusted_runtime_issues",
-    "required_task_receipts": "verify_rule_receipts AFTER immutable policy, service and task validation",
+    "required_task_receipts": "verify_rule_receipts FOR_OWNER_APPROVED_80",
     "bootstrap_random_incidents_required": false,
     "current_24_global_status_not_sufficient_for_task_authority": true,
     "protected_service_deployments_verified": false,
     "conditional_runtime_gate_status": "PENDING",
-    "status": "STRUCTURAL_IMPLEMENTATION_TESTED_NOT_LIVE_ADMITTED"
+    "status": "STRUCTURAL_IMPLEMENTATION_TESTED_NOT_LIVE_ADMITTED",
+    "current_80_global_status_not_sufficient_for_task_authority": true
+  },
+  "owner_historical_reconciliation": {
+    "source_count": 78,
+    "mapped_existing": 22,
+    "admitted_new": 56,
+    "excluded_for_conflict": 0,
+    "active_count": 80,
+    "all_source_rules_accounted_for": true,
+    "history_completeness_required_for_active_gate": false,
+    "original_24_preserved": true
   }
 }

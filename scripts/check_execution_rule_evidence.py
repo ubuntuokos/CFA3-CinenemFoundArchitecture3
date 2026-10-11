@@ -12,6 +12,7 @@ import json
 import math
 import re
 import time
+from pathlib import Path
 
 SCHEMA = "cfa3.execution-guard-rule-receipt.v1"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -37,6 +38,15 @@ def request_digest(task):
         raise RuleEvidenceBlocked("cannot canonicalize task contract") from exc
 
 def expected_rules(governance):
+    from check_execution_guard_rule_spec import SPEC, active_expected_codes
+    try:
+        root=Path(__file__).resolve().parents[1]
+        owner=json.loads((root/SPEC).read_text("utf-8"))
+        return active_expected_codes(governance,owner)
+    except (OSError,ValueError,TypeError,KeyError) as exc:
+        raise RuleEvidenceBlocked("owner-authorized 80 rule identities missing") from exc
+
+def original_expected_rules(governance):
     if not isinstance(governance, dict):
         raise RuleEvidenceBlocked("missing canonical governance")
     expected = {}
@@ -97,7 +107,7 @@ def verify_evidence_bytes(receipt, evidence_resolver):
 
 def verify_rule_receipts(task, receipts, governance, attestation_secret, now=None,
                          evidence_resolver=None):
-    """All 24 signed, scoped, fresh receipts required. No untrusted model PASS."""
+    """All 80 signed, scoped, fresh receipts required. No untrusted model PASS."""
     if (not isinstance(attestation_secret, bytes) or len(attestation_secret) < 32):
         raise RuleEvidenceBlocked("trusted independent attestation key missing")
     if not callable(evidence_resolver):
@@ -106,7 +116,7 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
         raise RuleEvidenceBlocked("signed rule evidence must be a list")
     expected = expected_rules(governance)
     if len(receipts) != len(expected):
-        raise RuleEvidenceBlocked("24 independent rule verdicts required")
+        raise RuleEvidenceBlocked("80 independent rule verdicts required")
     if not isinstance(task, dict) or not isinstance(task.get("source_hashes"), dict):
         raise RuleEvidenceBlocked("missing task source bindings")
     src = task["source_hashes"].get(GOV)
@@ -157,7 +167,7 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
     return True
 
 def bootstrap_rule_report(governance, catalog):
-    """Validate 24 canonical IDs/codes/status integrity, not unpredictable incidents.
+    """Validate 80 owner-admitted IDs/codes/status integrity, not unpredictable incidents.
 
     Bootstrap must neither cause an incident nor demand that a spontaneous
     violation has occurred. Runtime enforcers remain separately fail-closed.
@@ -172,15 +182,12 @@ def bootstrap_rule_report(governance, catalog):
         return [], issues + ["rule catalog unavailable"]
     rules = catalog.get("rules")
     rules = rules if isinstance(rules, dict) else {}
-    excluded = catalog.get("historical_execution_exclusion")
-    excluded = excluded if isinstance(excluded, dict) else {}
-    if (excluded.get("scope") != "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY"
-            or excluded.get("excluded_historical_candidate_count") != 78
-            or excluded.get("history_completeness_required_for_active_gate") is not False
-            or excluded.get("candidates_admitted_to_current_rule_set") is not False
-            or excluded.get("current_required_rule_count") != 24
-            or excluded.get("current_rule_ids") != sorted(expected)):
-        issues.append("24 active rules / 78 historical exclusion boundary changed")
+    owner=catalog.get("owner_historical_reconciliation",{})
+    if (not isinstance(owner,dict) or owner.get("source_count")!=78
+            or owner.get("mapped_existing")!=22 or owner.get("admitted_new")!=56
+            or owner.get("excluded_for_conflict")!=0 or owner.get("active_count")!=80
+            or owner.get("all_source_rules_accounted_for") is not True):
+        issues.append("owner-admitted 78 rule restoration incomplete")
     matrix = [(ident, code, rules.get(ident, {}).get("status", "MISSING")
                if isinstance(rules.get(ident), dict) else "MISSING")
               for ident, code in sorted(expected.items())]
@@ -214,7 +221,7 @@ def bootstrap_main():
             print("CFA3_RULE_MATRIX_FAIL:", issue, file=sys.stderr)
         return 1
     pending = sum(state != "VERIFIED_GATE" for _, _, state in matrix)
-    print("CFA3_RULE_MATRIX_STRUCTURAL_PASS: 24 current DEV/AI rule identities;"
+    print("CFA3_RULE_MATRIX_STRUCTURAL_PASS: 80 current owner-admitted rule identities;"
           " conditional runtime events are NOT required by bootstrap;"
           " pending rule statuses:", pending, "(informational); NOT execution authorization")
     return 0

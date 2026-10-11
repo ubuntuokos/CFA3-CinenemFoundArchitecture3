@@ -2,8 +2,8 @@
   "schema": "cfa3.execution-guard-owner-rule-spec.v1",
   "id": "CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001",
   "source_type": "EXPLICIT_OWNER_SUPPLIED_TEXT_2026_10_11",
-  "authority": "CURRENT_CANONICAL_RULE_IDS_CODES_ONLY__OWNER_TEXT_SUPPLEMENT",
-  "active_rule_count": 24,
+  "authority": "CURRENT_24_PLUS_OWNER_RECONFIRMED_56; 22 LEGACY_DEV_AI_MAPPED",
+  "active_rule_count": 80,
   "active_rules": [
     {
       "id": "DEV-01",
@@ -196,716 +196,734 @@
       "proof_mode": "SIGNED_SCOPE_AND_CANONICAL_SOURCES",
       "runtime_verified": false,
       "provenance": "OWNER_SUPPLIED_HUNGARIAN_REQUIREMENTS_2026_10_11"
-    }
-  ],
-  "historical_exclusion": {
-    "explicit_owner_exclusion_retained": true,
-    "excluded_count": 78,
-    "eligible_for_runtime_admission": false,
-    "reference_export": "docs/governance/exports/CFA3-EXECUTION-GUARD-RULES-AND-CANDIDATES-20261011.json"
-  },
-  "excluded_historical_candidates": [
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-01",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/0",
-      "text_hu": "Ellentmondás, megváltozott főág, sikertelen ellenőrzőkapu, bizonytalan állapot, ütköző munka vagy váratlan CI-eredmény esetén azonnali leállítás és jelentés kötelező.",
-      "current_rule_admission": false,
-      "active_execution_check": false
     },
     {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-02",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/1",
-      "text_hu": "Akadály után önálló rebase, workflow-indítás, pótló PR, komponenscsere, megkerülés vagy alternatív út választása nem engedélyezett.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-03",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/2",
-      "text_hu": "Egy beszélgetés csak a kifejezetten meghatározott feladatfájlokra, PR-ekre és közvetlenül engedélyezett függőségekre hathat ki.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-04",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/3",
-      "text_hu": "Minden GitHub-módosítás előtt ismét ellenőrizni kell a főág SHA-ját, a célág fejcommitját és a kapcsolódó nyitott PR-ek állapotát.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-05",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/4",
-      "text_hu": "Ugyanazon kanonikus fájl, ellenőrzőkapu, munkafolyamat vagy kizárólagos erőforrás párhuzamos módosítása blokkol, hacsak a tulajdonos erre a beszélgetésre kifejezetten felmentést nem adott.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-06",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/5",
-      "text_hu": "Workflow vagy kapu csak akkor indítható, ha szükséges a lezáráshoz, és nem fut már azzal egyenértékű ellenőrzés.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-07",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/6",
-      "text_hu": "Minden módosítás után jelenteni kell a változtatást, az aktuális SHA-t, a következő lépést és az akadályokat.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-08",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/7",
-      "text_hu": "A merge pontosan ellenőrzött célág- és főágcommitot igényel; bármely eltérés blokkolja.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-09",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/8",
-      "text_hu": "Újratervezést vagy javítást igénylő váratlan helyzetet a stratégia megváltoztatása előtt jelenteni kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-10",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/9",
-      "text_hu": "A tulajdonos aktuális, kifejezett korlátozásai felülírják a korábbi jogosultságokat és szélesebb engedélyeket.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "DEV-11",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/development_rules/10",
-      "text_hu": "A fejlesztő AI önállóan kizárólag saját, egyértelmű mechanikai vagy technikai hibáját javíthatja determinisztikusan, hatáskörbővítés és megkerülés nélkül; előtte értesítés és szükség esetén pontos állapotellenőrzés, utána részletes jelentés kötelező.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-01",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/0",
-      "text_hu": "A fejlesztő AI végrehajtása akadály esetén megáll, minden további mellékhatás előtt jelentéssel.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-02",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/1",
-      "text_hu": "A fejlesztő AI nem tekintheti a felhasználó célját hallgatólagos engedélynek egy akadály megkerülésére.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-03",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/2",
-      "text_hu": "Az AI-végrehajtáshoz kifejezett feladathatárnak, engedélyezett és tiltott műveleteknek, valamint kivételeknek kell társulniuk.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-04",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/3",
-      "text_hu": "A ténylegesen ellenőrzött friss állapot elsőbbséget élvez a gyorsítótárazott repository-, workflow- és futásidejű állapottal szemben.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-05",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/4",
-      "text_hu": "Másik ügynök, feladat vagy PR ütköző párhuzamos munkája blokkolja a módosítást.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-06",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/5",
-      "text_hu": "Az OLVASÁS, ELEMZÉS, TERVEZÉS, ÍRÁS, COMMIT, PUSH, PR, WORKFLOW, KAPU, MERGE, KIADÁS és KÜLSŐ MŰVELET jogai nem jelentik egymás automatikus engedélyezését.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-07",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/6",
-      "text_hu": "Minden állapotmódosító AI-művelethez hozzárendelhető auditbejegyzés szükséges.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-08",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/7",
-      "text_hu": "A konkrét állapothoz kötött engedély érvényét veszti az állapot lényeges megváltozásakor.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-09",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/8",
-      "text_hu": "Ismeretlen állapot, hatáskör, tulajdonos vagy jóváhagyási érvényesség esetén az AI leáll.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-10",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/9",
-      "text_hu": "A tulajdonos aktuális korlátozásai megelőzik a korábbi modellautonómiát.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_DEV_AI",
-      "id": "AI-11",
-      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
-      "source_json_pointer": "/ai_behavior_rules/10",
-      "text_hu": "Az AI/modell/ügynök saját mechanikai hibája kizárólag a DEV-11 szigorú feltételeivel javítható; újratervezés, alternatív út, új PR vagy bizonytalan javítás esetén STOP.",
-      "current_rule_admission": false,
-      "active_execution_check": false
-    },
-    {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CORE-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/0",
+      "code": "CORE",
       "text_hu": "Kitöltőszöveget (például Lorem ipsumot) nem szabad végleges kiadásba tenni.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/0",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CORE-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/1",
+      "code": "CORE",
       "text_hu": "Helyőrző szöveg- vagy mérőszámjelölések nem maradhatnak a végleges változatban.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/1",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CORE-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/2",
+      "code": "CORE",
       "text_hu": "Kitalált mérőszámokat vagy telemetriaadatokat tilos valós eredményként bemutatni.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/2",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CORE-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/3",
+      "code": "CORE",
       "text_hu": "Általános reklámtúlzáshoz vagy bizonyítatlan állításhoz cél és alátámasztás kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/3",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-UI-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/4",
+      "code": "UI",
       "text_hu": "Terminálra hasonlító díszítőelem csak megjelölt funkcionális céllal használható.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/4",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-UI-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/5",
+      "code": "UI",
       "text_hu": "Bento-elrendezést az információs architektúrának kell indokolnia.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/5",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-UI-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/6",
+      "code": "UI",
       "text_hu": "Ismételt dekoratív emojik sablonos megjelenésre utalhatnak, ezért felülvizsgálandók.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/6",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-UI-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/7",
+      "code": "UI",
       "text_hu": "A grafikus felület nem hajthat végre közvetlenül szolgáltatót vagy shell-folyamatot.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/7",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-COPY-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/8",
+      "code": "COPY",
       "text_hu": "Az általános reklámfordulatokat konkrét, ellenőrizhető állításokra kell cserélni.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/8",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-COPY-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/9",
+      "code": "COPY",
       "text_hu": "Emojival kezdett marketingfelsorolás csak meghatározott tartalmi céllal használható.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/9",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-COPY-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/10",
+      "code": "COPY",
       "text_hu": "Felsőfokú termékállításokhoz indoklás és bizonyíték szükséges.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/10",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-COPY-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/11",
+      "code": "COPY",
       "text_hu": "Bizonyítatlan, feltétlen garanciát sugalló állításokat tilos tenni.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/11",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-HUMAN-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/12",
+      "code": "HUMAN",
       "text_hu": "Interaktív elem billentyűzetes fókuszának tiltásához kifejezett indoklás kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/12",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-HUMAN-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/13",
+      "code": "HUMAN",
       "text_hu": "Akadálymentességi hozzáférés elrejtéséhez kifejezett indoklás szükséges.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/13",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-HUMAN-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/14",
+      "code": "HUMAN",
       "text_hu": "Nagyon alacsony átlátszatlanság ronthatja az olvashatóságot, ezért ellenőrizendő.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/14",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-HUMAN-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/15",
+      "code": "HUMAN",
       "text_hu": "A kezelőfelületi szöveg az elvégzendő műveletet nevezze meg, ne csak a kattintást.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/15",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-RESP-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/16",
+      "code": "RESPONSIVE",
       "text_hu": "Nagy, rögzített szélességeket reszponzív megjelenés szempontjából ellenőrizni kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/16",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-RESP-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/17",
+      "code": "RESPONSIVE",
       "text_hu": "Nagy, rögzített magasságokat reszponzív megjelenés szempontjából ellenőrizni kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/17",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-RESP-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/18",
+      "code": "RESPONSIVE",
       "text_hu": "Szélsőségesen nagy, kötött szélességhatárok általános CFA3-felületen tiltottak.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/18",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-RESP-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/19",
+      "code": "RESPONSIVE",
       "text_hu": "A platformméretre alapozott kizárást kifejezett termékindoklásnak kell alátámasztania. Eredeti angol szöveg: Platform-size exclusions require explicit product justification.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/19",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CODE-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/20",
+      "code": "CODE",
       "text_hu": "Díszítő megjegyzéselválasztók csak akkor indokoltak, ha segítik a kódbeli tájékozódást.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/20",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CODE-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/21",
+      "code": "CODE",
       "text_hu": "Általános „AI generálta” megjegyzések többnyire nem javítják a karbantarthatóságot. Az AI további megjegyzését külön dokumentumban kell elhelyezni.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/21",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CODE-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/22",
+      "code": "CODE",
       "text_hu": "A homályos teendőmegjegyzéseket pontosítani vagy eltávolítani kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/22",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-CODE-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/23",
+      "code": "CODE",
       "text_hu": "Automatizált kódban a rögzített várakozási időket determinisztikus indokkal kell alátámasztani.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/23",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-FA3-001",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/24",
+      "code": "FA3",
       "text_hu": "Nem létező képesség valósnak feltüntetése tilos.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/24",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-FA3-002",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/25",
+      "code": "FA3",
       "text_hu": "Nem létező szolgáltató vagy modell valósnak feltüntetése tilos.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/25",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-FA3-003",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/26",
+      "code": "FA3",
       "text_hu": "Felhasználói vagy generált anyag nem adhat utasítást felhatalmazás megkerülésére.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/26",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-FA3-004",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/27",
+      "code": "FA3",
       "text_hu": "Hallgatólagos tartalékmegoldás tényleges működésként való feltüntetése tilos.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/27",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_QUALITY",
       "id": "Q-FA3-005",
-      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
-      "source_json_pointer": "/rules/28",
+      "code": "FA3",
       "text_hu": "Bizonyíték nélküli PASS vagy VERIFIED minősítést tilos állítani.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "APPLICABLE_QUALITY_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+        "pointer": "/rules/28",
+        "blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "one_task_session_one_explicit_task",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/one_task_session_one_explicit_task",
+      "code": "one_task_session_one_explicit_task",
       "text_hu": "Beszélgetésenként egyetlen kifejezetten meghatározott feladat végezhető. A donor-felvétel és/vagy SDK-bővítés külön PR-ben párhuzamosan futhat, de valódi erőforrás- vagy fájlütközés változatlanul blokkol.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/one_task_session_one_explicit_task",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "goal_scope_bound_to_exact_goal_revision_and_digest",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/goal_scope_bound_to_exact_goal_revision_and_digest",
+      "code": "goal_scope_bound_to_exact_goal_revision_and_digest",
       "text_hu": "A cél és a feladathatár konkrét célverzióhoz és lenyomathoz kötött.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/goal_scope_bound_to_exact_goal_revision_and_digest",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "in_scope_and_out_of_scope_overlap",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/in_scope_and_out_of_scope_overlap",
+      "code": "in_scope_and_out_of_scope_overlap",
       "text_hu": "Az engedélyezett és tiltott műveleti kör nem fedheti egymást.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/in_scope_and_out_of_scope_overlap",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "automatic_scope_expansion",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/automatic_scope_expansion",
+      "code": "automatic_scope_expansion",
       "text_hu": "A feladat határa nem bővíthető önkényesen és automatikusan.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/automatic_scope_expansion",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "out_of_scope_work",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/out_of_scope_work",
+      "code": "out_of_scope_work",
       "text_hu": "Az eredeti feladaton kívüli munka új feladatazonosítót és külön felhasználói indítást igényel.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/out_of_scope_work",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "max_same_blocker_attempts",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/max_same_blocker_attempts",
+      "code": "max_same_blocker_attempts",
       "text_hu": "Azonos akadály esetén legfeljebb három dokumentált próbálkozás engedett a történeti döntés szerint.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/max_same_blocker_attempts",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "fourth_same_blocker_attempt",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/fourth_same_blocker_attempt",
+      "code": "fourth_same_blocker_attempt",
       "text_hu": "Ugyanazon akadály negyedik automatikus próbálkozása tiltott.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/fourth_same_blocker_attempt",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "third_same_blocker_failure",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/third_same_blocker_failure",
+      "code": "third_same_blocker_failure",
       "text_hu": "Három sikertelen alkalom után a feladat befagy, és emberi beavatkozást igényel.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/third_same_blocker_failure",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "automatic_retry_after_human_block",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/automatic_retry_after_human_block",
+      "code": "automatic_retry_after_human_block",
       "text_hu": "Emberi beavatkozást igénylő akadály után nincs automatikus újrapróbálkozás.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/automatic_retry_after_human_block",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "automatic_replan_after_human_block",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/automatic_replan_after_human_block",
+      "code": "automatic_replan_after_human_block",
       "text_hu": "Emberi akadály után nincs önálló újratervezés.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/automatic_replan_after_human_block",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "automatic_alternative_route_after_human_block",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/automatic_alternative_route_after_human_block",
+      "code": "automatic_alternative_route_after_human_block",
       "text_hu": "Emberi akadály után nincs önálló alternatív végrehajtási út.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/automatic_alternative_route_after_human_block",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "start_and_resume_require_fresh_task_scope_admission",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/start_and_resume_require_fresh_task_scope_admission",
+      "code": "start_and_resume_require_fresh_task_scope_admission",
       "text_hu": "Indítás és folytatás friss feladathatár-jóváhagyást igényel.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/start_and_resume_require_fresh_task_scope_admission",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "cached_execution_plan_may_not_bypass_newer_control_revision",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/cached_execution_plan_may_not_bypass_newer_control_revision",
+      "code": "cached_execution_plan_may_not_bypass_newer_control_revision",
       "text_hu": "Régi, gyorsítótárazott terv nem írhatja felül az újabb ellenőrzési döntést.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/cached_execution_plan_may_not_bypass_newer_control_revision",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "closed_task_execution",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/closed_task_execution",
+      "code": "closed_task_execution",
       "text_hu": "Lezárt feladat végrehajtása tilos.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/closed_task_execution",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "verified_closure",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/verified_closure",
+      "code": "verified_closure",
       "text_hu": "Igazolt lezáráshoz ellenőrizhető bizonyíték- és jogosultsági nyugta kell.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/verified_closure",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "automatic_followup_execution",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/automatic_followup_execution",
+      "code": "automatic_followup_execution",
       "text_hu": "A következő feladat nem indulhat automatikusan.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/automatic_followup_execution",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "followup_handoff_must_be_persisted_in_task_control",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/followup_handoff_must_be_persisted_in_task_control",
+      "code": "followup_handoff_must_be_persisted_in_task_control",
       "text_hu": "A folytatási átadásnak maradandóan szerepelnie kell a feladatvezérlésben.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/followup_handoff_must_be_persisted_in_task_control",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "user_closure_states",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/user_closure_states",
+      "code": "user_closure_states",
       "text_hu": "A történeti lezárási állapotok: kész; új feladat azonosítva; emberi beavatkozás szükséges.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/user_closure_states",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "all_executable_scope_origins_require_immutable_binding",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/all_executable_scope_origins_require_immutable_binding",
+      "code": "all_executable_scope_origins_require_immutable_binding",
       "text_hu": "Minden végrehajtható feladateredet változtathatatlan kötést kíván.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/all_executable_scope_origins_require_immutable_binding",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "all_executable_scope_origins_require_task_control",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/all_executable_scope_origins_require_task_control",
+      "code": "all_executable_scope_origins_require_task_control",
       "text_hu": "Minden végrehajtható feladateredet kötelező feladatvezérlés alatt áll.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/all_executable_scope_origins_require_task_control",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "scope_origin_provenance_preserved_end_to_end",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/scope_origin_provenance_preserved_end_to_end",
+      "code": "scope_origin_provenance_preserved_end_to_end",
       "text_hu": "A feladathatár eredete és bizonyítási lánca végig megőrzendő.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/scope_origin_provenance_preserved_end_to_end",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "active_main_task_identity_immutable",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/active_main_task_identity_immutable",
+      "code": "active_main_task_identity_immutable",
       "text_hu": "Az aktív főfeladat azonosítója önkényesen nem módosítható.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/active_main_task_identity_immutable",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "main_task_switch_authority",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/main_task_switch_authority",
+      "code": "main_task_switch_authority",
       "text_hu": "A főfeladat megváltoztatása kizárólag kifejezett tulajdonosi döntéssel lehetséges.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/main_task_switch_authority",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "new_runtime_rule_is_constraint_not_automatic_main_task",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/new_runtime_rule_is_constraint_not_automatic_main_task",
+      "code": "new_runtime_rule_is_constraint_not_automatic_main_task",
       "text_hu": "Egy új futásidejű szabály korlát, nem automatikusan új főfeladat.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/new_runtime_rule_is_constraint_not_automatic_main_task",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+      "code": "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
       "text_hu": "A párhuzamos feladat vagy PR nem válik automatikusan az aktuális főfeladattá.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "blocker_may_stop_but_not_reassign_main_task",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/blocker_may_stop_but_not_reassign_main_task",
+      "code": "blocker_may_stop_but_not_reassign_main_task",
       "text_hu": "Az akadály megállíthatja, de nem oszthatja át a főfeladatot.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/blocker_may_stop_but_not_reassign_main_task",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     },
     {
-      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
       "id": "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
-      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
-      "source_json_pointer": "/rules/owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+      "code": "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
       "text_hu": "Tulajdonosi főfeladatváltás új vagy kifejezetten újrakötött feladatvezérlést igényel.",
-      "current_rule_admission": false,
-      "active_execution_check": false
+      "proof_mode": "TASK_SCOPE_RULE",
+      "runtime_verified": false,
+      "provenance": "OWNER_RECONFIRMED_2026_10_11",
+      "historical_source": {
+        "path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+        "pointer": "/rules/owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+        "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
+      }
     }
   ],
   "owner_amendments": [
@@ -944,10 +962,881 @@
     {
       "id": "AI_GENERATION_COMMENT_DOCUMENT_ONLY",
       "text_hu": "Általános AI-generálási kódmegjegyzés helyett az érdemi AI-magyarázat külön dokumentumba kerüljön.",
-      "mapped_to": [],
+      "mapped_to": [
+        "Q-CODE-002"
+      ],
       "historic_quality_reference": "Q-CODE-002",
-      "active_runtime_admission": false
+      "active_runtime_admission": true
     }
   ],
-  "requirements_semantics": "An explicit accepted rule is not a runtime PASS. A human-language norm without independent observable evidence requires owner adjudication; unverifiable facts STOP."
+  "requirements_semantics": "An explicit accepted rule is not a runtime PASS. A human-language norm without independent observable evidence requires owner adjudication; unverifiable facts STOP.",
+  "historical_candidates": [
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-01",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/0",
+      "text_hu": "Ellentmondás, megváltozott főág, sikertelen ellenőrzőkapu, bizonytalan állapot, ütköző munka vagy váratlan CI-eredmény esetén azonnali leállítás és jelentés kötelező.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-01",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-02",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/1",
+      "text_hu": "Akadály után önálló rebase, workflow-indítás, pótló PR, komponenscsere, megkerülés vagy alternatív út választása nem engedélyezett.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-02",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-03",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/2",
+      "text_hu": "Egy beszélgetés csak a kifejezetten meghatározott feladatfájlokra, PR-ekre és közvetlenül engedélyezett függőségekre hathat ki.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-03",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-04",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/3",
+      "text_hu": "Minden GitHub-módosítás előtt ismét ellenőrizni kell a főág SHA-ját, a célág fejcommitját és a kapcsolódó nyitott PR-ek állapotát.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-04",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-05",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/4",
+      "text_hu": "Ugyanazon kanonikus fájl, ellenőrzőkapu, munkafolyamat vagy kizárólagos erőforrás párhuzamos módosítása blokkol, hacsak a tulajdonos erre a beszélgetésre kifejezetten felmentést nem adott.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-05",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-06",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/5",
+      "text_hu": "Workflow vagy kapu csak akkor indítható, ha szükséges a lezáráshoz, és nem fut már azzal egyenértékű ellenőrzés.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-06",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-07",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/6",
+      "text_hu": "Minden módosítás után jelenteni kell a változtatást, az aktuális SHA-t, a következő lépést és az akadályokat.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-07",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-08",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/7",
+      "text_hu": "A merge pontosan ellenőrzött célág- és főágcommitot igényel; bármely eltérés blokkolja.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-08",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-09",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/8",
+      "text_hu": "Újratervezést vagy javítást igénylő váratlan helyzetet a stratégia megváltoztatása előtt jelenteni kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-09",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-10",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/9",
+      "text_hu": "A tulajdonos aktuális, kifejezett korlátozásai felülírják a korábbi jogosultságokat és szélesebb engedélyeket.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-10",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "DEV-11",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/development_rules/10",
+      "text_hu": "A fejlesztő AI önállóan kizárólag saját, egyértelmű mechanikai vagy technikai hibáját javíthatja determinisztikusan, hatáskörbővítés és megkerülés nélkül; előtte értesítés és szükség esetén pontos állapotellenőrzés, utána részletes jelentés kötelező.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "DEV-11",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-01",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/0",
+      "text_hu": "A fejlesztő AI végrehajtása akadály esetén megáll, minden további mellékhatás előtt jelentéssel.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-01",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-02",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/1",
+      "text_hu": "A fejlesztő AI nem tekintheti a felhasználó célját hallgatólagos engedélynek egy akadály megkerülésére.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-02",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-03",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/2",
+      "text_hu": "Az AI-végrehajtáshoz kifejezett feladathatárnak, engedélyezett és tiltott műveleteknek, valamint kivételeknek kell társulniuk.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-03",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-04",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/3",
+      "text_hu": "A ténylegesen ellenőrzött friss állapot elsőbbséget élvez a gyorsítótárazott repository-, workflow- és futásidejű állapottal szemben.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-04",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-05",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/4",
+      "text_hu": "Másik ügynök, feladat vagy PR ütköző párhuzamos munkája blokkolja a módosítást.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-05",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-06",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/5",
+      "text_hu": "Az OLVASÁS, ELEMZÉS, TERVEZÉS, ÍRÁS, COMMIT, PUSH, PR, WORKFLOW, KAPU, MERGE, KIADÁS és KÜLSŐ MŰVELET jogai nem jelentik egymás automatikus engedélyezését.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-06",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-07",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/6",
+      "text_hu": "Minden állapotmódosító AI-művelethez hozzárendelhető auditbejegyzés szükséges.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-07",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-08",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/7",
+      "text_hu": "A konkrét állapothoz kötött engedély érvényét veszti az állapot lényeges megváltozásakor.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-08",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-09",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/8",
+      "text_hu": "Ismeretlen állapot, hatáskör, tulajdonos vagy jóváhagyási érvényesség esetén az AI leáll.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-09",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-10",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/9",
+      "text_hu": "A tulajdonos aktuális korlátozásai megelőzik a korábbi modellautonómiát.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-10",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_DEV_AI",
+      "id": "AI-11",
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_json_pointer": "/ai_behavior_rules/10",
+      "text_hu": "Az AI/modell/ügynök saját mechanikai hibája kizárólag a DEV-11 szigorú feltételeivel javítható; újratervezés, alternatív út, új PR vagy bizonytalan javítás esetén STOP.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "AI-11",
+      "admission_disposition": "MAPPED_TO_EXISTING_24"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CORE-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/0",
+      "text_hu": "Kitöltőszöveget (például Lorem ipsumot) nem szabad végleges kiadásba tenni.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CORE-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CORE-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/1",
+      "text_hu": "Helyőrző szöveg- vagy mérőszámjelölések nem maradhatnak a végleges változatban.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CORE-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CORE-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/2",
+      "text_hu": "Kitalált mérőszámokat vagy telemetriaadatokat tilos valós eredményként bemutatni.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CORE-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CORE-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/3",
+      "text_hu": "Általános reklámtúlzáshoz vagy bizonyítatlan állításhoz cél és alátámasztás kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CORE-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-UI-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/4",
+      "text_hu": "Terminálra hasonlító díszítőelem csak megjelölt funkcionális céllal használható.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-UI-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-UI-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/5",
+      "text_hu": "Bento-elrendezést az információs architektúrának kell indokolnia.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-UI-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-UI-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/6",
+      "text_hu": "Ismételt dekoratív emojik sablonos megjelenésre utalhatnak, ezért felülvizsgálandók.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-UI-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-UI-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/7",
+      "text_hu": "A grafikus felület nem hajthat végre közvetlenül szolgáltatót vagy shell-folyamatot.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-UI-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-COPY-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/8",
+      "text_hu": "Az általános reklámfordulatokat konkrét, ellenőrizhető állításokra kell cserélni.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-COPY-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-COPY-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/9",
+      "text_hu": "Emojival kezdett marketingfelsorolás csak meghatározott tartalmi céllal használható.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-COPY-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-COPY-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/10",
+      "text_hu": "Felsőfokú termékállításokhoz indoklás és bizonyíték szükséges.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-COPY-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-COPY-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/11",
+      "text_hu": "Bizonyítatlan, feltétlen garanciát sugalló állításokat tilos tenni.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-COPY-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-HUMAN-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/12",
+      "text_hu": "Interaktív elem billentyűzetes fókuszának tiltásához kifejezett indoklás kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-HUMAN-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-HUMAN-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/13",
+      "text_hu": "Akadálymentességi hozzáférés elrejtéséhez kifejezett indoklás szükséges.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-HUMAN-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-HUMAN-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/14",
+      "text_hu": "Nagyon alacsony átlátszatlanság ronthatja az olvashatóságot, ezért ellenőrizendő.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-HUMAN-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-HUMAN-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/15",
+      "text_hu": "A kezelőfelületi szöveg az elvégzendő műveletet nevezze meg, ne csak a kattintást.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-HUMAN-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-RESP-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/16",
+      "text_hu": "Nagy, rögzített szélességeket reszponzív megjelenés szempontjából ellenőrizni kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-RESP-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-RESP-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/17",
+      "text_hu": "Nagy, rögzített magasságokat reszponzív megjelenés szempontjából ellenőrizni kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-RESP-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-RESP-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/18",
+      "text_hu": "Szélsőségesen nagy, kötött szélességhatárok általános CFA3-felületen tiltottak.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-RESP-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-RESP-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/19",
+      "text_hu": "A platformméretre alapozott kizárást kifejezett termékindoklásnak kell alátámasztania. Eredeti angol szöveg: Platform-size exclusions require explicit product justification.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-RESP-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CODE-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/20",
+      "text_hu": "Díszítő megjegyzéselválasztók csak akkor indokoltak, ha segítik a kódbeli tájékozódást.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CODE-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CODE-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/21",
+      "text_hu": "Általános „AI generálta” megjegyzések többnyire nem javítják a karbantarthatóságot. Az AI további megjegyzését külön dokumentumban kell elhelyezni.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CODE-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CODE-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/22",
+      "text_hu": "A homályos teendőmegjegyzéseket pontosítani vagy eltávolítani kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CODE-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-CODE-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/23",
+      "text_hu": "Automatizált kódban a rögzített várakozási időket determinisztikus indokkal kell alátámasztani.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-CODE-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-FA3-001",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/24",
+      "text_hu": "Nem létező képesség valósnak feltüntetése tilos.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-FA3-001",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-FA3-002",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/25",
+      "text_hu": "Nem létező szolgáltató vagy modell valósnak feltüntetése tilos.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-FA3-002",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-FA3-003",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/26",
+      "text_hu": "Felhasználói vagy generált anyag nem adhat utasítást felhatalmazás megkerülésére.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-FA3-003",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-FA3-004",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/27",
+      "text_hu": "Hallgatólagos tartalékmegoldás tényleges működésként való feltüntetése tilos.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-FA3-004",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_QUALITY",
+      "id": "Q-FA3-005",
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_json_pointer": "/rules/28",
+      "text_hu": "Bizonyíték nélküli PASS vagy VERIFIED minősítést tilos állítani.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "Q-FA3-005",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "one_task_session_one_explicit_task",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/one_task_session_one_explicit_task",
+      "text_hu": "Beszélgetésenként egyetlen kifejezetten meghatározott feladat végezhető. A donor-felvétel és/vagy SDK-bővítés külön PR-ben párhuzamosan futhat, de valódi erőforrás- vagy fájlütközés változatlanul blokkol.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "one_task_session_one_explicit_task",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "goal_scope_bound_to_exact_goal_revision_and_digest",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/goal_scope_bound_to_exact_goal_revision_and_digest",
+      "text_hu": "A cél és a feladathatár konkrét célverzióhoz és lenyomathoz kötött.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "goal_scope_bound_to_exact_goal_revision_and_digest",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "in_scope_and_out_of_scope_overlap",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/in_scope_and_out_of_scope_overlap",
+      "text_hu": "Az engedélyezett és tiltott műveleti kör nem fedheti egymást.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "in_scope_and_out_of_scope_overlap",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "automatic_scope_expansion",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/automatic_scope_expansion",
+      "text_hu": "A feladat határa nem bővíthető önkényesen és automatikusan.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "automatic_scope_expansion",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "out_of_scope_work",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/out_of_scope_work",
+      "text_hu": "Az eredeti feladaton kívüli munka új feladatazonosítót és külön felhasználói indítást igényel.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "out_of_scope_work",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "max_same_blocker_attempts",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/max_same_blocker_attempts",
+      "text_hu": "Azonos akadály esetén legfeljebb három dokumentált próbálkozás engedett a történeti döntés szerint.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "max_same_blocker_attempts",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "fourth_same_blocker_attempt",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/fourth_same_blocker_attempt",
+      "text_hu": "Ugyanazon akadály negyedik automatikus próbálkozása tiltott.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "fourth_same_blocker_attempt",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "third_same_blocker_failure",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/third_same_blocker_failure",
+      "text_hu": "Három sikertelen alkalom után a feladat befagy, és emberi beavatkozást igényel.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "third_same_blocker_failure",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "automatic_retry_after_human_block",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/automatic_retry_after_human_block",
+      "text_hu": "Emberi beavatkozást igénylő akadály után nincs automatikus újrapróbálkozás.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "automatic_retry_after_human_block",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "automatic_replan_after_human_block",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/automatic_replan_after_human_block",
+      "text_hu": "Emberi akadály után nincs önálló újratervezés.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "automatic_replan_after_human_block",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "automatic_alternative_route_after_human_block",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/automatic_alternative_route_after_human_block",
+      "text_hu": "Emberi akadály után nincs önálló alternatív végrehajtási út.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "automatic_alternative_route_after_human_block",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "start_and_resume_require_fresh_task_scope_admission",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/start_and_resume_require_fresh_task_scope_admission",
+      "text_hu": "Indítás és folytatás friss feladathatár-jóváhagyást igényel.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "start_and_resume_require_fresh_task_scope_admission",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "cached_execution_plan_may_not_bypass_newer_control_revision",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/cached_execution_plan_may_not_bypass_newer_control_revision",
+      "text_hu": "Régi, gyorsítótárazott terv nem írhatja felül az újabb ellenőrzési döntést.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "cached_execution_plan_may_not_bypass_newer_control_revision",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "closed_task_execution",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/closed_task_execution",
+      "text_hu": "Lezárt feladat végrehajtása tilos.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "closed_task_execution",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "verified_closure",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/verified_closure",
+      "text_hu": "Igazolt lezáráshoz ellenőrizhető bizonyíték- és jogosultsági nyugta kell.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "verified_closure",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "automatic_followup_execution",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/automatic_followup_execution",
+      "text_hu": "A következő feladat nem indulhat automatikusan.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "automatic_followup_execution",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "followup_handoff_must_be_persisted_in_task_control",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/followup_handoff_must_be_persisted_in_task_control",
+      "text_hu": "A folytatási átadásnak maradandóan szerepelnie kell a feladatvezérlésben.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "followup_handoff_must_be_persisted_in_task_control",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "user_closure_states",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/user_closure_states",
+      "text_hu": "A történeti lezárási állapotok: kész; új feladat azonosítva; emberi beavatkozás szükséges.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "user_closure_states",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "all_executable_scope_origins_require_immutable_binding",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/all_executable_scope_origins_require_immutable_binding",
+      "text_hu": "Minden végrehajtható feladateredet változtathatatlan kötést kíván.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "all_executable_scope_origins_require_immutable_binding",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "all_executable_scope_origins_require_task_control",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/all_executable_scope_origins_require_task_control",
+      "text_hu": "Minden végrehajtható feladateredet kötelező feladatvezérlés alatt áll.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "all_executable_scope_origins_require_task_control",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "scope_origin_provenance_preserved_end_to_end",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/scope_origin_provenance_preserved_end_to_end",
+      "text_hu": "A feladathatár eredete és bizonyítási lánca végig megőrzendő.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "scope_origin_provenance_preserved_end_to_end",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "active_main_task_identity_immutable",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/active_main_task_identity_immutable",
+      "text_hu": "Az aktív főfeladat azonosítója önkényesen nem módosítható.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "active_main_task_identity_immutable",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "main_task_switch_authority",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/main_task_switch_authority",
+      "text_hu": "A főfeladat megváltoztatása kizárólag kifejezett tulajdonosi döntéssel lehetséges.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "main_task_switch_authority",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "new_runtime_rule_is_constraint_not_automatic_main_task",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/new_runtime_rule_is_constraint_not_automatic_main_task",
+      "text_hu": "Egy új futásidejű szabály korlát, nem automatikusan új főfeladat.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "new_runtime_rule_is_constraint_not_automatic_main_task",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+      "text_hu": "A párhuzamos feladat vagy PR nem válik automatikusan az aktuális főfeladattá.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "blocker_may_stop_but_not_reassign_main_task",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/blocker_may_stop_but_not_reassign_main_task",
+      "text_hu": "Az akadály megállíthatja, de nem oszthatja át a főfeladatot.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "blocker_may_stop_but_not_reassign_main_task",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    },
+    {
+      "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
+      "id": "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_json_pointer": "/rules/owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+      "text_hu": "Tulajdonosi főfeladatváltás új vagy kifejezetten újrakötött feladatvezérlést igényel.",
+      "current_rule_admission": true,
+      "active_execution_check": true,
+      "mapped_to_rule_id": "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+      "admission_disposition": "ADMITTED_ADDITIONAL_56"
+    }
+  ],
+  "historical_reconciliation": {
+    "source_count": 78,
+    "mapped_existing": 22,
+    "admitted_new": 56,
+    "excluded_for_conflict": 0,
+    "active_count": 80,
+    "all_source_rules_accounted_for": true,
+    "authority": "OWNER_2026_10_11"
+  }
 }

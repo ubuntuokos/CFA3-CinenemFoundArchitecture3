@@ -42,7 +42,7 @@ def validate(reg, tree, ledger):
         for g in groups:
             path=g.get("source_path")
             if (path in seen or sources.get(path)!=g.get("source_git_sha")
-                or g.get("owner_admitted") is not False or g.get("status")!="UNRECONCILED"):
+                or g.get("owner_admitted") is not True or g.get("status")!="OWNER_APPROVED_NAMED_78_ONLY"):
                 errors.append("candidate source drift or unauthorized admission")
             seen.add(path)
             pairs=g.get("rule_pointers")

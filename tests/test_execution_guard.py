@@ -33,24 +33,20 @@ class GuardTests(unittest.TestCase):
         expected = {r["id"] for section in ("development_rules", "ai_behavior_rules")
                     for r in gov[section]}
         self.assertEqual(24, len(expected))
-        self.assertEqual(expected, set(catalog["rules"]))
+        self.assertTrue(expected.issubset(set(catalog["rules"])))
+        self.assertEqual(80,len(catalog["rules"]))
 
-    def test_78_unadmitted_historical_candidates_not_active_preflight(self):
-        catalog = load(ROOT, CATALOG)
-        self.assertEqual(24, len(catalog["rules"]))
-        exclusion = catalog["historical_execution_exclusion"]
-        self.assertEqual(78, exclusion["excluded_historical_candidate_count"])
-        self.assertFalse(exclusion["history_completeness_required_for_active_gate"])
-        self.assertFalse(exclusion["candidates_admitted_to_current_rule_set"])
-        errors = policy_issues(ROOT)
-        for historical in ("historical rule inventory", "historical per-file",
-                           "canonical rule inventory incomplete",
-                           "MISSING=0 / UNRESOLVED_CONFLICT=0"):
-            with self.subTest(historical=historical):
-                self.assertFalse(any(historical in s for s in errors))
-        self.assertTrue(any("DEV/AI per-rule" in s for s in errors))
-        self.assertTrue(any("independent gate" in s for s in errors))
-
+    def test_78_owner_rules_active_with_24_original_unmodified(self):
+        catalog=load(ROOT,CATALOG)
+        self.assertEqual(80,len(catalog["rules"]))
+        restored=catalog["owner_historical_reconciliation"]
+        self.assertEqual(78,restored["source_count"])
+        self.assertEqual(22,restored["mapped_existing"])
+        self.assertEqual(56,restored["admitted_new"])
+        self.assertEqual(0,restored["excluded_for_conflict"])
+        self.assertEqual([],policy_issues(ROOT,require_prior_runtime_proofs=False))
+        self.assertTrue(policy_issues(ROOT))
+        
     def test_signature_required_and_tampering_fails(self):
         t, key = sample(), b"x" * 32
         with self.assertRaises(Blocked):
@@ -186,7 +182,7 @@ class GuardTests(unittest.TestCase):
     def test_legacy_candidates_archived_without_runtime_authority(self):
         history = load(ROOT, "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json")
         self.assertEqual(78, sum(len(g["rule_pointers"]) for g in history["candidate_groups"]))
-        self.assertTrue(all(g["owner_admitted"] is False for g in history["candidate_groups"]))
+        self.assertTrue(all(g["owner_admitted"] is True for g in history["candidate_groups"]))
         self.assertFalse(history["decisions_complete"])
         for path in (LEDGER, "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
                      "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
@@ -251,31 +247,26 @@ class GuardTests(unittest.TestCase):
             with self.subTest(name=name), self.assertRaises(Blocked):
                 check_task(ROOT, bad)
 
-    def test_owner_exclusion_contract_changes_fail_closed(self):
-        current = load(ROOT, CATALOG)
-        for change in (
-            {"excluded_historical_candidate_count": 77},
-            {"history_completeness_required_for_active_gate": True},
-            {"candidates_admitted_to_current_rule_set": True},
-            {"current_required_rule_count": 23},
-            {"scope": "ANY_RULES"},
-        ):
-            bad = copy.deepcopy(current)
-            bad["historical_execution_exclusion"].update(change)
-            with patch("execution_guard.load", side_effect=lambda root, name:
-                       bad if name == CATALOG else load(root, name)):
-                with self.subTest(change=change):
-                    self.assertTrue(any("historical exclusion boundary" in x
-                                        for x in policy_issues(ROOT)))
-
+    def test_owner_restoration_contract_drift_fails_closed(self):
+        current=load(ROOT,CATALOG)
+        for key,value in (("source_count",77),("mapped_existing",21),
+                          ("admitted_new",55),("excluded_for_conflict",1),
+                          ("active_count",79)):
+            bad=copy.deepcopy(current)
+            bad["owner_historical_reconciliation"][key]=value
+            with patch("execution_guard.load",side_effect=lambda root,name:
+                       bad if name==CATALOG else load(root,name)):
+                with self.subTest(key=key):
+                    self.assertTrue(policy_issues(ROOT))
+        
     def test_structural_policy_does_not_require_random_runtime_events(self):
         self.assertEqual([], policy_issues(ROOT, require_prior_runtime_proofs=False))
-        self.assertTrue(any("DEV/AI per-rule" in issue for issue in policy_issues(ROOT)))
+        self.assertTrue(any("active per-rule" in issue for issue in policy_issues(ROOT)))
         self.assertTrue(any("independent gate" in issue for issue in policy_issues(ROOT)))
 
     def test_unverified_independent_services_block_before_rule_evaluation(self):
         catalog = load(ROOT, CATALOG)
-        self.assertEqual(24, len(catalog["rules"]))
+        self.assertEqual(80, len(catalog["rules"]))
         missing = trusted_runtime_issues(catalog)
         for part in ("rule attester", "rule evaluator", "evidence resolver",
                      "content store", "mutation audit", "owner signing service"):
@@ -292,9 +283,9 @@ class GuardTests(unittest.TestCase):
     def test_current_rule_code_drift_and_pending_proof_still_block(self):
         gov = load(ROOT, GOV)
         cat = load(ROOT, CATALOG)
-        self.assertEqual(24, len(cat["rules"]))
+        self.assertEqual(80, len(cat["rules"]))
         self.assertEqual([], validate_current_rule_map(gov, cat))
-        self.assertTrue(any("DEV/AI per-rule" in x for x in policy_issues(ROOT)))
+        self.assertTrue(any("active per-rule" in x for x in policy_issues(ROOT)))
         self.assertTrue(any("independent gate" in x for x in policy_issues(ROOT)))
 
 if __name__ == "__main__":

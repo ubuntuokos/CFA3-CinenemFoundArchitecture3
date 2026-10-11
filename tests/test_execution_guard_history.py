@@ -18,9 +18,9 @@ class HistoricalIntegrityTests(unittest.TestCase):
         self.assertEqual(21,self.reg["source_seed_count"])
         self.assertEqual([],self.reg["reviewed_dispositions"])
         self.assertTrue(pending(self.reg,self.tree))
-    def test_machine_rule_pointers_not_owner_admitted(self):
+    def test_78_machine_rule_pointers_owner_admitted_only(self):
         self.assertEqual(78,sum(len(g["rule_pointers"]) for g in self.reg["candidate_groups"]))
-        self.assertTrue(all(not g["owner_admitted"] for g in self.reg["candidate_groups"]))
+        self.assertTrue(all(g["owner_admitted"] for g in self.reg["candidate_groups"]))
     def test_fake_complete_state_fails(self):
         bad=copy.deepcopy(self.reg);bad["decisions_complete"]=True
         bad["missing_rules"]=0;bad["unresolved_conflicts"]=0

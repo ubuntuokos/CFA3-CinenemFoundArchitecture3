@@ -61,57 +61,33 @@ def load(root, name):
     except (OSError, ValueError, TypeError) as exc:
         raise Blocked("authoritative source unavailable: " + name) from exc
 
-def validate_current_rule_map(governance, catalog):
-    """Exact current canonical rule-code and evidence-state mapping.
-
-    A catalog that only contains the right IDs but swaps the meaning of one
-    code is invalid. Mapping is NOT a verified runtime policy implementation.
-    """
-    issues = []
-    if not isinstance(governance, dict) or not isinstance(catalog, dict):
-        return ["canonical governance or rule catalog is not an object"]
-    mapped = catalog.get("rules")
-    if not isinstance(mapped, dict):
-        return ["DEV/AI catalog rules missing"]
-    expected = {}
-    for section, prefix in (("development_rules", "DEV"), ("ai_behavior_rules", "AI")):
-        records = governance.get(section)
-        if not isinstance(records, list) or len(records) != 12:
-            issues.append("current canonical rule section must have 12 entries: " + section)
-            continue
-        for n, item in enumerate(records, 1):
-            if not isinstance(item, dict):
-                issues.append("malformed canonical rule")
-                continue
-            ident, code = item.get("id"), item.get("code")
-            if ident != "%s-%02d" % (prefix, n) or not isinstance(code, str) or not code:
-                issues.append("canonical rule ID/code/sequence invalid: " + section)
-                continue
-            if ident in expected:
-                issues.append("duplicate canonical rule ID")
-            expected[ident] = code
-    if len(expected) != 24 or set(mapped) != set(expected):
-        issues.append("DEV/AI inventory differs from 24 canonical rule identities")
-    for ident, code in expected.items():
-        row = mapped.get(ident)
-        if not isinstance(row, dict) or row.get("code") != code:
-            issues.append("DEV/AI canonical code mismatch: " + ident)
-        elif row.get("status") not in ("PENDING_RUNTIME_GATE_AND_PROOF", "VERIFIED_GATE"):
-            issues.append("unknown gate state: " + ident)
-    return issues
+def validate_current_rule_map(governance,catalog,owner_spec=None):
+    from check_execution_guard_rule_spec import SPEC,active_expected_codes
+    problems=[]
+    try:
+        if owner_spec is None: owner_spec=load(ROOT,SPEC)
+        required=active_expected_codes(governance,owner_spec)
+        rows=catalog.get("rules") if isinstance(catalog,dict) else None
+        if not isinstance(rows,dict) or set(rows)!=set(required):
+            problems.append("80 current active rule identities incomplete")
+        else:
+            for ident,code in required.items():
+                row=rows[ident]
+                if not isinstance(row,dict) or row.get("code")!=code:
+                    problems.append("canonical rule code mismatch: "+ident)
+                elif row.get("status") not in ("PENDING_RUNTIME_GATE_AND_PROOF","VERIFIED_GATE"):
+                    problems.append("unknown gate state: "+ident)
+    except (Blocked,ValueError,TypeError,KeyError,ImportError) as exc:
+        problems.append("owner-approved rule identities unavailable: "+str(exc))
+    return problems
 
 def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
     """Verify immutable policy sources and, on status queries, runtime admission.
 
     The executor verifies fresh task-scoped receipts AFTER immutable policy
     validation. Conditional incidents must not be an upfront policy condition.
-    Historical candidates remain excluded.
-
-    Evaluate admitted, current 24 DEV/AI rules only; legacy candidates excluded.
-
-    Owner-scoped exception: the 78 historical candidates and the full legacy
-    rule-disposition work remain UNRECONCILED and archived, but do not supply
-    active preflight requirements or evidence gates. No global CFA3 admission.
+    All 78 returned provisions are included (22 mapped to existing rules,
+    56 additional quality/task-scope rules). No global legacy admission.
     """
     try:
         gov, catalog = [load(root, n) for n in (GOV, CATALOG)]
@@ -120,20 +96,20 @@ def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
     issues = []
     if catalog.get("schema") != "cfa3.execution-guard-coverage.v1":
         issues.append("invalid coverage catalog")
-    issues.extend(validate_current_rule_map(gov, catalog))
     try:
         from check_execution_guard_rule_spec import validate, SPEC, EXPORT
         owner_spec = load(root, SPEC)
         evidence_export = load(root, EXPORT)
-        issues.extend(validate(owner_spec, gov, catalog, evidence_export))
+        issues.extend(validate_current_rule_map(gov,catalog,owner_spec))
+        issues.extend(validate(owner_spec,gov,catalog,evidence_export))
     except (Blocked, ImportError, OSError, TypeError, ValueError, KeyError):
-        issues.append("owner-provided 24-rule normative source unavailable")
+        issues.append("owner-provided 80-rule normative source unavailable")
     if require_prior_runtime_proofs:
         rules = catalog.get("rules", {})
         if not isinstance(rules, dict) or any(
                 not isinstance(record, dict) or record.get("status") != "VERIFIED_GATE"
                 for record in rules.values()):
-            issues.append("DEV/AI per-rule execution gates not verified")
+            issues.append("active per-rule execution gates not verified")
     policy_files = {str(p.relative_to(root)) for p in
                     (Path(root) / "canonical/policies").glob("*.json")}
     if (set(catalog.get("policy_files", [])) != policy_files or
@@ -145,14 +121,11 @@ def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
         issues.extend(validate_snapshot(surface, root))
     except (Blocked, OSError, ValueError, TypeError, ImportError):
         issues.append("canonical policy field snapshot unavailable or inconsistent")
-    exclusion = catalog.get("historical_execution_exclusion")
-    if (not isinstance(exclusion, dict) or
-            exclusion.get("scope") != "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY" or
-            exclusion.get("excluded_historical_candidate_count") != 78 or
-            exclusion.get("history_completeness_required_for_active_gate") is not False or
-            exclusion.get("candidates_admitted_to_current_rule_set") is not False or
-            exclusion.get("current_required_rule_count") != 24):
-        issues.append("explicit historical exclusion boundary invalid")
+    restored=catalog.get("owner_historical_reconciliation",{})
+    if (not isinstance(restored,dict) or restored.get("source_count")!=78
+            or restored.get("mapped_existing")!=22 or restored.get("admitted_new")!=56
+            or restored.get("excluded_for_conflict")!=0 or restored.get("active_count")!=80):
+        issues.append("owner-approved 78-rule restoration boundary invalid")
     if (require_prior_runtime_proofs and
             catalog.get("independent_evidence_verified") is not True):
         issues.append("independent gate execution evidence absent")
@@ -369,9 +342,9 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         raise Blocked("RULE_GATE: " + str(exc)) from exc
     evidence = admission(task)
     if not isinstance(evidence, dict) or any(evidence.get(x) is not True for x in (
-            "current_24_rule_inventory_verified", "current_24_rule_gates_verified",
-            "current_24_conflicts_resolved", "independent_proof_verified")):
-        raise Blocked("independent current-24 rule admission not verified")
+            "current_80_rule_inventory_verified", "current_80_rule_gates_verified",
+            "current_80_conflicts_resolved", "independent_proof_verified")):
+        raise Blocked("independent current-80 rule admission not verified")
     proof = live_state(task)
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
             "main_current", "head_current", "no_overlap", "checks_passed",

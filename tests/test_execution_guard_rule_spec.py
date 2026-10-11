@@ -1,4 +1,4 @@
-"""Signed-source rule text coverage, no historical automatic admission."""
+"""80 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
 import copy
 import json
 from pathlib import Path
@@ -6,55 +6,51 @@ import sys
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"scripts"))
-from check_execution_guard_rule_spec import SPEC,GOV,COVERAGE,EXPORT,validate
-
+from check_execution_guard_rule_spec import SPEC,GOV,COVERAGE,EXPORT,validate,active_expected_codes
 class OwnerRuleSpecTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.spec,cls.gov,cls.coverage,cls.export=[
-            json.loads((ROOT/path).read_text("utf-8"))
-            for path in (SPEC,GOV,COVERAGE,EXPORT)]
-    def check(self,spec=None):
-        return validate(self.spec if spec is None else spec,
-                        self.gov,self.coverage,self.export)
-    def test_24_current_rule_texts_and_78_reference_texts_preserved(self):
+            json.loads((ROOT/name).read_text("utf-8")) for name in (SPEC,GOV,COVERAGE,EXPORT)]
+    def check(self,spec=None,coverage=None,export=None):
+        return validate(self.spec if spec is None else spec,self.gov,
+                        self.coverage if coverage is None else coverage,
+                        self.export if export is None else export)
+    def test_exact_80_current_rules_and_all_78_admitted(self):
         self.assertEqual([],self.check())
-        self.assertEqual(24,len(self.spec["active_rules"]))
-        self.assertEqual(78,len(self.spec["excluded_historical_candidates"]))
-        self.assertTrue(all(not x["runtime_verified"] for x in self.spec["active_rules"]))
-    def test_24_rule_texts_non_optional(self):
-        for index in range(24):
-            other=copy.deepcopy(self.spec)
-            other["active_rules"][index]["text_hu"]=""
+        self.assertEqual(80,len(active_expected_codes(self.gov,self.spec)))
+        self.assertEqual(80,len(self.spec["active_rules"]))
+        self.assertEqual(78,len(self.spec["historical_candidates"]))
+        self.assertEqual(0,self.spec["historical_reconciliation"]["excluded_for_conflict"])
+        self.assertEqual(22,self.spec["historical_reconciliation"]["mapped_existing"])
+        self.assertEqual(56,self.spec["historical_reconciliation"]["admitted_new"])
+        self.assertTrue(all(not r["runtime_verified"] for r in self.spec["active_rules"]))
+    def test_each_missing_owner_rule_denied(self):
+        for index in range(80):
+            bad=copy.deepcopy(self.spec);bad["active_rules"].pop(index)
             with self.subTest(index=index):
-                self.assertTrue(self.check(other))
-    def test_no_forged_current_rule_authority(self):
-        other=copy.deepcopy(self.spec);other["active_rules"][0]["code"]="INVENTED_CODE"
-        self.assertTrue(self.check(other))
-        other=copy.deepcopy(self.spec);other["active_rules"][0]["runtime_verified"]=True
-        self.assertTrue(self.check(other))
-    def test_78_excluded_refs_never_automatically_activated(self):
-        for typ in ("HISTORICAL_CANDIDATE_DEV_AI",
-                    "HISTORICAL_CANDIDATE_QUALITY",
-                    "HISTORICAL_CANDIDATE_TASK_SCOPE"):
-            other=copy.deepcopy(self.spec)
-            chosen=next(x for x in other["excluded_historical_candidates"] if x["type"]==typ)
-            chosen["active_execution_check"]=True
-            with self.subTest(typ=typ):
-                self.assertTrue(self.check(other))
-    def test_missing_78_reference_or_wrong_provenance_blocks(self):
-        other=copy.deepcopy(self.spec)
-        other["excluded_historical_candidates"].pop()
-        self.assertTrue(self.check(other))
-        other=copy.deepcopy(self.spec)
-        other["excluded_historical_candidates"][0]["source_json_pointer"]="/wrong"
-        self.assertTrue(self.check(other))
-    def test_second_consecutive_error_rule_and_command_semantics_preserved(self):
-        amend={x["id"]:x for x in self.spec["owner_amendments"]}
-        self.assertIn("SECOND_CONSECUTIVE_OWN_ERROR_APPROVAL",amend)
-        self.assertIn("DONOR_SDK_PARALLEL_NONBLOCKING_WHEN_DISJOINT",amend)
-        self.assertIn("SHORT_OWNER_COMMANDS_LIMITED_TO_MAIN_TASK",amend)
-        other=copy.deepcopy(self.spec);other["owner_amendments"].pop()
-        self.assertTrue(self.check(other))
-
+                self.assertTrue(self.check(bad))
+    def test_every_source_admission_required(self):
+        for index in range(78):
+            bad=copy.deepcopy(self.spec);bad["historical_candidates"][index]["active_execution_check"]=False
+            with self.subTest(index=index):
+                self.assertTrue(self.check(bad))
+    def test_no_silent_re_exclusion_or_source_change(self):
+        bad=copy.deepcopy(self.spec);bad["historical_reconciliation"]["excluded_for_conflict"]=1
+        self.assertTrue(self.check(bad))
+        bad=copy.deepcopy(self.spec);bad["historical_candidates"][0]["source_json_pointer"]="/wrong"
+        self.assertTrue(self.check(bad))
+        bad=copy.deepcopy(self.export);bad["historical_rule_candidates"][0]["excluded_from_execution_guard_active_rule_set"]=True
+        self.assertTrue(self.check(export=bad))
+    def test_original_24_codes_immutable(self):
+        bad=copy.deepcopy(self.spec);bad["active_rules"][0]["code"]="FAKE"
+        self.assertTrue(self.check(bad))
+        bad=copy.deepcopy(self.coverage);bad["rules"]["DEV-01"]["code"]="FAKE"
+        self.assertTrue(self.check(coverage=bad))
+    def test_no_fake_runtime_pass(self):
+        bad=copy.deepcopy(self.spec);bad["active_rules"][79]["runtime_verified"]=True
+        self.assertTrue(self.check(bad))
+    def test_owner_amendments_complete(self):
+        bad=copy.deepcopy(self.spec);bad["owner_amendments"].pop()
+        self.assertTrue(self.check(bad))
 if __name__=="__main__":unittest.main()

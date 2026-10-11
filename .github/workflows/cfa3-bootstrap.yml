@@ -22,9 +22,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
-      - name: Verify owner-supplied normative text without admitting excluded history
+      - name: Verify owner-supplied normative text with all owner-admitted historical provisions
         run: python3 scripts/check_execution_guard_rule_spec.py
-      - name: Validate 24 current rule identities without forcing conditional runtime incidents
+      - name: Validate 80 owner-admitted rule identities without forcing conditional runtime incidents
         run: python3 scripts/check_execution_rule_evidence.py --bootstrap-report
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v

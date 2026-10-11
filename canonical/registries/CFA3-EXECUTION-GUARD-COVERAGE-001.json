@@ -1,0 +1,131 @@
+{
+  "schema": "cfa3.execution-guard-coverage.v1",
+  "id": "CFA3-EXECUTION-GUARD-COVERAGE-001",
+  "status": "PARTIAL_FOUNDATION_DENY_ALL_SIDE_EFFECTS",
+  "policy_files": [
+    "canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",
+    "canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",
+    "canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json",
+    "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
+    "canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json"
+  ],
+  "rules": {
+    "DEV-01": {
+      "code": "STOP_ON_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-02": {
+      "code": "NO_AUTONOMOUS_WORKAROUND",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-03": {
+      "code": "THREAD_SCOPE_LOCK",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-04": {
+      "code": "FRESH_STATE_BEFORE_WRITE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-05": {
+      "code": "OVERLAP_IS_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-06": {
+      "code": "NO_AUTOMATIC_WORKFLOW_OR_GATE_START",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-07": {
+      "code": "REPORT_AFTER_EVERY_MUTATION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-08": {
+      "code": "EXACT_HEAD_BEFORE_MERGE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-09": {
+      "code": "NO_SILENT_REDESIGN_OR_REPAIR",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-10": {
+      "code": "CURRENT_OWNER_RESTRICTION_WINS",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-11": {
+      "code": "NARROW_SELF_CORRECTION_EXCEPTION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-12": {
+      "code": "NO_ASSUMPTIONS_EXACT_SCOPE_AND_CANONICAL_DESIGN",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-01": {
+      "code": "STOP_ON_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-02": {
+      "code": "NO_INFERRED_BYPASS",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-03": {
+      "code": "EXPLICIT_SCOPE_BINDING",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-04": {
+      "code": "FRESH_STATE_OVER_CACHE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-05": {
+      "code": "CROSS_AGENT_COLLISION_BLOCK",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-06": {
+      "code": "EXPLICIT_SIDE_EFFECT_LEVEL",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-07": {
+      "code": "MUTATION_AUDIT",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-08": {
+      "code": "EXACT_STATE_AUTHORIZATION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-09": {
+      "code": "UNKNOWN_IS_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-10": {
+      "code": "LATEST_OWNER_CONSTRAINT_WINS",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-11": {
+      "code": "NARROW_SELF_CORRECTION_EXCEPTION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-12": {
+      "code": "NO_ASSUMPTIONS_AND_MANDATORY_CFA3_COMPLIANCE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    }
+  },
+  "historical": {
+    "repository": "ubuntuokos/Final-Architecture-v3.0",
+    "commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+    "files": 3159,
+    "content_reviewed": 21,
+    "inventory_complete": false
+  },
+  "coverage_complete": false,
+  "missing_rules": null,
+  "unresolved_conflicts": null,
+  "independent_evidence_verified": false,
+  "approved_design_sources": [],
+  "limitations": [
+    "NO_FULL_LEGACY_INVENTORY",
+    "NO_TRUSTED_EXECUTION_ADAPTER",
+    "NATIVE_CHATGPT_TOOLS_NOT_INTERCEPTED",
+    "NO_VERIFIED_FULL_GUI_DESIGN",
+    "RULE_GATE_PROOFS_PENDING",
+    "NO_REQUIRED_GITHUB_CHECKS",
+    "NO_PHYSICAL_CURRENT_HOST_PASS"
+  ]
+}

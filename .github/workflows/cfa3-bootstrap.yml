@@ -18,16 +18,10 @@ jobs:
         run: python3 scripts/check_bootstrap.py
       - name: Verify full current canonical policy JSON surface
         run: python3 scripts/check_guard_policy_surface.py
-      - name: Verify every historical rule ledger blob against frozen Git tree
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: python3 scripts/check_legacy_rule_blobs.py
       - name: Verify actual main-protection required checks and no bypass
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
-      - name: Validate exhaustive historical rule-source accountability
-        run: python3 scripts/check_execution_guard_history.py
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v
       - name: Verify Rust-first contract workspace

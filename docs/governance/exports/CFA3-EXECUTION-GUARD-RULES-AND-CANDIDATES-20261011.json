@@ -14,7 +14,7 @@
     "unreviewed_historical_files": 3159,
     "content_review_not_completed": true
   },
-  "important": "An export, not a new rule admission or approval. Historical candidates are NOT in the 24-current-rule attestation set, but separate governance-completeness checks still block overall execution; no checks have been disabled.",
+  "important": "78 historical rule candidates and historical completeness prerequisites are excluded from the active Execution Guard 24-rule evaluation per explicit owner scope. Current 24 rules and all independent proofs remain mandatory. Archives and non-admission states persist; no full-governance PASS.",
   "current_rules": [
     {
       "type": "CURRENT_CANONICAL_RULE",
@@ -292,7 +292,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -304,7 +305,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -316,7 +318,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -328,7 +331,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -340,7 +344,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -352,7 +357,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -364,7 +370,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -376,7 +383,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -388,7 +396,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -400,7 +409,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -412,7 +422,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -424,7 +435,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -436,7 +448,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -448,7 +461,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -460,7 +474,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -472,7 +487,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -484,7 +500,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -496,7 +513,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -508,7 +526,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -520,7 +539,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -532,7 +552,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_DEV_AI",
@@ -544,7 +565,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
       "source_git_blob_sha1": "622408f842d684f60de9590fddbf136110005675",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -561,7 +583,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -578,7 +601,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -595,7 +619,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -612,7 +637,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -629,7 +655,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -646,7 +673,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -663,7 +691,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -680,7 +709,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -697,7 +727,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -714,7 +745,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -731,7 +763,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -748,7 +781,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -765,7 +799,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -782,7 +817,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -799,7 +835,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -816,7 +853,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -833,7 +871,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -850,7 +889,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -867,7 +907,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -884,7 +925,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -901,7 +943,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -918,7 +961,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -935,7 +979,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -952,7 +997,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -969,7 +1015,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -986,7 +1033,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -1003,7 +1051,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -1020,7 +1069,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_QUALITY",
@@ -1037,7 +1087,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
       "source_git_blob_sha1": "106403d560fefc7d12ce2768e32926685e05dde4",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1050,7 +1101,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1063,7 +1115,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1076,7 +1129,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1089,7 +1143,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1102,7 +1157,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1115,7 +1171,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1128,7 +1185,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1141,7 +1199,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1154,7 +1213,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1167,7 +1227,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1180,7 +1241,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1193,7 +1255,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1206,7 +1269,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1219,7 +1283,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1232,7 +1297,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1245,7 +1311,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1258,7 +1325,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1275,7 +1343,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1288,7 +1357,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1301,7 +1371,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1314,7 +1385,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1327,7 +1399,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1340,7 +1413,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1353,7 +1427,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1366,7 +1441,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1379,7 +1455,8 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     },
     {
       "type": "HISTORICAL_CANDIDATE_TASK_SCOPE",
@@ -1392,14 +1469,17 @@
       "source_url": "https://github.com/ubuntuokos/Final-Architecture-v3.0/blob/a9c724da62bf49f3353c694990fc51443e634b4a/canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
       "source_git_blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "authority": "UNRECONCILED_NOT_ADMITTED",
-      "active_rule_receipt_scope": false
+      "active_rule_receipt_scope": false,
+      "excluded_from_execution_guard_active_rule_set": true
     }
   ],
   "additional_unclassified_historical_sources": {
     "count": 3159,
     "inventory_source": "https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/blob/11fee820611a8949b6df4b52d4d40a2f236937c4/canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
-    "status": "UNREVIEWED_RULE_APPLICABILITY"
+    "status": "UNREVIEWED_RULE_APPLICABILITY",
+    "active_24_rule_gate_completeness_precondition": false
   },
   "review_status": "INCOMPLETE",
-  "exclusion_request_status": "AWAITING_PRECISE_OWNER_SCOPE_FOR_ANY_MANDATORY_GATE_CHANGE"
+  "exclusion_request_status": "OWNER_CONFIRMED_ACTIVE_24_RULE_SCOPE_EXCLUDES_78_UNADMITTED_HISTORICAL_CANDIDATES",
+  "exclusion_implemented_in_pr_13": true
 }

@@ -34,8 +34,21 @@ class GuardTests(unittest.TestCase):
         self.assertEqual(24, len(expected))
         self.assertEqual(expected, set(catalog["rules"]))
 
-    def test_unreviewed_historical_rules_block(self):
-        self.assertTrue(any("historical rule inventory" in s for s in policy_issues(ROOT)))
+    def test_78_unadmitted_historical_candidates_not_active_preflight(self):
+        catalog = load(ROOT, CATALOG)
+        self.assertEqual(24, len(catalog["rules"]))
+        exclusion = catalog["historical_execution_exclusion"]
+        self.assertEqual(78, exclusion["excluded_historical_candidate_count"])
+        self.assertFalse(exclusion["history_completeness_required_for_active_gate"])
+        self.assertFalse(exclusion["candidates_admitted_to_current_rule_set"])
+        errors = policy_issues(ROOT)
+        for historical in ("historical rule inventory", "historical per-file",
+                           "canonical rule inventory incomplete",
+                           "MISSING=0 / UNRESOLVED_CONFLICT=0"):
+            with self.subTest(historical=historical):
+                self.assertFalse(any(historical in s for s in errors))
+        self.assertTrue(any("DEV/AI per-rule" in s for s in errors))
+        self.assertTrue(any("independent gate" in s for s in errors))
 
     def test_signature_required_and_tampering_fails(self):
         t, key = sample(), b"x" * 32
@@ -147,8 +160,10 @@ class GuardTests(unittest.TestCase):
     def test_preflight_failure_consumes_no_quota(self):
         t, key = sample(), b"x" * 32
         t["signature"] = hmac.new(key, canonical_bytes(t), hashlib.sha256).hexdigest()
-        ok = dict(complete_rule_inventory=True, rule_gates_verified=True,
-                  all_conflicts_resolved=True, independent_proof_verified=True)
+        ok = dict(current_24_rule_inventory_verified=True,
+                  current_24_rule_gates_verified=True,
+                  current_24_conflicts_resolved=True,
+                  independent_proof_verified=True)
         state = dict(main_current=True, head_current=True, no_overlap=True,
                      checks_passed=True, review_threads_clear=True,
                      owner_scope_approved=True, main_ruleset_verified=True,
@@ -166,12 +181,17 @@ class GuardTests(unittest.TestCase):
             self.assertEqual([], called)
             self.assertFalse((Path(location) / "receipts.json").exists())
 
-    def test_full_legacy_tree_is_explicitly_pending_rule_review(self):
-        frozen = load(ROOT, "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json")
-        self.assertEqual("UNREVIEWED_RULE_APPLICABILITY", frozen["review_status_default"])
-        self.assertEqual(3159, len(frozen["files"]))
-        self.assertTrue(any("historical rule inventory incomplete" in x
-                            for x in policy_issues(ROOT)))
+    def test_legacy_candidates_archived_without_runtime_authority(self):
+        history = load(ROOT, "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json")
+        self.assertEqual(78, sum(len(g["rule_pointers"]) for g in history["candidate_groups"]))
+        self.assertTrue(all(g["owner_admitted"] is False for g in history["candidate_groups"]))
+        self.assertFalse(history["decisions_complete"])
+        for path in (LEDGER, "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
+                     "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
+                     "scripts/check_legacy_rule_blobs.py",
+                     "scripts/check_execution_guard_history.py"):
+            with self.subTest(path=path):
+                self.assertNotIn(path, GUARD_SOURCE_BINDINGS)
 
     def test_policy_surface_contains_all_current_leaf_fields(self):
         from check_guard_policy_surface import validate_snapshot
@@ -210,7 +230,7 @@ class GuardTests(unittest.TestCase):
                     self.assertTrue(validate_current_rule_map(broken, catalog))
 
     def test_all_guard_and_authoritative_manifests_bound_in_signed_contract(self):
-        self.assertGreaterEqual(len(GUARD_SOURCE_BINDINGS), 14)
+        self.assertGreaterEqual(len(GUARD_SOURCE_BINDINGS), 12)
         for name in sorted(GUARD_SOURCE_BINDINGS):
             self.assertTrue((ROOT / name).is_file(), name)
             bad = sample()
@@ -228,6 +248,31 @@ class GuardTests(unittest.TestCase):
             del bad["source_hashes"][name]
             with self.subTest(name=name), self.assertRaises(Blocked):
                 check_task(ROOT, bad)
+
+    def test_owner_exclusion_contract_changes_fail_closed(self):
+        current = load(ROOT, CATALOG)
+        for change in (
+            {"excluded_historical_candidate_count": 77},
+            {"history_completeness_required_for_active_gate": True},
+            {"candidates_admitted_to_current_rule_set": True},
+            {"current_required_rule_count": 23},
+            {"scope": "ANY_RULES"},
+        ):
+            bad = copy.deepcopy(current)
+            bad["historical_execution_exclusion"].update(change)
+            with patch("execution_guard.load", side_effect=lambda root, name:
+                       bad if name == CATALOG else load(root, name)):
+                with self.subTest(change=change):
+                    self.assertTrue(any("historical exclusion boundary" in x
+                                        for x in policy_issues(ROOT)))
+
+    def test_current_rule_code_drift_and_pending_proof_still_block(self):
+        gov = load(ROOT, GOV)
+        cat = load(ROOT, CATALOG)
+        self.assertEqual(24, len(cat["rules"]))
+        self.assertEqual([], validate_current_rule_map(gov, cat))
+        self.assertTrue(any("DEV/AI per-rule" in x for x in policy_issues(ROOT)))
+        self.assertTrue(any("independent gate" in x for x in policy_issues(ROOT)))
 
 if __name__ == "__main__":
     unittest.main()

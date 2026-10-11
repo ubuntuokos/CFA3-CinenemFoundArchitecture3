@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CFA3 fail-closed execution gate foundation; NOT a full governance PASS."""
+"""CFA3 fail-closed active DEV/AI Execution Guard, not global CFA3 admission."""
 import fcntl
 import hashlib
 import hmac
@@ -21,17 +21,14 @@ ACTIONS = {"GUI_RENDER", "REPOSITORY_WRITE", "WORKFLOW_START", "ARTIFACT_EXPORT"
 # Every task authorization must bind these exact source bytes, in addition to
 # all dynamically discovered canonical/policies/*.json files.
 GUARD_SOURCE_BINDINGS = frozenset({
-    GOV, LEDGER, CATALOG, FROZEN_TREE, POLICY_SURFACE, "AGENTS.md",
+    GOV, CATALOG, POLICY_SURFACE, "AGENTS.md",
     "docs/branding/CFA3-BRANDING.md",
     ".github/workflows/cfa3-bootstrap.yml",
     "scripts/check_bootstrap.py",
     "scripts/check_guard_policy_surface.py",
-    "scripts/check_legacy_rule_blobs.py",
     "scripts/check_execution_guard_ruleset.py",
     "scripts/check_execution_rule_evidence.py",
-    "scripts/check_execution_guard_history.py",
     "scripts/check_execution_guard_github_state.py",
-    HISTORY_REGISTER,
     "scripts/execution_guard.py",
 })
 
@@ -100,9 +97,14 @@ def validate_current_rule_map(governance, catalog):
     return issues
 
 def policy_issues(root=ROOT):
-    """Unknown legacy rules and incomplete runtime gates MUST prevent all effects."""
+    """Evaluate admitted, current 24 DEV/AI rules only; legacy candidates excluded.
+
+    Owner-scoped exception: the 78 historical candidates and the full legacy
+    rule-disposition work remain UNRECONCILED and archived, but do not supply
+    active preflight requirements or evidence gates. No global CFA3 admission.
+    """
     try:
-        gov, ledger, catalog = [load(root, n) for n in (GOV, LEDGER, CATALOG)]
+        gov, catalog = [load(root, n) for n in (GOV, CATALOG)]
     except Blocked as exc:
         return [str(exc)]
     issues = []
@@ -120,43 +122,19 @@ def policy_issues(root=ROOT):
             len(catalog.get("policy_files", [])) != len(policy_files)):
         issues.append("canonical policy file coverage incomplete")
     try:
-        frozen = load(root, FROZEN_TREE)
-        frozen_rows = frozen.get("files", [])
-        mapped = {record[0]: record[1] for record in frozen_rows
-                  if isinstance(record, list) and len(record) == 3}
-        if (frozen.get("schema") != "cfa3.legacy-frozen-tree.v1" or
-                frozen.get("commit") != ledger.get("source_main_commit") or
-                frozen.get("blob_count") != 3159 or
-                len(frozen_rows) != 3159 or len(mapped) != len(frozen_rows) or
-                frozen.get("no_files_excluded_from_rule_review") is not True or
-                any(mapped.get(record.get("path")) != record.get("blob_sha")
-                    for record in ledger.get("source_records", []))):
-            issues.append("full frozen file inventory invalid or missing seed bindings")
-    except (Blocked, ValueError, TypeError, KeyError, IndexError):
-        issues.append("full frozen file inventory absent or malformed")
-    try:
         from check_guard_policy_surface import validate_snapshot
         surface = load(root, POLICY_SURFACE)
         issues.extend(validate_snapshot(surface, root))
     except (Blocked, OSError, ValueError, TypeError, ImportError):
         issues.append("canonical policy field snapshot unavailable or inconsistent")
-    try:
-        from check_execution_guard_history import validate, pending
-        reg = load(root, HISTORY_REGISTER)
-        frozen = load(root, FROZEN_TREE)
-        issues.extend(validate(reg, frozen, ledger))
-        issues.extend(pending(reg, frozen))
-    except (Blocked, ImportError, OSError, TypeError, ValueError):
-        issues.append("historical per-file rule accountability missing")
-    if ledger.get("inventory_complete") is not True:
-        issues.append("historical rule inventory incomplete")
-    if gov.get("legacy_policy_transfer", {}).get("rule_inventory_complete") is not True:
-        issues.append("canonical rule inventory incomplete")
-    if gov.get("readiness", {}).get("full_development_governance_admission") != "VERIFIED":
-        issues.append("governance admission not verified")
-    if catalog.get("coverage_complete") is not True or (
-            catalog.get("missing_rules") != 0 or catalog.get("unresolved_conflicts") != 0):
-        issues.append("MISSING=0 / UNRESOLVED_CONFLICT=0 unproven")
+    exclusion = catalog.get("historical_execution_exclusion")
+    if (not isinstance(exclusion, dict) or
+            exclusion.get("scope") != "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY" or
+            exclusion.get("excluded_historical_candidate_count") != 78 or
+            exclusion.get("history_completeness_required_for_active_gate") is not False or
+            exclusion.get("candidates_admitted_to_current_rule_set") is not False or
+            exclusion.get("current_required_rule_count") != 24):
+        issues.append("explicit historical exclusion boundary invalid")
     if catalog.get("independent_evidence_verified") is not True:
         issues.append("independent gate execution evidence absent")
     return issues
@@ -332,9 +310,9 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         raise Blocked("RULE_GATE: " + str(exc)) from exc
     evidence = admission(task)
     if not isinstance(evidence, dict) or any(evidence.get(x) is not True for x in (
-            "complete_rule_inventory", "rule_gates_verified",
-            "all_conflicts_resolved", "independent_proof_verified")):
-        raise Blocked("independent full-rule admission not verified")
+            "current_24_rule_inventory_verified", "current_24_rule_gates_verified",
+            "current_24_conflicts_resolved", "independent_proof_verified")):
+        raise Blocked("independent current-24 rule admission not verified")
     proof = live_state(task)
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
             "main_current", "head_current", "no_overlap", "checks_passed",

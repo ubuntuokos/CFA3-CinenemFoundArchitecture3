@@ -220,5 +220,48 @@
       "does not intercept non-GitHub side effects",
       "not a global tool admission"
     ]
+  },
+  "historical_execution_exclusion": {
+    "scope": "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY",
+    "owner_instruction_date": "2026-10-11",
+    "excluded_historical_candidate_count": 78,
+    "historical_candidate_groups": {
+      "DEV_AI": 22,
+      "QUALITY": 29,
+      "TASK_SCOPE": 27
+    },
+    "history_completeness_required_for_active_gate": false,
+    "candidates_admitted_to_current_rule_set": false,
+    "current_required_rule_count": 24,
+    "current_rule_ids": [
+      "AI-01",
+      "AI-02",
+      "AI-03",
+      "AI-04",
+      "AI-05",
+      "AI-06",
+      "AI-07",
+      "AI-08",
+      "AI-09",
+      "AI-10",
+      "AI-11",
+      "AI-12",
+      "DEV-01",
+      "DEV-02",
+      "DEV-03",
+      "DEV-04",
+      "DEV-05",
+      "DEV-06",
+      "DEV-07",
+      "DEV-08",
+      "DEV-09",
+      "DEV-10",
+      "DEV-11",
+      "DEV-12"
+    ],
+    "reference_register": "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
+    "export_json": "docs/governance/exports/CFA3-EXECUTION-GUARD-RULES-AND-CANDIDATES-20261011.json",
+    "still_requires_current_rule_proofs": true,
+    "note": "Explicit owner-scoped removal from Execution Guard active evaluation only. Historical source data remains unreviewed and cannot become new-CFA3 authority. No global full-governance PASS."
   }
 }

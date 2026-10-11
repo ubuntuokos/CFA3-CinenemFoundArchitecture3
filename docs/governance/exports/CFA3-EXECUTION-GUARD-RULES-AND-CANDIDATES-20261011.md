@@ -442,3 +442,5 @@ Forrás: `canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json#/rules/28`
 - A 3159 történeti fájl egyenkénti tartalmi minősítése még nincs kész; ezért a 78 jelölt nem minősíthető az összes szabály teljes jegyzékének.
 
 Részletes paraméterek és eredeti források a kísérő JSON-ban.
+
+**Aktuális kizárási döntés (2026-10-11):** a 78 történeti jelölt és az ezekhez kapcsolódó történeti teljességi előfeltételek nem részei a #13-as Execution Guard aktív 24 szabályos ellenőrzésének. A 24 jelenlegi DEV/AI-szabály ellenőrzése változatlanul kötelező. A történeti adatok archiválva, befogadás nélkül maradnak; a teljes CFA3 szabályzat vagy a tényleges futtatás ettől még nem VERIFIED.

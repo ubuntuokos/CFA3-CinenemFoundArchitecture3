@@ -26,8 +26,36 @@ def validate_objects(gov, cpu, platform, ledger):
     require(gov.get("evidence_policy", {}).get("physical_current_host_evidence_only_from_physical_run") is True, "physical proof must be real")
     require(gov.get("readiness", {}).get("full_development_governance_admission") == "PENDING_RECONCILIATION", "cannot claim full governance admission")
     require(gov.get("readiness", {}).get("foundation_verified") is False, "cannot claim unbuilt Foundation PASS")
-    require({x.get("id") for x in gov.get("development_rules", [])} == {f"DEV-{i:02d}" for i in range(1, 12)}, "DEV-01..11 coverage missing")
-    require({x.get("id") for x in gov.get("ai_behavior_rules", [])} == {f"AI-{i:02d}" for i in range(1, 12)}, "AI-01..11 coverage missing")
+    development_rules = gov.get("development_rules", [])
+    ai_behavior_rules = gov.get("ai_behavior_rules", [])
+    require({x.get("id") for x in development_rules} == {f"DEV-{i:02d}" for i in range(1, 13)}
+            and len(development_rules) == 12, "DEV-01..12 exact coverage missing or duplicated")
+    require({x.get("id") for x in ai_behavior_rules} == {f"AI-{i:02d}" for i in range(1, 13)}
+            and len(ai_behavior_rules) == 12, "AI-01..12 exact coverage missing or duplicated")
+    require(any(x.get("id") == "DEV-12" and x.get("code") == "NO_ASSUMPTIONS_EXACT_SCOPE_AND_CANONICAL_DESIGN" for x in development_rules),
+            "mandatory development execution rule DEV-12 missing")
+    require(any(x.get("id") == "AI-12" and x.get("code") == "NO_ASSUMPTIONS_AND_MANDATORY_CFA3_COMPLIANCE" for x in ai_behavior_rules),
+            "mandatory AI execution rule AI-12 missing")
+    execution = gov.get("execution_integrity_policy", {})
+    require(execution.get("id") == "CFA3-TASK-EXECUTION-COMPLIANCE-001", "execution compliance identity missing")
+    require(execution.get("status") == "FINAL_MANDATORY", "execution compliance must be mandatory")
+    require(execution.get("interpretation") == "PROHIBITION_NOT_PREFERENCE", "execution compliance cannot be optional")
+    required_execution = {
+        "assumption_based_execution": "FORBIDDEN",
+        "task_definition": "EXACT_DESCRIPTION_GOAL_SCOPE_AND_CONSTRAINTS_MANDATORY",
+        "unrequested_task_expansion": "FORBIDDEN",
+        "approved_guidelines_rules_and_architecture": "MANDATORY_NO_DEVIATION",
+        "approved_cfa3_design_description": "MANDATORY_NO_DEVIATION",
+        "approved_cfa3_branding_and_identity": "MANDATORY_NO_DEVIATION",
+        "self_invented_or_substitute_design": "FORBIDDEN",
+        "current_authoritative_or_deterministic_source_verification": "REQUIRED_BEFORE_EACH_RELEVANT_OPERATION",
+        "unverified_or_missing_mandatory_requirement": "STOP_AND_REPORT_BLOCKER",
+        "autonomous_bypass_or_workaround": "FORBIDDEN",
+    }
+    for field, expected in required_execution.items():
+        require(execution.get("requirements", {}).get(field) == expected, "mandatory execution compliance missing: " + field)
+    require(execution.get("verified_branding_reference") == "docs/branding/CFA3-BRANDING.md",
+            "official CFA3 branding reference missing")
     require(platform.get("capability_target_count") == 200, "new target baseline must be 200")
     require(platform.get("capability_registry_complete") is False, "200-capability ledger not yet verified")
     require(platform.get("foundation_verified") is False, "full Foundation not yet verified")

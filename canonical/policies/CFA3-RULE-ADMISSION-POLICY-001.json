@@ -6,7 +6,7 @@
   "rule": {
     "id": "RULE-ADMISSION-001",
     "code": "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
-    "text_hu": "Szabály felvételekor az AI kizárólag a kijelölt főfeladattal foglalkozhat; minden új szabályt fel kell venni a CFA3-CURRENT-POLICY-SURFACE-001.json nyilvántartásba; ellenőrizni kell a Bootstrap követelményeit; az új szabályhoz igazítani kell a fixen beírt tesztértékeket; a PR-t valamennyi közvetlenül szükséges, egymással konzisztens fájllal kell előkészíteni; sikertelen ellenőrzésnél bizonyíték alapján egyértelműen meg kell jelölni, hogy a hiányosságért az AI asszisztens vagy az AI fejlesztő felelős.",
+    "text_hu": "Szabály felvételekor az AI kizárólag a kijelölt főfeladattal foglalkozhat; minden új szabályt fel kell venni a CFA3-CURRENT-POLICY-SURFACE-001.json nyilvántartásba; ellenőrizni kell a Bootstrap követelményeit; az új szabályhoz igazítani kell a fixen beírt tesztértékeket; a PR-t valamennyi közvetlenül szükséges, egymással konzisztens fájllal kell előkészíteni; sikertelen ellenőrzésnél bizonyíték alapján egyértelműen meg kell jelölni, hogy a hiányosságért az AI asszisztens vagy az AI fejlesztő felelős. Külön tulajdonosi feladat vagy önállóan jóváhagyott új szabály csak a saját feladatához kötött ágon és PR-ben vezethető be; másik, már megnyitott feladat PR-jébe automatikusan nem helyezhető át. A közös nyilvántartás szükséges konzisztens módosítása nem teszi közössé a két feladat hatáskörét.",
     "scope": "ONLY_THE_OWNER_DESIGNATED_MAIN_TASK",
     "runtime_verified": false
   },
@@ -20,7 +20,8 @@
     "failed_check_requires_responsible_ai_role": true,
     "failed_check_must_report_root_cause_and_evidence": true,
     "no_unjustified_attribution_or_fabricated_pass": true,
-    "failed_gate_requires_stop_and_report": true
+    "failed_gate_requires_stop_and_report": true,
+    "independent_owner_task_must_have_dedicated_branch_and_pr": true
   },
   "responsibility": {
     "ai_assistant": "Feladatvezérlési, hatásköri, ellenőrzés-előkészítési és jelentési hiányosság.",

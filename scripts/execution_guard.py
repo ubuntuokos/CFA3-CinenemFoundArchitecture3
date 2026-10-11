@@ -30,6 +30,7 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_guard_ruleset.py",
     "scripts/check_execution_rule_evidence.py",
     "scripts/check_execution_guard_history.py",
+    "scripts/check_execution_guard_github_state.py",
     HISTORY_REGISTER,
     "scripts/execution_guard.py",
 })

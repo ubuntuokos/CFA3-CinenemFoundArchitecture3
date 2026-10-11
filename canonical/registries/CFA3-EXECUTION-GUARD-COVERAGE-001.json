@@ -201,5 +201,24 @@
     "plus_all_current_policy_files": true,
     "source_hash_type": "SHA256_FILE_BYTES",
     "scope": "AUTHORIZE_ONLY_EXACT_CHECKER_VERSION_AND_TRUSTED_SOURCE_STATE"
+  },
+  "live_github_state_adapter": {
+    "path": "scripts/check_execution_guard_github_state.py",
+    "tests": "tests/test_execution_guard_github_state.py",
+    "state": "READ_ONLY_ADAPTER_AND_NEGATIVE_TESTS_NOT_DEPLOYED",
+    "checks": [
+      "exact_main_and_head",
+      "PR_file_scope_and_overlap",
+      "required_check_runs_bound_to_head",
+      "review_thread_resolved",
+      "privileged_ruleset_bypass_list",
+      "separate_signed_owner_grant"
+    ],
+    "limitations": [
+      "requires separately controlled GitHub token",
+      "requires independent signed owner grant authority",
+      "does not intercept non-GitHub side effects",
+      "not a global tool admission"
+    ]
   }
 }

@@ -14,7 +14,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from execution_guard import (Blocked, GOV, LEDGER, CATALOG, canonical_bytes,
                              check_task, guarded_execute, load, local_path,
                              policy_issues, verify_signature, _reserve,
-                             validate_current_rule_map, GUARD_SOURCE_BINDINGS)
+                             validate_current_rule_map, GUARD_SOURCE_BINDINGS,
+                             trusted_runtime_issues)
 
 def sample():
     sources = sorted(GUARD_SOURCE_BINDINGS.union(load(ROOT, CATALOG)["policy_files"]))
@@ -266,6 +267,27 @@ class GuardTests(unittest.TestCase):
                 with self.subTest(change=change):
                     self.assertTrue(any("historical exclusion boundary" in x
                                         for x in policy_issues(ROOT)))
+
+    def test_structural_policy_does_not_require_random_runtime_events(self):
+        self.assertEqual([], policy_issues(ROOT, require_prior_runtime_proofs=False))
+        self.assertTrue(any("DEV/AI per-rule" in issue for issue in policy_issues(ROOT)))
+        self.assertTrue(any("independent gate" in issue for issue in policy_issues(ROOT)))
+
+    def test_unverified_independent_services_block_before_rule_evaluation(self):
+        catalog = load(ROOT, CATALOG)
+        self.assertEqual(24, len(catalog["rules"]))
+        missing = trusted_runtime_issues(catalog)
+        for part in ("rule attester", "rule evaluator", "evidence resolver",
+                     "content store", "mutation audit", "owner signing service"):
+            with self.subTest(part=part):
+                self.assertTrue(any(part in issue for issue in missing))
+        called = []
+        with patch("execution_guard.policy_issues", return_value=[]):
+            with self.assertRaisesRegex(Blocked, "RUNTIME_AUTHORITY_UNAVAILABLE"):
+                guarded_execute(sample(), root=ROOT, secret=b"x" * 32,
+                                rule_attester=lambda _: called.append("rule"),
+                                executor=lambda _: called.append("executor"))
+        self.assertEqual([], called)
 
     def test_current_rule_code_drift_and_pending_proof_still_block(self):
         gov = load(ROOT, GOV)

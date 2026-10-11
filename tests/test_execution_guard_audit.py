@@ -160,6 +160,7 @@ class AuditProofTests(unittest.TestCase):
         called = []
         with tempfile.TemporaryDirectory() as tmp, patch(
                 "execution_guard.policy_issues", return_value=[]), patch(
+                "execution_guard.trusted_runtime_issues", return_value=[]), patch(
                 "check_execution_rule_evidence.time.time", return_value=10000.0):
             with self.assertRaises(Blocked):
                 guarded_execute(

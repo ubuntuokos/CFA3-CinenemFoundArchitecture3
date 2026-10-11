@@ -100,8 +100,14 @@ def validate_current_rule_map(governance, catalog):
             issues.append("unknown gate state: " + ident)
     return issues
 
-def policy_issues(root=ROOT):
-    """Evaluate admitted, current 24 DEV/AI rules only; legacy candidates excluded.
+def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
+    """Verify immutable policy sources and, on status queries, runtime admission.
+
+    The executor verifies fresh task-scoped receipts AFTER immutable policy
+    validation. Conditional incidents must not be an upfront policy condition.
+    Historical candidates remain excluded.
+
+    Evaluate admitted, current 24 DEV/AI rules only; legacy candidates excluded.
 
     Owner-scoped exception: the 78 historical candidates and the full legacy
     rule-disposition work remain UNRECONCILED and archived, but do not supply
@@ -122,11 +128,12 @@ def policy_issues(root=ROOT):
         issues.extend(validate(owner_spec, gov, catalog, evidence_export))
     except (Blocked, ImportError, OSError, TypeError, ValueError, KeyError):
         issues.append("owner-provided 24-rule normative source unavailable")
-    rules = catalog.get("rules", {})
-    if not isinstance(rules, dict) or any(
-            not isinstance(record, dict) or record.get("status") != "VERIFIED_GATE"
-            for record in rules.values()):
-        issues.append("DEV/AI per-rule execution gates not verified")
+    if require_prior_runtime_proofs:
+        rules = catalog.get("rules", {})
+        if not isinstance(rules, dict) or any(
+                not isinstance(record, dict) or record.get("status") != "VERIFIED_GATE"
+                for record in rules.values()):
+            issues.append("DEV/AI per-rule execution gates not verified")
     policy_files = {str(p.relative_to(root)) for p in
                     (Path(root) / "canonical/policies").glob("*.json")}
     if (set(catalog.get("policy_files", [])) != policy_files or
@@ -146,9 +153,42 @@ def policy_issues(root=ROOT):
             exclusion.get("candidates_admitted_to_current_rule_set") is not False or
             exclusion.get("current_required_rule_count") != 24):
         issues.append("explicit historical exclusion boundary invalid")
-    if catalog.get("independent_evidence_verified") is not True:
+    if (require_prior_runtime_proofs and
+            catalog.get("independent_evidence_verified") is not True):
         issues.append("independent gate execution evidence absent")
     return issues
+
+def trusted_runtime_issues(catalog):
+    """Require deployed independent gate authorities, not prior random events.
+
+    The registry is merely a fail-closed prerequisite. Runtime callbacks,
+    source-bound signatures and actual per-task evidence are required too.
+    """
+    if not isinstance(catalog, dict):
+        return ["trusted Execution Guard deployment registry unavailable"]
+    protocol = catalog.get("rule_receipt_protocol")
+    protocol = protocol if isinstance(protocol, dict) else {}
+    content = protocol.get("content_evidence")
+    content = content if isinstance(content, dict) else {}
+    live = catalog.get("live_github_state_adapter")
+    live = live if isinstance(live, dict) else {}
+    owner = live.get("owner_authorization")
+    owner = owner if isinstance(owner, dict) else {}
+    audit = catalog.get("audit_receipt_gate")
+    audit = audit if isinstance(audit, dict) else {}
+    missing = []
+    for label, value in (
+        ("independent rule attester", protocol.get("current_trusted_attester_deployed")),
+        ("verified rule evaluator", content.get("evaluator_implementation_runtime_verified")),
+        ("independent evidence resolver", content.get("independent_evidence_resolver_deployed")),
+        ("protected evidence content store", content.get("trusted_content_store_deployed")),
+        ("durable independent mutation audit", audit.get("trusted_durable_writer_deployed")),
+    ):
+        if value is not True:
+            missing.append(label + " deployment not verified")
+    if owner.get("deployment") != "DEPLOYED_VERIFIED":
+        missing.append("independent owner signing service deployment not verified")
+    return missing
 
 def verify_signature(task, secret):
     """HMAC key must only exist in independent gateway service, NEVER AI context."""
@@ -299,9 +339,12 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
 
     It cannot intercept native ChatGPT tools or other unguarded service routes.
     """
-    issues = policy_issues(root)
+    issues = policy_issues(root, require_prior_runtime_proofs=False)
     if issues:
         raise Blocked("POLICY_INCOMPLETE: " + "; ".join(issues))
+    readiness = trusted_runtime_issues(load(root, CATALOG))
+    if readiness:
+        raise Blocked("RUNTIME_AUTHORITY_UNAVAILABLE: " + "; ".join(readiness))
     check_task(root, task)
     verify_signature(task, secret)
     if not all(callable(f) for f in (

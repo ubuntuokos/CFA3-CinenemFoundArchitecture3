@@ -303,5 +303,15 @@
     "description_finalized": true,
     "independent_runtime_proofs_verified": false,
     "status": "OWNER_TEXT_CANONICAL_MAPPING_IMPLEMENTED_BUT_RUNTIME_PROOFS_PENDING"
+  },
+  "runtime_preflight_separation": {
+    "static_contract_validation": "policy_issues(require_prior_runtime_proofs=False)",
+    "independent_service_prerequisites": "trusted_runtime_issues",
+    "required_task_receipts": "verify_rule_receipts AFTER immutable policy, service and task validation",
+    "bootstrap_random_incidents_required": false,
+    "current_24_global_status_not_sufficient_for_task_authority": true,
+    "protected_service_deployments_verified": false,
+    "conditional_runtime_gate_status": "PENDING",
+    "status": "STRUCTURAL_IMPLEMENTATION_TESTED_NOT_LIVE_ADMITTED"
   }
 }

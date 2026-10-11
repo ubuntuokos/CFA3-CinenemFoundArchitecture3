@@ -17,7 +17,7 @@ RULESET_NAME = "CFA3-MAIN-PROTECTION"
 EXPECTED_CONTEXTS = {"bootstrap", "qt68-linux"}
 ACTIONS_INTEGRATION_ID = 15368
 
-def validate_ruleset(obj):
+def validate_ruleset(obj, *, require_bypass_proof=True):
     errors = []
     if not isinstance(obj, dict):
         return ["ruleset must be a JSON object"]
@@ -25,8 +25,11 @@ def validate_ruleset(obj):
         errors.append("wrong ruleset identity")
     if obj.get("enforcement") != "active":
         errors.append("main protection ruleset not active")
-    if obj.get("bypass_actors") != []:
-        errors.append("ruleset bypass actors changed")
+    if "bypass_actors" not in obj:
+        if require_bypass_proof:
+            errors.append("bypass actors unavailable: privileged Ruleset verification required")
+    elif obj["bypass_actors"] != []:
+        errors.append("ruleset bypass actors are not an empty list")
     refs = obj.get("conditions", {}).get("ref_name", {})
     if refs.get("include") != ["~DEFAULT_BRANCH"] or refs.get("exclude") != []:
         errors.append("ruleset default branch scope changed")
@@ -90,16 +93,39 @@ def fetch_ruleset():
         return json.load(response)
 
 def main():
+    # GitHub intentionally omits bypass_actors for a caller without ruleset-write
+    # permission. An omitted field is UNKNOWN, not equivalent to an empty list.
+    if sys.argv[1:] == ["--ci-visible"]:
+        full_proof_required = False
+    elif sys.argv[1:] in ([], ["--full"]):
+        full_proof_required = True
+    else:
+        print("RULESET_GUARD_BLOCKER: expected --ci-visible or --full", file=sys.stderr)
+        return 2
     try:
-        problems = validate_ruleset(fetch_ruleset())
+        response = fetch_ruleset()
+        problems = validate_ruleset(response, require_bypass_proof=full_proof_required)
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, TypeError) as exc:
         problems = ["GitHub live ruleset unavailable: " + type(exc).__name__]
+        response = {}
     if problems:
         for issue in problems:
             print("RULESET_GUARD_BLOCKER:", issue, file=sys.stderr)
         return 1
-    print("RULESET_CONFIG_VERIFIED: required PR checks and protection currently active; "
-          "not a global Execution Guard or physical Current Host PASS")
+    if not full_proof_required:
+        if "bypass_actors" not in response:
+            print("RULESET_VISIBLE_PASS_BYPASS_UNVERIFIED: visible main protection "
+                  "and required GitHub CI contexts verified; bypass list hidden "
+                  "by insufficient GitHub API permission. Privileged --full "
+                  "verification REQUIRED before full admission.")
+        else:
+            print("RULESET_VISIBLE_PASS: all visible protections verified, "
+                  "including an empty bypass list; independent full admission "
+                  "still required.")
+    else:
+        print("RULESET_PRIVILEGED_CONFIG_VERIFIED: verified empty bypass actor "
+              "list and main required CI checks; NOT full CFA3 execution "
+              "admission or physical Current Host PASS")
     return 0
 
 if __name__ == "__main__":

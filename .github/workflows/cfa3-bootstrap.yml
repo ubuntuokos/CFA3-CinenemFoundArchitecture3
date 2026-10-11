@@ -25,7 +25,7 @@ jobs:
       - name: Verify actual main-protection required checks and no bypass
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 scripts/check_execution_guard_ruleset.py
+        run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v
       - name: Verify Rust-first contract workspace

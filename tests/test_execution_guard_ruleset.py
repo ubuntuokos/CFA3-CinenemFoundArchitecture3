@@ -78,5 +78,32 @@ class RulesetGuardTests(unittest.TestCase):
         for obj in ({}, None, [], {"rules": None}):
             self.assertTrue(validate_ruleset(obj))
 
+    def test_missing_bypass_proof_blocks_privileged_verification(self):
+        obj = protected_ruleset()
+        del obj["bypass_actors"]
+        self.assertTrue(any("unavailable" in x for x in validate_ruleset(obj)))
+
+    def test_missing_bypass_is_unknown_not_empty_in_ci_visible_mode(self):
+        obj = protected_ruleset()
+        del obj["bypass_actors"]
+        self.assertEqual([], validate_ruleset(obj, require_bypass_proof=False))
+        self.assertNotEqual([], validate_ruleset(obj, require_bypass_proof=True))
+
+    def test_ci_visible_mode_rejects_observed_bypass_actors(self):
+        obj = protected_ruleset()
+        obj["bypass_actors"] = [{"actor_type": "RepositoryRole", "actor_id": 5}]
+        self.assertTrue(validate_ruleset(obj, require_bypass_proof=False))
+
+    def test_null_bypass_denied_even_in_ci_visible_mode(self):
+        obj = protected_ruleset()
+        obj["bypass_actors"] = None
+        self.assertTrue(validate_ruleset(obj, require_bypass_proof=False))
+
+    def test_ci_visible_mode_still_fails_other_required_checks(self):
+        obj = protected_ruleset()
+        obj["rules"][3]["parameters"]["required_status_checks"] = []
+        del obj["bypass_actors"]
+        self.assertTrue(validate_ruleset(obj, require_bypass_proof=False))
+
 if __name__ == "__main__":
     unittest.main()

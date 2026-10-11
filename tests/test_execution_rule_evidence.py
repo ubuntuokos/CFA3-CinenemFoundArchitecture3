@@ -74,18 +74,18 @@ class RuleReceiptTests(unittest.TestCase):
             now=NOW, evidence_resolver=self.resolver if resolver is None else resolver)
 
     def test_only_full_24_source_bound_receipts_pass_structurally(self):
-        self.assertEqual(24, len(expected_rules(self.governance)))
+        self.assertEqual(80, len(expected_rules(self.governance)))
         self.assertTrue(self.check(receipts(task(), self.governance)))
 
     def test_every_missing_individual_rule_blocks(self):
         valid = receipts(task(), self.governance)
-        for index in range(24):
+        for index in range(80):
             with self.subTest(rule=valid[index]["rule_id"]), self.assertRaises(RuleEvidenceBlocked):
                 self.check(valid[:index] + valid[index + 1:])
 
     def test_every_negative_individual_verdict_blocks(self):
         valid = receipts(task(), self.governance)
-        for index in range(24):
+        for index in range(80):
             tampered = copy.deepcopy(valid)
             tampered[index]["verdict"] = "PENDING"
             with self.subTest(rule=valid[index]["rule_id"]), self.assertRaises(RuleEvidenceBlocked):
@@ -206,7 +206,7 @@ class RuleReceiptTests(unittest.TestCase):
         catalog = load(ROOT, CATALOG)
         matrix, issues = bootstrap_rule_report(self.governance, catalog)
         self.assertEqual([], issues)
-        self.assertEqual(24, len(matrix))
+        self.assertEqual(80, len(matrix))
         self.assertEqual(sorted(expected_rules(self.governance)), [row[0] for row in matrix])
         self.assertEqual({"PENDING_RUNTIME_GATE_AND_PROOF"}, {row[2] for row in matrix})
         self.assertFalse(catalog["coverage_complete"])
@@ -224,7 +224,7 @@ class RuleReceiptTests(unittest.TestCase):
                 redirect_stdout(output):
             self.assertEqual(0, bootstrap_main())
         rendered = output.getvalue()
-        self.assertEqual(24, rendered.count("CFA3_RULE:"))
+        self.assertEqual(80, rendered.count("CFA3_RULE:"))
         self.assertIn("conditional runtime events are NOT required by bootstrap", rendered)
         self.assertIn("NOT execution authorization", rendered)
 
@@ -245,7 +245,7 @@ class RuleReceiptTests(unittest.TestCase):
             with self.subTest(rule=ident, field="status"):
                 self.assertTrue(bootstrap_rule_report(self.governance, changed)[1])
 
-    def test_bootstrap_rejects_false_coverage_and_historical_scope_drift(self):
+    def test_bootstrap_rejects_false_coverage_and_restoration_drift(self):
         from check_execution_rule_evidence import bootstrap_rule_report
         catalog = load(ROOT, CATALOG)
         for change in ({"coverage_complete": True},
@@ -259,11 +259,11 @@ class RuleReceiptTests(unittest.TestCase):
             row["status"] = "VERIFIED_GATE"
         self.assertTrue(bootstrap_rule_report(self.governance, altered)[1])
         for field, value in (
-            ("excluded_historical_candidate_count", 77),
-            ("current_rule_ids", ["AI-01"]),
-            ("candidates_admitted_to_current_rule_set", True)):
+            ("source_count", 77), ("mapped_existing", 21),
+            ("admitted_new", 55), ("excluded_for_conflict", 1),
+            ("active_count", 24), ("all_source_rules_accounted_for", False)):
             altered = copy.deepcopy(catalog)
-            altered["historical_execution_exclusion"][field] = value
+            altered["owner_historical_reconciliation"][field] = value
             with self.subTest(field=field):
                 self.assertTrue(bootstrap_rule_report(self.governance, altered)[1])
 

@@ -17,8 +17,8 @@
       "source_git_sha": "622408f842d684f60de9590fddbf136110005675",
       "kind": "DEV_AI",
       "legacy_baseline": 175,
-      "status": "UNRECONCILED",
-      "owner_admitted": false,
+      "status": "OWNER_APPROVED_NAMED_78_ONLY",
+      "owner_admitted": true,
       "rule_pointers": [
         [
           "/development_rules/0",
@@ -115,8 +115,8 @@
       "source_git_sha": "106403d560fefc7d12ce2768e32926685e05dde4",
       "kind": "QUALITY",
       "legacy_baseline": null,
-      "status": "UNRECONCILED",
-      "owner_admitted": false,
+      "status": "OWNER_APPROVED_NAMED_78_ONLY",
+      "owner_admitted": true,
       "rule_pointers": [
         [
           "/rules/0",
@@ -241,8 +241,8 @@
       "source_git_sha": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
       "kind": "TASK_SCOPE",
       "legacy_baseline": 175,
-      "status": "UNRECONCILED",
-      "owner_admitted": false,
+      "status": "OWNER_APPROVED_NAMED_78_ONLY",
+      "owner_admitted": true,
       "rule_pointers": [
         [
           "/rules/one_task_session_one_explicit_task",
@@ -355,5 +355,5 @@
       ]
     }
   ],
-  "note": "78 machine-addressable candidates in three frozen sources are NOT owner-admitted. Every one of 3159 files requires an explicit source disposition; unknown is not PASS."
+  "note": "78 machine-addressable candidates in three frozen sources are NOT owner-admitted. Every one of 3159 files requires an explicit source disposition; unknown is not PASS.\nOwner reaffirmed admission of all 78 named candidates, 22 mapped to existing and 56 newly active; review of other historical files remains pending."
 }

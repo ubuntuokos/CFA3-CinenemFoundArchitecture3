@@ -16,6 +16,7 @@ LEDGER = "canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json"
 CATALOG = "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json"
 FROZEN_TREE = "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json"
 POLICY_SURFACE = "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json"
+HISTORY_REGISTER = "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json"
 ACTIONS = {"GUI_RENDER", "REPOSITORY_WRITE", "WORKFLOW_START", "ARTIFACT_EXPORT"}
 # Every task authorization must bind these exact source bytes, in addition to
 # all dynamically discovered canonical/policies/*.json files.
@@ -28,6 +29,8 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_legacy_rule_blobs.py",
     "scripts/check_execution_guard_ruleset.py",
     "scripts/check_execution_rule_evidence.py",
+    "scripts/check_execution_guard_history.py",
+    HISTORY_REGISTER,
     "scripts/execution_guard.py",
 })
 
@@ -136,6 +139,14 @@ def policy_issues(root=ROOT):
         issues.extend(validate_snapshot(surface, root))
     except (Blocked, OSError, ValueError, TypeError, ImportError):
         issues.append("canonical policy field snapshot unavailable or inconsistent")
+    try:
+        from check_execution_guard_history import validate, pending
+        reg = load(root, HISTORY_REGISTER)
+        frozen = load(root, FROZEN_TREE)
+        issues.extend(validate(reg, frozen, ledger))
+        issues.extend(pending(reg, frozen))
+    except (Blocked, ImportError, OSError, TypeError, ValueError):
+        issues.append("historical per-file rule accountability missing")
     if ledger.get("inventory_complete") is not True:
         issues.append("historical rule inventory incomplete")
     if gov.get("legacy_policy_transfer", {}).get("rule_inventory_complete") is not True:

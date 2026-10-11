@@ -116,7 +116,11 @@
     "path_inventory": "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
     "pinned_tree_blob_enumeration_complete": true,
     "pinned_tree_blob_count": 3159,
-    "rule_content_review_complete": false
+    "rule_content_review_complete": false,
+    "rule_reconciliation_register": "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
+    "known_structured_candidates": 78,
+    "source_dispositions_verified": 0,
+    "full_rule_applicability_review_complete": false
   },
   "coverage_complete": false,
   "missing_rules": null,
@@ -135,7 +139,8 @@
     "COMPLETE_POLICY_JSON_FIELD_INVENTORY_NOT_SEMANTIC_RULE_ACCEPTANCE",
     "GITHUB_REST_BYPASS_ACTORS_REQUIRE_RULESET_WRITE_PERMISSION_TO_READ",
     "RULE_RECEIPTS_REQUIRE_A_REAL_INDEPENDENT_ATTESTER_NOT_SYNTHETIC_TEST_KEYS",
-    "SIGNED_HASH_WITHOUT_INDEPENDENT_CONTENT_READBACK_IS_NOT_AN_ADMISSIBLE_RULE_PROOF"
+    "SIGNED_HASH_WITHOUT_INDEPENDENT_CONTENT_READBACK_IS_NOT_AN_ADMISSIBLE_RULE_PROOF",
+    "HISTORICAL_3159_FILE_AUTHORITY_AND_APPLICABILITY_DISPOSITIONS_UNRESOLVED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
   "canonical_policy_leaf_fields_enumerated": 431,

@@ -1,0 +1,359 @@
+{
+  "schema": "cfa3.legacy-rule-reconciliation.v1",
+  "source_repo": "ubuntuokos/Final-Architecture-v3.0",
+  "source_commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "full_manifest": "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
+  "source_count": 3159,
+  "source_seed_count": 21,
+  "default_disposition": "UNREVIEWED",
+  "reviewed_dispositions": [],
+  "decisions_complete": false,
+  "unresolved_conflicts": null,
+  "missing_rules": null,
+  "legacy_175_not_new_200": true,
+  "candidate_groups": [
+    {
+      "source_path": "canonical/CFA3-DEVELOPMENT-AI-BEHAVIOR-GOVERNANCE-POLICY-001.json",
+      "source_git_sha": "622408f842d684f60de9590fddbf136110005675",
+      "kind": "DEV_AI",
+      "legacy_baseline": 175,
+      "status": "UNRECONCILED",
+      "owner_admitted": false,
+      "rule_pointers": [
+        [
+          "/development_rules/0",
+          "DEV-01"
+        ],
+        [
+          "/development_rules/1",
+          "DEV-02"
+        ],
+        [
+          "/development_rules/2",
+          "DEV-03"
+        ],
+        [
+          "/development_rules/3",
+          "DEV-04"
+        ],
+        [
+          "/development_rules/4",
+          "DEV-05"
+        ],
+        [
+          "/development_rules/5",
+          "DEV-06"
+        ],
+        [
+          "/development_rules/6",
+          "DEV-07"
+        ],
+        [
+          "/development_rules/7",
+          "DEV-08"
+        ],
+        [
+          "/development_rules/8",
+          "DEV-09"
+        ],
+        [
+          "/development_rules/9",
+          "DEV-10"
+        ],
+        [
+          "/development_rules/10",
+          "DEV-11"
+        ],
+        [
+          "/ai_behavior_rules/0",
+          "AI-01"
+        ],
+        [
+          "/ai_behavior_rules/1",
+          "AI-02"
+        ],
+        [
+          "/ai_behavior_rules/2",
+          "AI-03"
+        ],
+        [
+          "/ai_behavior_rules/3",
+          "AI-04"
+        ],
+        [
+          "/ai_behavior_rules/4",
+          "AI-05"
+        ],
+        [
+          "/ai_behavior_rules/5",
+          "AI-06"
+        ],
+        [
+          "/ai_behavior_rules/6",
+          "AI-07"
+        ],
+        [
+          "/ai_behavior_rules/7",
+          "AI-08"
+        ],
+        [
+          "/ai_behavior_rules/8",
+          "AI-09"
+        ],
+        [
+          "/ai_behavior_rules/9",
+          "AI-10"
+        ],
+        [
+          "/ai_behavior_rules/10",
+          "AI-11"
+        ]
+      ]
+    },
+    {
+      "source_path": "canonical/quality/FA3-QUALITY-RULE-REGISTRY-001.json",
+      "source_git_sha": "106403d560fefc7d12ce2768e32926685e05dde4",
+      "kind": "QUALITY",
+      "legacy_baseline": null,
+      "status": "UNRECONCILED",
+      "owner_admitted": false,
+      "rule_pointers": [
+        [
+          "/rules/0",
+          "Q-CORE-001"
+        ],
+        [
+          "/rules/1",
+          "Q-CORE-002"
+        ],
+        [
+          "/rules/2",
+          "Q-CORE-003"
+        ],
+        [
+          "/rules/3",
+          "Q-CORE-004"
+        ],
+        [
+          "/rules/4",
+          "Q-UI-001"
+        ],
+        [
+          "/rules/5",
+          "Q-UI-002"
+        ],
+        [
+          "/rules/6",
+          "Q-UI-003"
+        ],
+        [
+          "/rules/7",
+          "Q-UI-004"
+        ],
+        [
+          "/rules/8",
+          "Q-COPY-001"
+        ],
+        [
+          "/rules/9",
+          "Q-COPY-002"
+        ],
+        [
+          "/rules/10",
+          "Q-COPY-003"
+        ],
+        [
+          "/rules/11",
+          "Q-COPY-004"
+        ],
+        [
+          "/rules/12",
+          "Q-HUMAN-001"
+        ],
+        [
+          "/rules/13",
+          "Q-HUMAN-002"
+        ],
+        [
+          "/rules/14",
+          "Q-HUMAN-003"
+        ],
+        [
+          "/rules/15",
+          "Q-HUMAN-004"
+        ],
+        [
+          "/rules/16",
+          "Q-RESP-001"
+        ],
+        [
+          "/rules/17",
+          "Q-RESP-002"
+        ],
+        [
+          "/rules/18",
+          "Q-RESP-003"
+        ],
+        [
+          "/rules/19",
+          "Q-RESP-004"
+        ],
+        [
+          "/rules/20",
+          "Q-CODE-001"
+        ],
+        [
+          "/rules/21",
+          "Q-CODE-002"
+        ],
+        [
+          "/rules/22",
+          "Q-CODE-003"
+        ],
+        [
+          "/rules/23",
+          "Q-CODE-004"
+        ],
+        [
+          "/rules/24",
+          "Q-FA3-001"
+        ],
+        [
+          "/rules/25",
+          "Q-FA3-002"
+        ],
+        [
+          "/rules/26",
+          "Q-FA3-003"
+        ],
+        [
+          "/rules/27",
+          "Q-FA3-004"
+        ],
+        [
+          "/rules/28",
+          "Q-FA3-005"
+        ]
+      ]
+    },
+    {
+      "source_path": "canonical/decisions/FA3-DEC-TASK-SCOPE-CLOSURE-POLICY-2026-10-03.json",
+      "source_git_sha": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127",
+      "kind": "TASK_SCOPE",
+      "legacy_baseline": 175,
+      "status": "UNRECONCILED",
+      "owner_admitted": false,
+      "rule_pointers": [
+        [
+          "/rules/one_task_session_one_explicit_task",
+          "one_task_session_one_explicit_task"
+        ],
+        [
+          "/rules/goal_scope_bound_to_exact_goal_revision_and_digest",
+          "goal_scope_bound_to_exact_goal_revision_and_digest"
+        ],
+        [
+          "/rules/in_scope_and_out_of_scope_overlap",
+          "in_scope_and_out_of_scope_overlap"
+        ],
+        [
+          "/rules/automatic_scope_expansion",
+          "automatic_scope_expansion"
+        ],
+        [
+          "/rules/out_of_scope_work",
+          "out_of_scope_work"
+        ],
+        [
+          "/rules/max_same_blocker_attempts",
+          "max_same_blocker_attempts"
+        ],
+        [
+          "/rules/fourth_same_blocker_attempt",
+          "fourth_same_blocker_attempt"
+        ],
+        [
+          "/rules/third_same_blocker_failure",
+          "third_same_blocker_failure"
+        ],
+        [
+          "/rules/automatic_retry_after_human_block",
+          "automatic_retry_after_human_block"
+        ],
+        [
+          "/rules/automatic_replan_after_human_block",
+          "automatic_replan_after_human_block"
+        ],
+        [
+          "/rules/automatic_alternative_route_after_human_block",
+          "automatic_alternative_route_after_human_block"
+        ],
+        [
+          "/rules/start_and_resume_require_fresh_task_scope_admission",
+          "start_and_resume_require_fresh_task_scope_admission"
+        ],
+        [
+          "/rules/cached_execution_plan_may_not_bypass_newer_control_revision",
+          "cached_execution_plan_may_not_bypass_newer_control_revision"
+        ],
+        [
+          "/rules/closed_task_execution",
+          "closed_task_execution"
+        ],
+        [
+          "/rules/verified_closure",
+          "verified_closure"
+        ],
+        [
+          "/rules/automatic_followup_execution",
+          "automatic_followup_execution"
+        ],
+        [
+          "/rules/followup_handoff_must_be_persisted_in_task_control",
+          "followup_handoff_must_be_persisted_in_task_control"
+        ],
+        [
+          "/rules/user_closure_states",
+          "user_closure_states"
+        ],
+        [
+          "/rules/all_executable_scope_origins_require_immutable_binding",
+          "all_executable_scope_origins_require_immutable_binding"
+        ],
+        [
+          "/rules/all_executable_scope_origins_require_task_control",
+          "all_executable_scope_origins_require_task_control"
+        ],
+        [
+          "/rules/scope_origin_provenance_preserved_end_to_end",
+          "scope_origin_provenance_preserved_end_to_end"
+        ],
+        [
+          "/rules/active_main_task_identity_immutable",
+          "active_main_task_identity_immutable"
+        ],
+        [
+          "/rules/main_task_switch_authority",
+          "main_task_switch_authority"
+        ],
+        [
+          "/rules/new_runtime_rule_is_constraint_not_automatic_main_task",
+          "new_runtime_rule_is_constraint_not_automatic_main_task"
+        ],
+        [
+          "/rules/parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task",
+          "parallel_task_or_pr_is_observation_dependency_or_followup_not_automatic_main_task"
+        ],
+        [
+          "/rules/blocker_may_stop_but_not_reassign_main_task",
+          "blocker_may_stop_but_not_reassign_main_task"
+        ],
+        [
+          "/rules/owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
+          "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control"
+        ]
+      ]
+    }
+  ],
+  "note": "78 machine-addressable candidates in three frozen sources are NOT owner-admitted. Every one of 3159 files requires an explicit source disposition; unknown is not PASS."
+}

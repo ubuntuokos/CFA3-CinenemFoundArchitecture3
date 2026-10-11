@@ -243,6 +243,18 @@ class BootstrapPolicyTests(unittest.TestCase):
         broken = copy.deepcopy(policy)
         broken["owner_decision_date"] = "2026-10-12"
         self.assertTrue(validate_rule_admission(broken))
+        for section, extra in (
+            (None, "owner_approval_may_be_skipped"),
+            ("rule", "skip_source_authorization"),
+            ("responsibility", "blame_user_without_proof"),
+            ("admission_boundary", "owner_approval_may_be_skipped"),
+        ):
+            broken = copy.deepcopy(policy)
+            target = broken if section is None else broken[section]
+            target[extra] = True
+            with self.subTest(extra_semantic_field=section or "root"):
+                self.assertTrue(validate_rule_admission(broken))
+
         for key in policy["requirements"]:
             broken = copy.deepcopy(policy)
             broken["requirements"][key] = False

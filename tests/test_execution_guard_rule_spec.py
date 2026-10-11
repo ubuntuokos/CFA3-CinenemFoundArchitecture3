@@ -93,14 +93,23 @@ class OwnerRuleSpecTests(unittest.TestCase):
         """Regenerated source inventory and export cannot authorize new owner semantics."""
         from check_guard_policy_surface import SURFACE, git_blob_sha, leaves
         policy_path="canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json"
-        for case in ("extra_requirement", "altered_owner_date"):
+        cases={
+            "extra_requirement":("requirements","independent_owner_task_may_share_existing_pr",
+                                 "unapproved or missing rule-admission requirement"),
+            "altered_owner_date":(None,"owner_decision_date","owner-approved decision date changed"),
+            "extra_root_field":(None,"owner_approval_may_be_skipped",
+                                "unapproved or missing policy root field"),
+            "extra_rule_field":("rule","skip_source_authorization",
+                                "unapproved or missing rule field"),
+            "extra_responsibility_field":("responsibility","blame_user_without_proof",
+                                          "unapproved or missing responsibility field"),
+            "extra_admission_boundary_field":("admission_boundary","owner_approval_may_be_skipped",
+                                              "unapproved or missing admission boundary field"),
+        }
+        for case,(section,field,expected_message) in cases.items():
             policy=json.loads((ROOT/policy_path).read_text("utf-8"))
-            expected_message=("unapproved or missing rule-admission requirement"
-                              if case=="extra_requirement" else "owner-approved decision date changed")
-            if case=="extra_requirement":
-                policy["requirements"]["independent_owner_task_may_share_existing_pr"]=True
-            else:
-                policy["owner_decision_date"]="2026-10-12"
+            target=policy if section is None else policy[section]
+            target[field]="2026-10-12" if case=="altered_owner_date" else True
             surface=json.loads((ROOT/SURFACE).read_text("utf-8"))
             altered_export=copy.deepcopy(self.export)
             altered_coverage=copy.deepcopy(self.coverage)
@@ -130,6 +139,29 @@ class OwnerRuleSpecTests(unittest.TestCase):
                                 root=staged)
                 with self.subTest(case=case):
                     self.assertTrue(any(expected_message in issue for issue in issues),issues)
+
+    def test_rule_admission_proof_mode_requires_approved_value(self):
+        tampered=copy.deepcopy(self.spec)
+        tampered["active_rules"][-2]["proof_mode"]="NO_PROOF_REQUIRED"
+        self.assertIn("rule admission proof mode changed",self.check(spec=tampered))
+
+    def test_export_post_historical_admission_count_cannot_drift(self):
+        for count in (0,1,99):
+            tampered=copy.deepcopy(self.export)
+            tampered["owner_reconciliation"]["post_historical_rule_admissions"]=count
+            with self.subTest(post_historical_rule_admissions=count):
+                self.assertIn("governance export post-historical admission count inconsistent",
+                              self.check(export=tampered))
+
+    def test_export_all_current_id_and_code_pairs_required(self):
+        first=copy.deepcopy(self.export)
+        first["current_rules"][0]=copy.deepcopy(first["current_rules"][-1])
+        self.assertIn("canonical export current rule ID/code set incomplete or duplicated",
+                      self.check(export=first))
+        second=copy.deepcopy(self.export)
+        second["current_rules"][0]["code"]="TAMPERED_CODE"
+        self.assertIn("canonical export current rule ID/code set incomplete or duplicated",
+                      self.check(export=second))
 
     def test_coverages_policy_leaf_total_must_match_surface(self):
         for delta in (-1,1):

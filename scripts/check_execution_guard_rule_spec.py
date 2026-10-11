@@ -112,6 +112,8 @@ def validate(spec,gov,coverage,reference,root=ROOT):
         return issues+["78 owner sources not all present"]
     count={"HISTORICAL_CANDIDATE_DEV_AI":0,"HISTORICAL_CANDIDATE_QUALITY":0,"HISTORICAL_CANDIDATE_TASK_SCOPE":0}
     active={r["id"]:r for r in spec["active_rules"]}
+    if active.get("RULE-ADMISSION-001",{}).get("proof_mode") != "RULE_ADMISSION_SCOPE_AND_BOOTSTRAP_CONSISTENCY":
+        issues.append("rule admission proof mode changed")
     for row,ref in zip(hist,refs):
         if not isinstance(row,dict) or any(row.get(k)!=ref.get(k) for k in ("id","type","source_path","source_json_pointer")) or row.get("current_rule_admission") is not True or row.get("active_execution_check") is not True or row.get("mapped_to_rule_id")!=row.get("id") or ref.get("active_rule_receipt_scope") is not True or ref.get("excluded_from_execution_guard_active_rule_set") is not False or row.get("id") not in active:
             issues.append("owner source admission/provenance lost")
@@ -131,6 +133,24 @@ def validate(spec,gov,coverage,reference,root=ROOT):
             reference.get("counts",{}).get("current_canonical")!=82 or
             len(reference.get("current_rules",[]))!=82):
         issues.append("provenance export incorrectly excludes current rules")
+    exported=reference.get("current_rules")
+    if (not isinstance(exported,list) or
+            any(not isinstance(row,dict) or
+                not isinstance(row.get("id"),str) or
+                not isinstance(row.get("code"),str) for row in exported)):
+        issues.append("canonical export rule identities invalid")
+    else:
+        exported_ids=[row["id"] for row in exported]
+        if (len(exported)!=len(expected) or
+                len(set(exported_ids))!=len(exported_ids) or
+                {row["id"]:row["code"] for row in exported}!=expected):
+            issues.append("canonical export current rule ID/code set incomplete or duplicated")
+    exported_reconciliation=reference.get("owner_reconciliation")
+    if (not isinstance(exported_reconciliation,dict) or
+            exported_reconciliation.get("post_historical_rule_admissions")!=2 or
+            exported_reconciliation.get("post_historical_rule_admissions")!=own.get("post_historical_rule_admissions") or
+            exported_reconciliation.get("post_historical_rule_admissions")!=reg.get("post_historical_rule_admissions")):
+        issues.append("governance export post-historical admission count inconsistent")
     summary=reference.get("important")
     if not isinstance(summary,str) or f"{rule_count} aktív szabály" not in summary or "RULE-ADMISSION-001" not in summary or "CFA3-SEQUENTIAL-COMMAND-001" not in summary:
         issues.append("governance export summary inconsistent with active owner rules")

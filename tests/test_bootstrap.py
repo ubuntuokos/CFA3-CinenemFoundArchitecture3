@@ -237,7 +237,7 @@ class BootstrapPolicyTests(unittest.TestCase):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(5, surface["source_policy_count"])
+        self.assertEqual(6, surface["source_policy_count"])
         self.assertFalse(surface["semantic_rule_admission"])
         self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
                          sum(s["leaf_count"] for s in surface["sources"]))

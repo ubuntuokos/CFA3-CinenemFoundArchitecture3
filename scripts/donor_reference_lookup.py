@@ -167,7 +167,14 @@ def lookup(*, donor_id=None, original_url=None, registry_path=REGISTRY):
         raise ValueError("Exactly one of donor_id or original_url must be supplied")
     data = json.loads(Path(registry_path).read_text(encoding="utf-8"))
     if data.get("schema") == "cfa3.donor-transfer-snapshot.v1":
-        return lookup_snapshot(ValidatedSnapshot(data), donor_id=donor_id, original_url=original_url)
+        current = lookup_snapshot(ValidatedSnapshot(data), donor_id=donor_id,
+                                  original_url=original_url)
+        if current is not None or Path(registry_path).resolve() != REGISTRY.resolve():
+            return current
+        # Existing canonical sources always win. Unmerged PR545 records are
+        # searchable as NON-ADMITTED proposals only, never transfer mutations.
+        from donor_unmerged_proposals import lookup_proposal
+        return lookup_proposal(donor_id=donor_id, original_url=original_url)
     if data.get("schema") != "cfa3.canonical-donor-reference-registry.v1":
         raise ValueError("Unexpected canonical donor registry schema")
     if data.get("registration_state") != "PARTIAL_CANONICAL_REFERENCES_REGISTERED":

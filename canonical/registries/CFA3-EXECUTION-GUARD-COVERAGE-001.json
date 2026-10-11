@@ -293,5 +293,15 @@
     "no_op_audit_callback_fails_closed": true,
     "trusted_durable_writer_deployed": false,
     "status": "REFERENCE_VALIDATOR_TESTED_NOT_INDEPENDENT_RUNTIME_PROOF"
+  },
+  "owner_rule_specification": {
+    "path": "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
+    "validator": "scripts/check_execution_guard_rule_spec.py",
+    "active_texts": 24,
+    "archived_excluded_texts": 78,
+    "owner_amendments": 5,
+    "description_finalized": true,
+    "independent_runtime_proofs_verified": false,
+    "status": "OWNER_TEXT_CANONICAL_MAPPING_IMPLEMENTED_BUT_RUNTIME_PROOFS_PENDING"
   }
 }

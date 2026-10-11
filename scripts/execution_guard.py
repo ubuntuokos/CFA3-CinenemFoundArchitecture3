@@ -31,6 +31,8 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_guard_github_state.py",
     "scripts/check_execution_guard_owner_grant.py",
     "scripts/check_execution_guard_audit.py",
+    "scripts/check_execution_guard_rule_spec.py",
+    "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "scripts/execution_guard.py",
 })
 
@@ -113,6 +115,13 @@ def policy_issues(root=ROOT):
     if catalog.get("schema") != "cfa3.execution-guard-coverage.v1":
         issues.append("invalid coverage catalog")
     issues.extend(validate_current_rule_map(gov, catalog))
+    try:
+        from check_execution_guard_rule_spec import validate, SPEC, EXPORT
+        owner_spec = load(root, SPEC)
+        evidence_export = load(root, EXPORT)
+        issues.extend(validate(owner_spec, gov, catalog, evidence_export))
+    except (Blocked, ImportError, OSError, TypeError, ValueError, KeyError):
+        issues.append("owner-provided 24-rule normative source unavailable")
     rules = catalog.get("rules", {})
     if not isinstance(rules, dict) or any(
             not isinstance(record, dict) or record.get("status") != "VERIFIED_GATE"

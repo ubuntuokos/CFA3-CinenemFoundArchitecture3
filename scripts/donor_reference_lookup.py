@@ -23,7 +23,7 @@ def _freeze(value):
     """No caller-owned mutable child may survive in the validated handle."""
     if isinstance(value, dict):
         return MappingProxyType({key: _freeze(child) for key, child in value.items()})
-    if isinstance(value, list):
+    if isinstance(value, (list, tuple)):
         return tuple(_freeze(child) for child in value)
     return value
 

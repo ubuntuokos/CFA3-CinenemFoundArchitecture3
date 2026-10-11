@@ -471,5 +471,21 @@ class DonorLookupIntegrityTests(unittest.TestCase):
                 self.assertEqual(evaluate("https://github.com/ExistentialAudio/BlackHole",
                                           self.index)["disposition"], "BLOCKED_INDEX_CONFLICT")
 
+    def test_tuple_container_cannot_bypass_validated_snapshot_deep_freeze(self):
+        variant = copy.deepcopy(self.snapshot)
+        # Tuple and list have equivalent JSON serialization; an attacker may
+        # supply a tuple containing mutable record dictionaries.
+        variant["records"] = tuple(variant["records"])
+        variant["records"][0]["aliases"] = tuple(variant["records"][0]["aliases"])
+        handle = ValidatedSnapshot(variant)
+        sid = variant["records"][0]["source_id"]
+        original_status = lookup_snapshot(handle, donor_id=sid)["historical_status"]
+        with self.assertRaises(TypeError):
+            handle._data["records"][0]["reference_record"]["historical_status"] = "FORGED"
+        self.assertNotEqual(lookup_snapshot(handle, donor_id=sid)["historical_status"], "FORGED")
+        self.assertEqual(lookup_snapshot(handle, donor_id=sid)["historical_status"], original_status)
+        self.assertIsInstance(handle._data["records"], tuple)
+        self.assertIsInstance(handle._data["records"][0]["aliases"], tuple)
+
 if __name__ == "__main__":
     unittest.main()

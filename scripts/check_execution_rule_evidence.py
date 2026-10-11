@@ -155,3 +155,65 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
     if found != set(expected):
         raise RuleEvidenceBlocked("missing canonical rule proofs")
     return True
+
+def bootstrap_rule_report(governance, catalog):
+    """Report 24 admitted DEV/AI identities in reference CI, never runtime PASS."""
+    from execution_guard import validate_current_rule_map
+    issues = validate_current_rule_map(governance, catalog)
+    try:
+        expected = expected_rules(governance)
+    except RuleEvidenceBlocked as exc:
+        return [], issues + [str(exc)]
+    if not isinstance(catalog, dict):
+        return [], issues + ["rule catalog unavailable"]
+    rules = catalog.get("rules")
+    rules = rules if isinstance(rules, dict) else {}
+    excluded = catalog.get("historical_execution_exclusion")
+    excluded = excluded if isinstance(excluded, dict) else {}
+    if (excluded.get("scope") != "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY"
+            or excluded.get("excluded_historical_candidate_count") != 78
+            or excluded.get("history_completeness_required_for_active_gate") is not False
+            or excluded.get("candidates_admitted_to_current_rule_set") is not False
+            or excluded.get("current_required_rule_count") != 24
+            or excluded.get("current_rule_ids") != sorted(expected)):
+        issues.append("24 active rules / 78 historical exclusion boundary changed")
+    matrix = [(ident, code, rules.get(ident, {}).get("status", "MISSING")
+               if isinstance(rules.get(ident), dict) else "MISSING")
+              for ident, code in sorted(expected.items())]
+    verified = all(state == "VERIFIED_GATE" for _, _, state in matrix)
+    independently_attested = catalog.get("independent_evidence_verified") is True
+    if verified != independently_attested:
+        issues.append("runtime gate status and independent evidence claims disagree")
+    if catalog.get("coverage_complete") is True and not (verified and independently_attested):
+        issues.append("full coverage declared without independent gate evidence")
+    return matrix, issues
+
+
+def bootstrap_main():
+    """Structural status reporting is not per-rule runtime gate execution."""
+    import sys
+    from pathlib import Path
+    from execution_guard import load, GOV, CATALOG
+    if sys.argv[1:] != ["--bootstrap-report"]:
+        print("usage: check_execution_rule_evidence.py --bootstrap-report", file=sys.stderr)
+        return 2
+    root = Path(__file__).resolve().parents[1]
+    try:
+        matrix, issues = bootstrap_rule_report(load(root, GOV), load(root, CATALOG))
+    except (OSError, ValueError, TypeError) as exc:
+        print("CFA3_RULE_MATRIX_BLOCKED:", type(exc).__name__, file=sys.stderr)
+        return 1
+    for ident, code, status in matrix:
+        print("CFA3_RULE:", ident, code, status, "(structural inventory only)")
+    if issues:
+        for issue in issues:
+            print("CFA3_RULE_MATRIX_FAIL:", issue, file=sys.stderr)
+        return 1
+    pending = sum(state != "VERIFIED_GATE" for _, _, state in matrix)
+    print("CFA3_RULE_MATRIX_STRUCTURAL_PASS: 24 current DEV/AI rule identities;"
+          " pending runtime gates:", pending, "; NOT execution authorization")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(bootstrap_main())

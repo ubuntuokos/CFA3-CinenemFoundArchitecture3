@@ -197,5 +197,56 @@ class RuleReceiptTests(unittest.TestCase):
         with self.assertRaises(RuleEvidenceBlocked):
             self.check(valid, resolver=unavailable)
 
+
+    def test_bootstrap_reports_24_individual_rules_without_runtime_admission(self):
+        from check_execution_rule_evidence import bootstrap_rule_report
+        catalog = load(ROOT, CATALOG)
+        matrix, issues = bootstrap_rule_report(self.governance, catalog)
+        self.assertEqual([], issues)
+        self.assertEqual(24, len(matrix))
+        self.assertEqual(sorted(expected_rules(self.governance)), [row[0] for row in matrix])
+        self.assertEqual({"PENDING_RUNTIME_GATE_AND_PROOF"}, {row[2] for row in matrix})
+        self.assertFalse(catalog["coverage_complete"])
+        self.assertFalse(catalog["independent_evidence_verified"])
+
+    def test_bootstrap_each_rule_code_presence_and_status_are_checked(self):
+        from check_execution_rule_evidence import bootstrap_rule_report
+        catalog = load(ROOT, CATALOG)
+        for ident in expected_rules(self.governance):
+            changed = copy.deepcopy(catalog)
+            changed["rules"][ident]["code"] += "_CHANGED"
+            with self.subTest(rule=ident, field="code"):
+                self.assertTrue(bootstrap_rule_report(self.governance, changed)[1])
+            changed = copy.deepcopy(catalog)
+            del changed["rules"][ident]
+            with self.subTest(rule=ident, field="missing"):
+                self.assertTrue(bootstrap_rule_report(self.governance, changed)[1])
+            changed = copy.deepcopy(catalog)
+            changed["rules"][ident]["status"] = "AUTO_PASS"
+            with self.subTest(rule=ident, field="status"):
+                self.assertTrue(bootstrap_rule_report(self.governance, changed)[1])
+
+    def test_bootstrap_rejects_false_coverage_and_historical_scope_drift(self):
+        from check_execution_rule_evidence import bootstrap_rule_report
+        catalog = load(ROOT, CATALOG)
+        for change in ({"coverage_complete": True},
+                       {"independent_evidence_verified": True}):
+            altered = copy.deepcopy(catalog)
+            altered.update(change)
+            with self.subTest(change=change):
+                self.assertTrue(bootstrap_rule_report(self.governance, altered)[1])
+        altered = copy.deepcopy(catalog)
+        for row in altered["rules"].values():
+            row["status"] = "VERIFIED_GATE"
+        self.assertTrue(bootstrap_rule_report(self.governance, altered)[1])
+        for field, value in (
+            ("excluded_historical_candidate_count", 77),
+            ("current_rule_ids", ["AI-01"]),
+            ("candidates_admitted_to_current_rule_set", True)):
+            altered = copy.deepcopy(catalog)
+            altered["historical_execution_exclusion"][field] = value
+            with self.subTest(field=field):
+                self.assertTrue(bootstrap_rule_report(self.governance, altered)[1])
+
 if __name__ == "__main__":
     unittest.main()

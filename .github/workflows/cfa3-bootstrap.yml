@@ -22,6 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
+      - name: Report each of the 24 current Execution Guard rules without runtime PASS
+        run: python3 scripts/check_execution_rule_evidence.py --bootstrap-report
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v
       - name: Verify Rust-first contract workspace

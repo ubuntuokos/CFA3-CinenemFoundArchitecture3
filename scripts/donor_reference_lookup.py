@@ -278,12 +278,12 @@ def _verified_published_original_aliases(doc):
         if (donor["donor_id"] != source_id
                 or donor["historical_status"] != item["status"]
                 or donor["normalized_key"] != item["normalized_key"]
-                or donor["donor_registration"] != (
-                    "CANONICAL_REFERENCE_REGISTERED" if item["status"] == "ACCEPTED_REFERENCE"
-                    else "NOT_CANONICALLY_REGISTERED")):
-            # Superseded and non-accepted sources must never be promoted.
-            if item["status"] == "ACCEPTED_REFERENCE" or donor["donor_registration"] == "CANONICAL_REFERENCE_REGISTERED":
-                raise ValueError("Original URL alias would change a donor decision")
+                or (donor["donor_registration"] == "CANONICAL_REFERENCE_REGISTERED")
+                   != (item["status"] == "ACCEPTED_REFERENCE")
+                or any(donor.get(key) is not False for key in (
+                    "runtime_admission", "code_copy_authorized",
+                    "license_authorized", "model_provider_admission"))):
+            raise ValueError("Original URL alias would change a donor decision")
         route = existing.get(url)
         if route is not None:
             if route != source_id:

@@ -237,6 +237,72 @@ def validate_donor_classification_plan(policy, decision):
     require(decision.get("effects",{}).get("runtime_admission") is False,"runtime cannot be admitted")
     return errors
 
+
+APPROVED_RULE_ADMISSION_TEXT_HU = (
+    "Szabály felvételekor az AI kizárólag a kijelölt főfeladattal foglalkozhat; minden új szabályt fel kell venni a CFA3-CURRENT-POLICY-SURFACE-001.json "
+    "nyilvántartásba; ellenőrizni kell a Bootstrap követelményeit; az új szabályhoz igazítani kell a fixen beírt tesztértékeket; a PR-t valamennyi közvetlenül "
+    "szükséges, egymással konzisztens fájllal kell előkészíteni; sikertelen ellenőrzésnél bizonyíték alapján egyértelműen meg kell jelölni, hogy a hiányosságért "
+    "az AI asszisztens vagy az AI fejlesztő felelős. Külön tulajdonosi feladat vagy önállóan jóváhagyott új szabály csak a saját feladatához kötött ágon és "
+    "PR-ben vezethető be; másik, már megnyitott feladat PR-jébe automatikusan nem helyezhető át. A közös nyilvántartás szükséges konzisztens módosítása nem "
+    "teszi közössé a két feladat hatáskörét."
+)
+
+def validate_rule_admission(policy):
+    """Check the owner's new rule-admission contract without claiming runtime PASS."""
+    errors = []
+    def require(condition, message):
+        if not condition:
+            errors.append("rule admission: " + message)
+    require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    require(policy.get("owner_decision_date") == "2026-10-11",
+            "owner-approved decision date changed")
+    rule = policy.get("rule", {})
+    require(rule.get("id") == "RULE-ADMISSION-001" and
+            rule.get("code") == "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
+            "rule identity/code missing")
+    require(rule.get("text_hu") == APPROVED_RULE_ADMISSION_TEXT_HU,
+            "owner-approved rule text changed")
+    require(rule.get("scope") == "ONLY_THE_OWNER_DESIGNATED_MAIN_TASK", "rule scope widened")
+    require(rule.get("runtime_verified") is False, "unverified runtime PASS is forbidden")
+    required = (
+        "rule_admission_may_not_expand_the_main_task",
+        "new_rule_must_be_registered_in_canonical_policy_surface",
+        "bootstrap_requirements_checked_before_pr",
+        "fixed_test_expectations_updated_when_new_rule_is_added",
+        "pr_must_include_all_directly_affected_consistent_files",
+        "independent_owner_task_must_have_dedicated_branch_and_pr",
+        "positive_and_negative_bootstrap_checks_required",
+        "failed_check_requires_responsible_ai_role",
+        "failed_check_must_report_root_cause_and_evidence",
+        "no_unjustified_attribution_or_fabricated_pass",
+        "failed_gate_requires_stop_and_report",
+    )
+    requirements = policy.get("requirements")
+    require(isinstance(requirements, dict) and set(requirements) == set(required),
+            "unapproved or missing rule-admission requirement")
+    for name in required:
+        require(isinstance(requirements, dict) and requirements.get(name) is True,
+                "mandatory requirement absent: " + name)
+    responsibility = policy.get("responsibility", {})
+    require(responsibility.get("ai_assistant") == "Feladatvezérlési, hatásköri, ellenőrzés-előkészítési és jelentési hiányosság.", "ai_assistant exact accountability drift")
+    require(responsibility.get("ai_developer") == "Implementációs, teszt-, konfigurációs, adat- és PR-fájlkonzisztencia miatti hiányosság.", "ai_developer exact accountability drift")
+    require(responsibility.get("unverifiable_cause") ==
+            "STOP_AND_REPORT_UNVERIFIED_CAUSE_NO_FALSE_ATTRIBUTION",
+            "uncertain cause must not be invented")
+    require(responsibility.get("if_both_roles_are_same_actor") ==
+            "REPORT_BOTH_ROLES_WITH_SPECIFIC_CAUSE",
+            "same actor must report both roles and concrete cause")
+    require(responsibility.get("attribution_basis") ==
+            "DETERMINISTIC_CHECK_LOGS_AND_EXACT_CHANGED_FILES",
+            "responsibility requires deterministic evidence and exact changed files")
+    require(policy.get("admission_boundary", {}).get("bootstrap_structural_pass_is_runtime_proof") is False,
+            "bootstrap may not fake runtime gate proof")
+    require(policy.get("admission_boundary", {}).get("independent_execution_gate_pass") is False,
+            "independent gate PASS may not be fabricated")
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -249,6 +315,10 @@ def check(root=ROOT):
     donor_policy=load("canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",root)
     donor_decision=load("canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json",root)
     errors.extend(validate_donor_classification_plan(donor_policy,donor_decision))
+    rule_admission=load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",root)
+    errors.extend(validate_rule_admission(rule_admission))
+    from check_guard_policy_surface import SURFACE, validate_snapshot
+    errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

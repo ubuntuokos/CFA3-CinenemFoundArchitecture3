@@ -69,7 +69,7 @@ def validate_current_rule_map(governance,catalog,owner_spec=None):
         required=active_expected_codes(governance,owner_spec)
         rows=catalog.get("rules") if isinstance(catalog,dict) else None
         if not isinstance(rows,dict) or set(rows)!=set(required):
-            problems.append("80 current active rule identities incomplete")
+            problems.append("81 current active rule identities incomplete")
         else:
             for ident,code in required.items():
                 row=rows[ident]
@@ -101,9 +101,9 @@ def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
         owner_spec = load(root, SPEC)
         evidence_export = load(root, EXPORT)
         issues.extend(validate_current_rule_map(gov,catalog,owner_spec))
-        issues.extend(validate(owner_spec,gov,catalog,evidence_export))
+        issues.extend(validate(owner_spec,gov,catalog,evidence_export,root=root))
     except (Blocked, ImportError, OSError, TypeError, ValueError, KeyError):
-        issues.append("owner-provided 80-rule normative source unavailable")
+        issues.append("owner-provided 81-rule normative source unavailable")
     if require_prior_runtime_proofs:
         rules = catalog.get("rules", {})
         if not isinstance(rules, dict) or any(
@@ -124,7 +124,7 @@ def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
     restored=catalog.get("owner_historical_reconciliation",{})
     if (not isinstance(restored,dict) or restored.get("source_count")!=78
             or restored.get("mapped_existing")!=22 or restored.get("admitted_new")!=56
-            or restored.get("excluded_for_conflict")!=0 or restored.get("active_count")!=80):
+            or restored.get("excluded_for_conflict")!=0 or restored.get("active_count")!=81):
         issues.append("owner-approved 78-rule restoration boundary invalid")
     if (require_prior_runtime_proofs and
             catalog.get("independent_evidence_verified") is not True):
@@ -342,9 +342,9 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         raise Blocked("RULE_GATE: " + str(exc)) from exc
     evidence = admission(task)
     if not isinstance(evidence, dict) or any(evidence.get(x) is not True for x in (
-            "current_80_rule_inventory_verified", "current_80_rule_gates_verified",
-            "current_80_conflicts_resolved", "independent_proof_verified")):
-        raise Blocked("independent current-80 rule admission not verified")
+            "current_81_rule_inventory_verified", "current_81_rule_gates_verified",
+            "current_81_conflicts_resolved", "independent_proof_verified")):
+        raise Blocked("independent current-81 rule admission not verified")
     proof = live_state(task)
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
             "main_current", "head_current", "no_overlap", "checks_passed",

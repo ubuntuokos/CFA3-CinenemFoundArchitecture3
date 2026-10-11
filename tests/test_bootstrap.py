@@ -237,6 +237,12 @@ class BootstrapPolicyTests(unittest.TestCase):
         from check_bootstrap import validate_rule_admission
         policy = load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json")
         self.assertEqual([], validate_rule_admission(policy))
+        broken = copy.deepcopy(policy)
+        broken["requirements"]["independent_owner_task_may_share_existing_pr"] = True
+        self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["owner_decision_date"] = "2026-10-12"
+        self.assertTrue(validate_rule_admission(broken))
         for key in policy["requirements"]:
             broken = copy.deepcopy(policy)
             broken["requirements"][key] = False

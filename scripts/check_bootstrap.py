@@ -256,6 +256,8 @@ def validate_rule_admission(policy):
     require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
     require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    require(policy.get("owner_decision_date") == "2026-10-11",
+            "owner-approved decision date changed")
     rule = policy.get("rule", {})
     require(rule.get("id") == "RULE-ADMISSION-001" and
             rule.get("code") == "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
@@ -277,8 +279,12 @@ def validate_rule_admission(policy):
         "no_unjustified_attribution_or_fabricated_pass",
         "failed_gate_requires_stop_and_report",
     )
+    requirements = policy.get("requirements")
+    require(isinstance(requirements, dict) and set(requirements) == set(required),
+            "unapproved or missing rule-admission requirement")
     for name in required:
-        require(policy.get("requirements", {}).get(name) is True, "mandatory requirement absent: " + name)
+        require(isinstance(requirements, dict) and requirements.get(name) is True,
+                "mandatory requirement absent: " + name)
     responsibility = policy.get("responsibility", {})
     require(responsibility.get("ai_assistant") == "Feladatvezérlési, hatásköri, ellenőrzés-előkészítési és jelentési hiányosság.", "ai_assistant exact accountability drift")
     require(responsibility.get("ai_developer") == "Implementációs, teszt-, konfigurációs, adat- és PR-fájlkonzisztencia miatti hiányosság.", "ai_developer exact accountability drift")

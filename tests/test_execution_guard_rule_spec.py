@@ -89,6 +89,48 @@ class OwnerRuleSpecTests(unittest.TestCase):
             issues=validate(altered_spec,self.gov,self.coverage,altered_export,root=custom_root)
             self.assertTrue(any("owner-approved rule text changed" in x for x in issues),issues)
 
+    def test_coordinated_requirement_or_decision_date_tampering_rejected(self):
+        """Regenerated source inventory and export cannot authorize new owner semantics."""
+        from check_guard_policy_surface import SURFACE, git_blob_sha, leaves
+        policy_path="canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json"
+        for case in ("extra_requirement", "altered_owner_date"):
+            policy=json.loads((ROOT/policy_path).read_text("utf-8"))
+            expected_message=("unapproved or missing rule-admission requirement"
+                              if case=="extra_requirement" else "owner-approved decision date changed")
+            if case=="extra_requirement":
+                policy["requirements"]["independent_owner_task_may_share_existing_pr"]=True
+            else:
+                policy["owner_decision_date"]="2026-10-12"
+            surface=json.loads((ROOT/SURFACE).read_text("utf-8"))
+            altered_export=copy.deepcopy(self.export)
+            altered_coverage=copy.deepcopy(self.coverage)
+            with tempfile.TemporaryDirectory() as temp:
+                staged=Path(temp)
+                target=staged/policy_path
+                target.parent.mkdir(parents=True,exist_ok=True)
+                raw=(json.dumps(policy,ensure_ascii=False,indent=2)+"\n").encode("utf-8")
+                target.write_bytes(raw)
+                sha=git_blob_sha(raw)
+                for row in surface["sources"]:
+                    if row["path"]==policy_path:
+                        row["git_blob_sha1"]=sha
+                        row["leaves"]=leaves(policy)
+                        row["leaf_count"]=len(row["leaves"])
+                        break
+                else:
+                    self.fail("policy missing from canonical surface")
+                altered_coverage["canonical_policy_leaf_fields_enumerated"]=sum(
+                    row["leaf_count"] for row in surface["sources"])
+                altered_export["current_rules"][-1]["source_git_blob_sha1"]=sha
+                snapshot=staged/SURFACE
+                snapshot.parent.mkdir(parents=True,exist_ok=True)
+                snapshot.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",
+                                    encoding="utf-8")
+                issues=validate(self.spec,self.gov,altered_coverage,altered_export,
+                                root=staged)
+                with self.subTest(case=case):
+                    self.assertTrue(any(expected_message in issue for issue in issues),issues)
+
     def test_coverages_policy_leaf_total_must_match_surface(self):
         for delta in (-1,1):
             tampered=copy.deepcopy(self.coverage)

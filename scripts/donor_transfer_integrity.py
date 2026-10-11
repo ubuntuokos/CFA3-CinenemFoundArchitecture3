@@ -2,9 +2,10 @@
 from functools import lru_cache
 import hashlib
 import json
+import marshal
 from pathlib import Path
 
-from transfer_donors import digest, current_owner_confirmations, OWNER_CONFIRMATION
+from transfer_donors import digest, current_owner_confirmations, OWNER_CONFIRMATION, STATES
 
 REG = Path(__file__).resolve().parents[1] / "canonical/registries"
 TRANSFER_NAME = "CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
@@ -20,6 +21,25 @@ def file_signature(path):
 def _read_snapshot(path, signature):
     raw = path.read_bytes()
     data = json.loads(raw)
+    validate_snapshot(data)
+    return data, hashlib.sha256(raw).hexdigest()
+
+
+def validate_snapshot(data):
+    # Cache by the complete serialized VALUE, never by mutable object identity.
+    # Any mutation, including outside the requested row, gets a different key.
+    # marshal is only an in-process typed value key here. Never load external
+    # marshal bytes. Unlike dict equality it distinguishes 1, 1.0 and True,
+    # without serializing the entire JSON text for each lookup in a batch.
+    # Version 2 has no reference-sharing flags: retaining a returned object
+    # cannot change the encoding of otherwise identical JSON values.
+    payload = marshal.dumps(data, 2)
+    _validate_snapshot_payload(payload)
+
+
+@lru_cache(maxsize=2)
+def _validate_snapshot_payload(payload):
+    data = marshal.loads(payload)
     if (data.get("schema") != "cfa3.donor-transfer-snapshot.v1"
             or data.get("runtime_admission") is not False
             or data.get("code_or_license_admission") is not False):
@@ -34,10 +54,33 @@ def _read_snapshot(path, signature):
             raise ValueError("Historical record digest or identity mismatch")
         if row["historical_record"]["donor_id"] != sid:
             raise ValueError("Historical donor identity mismatch")
+        reference = row["reference_record"]
+        if (reference["donor_id"] != sid
+                or STATES.get(row["pre_transfer_status"]) != row["reference_state"]
+                or reference["donor_registration"] != row["reference_state"]
+                or row["runtime_admission"] is not False
+                or any(reference.get(k) is not False for k in (
+                    "runtime_admission", "code_copy_authorized", "license_authorized",
+                    "model_provider_admission"))):
+            raise ValueError("Historical donor authority mismatch")
         ids[sid] = position
-    if ids != data["lookup_by_id"]:
+    if ids != data["lookup_by_id"] or any(type(v) is not int for v in data["lookup_by_id"].values()):
         raise ValueError("Historical donor lookup index mismatch")
-    return data, hashlib.sha256(raw).hexdigest()
+    locators = {}
+    for position, route in enumerate(data["locator_routes"]):
+        alias, preferred, related = route["alias"], route["preferred_source_id"], route["related_source_ids"]
+        if preferred not in ids:
+            raise ValueError("Resolved locator targets a missing donor identity")
+        if (not isinstance(alias, str) or not alias or alias in locators
+                or not isinstance(related, list) or not related
+                or len(set(related)) != len(related) or any(sid not in ids for sid in related)
+                or preferred not in related or not route.get("authority")
+                or alias not in data["records"][ids[preferred]]["aliases"]):
+            raise ValueError("Historical locator route integrity mismatch")
+        locators[alias] = position
+    if (locators != data["lookup_by_locator"]
+            or any(type(v) is not int for v in data["lookup_by_locator"].values())):
+        raise ValueError("Historical locator lookup index mismatch")
 
 
 def verified_snapshot():
@@ -63,6 +106,9 @@ def confirmation_evidence():
             raise ValueError("Current owner confirmation binding mismatch")
     raw = OWNER_CONFIRMATION.read_bytes()
     doc = json.loads(raw)
+    if (doc.get("source_commit") != data["source_commit"]
+            or doc.get("transfer_snapshot_id") != data["id"]):
+        raise ValueError("Current owner confirmation snapshot binding mismatch")
     evidence = {row["source_id"]: {
         "confirmation_id": doc["id"],
         "confirmation_file": CONFIRMATION_NAME,
@@ -87,3 +133,69 @@ def preserved_aliases(records):
                     raise ValueError("Conflicting historical alias identities")
                 aliases[locator] = row["source_id"]
     return aliases
+
+
+PROJECTION_INPUTS = (
+    "CFA3-DONOR-L1-STAGED-DIRECT-ACCESS-20261010.json",
+    "CFA3-DONOR-L1-URL-ROUTING-20261010.json",
+    "CFA3-DONOR-OWNER-APPROVAL-19-26-20261010.json",
+    "CFA3-DONOR-REFERENCE-REGISTRY-001.json", TRANSFER_NAME, CONFIRMATION_NAME,
+)
+
+
+def expected_lifecycle_projection():
+    signatures = tuple(file_signature(REG / name) for name in PROJECTION_INPUTS)
+    return _expected_lifecycle_projection(REG, signatures)
+
+
+@lru_cache(maxsize=2)
+def _expected_lifecycle_projection(reg, signatures):
+    raw = {name: (reg / name).read_bytes() for name in PROJECTION_INPUTS}
+    staged, routing, approvals, registered, transfer, confirmation = (
+        json.loads(raw[name]) for name in PROJECTION_INPUTS)
+    validated, transfer_sha = verified_snapshot()
+    confirmations, confirmation_sha = confirmation_evidence()
+    if (transfer != validated or hashlib.sha256(raw[TRANSFER_NAME]).hexdigest() != transfer_sha
+            or hashlib.sha256(raw[CONFIRMATION_NAME]).hexdigest() != confirmation_sha):
+        raise ValueError("Donor evidence changed during projection read")
+    rows = {row["source_id"]: row for row in transfer["records"]}
+    approval_by_id = {row["id"]: row for row in approvals["records"]}
+    if any(rows[row["donor_id"]]["reference_record"] != row for row in registered["records"]):
+        raise ValueError("Existing canonical donor subset differs from transfer")
+    if {row["id"] for row in staged["sources"]} != set(rows):
+        raise ValueError("Staged source identity coverage mismatch")
+    records = []
+    for row in staged["sources"]:
+        sid = row["id"]
+        archived = rows[sid]
+        original = archived["historical_record"]
+        if row["status"] != archived["pre_transfer_status"]:
+            raise ValueError("Staged donor status differs from transferred history")
+        records.append({
+            "source_id": sid, "canonical_url": row["url"], "normalized_key": row["key"],
+            "prior_decision": {
+                "decision_id": "preserved-donor-record:" + sid,
+                "revision": archived["historical_record_sha256"], "outcome": row["status"],
+                "historical_outcome": original["status"],
+                "submission_review": original.get("submission_review", {}),
+                "intake_provenance": original.get("intake_provenance", {}),
+                "owner_approval": confirmations.get(sid, approval_by_id.get(sid)),
+                "canonical_reference_registration": archived["reference_record"],
+            },
+            "observed_revision": None, "support_status": "UNKNOWN",
+            "rights": {"verified": False, "may_modify_and_distribute": False},
+            "runtime_admission": False, "reference_state": archived["reference_state"],
+        })
+    if routing["entries"] != transfer["locator_routes"]:
+        raise ValueError("Staged lifecycle routes differ from transferred routes")
+    routes = [dict(route) for route in transfer["locator_routes"]]
+    by_alias = {route["alias"]: route for route in routes}
+    for alias, sid in sorted(preserved_aliases(transfer["records"]).items()):
+        if alias in by_alias:
+            if by_alias[alias]["preferred_source_id"] != sid:
+                raise ValueError("Preserved alias conflicts with transferred route")
+        else:
+            routes.append({"alias": alias, "preferred_source_id": sid,
+                           "related_source_ids": [sid], "authority": "PRESERVED_HISTORICAL_LOCATOR"})
+    return {"input_sha256": {name: hashlib.sha256(raw[name]).hexdigest() for name in PROJECTION_INPUTS},
+            "source_records": records, "locator_routes": routes}

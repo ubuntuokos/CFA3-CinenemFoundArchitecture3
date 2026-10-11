@@ -37,6 +37,9 @@ def current_owner_confirmations():
     """Current owner approval is separate from historical message reconstruction."""
     data = json.loads(OWNER_CONFIRMATION.read_text(encoding="utf-8"))
     if (data.get("schema") != "cfa3.current-owner-reference-approval-confirmation.v1"
+            or data.get("id") != "CFA3-DONOR-CURRENT-OWNER-APPROVAL-CONFIRMATION-20261011"
+            or data.get("source_commit") != "a9c724da62bf49f3353c694990fc51443e634b4a"
+            or data.get("transfer_snapshot_id") != "CFA3-DONOR-TRANSFER-SNAPSHOT-001"
             or data.get("current_owner_reference_approval") is not True
             or data.get("historical_source_records_immutable") is not True
             or data.get("does_not_reconstruct_original_chat_evidence") is not True

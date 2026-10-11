@@ -10,7 +10,7 @@ from pathlib import Path
 import sys
 
 from donor_delta_routes import delta_aliases
-from donor_transfer_integrity import preserved_aliases
+from donor_transfer_integrity import preserved_aliases, validate_snapshot
 
 REGISTRY = Path(__file__).resolve().parents[1] / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
 
@@ -18,6 +18,7 @@ REGISTRY = Path(__file__).resolve().parents[1] / "canonical/registries/CFA3-DONO
 def lookup_snapshot(data, *, donor_id=None, original_url=None):
     if (donor_id is None) == (original_url is None):
         raise ValueError("Exactly one of donor_id or original_url must be supplied")
+    validate_snapshot(data)
     if (data.get("schema") != "cfa3.donor-transfer-snapshot.v1"
             or data.get("runtime_admission") is not False
             or data.get("code_or_license_admission") is not False):

@@ -118,8 +118,17 @@ Foundation, a 200 képesség célja és az L1–L5 szabályai változatlanok.
 - Létező locator hiányzó célazonosítóval integritási hibát ad, nem egyszerű
   „nem található” eredményt.
 
-Helyi bizonyíték: 104 Python-teszt, bootstrap strukturális ellenőrzés és mindkét
+Helyi bizonyíték az aktuális `bd26ce9f24eb31a5e4c810a3c97c79c23ed21521`
+főági szabályokkal együtt: 111 Python-teszt, bootstrap strukturális ellenőrzés és mindkét
 generátor `--check` futása sikeres. A negatív tesztek tényleges ideiglenes
 fájlmódosítással ellenőrzik a felmelegített cache utáni sérülésfelismerést is.
 Ez referencia-/keresési bizonyíték, nem fizikai Current Host PASS, nem globális
 L1–L5 lezárás. A publikált commit és a CI állapota a javító PR-ben ellenőrizhető.
+
+A #11 első független review-jának négy kiegészítő észrevétele is regressziós
+tesztet kapott. A referencia-kereső a teljes snapshotot és mindkét lookup-indexet
+ellenőrzi, így másik donor sérülése sem marad észrevétlen. A lifecycle-index
+minden döntési, proveniencia- és útvonalmezőjének egyeznie kell a megőrzött
+bemenetekből előállított projekcióval. A tulajdonosi megerősítés dokumentumazonosítója,
+forráscommitja és cél-snapshotja is kötött. A belső gyorsítótár teljes, típushelyes
+adatérték alapján működik; változott adat nem használhat korábbi sikeres ellenőrzést.

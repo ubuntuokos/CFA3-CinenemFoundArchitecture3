@@ -71,7 +71,7 @@ class DonorLookupIntegrityTests(unittest.TestCase):
         route["related_source_ids"] = ["absent-id"]
         with self.assertRaisesRegex(ValueError, "missing donor"):
             lookup_snapshot(data, original_url=route["alias"])
-        self.assertIsNone(lookup_snapshot(data, donor_id="absent-id"))
+        self.assertIsNone(lookup_snapshot(self.snapshot, donor_id="absent-id"))
 
     def test_all_56_current_confirmations_are_visible_and_bound(self):
         confirmations = json.loads(transfer_donors.OWNER_CONFIRMATION.read_text())
@@ -92,8 +92,8 @@ class DonorLookupIntegrityTests(unittest.TestCase):
             reg = Path(tmp)
             transfer = reg / integrity.TRANSFER_NAME
             confirmation = reg / integrity.CONFIRMATION_NAME
-            shutil.copyfile(transfer_donors.OUTPUT, transfer)
-            shutil.copyfile(transfer_donors.OWNER_CONFIRMATION, confirmation)
+            for name in integrity.PROJECTION_INPUTS:
+                shutil.copyfile(integrity.REG / name, reg / name)
             original_confirmation = confirmation.read_bytes()
             with patch.object(integrity, "REG", reg), \
                  patch.object(integrity, "OWNER_CONFIRMATION", confirmation), \
@@ -119,6 +119,78 @@ class DonorLookupIntegrityTests(unittest.TestCase):
                 self.assertEqual(evaluate(url, self.index)["disposition"], "BLOCKED_INDEX_CONFLICT")
                 confirmation.unlink()
                 self.assertEqual(evaluate(url, self.index)["disposition"], "BLOCKED_INDEX_CONFLICT")
+
+    def test_lookup_rejects_corruption_outside_selected_record_and_indexes(self):
+        sid = self.snapshot["records"][0]["source_id"]
+        corruptions = [
+            lambda d: d.__setitem__("record_count", 1),
+            lambda d: d.__setitem__("record_set_sha256", "0" * 64),
+            lambda d: d["records"][-1]["historical_record"].__setitem__("notes", ["altered"]),
+            lambda d: d["lookup_by_id"].pop(d["records"][-1]["source_id"]),
+            lambda d: d["lookup_by_locator"].pop(d["locator_routes"][-1]["alias"]),
+        ]
+        self.assertEqual(lookup_snapshot(self.snapshot, donor_id=sid)["donor_id"], sid)
+        for corrupt in corruptions:
+            bad = copy.deepcopy(self.snapshot)
+            corrupt(bad)
+            with self.assertRaises(ValueError):
+                lookup_snapshot(bad, donor_id=sid)
+
+    def test_existing_identity_cannot_replace_preserved_lifecycle_route(self):
+        bad = copy.deepcopy(self.index)
+        route = next(r for r in bad["locator_routes"] if r["alias"] == "project:OpenCut")
+        route["preferred_source_id"] = "FA3-DONOR-AGENTSCOPE-AI-AGENTSCOPE-001"
+        route["related_source_ids"] = [route["preferred_source_id"]]
+        self.assertEqual(evaluate("project:OpenCut", bad)["disposition"], "BLOCKED_INDEX_CONFLICT")
+
+    def test_every_projected_decision_and_provenance_field_is_bound(self):
+        fields = {
+            "decision_id": "forged-decision", "revision": "0" * 64,
+            "outcome": "ACCEPTED_REFERENCE", "historical_outcome": "ACCEPTED_REFERENCE",
+            "submission_review": {"approved": True}, "intake_provenance": {"approved": True},
+            "owner_approval": {"approved": True}, "canonical_reference_registration": {},
+        }
+        for field, altered in fields.items():
+            with self.subTest(field=field):
+                bad = copy.deepcopy(self.index)
+                row = next(r for r in bad["source_records"] if r["reference_state"] == "CANDIDATE_PRESERVED")
+                row["prior_decision"][field] = altered
+                self.assertEqual(evaluate(row["canonical_url"], bad)["disposition"], "BLOCKED_INDEX_CONFLICT")
+        bad = copy.deepcopy(self.index)
+        bad["source_records"][0]["observed_revision"] = "0" * 40
+        self.assertEqual(evaluate(bad["source_records"][0]["canonical_url"], bad)["disposition"], "BLOCKED_INDEX_CONFLICT")
+
+    def test_confirmation_document_cannot_target_another_snapshot(self):
+        original = json.loads(transfer_donors.OWNER_CONFIRMATION.read_text())
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / integrity.CONFIRMATION_NAME
+            with patch.object(transfer_donors, "OWNER_CONFIRMATION", path), \
+                 patch.object(integrity, "OWNER_CONFIRMATION", path):
+                for field in ("id", "source_commit", "transfer_snapshot_id"):
+                    with self.subTest(field=field):
+                        bad = copy.deepcopy(original)
+                        bad[field] = "unrelated-snapshot"
+                        path.write_text(json.dumps(bad))
+                        with self.assertRaises(ValueError):
+                            integrity.confirmation_evidence()
+
+    def test_returned_evidence_cannot_mutate_later_lookup(self):
+        url = "https://github.com/agentscope-ai/agentscope"
+        answer = evaluate(url, self.index)
+        answer["prior_decision"]["historical_upstream_evidence"]["notes"].append("forged")
+        again = evaluate(url, self.index)
+        self.assertNotIn("forged", again["prior_decision"]["historical_upstream_evidence"]["notes"])
+
+    def test_retaining_lookup_result_does_not_invalidate_identical_value_cache(self):
+        integrity._validate_snapshot_payload.cache_clear()
+        sid = self.snapshot["records"][0]["source_id"]
+        held = lookup_snapshot(self.snapshot, donor_id=sid)
+        before = integrity._validate_snapshot_payload.cache_info()
+        again = lookup_snapshot(self.snapshot, donor_id=sid)
+        after = integrity._validate_snapshot_payload.cache_info()
+        self.assertEqual(held, again)
+        self.assertEqual(after.misses, before.misses)
+        self.assertEqual(after.hits, before.hits + 1)
 
 
 if __name__ == "__main__":

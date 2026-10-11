@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Read-only CFA3 source-identity / prior-decision gate. Never fetches or registers."""
 import argparse
+import copy
 import json
 import pathlib
 import re
@@ -9,7 +10,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from donor_delta_routes import delta_aliases
 from donor_transfer_integrity import (verified_snapshot, confirmation_evidence,
-                                      TRANSFER_NAME, CONFIRMATION_NAME)
+                                      TRANSFER_NAME, CONFIRMATION_NAME, expected_lifecycle_projection)
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_INDEX = ROOT / "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json"
@@ -90,6 +91,10 @@ def validate_migrated_index(index):
         raise ValueError("Lifecycle transfer-file digest mismatch")
     if inputs.get(CONFIRMATION_NAME) != confirmation_sha:
         raise ValueError("Lifecycle owner-confirmation digest mismatch")
+    expected = expected_lifecycle_projection()
+    for field in ("input_sha256", "source_records", "locator_routes"):
+        if index.get(field) != expected[field]:
+            raise ValueError("Lifecycle projection differs from authenticated inputs: " + field)
     history = {row["source_id"]: row for row in transfer["records"]}
     names = set()
     for record in records:
@@ -228,7 +233,7 @@ def result(state, *, source=None, **details):
             archived = historical_upstream_evidence().get(source["source_id"])
             if archived is not None and archived[0] == prior.get("revision"):
                 prior = {**prior, "historical_upstream_evidence": archived[1]}
-        value["prior_decision"] = prior
+        value["prior_decision"] = copy.deepcopy(prior)
     value.update(details)
     return value
 

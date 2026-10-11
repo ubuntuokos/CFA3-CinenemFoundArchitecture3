@@ -5,6 +5,7 @@
   "policy_files": [
     "canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",
     "canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",
+    "canonical/policies/CFA3-GUI-IMAGE-GENERATION-POLICY-001.json",
     "canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json",
     "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
     "canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json"
@@ -368,7 +369,7 @@
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
-  "canonical_policy_leaf_fields_enumerated": 431,
+  "canonical_policy_leaf_fields_enumerated": 495,
   "canonical_policy_field_enumeration_complete": true,
   "canonical_policy_semantic_rule_enforcement_complete": false,
   "github_main_protection_ruleset": {

@@ -233,11 +233,27 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["truncated"] = True
         self.assertTrue(validate_complete_inventory(frozen, bad))
 
+    def test_rule_admission_bootstrap_requirements(self):
+        from check_bootstrap import validate_rule_admission
+        policy = load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json")
+        self.assertEqual([], validate_rule_admission(policy))
+        for key in policy["requirements"]:
+            broken = copy.deepcopy(policy)
+            broken["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["responsibility"]["ai_developer"] = ""
+        self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_rule_admission(broken))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(6, surface["source_policy_count"])
+        self.assertEqual(7, surface["source_policy_count"])
         self.assertFalse(surface["semantic_rule_admission"])
         self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
                          sum(s["leaf_count"] for s in surface["sources"]))

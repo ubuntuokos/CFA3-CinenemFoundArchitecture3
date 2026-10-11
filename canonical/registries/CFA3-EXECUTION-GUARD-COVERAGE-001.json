@@ -8,6 +8,7 @@
     "canonical/policies/CFA3-GUI-IMAGE-GENERATION-POLICY-001.json",
     "canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json",
     "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
+    "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
     "canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json"
   ],
   "rules": {
@@ -330,6 +331,10 @@
     "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control": {
       "code": "owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
       "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "RULE-ADMISSION-001": {
+      "code": "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
     }
   },
   "historical": {
@@ -369,7 +374,7 @@
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
-  "canonical_policy_leaf_fields_enumerated": 495,
+  "canonical_policy_leaf_fields_enumerated": 521,
   "canonical_policy_field_enumeration_complete": true,
   "canonical_policy_semantic_rule_enforcement_complete": false,
   "github_main_protection_ruleset": {
@@ -391,7 +396,7 @@
     "schema": "cfa3.execution-guard-rule-receipt.v1",
     "validator": "scripts/check_execution_rule_evidence.py",
     "testing": "tests/test_execution_rule_evidence.py",
-    "known_current_governance_rule_count": 80,
+    "known_current_governance_rule_count": 81,
     "receipt_signature": "INDEPENDENT_HMAC_SHA256",
     "task_source_binding": "CANONICAL_REQUEST_DIGEST_AND_GOVERNANCE_SHA256",
     "current_trusted_attester_deployed": false,
@@ -478,32 +483,33 @@
   "owner_rule_specification": {
     "path": "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "validator": "scripts/check_execution_guard_rule_spec.py",
-    "active_texts": 80,
+    "active_texts": 81,
     "owner_amendments": 5,
     "description_finalized": true,
     "independent_runtime_proofs_verified": false,
-    "status": "OWNER_80_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS",
+    "status": "OWNER_81_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS",
     "current_historical_source_texts": 78
   },
   "runtime_preflight_separation": {
     "static_contract_validation": "policy_issues(require_prior_runtime_proofs=False)",
     "independent_service_prerequisites": "trusted_runtime_issues",
-    "required_task_receipts": "verify_rule_receipts FOR_OWNER_APPROVED_80",
+    "required_task_receipts": "verify_rule_receipts FOR_OWNER_APPROVED_81",
     "bootstrap_random_incidents_required": false,
     "current_24_global_status_not_sufficient_for_task_authority": true,
     "protected_service_deployments_verified": false,
     "conditional_runtime_gate_status": "PENDING",
     "status": "STRUCTURAL_IMPLEMENTATION_TESTED_NOT_LIVE_ADMITTED",
-    "current_80_global_status_not_sufficient_for_task_authority": true
+    "current_81_global_status_not_sufficient_for_task_authority": true
   },
   "owner_historical_reconciliation": {
     "source_count": 78,
     "mapped_existing": 22,
     "admitted_new": 56,
     "excluded_for_conflict": 0,
-    "active_count": 80,
+    "active_count": 81,
     "all_source_rules_accounted_for": true,
     "history_completeness_required_for_active_gate": false,
-    "original_24_preserved": true
+    "original_24_preserved": true,
+    "post_historical_rule_admissions": 1
   }
 }

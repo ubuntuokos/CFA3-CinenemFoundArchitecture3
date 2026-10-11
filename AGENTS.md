@@ -5,6 +5,7 @@
 ## Scope and change discipline
 - One explicitly requested task per conversation. Record main task, result, allowed files/actions, constraints, and completion condition before work.
 - Never self-expand scope. New ideas are separate proposed tasks, not automatic implementations.
+- Rule admission is also strictly one-task-only: register every new canonical rule in `canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json`, check Bootstrap expectations and fixed test counts, prepare a coherent PR, and attribute failed checks to the AI assistant (task orchestration) or AI developer (implementation) on verifiable evidence; never invent fault attribution.
 - Only use `ubuntuokos/CFA3-CinenemFoundArchitecture3` for new CFA3 mutations; never write to the legacy repository.
 - At most one active implementation PR. No new PR or code implementation without the owner's approval.
 - Check exact `main`, target branch/head, checks and overlapping PRs before **every** mutation or merge. Main is not a direct-write workspace.

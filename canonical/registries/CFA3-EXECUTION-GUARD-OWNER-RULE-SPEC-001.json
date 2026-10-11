@@ -3,7 +3,7 @@
   "id": "CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001",
   "source_type": "EXPLICIT_OWNER_SUPPLIED_TEXT_2026_10_11",
   "authority": "CURRENT_24_PLUS_OWNER_RECONFIRMED_56; 22 LEGACY_DEV_AI_MAPPED",
-  "active_rule_count": 80,
+  "active_rule_count": 81,
   "active_rules": [
     {
       "id": "DEV-01",
@@ -924,6 +924,15 @@
         "pointer": "/rules/owner_main_task_switch_requires_new_or_explicitly_rebound_task_control",
         "blob_sha1": "0b0fcd8784e8e9c4f7a1b42726d45d521a042127"
       }
+    },
+    {
+      "id": "RULE-ADMISSION-001",
+      "code": "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
+      "text_hu": "Szabály felvételekor az AI kizárólag a kijelölt főfeladattal foglalkozhat; minden új szabályt fel kell venni a CFA3-CURRENT-POLICY-SURFACE-001.json nyilvántartásba; ellenőrizni kell a Bootstrap követelményeit; az új szabályhoz igazítani kell a fixen beírt tesztértékeket; a PR-t valamennyi közvetlenül szükséges, egymással konzisztens fájllal kell előkészíteni; sikertelen ellenőrzésnél bizonyíték alapján egyértelműen meg kell jelölni, hogy a hiányosságért az AI asszisztens vagy az AI fejlesztő felelős.",
+      "proof_mode": "RULE_ADMISSION_SCOPE_AND_BOOTSTRAP_CONSISTENCY",
+      "runtime_verified": false,
+      "provenance": "OWNER_SUPPLIED_2026_10_11",
+      "canonical_policy_path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json"
     }
   ],
   "owner_amendments": [
@@ -1835,8 +1844,9 @@
     "mapped_existing": 22,
     "admitted_new": 56,
     "excluded_for_conflict": 0,
-    "active_count": 80,
+    "active_count": 81,
     "all_source_rules_accounted_for": true,
-    "authority": "OWNER_2026_10_11"
+    "authority": "OWNER_2026_10_11",
+    "post_historical_rule_admissions": 1
   }
 }

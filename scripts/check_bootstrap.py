@@ -237,6 +237,50 @@ def validate_donor_classification_plan(policy, decision):
     require(decision.get("effects",{}).get("runtime_admission") is False,"runtime cannot be admitted")
     return errors
 
+
+def validate_rule_admission(policy):
+    """Check the owner's new rule-admission contract without claiming runtime PASS."""
+    errors = []
+    def require(condition, message):
+        if not condition:
+            errors.append("rule admission: " + message)
+    require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    rule = policy.get("rule", {})
+    require(rule.get("id") == "RULE-ADMISSION-001" and
+            rule.get("code") == "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
+            "rule identity/code missing")
+    require(isinstance(rule.get("text_hu"), str) and len(rule["text_hu"]) > 100,
+            "owner rule text missing")
+    require(rule.get("scope") == "ONLY_THE_OWNER_DESIGNATED_MAIN_TASK", "rule scope widened")
+    require(rule.get("runtime_verified") is False, "unverified runtime PASS is forbidden")
+    required = (
+        "rule_admission_may_not_expand_the_main_task",
+        "new_rule_must_be_registered_in_canonical_policy_surface",
+        "bootstrap_requirements_checked_before_pr",
+        "fixed_test_expectations_updated_when_new_rule_is_added",
+        "pr_must_include_all_directly_affected_consistent_files",
+        "positive_and_negative_bootstrap_checks_required",
+        "failed_check_requires_responsible_ai_role",
+        "failed_check_must_report_root_cause_and_evidence",
+        "no_unjustified_attribution_or_fabricated_pass",
+        "failed_gate_requires_stop_and_report",
+    )
+    for name in required:
+        require(policy.get("requirements", {}).get(name) is True, "mandatory requirement absent: " + name)
+    responsibility = policy.get("responsibility", {})
+    require(bool(responsibility.get("ai_assistant")), "assistant accountability missing")
+    require(bool(responsibility.get("ai_developer")), "developer accountability missing")
+    require(responsibility.get("unverifiable_cause") ==
+            "STOP_AND_REPORT_UNVERIFIED_CAUSE_NO_FALSE_ATTRIBUTION",
+            "uncertain cause must not be invented")
+    require(policy.get("admission_boundary", {}).get("bootstrap_structural_pass_is_runtime_proof") is False,
+            "bootstrap may not fake runtime gate proof")
+    require(policy.get("admission_boundary", {}).get("independent_execution_gate_pass") is False,
+            "independent gate PASS may not be fabricated")
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -249,6 +293,8 @@ def check(root=ROOT):
     donor_policy=load("canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",root)
     donor_decision=load("canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json",root)
     errors.extend(validate_donor_classification_plan(donor_policy,donor_decision))
+    rule_admission=load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",root)
+    errors.extend(validate_rule_admission(rule_admission))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

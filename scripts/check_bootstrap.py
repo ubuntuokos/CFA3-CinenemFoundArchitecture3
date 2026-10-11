@@ -238,6 +238,15 @@ def validate_donor_classification_plan(policy, decision):
     return errors
 
 
+APPROVED_RULE_ADMISSION_TEXT_HU = (
+    "Szabály felvételekor az AI kizárólag a kijelölt főfeladattal foglalkozhat; minden új szabályt fel kell venni a CFA3-CURRENT-POLICY-SURFACE-001.json "
+    "nyilvántartásba; ellenőrizni kell a Bootstrap követelményeit; az új szabályhoz igazítani kell a fixen beírt tesztértékeket; a PR-t valamennyi közvetlenül "
+    "szükséges, egymással konzisztens fájllal kell előkészíteni; sikertelen ellenőrzésnél bizonyíték alapján egyértelműen meg kell jelölni, hogy a hiányosságért "
+    "az AI asszisztens vagy az AI fejlesztő felelős. Külön tulajdonosi feladat vagy önállóan jóváhagyott új szabály csak a saját feladatához kötött ágon és "
+    "PR-ben vezethető be; másik, már megnyitott feladat PR-jébe automatikusan nem helyezhető át. A közös nyilvántartás szükséges konzisztens módosítása nem "
+    "teszi közössé a két feladat hatáskörét."
+)
+
 def validate_rule_admission(policy):
     """Check the owner's new rule-admission contract without claiming runtime PASS."""
     errors = []
@@ -251,8 +260,8 @@ def validate_rule_admission(policy):
     require(rule.get("id") == "RULE-ADMISSION-001" and
             rule.get("code") == "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
             "rule identity/code missing")
-    require(isinstance(rule.get("text_hu"), str) and len(rule["text_hu"]) > 100,
-            "owner rule text missing")
+    require(rule.get("text_hu") == APPROVED_RULE_ADMISSION_TEXT_HU,
+            "owner-approved rule text changed")
     require(rule.get("scope") == "ONLY_THE_OWNER_DESIGNATED_MAIN_TASK", "rule scope widened")
     require(rule.get("runtime_verified") is False, "unverified runtime PASS is forbidden")
     required = (
@@ -302,6 +311,8 @@ def check(root=ROOT):
     errors.extend(validate_donor_classification_plan(donor_policy,donor_decision))
     rule_admission=load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",root)
     errors.extend(validate_rule_admission(rule_admission))
+    from check_guard_policy_surface import SURFACE, validate_snapshot
+    errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

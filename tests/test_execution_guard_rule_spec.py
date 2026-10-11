@@ -1,6 +1,7 @@
 """81 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
 import copy
 import json
+import tempfile
 from pathlib import Path
 import sys
 import unittest
@@ -57,6 +58,43 @@ class OwnerRuleSpecTests(unittest.TestCase):
         broken_export = copy.deepcopy(self.export)
         broken_export["current_rules"].pop()
         self.assertTrue(self.check(export=broken_export))
+
+    def test_coordinated_owner_text_surface_and_export_tampering_rejected(self):
+        """Matching forged owner spec, policy and provenance must not bypass authority."""
+        from check_guard_policy_surface import SURFACE, git_blob_sha
+        source="canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json"
+        policy=json.loads((ROOT/source).read_text("utf-8"))
+        policy["rule"]["text_hu"]="Nem jóváhagyott, módosított szabályszöveg. " * 18
+        altered_spec=copy.deepcopy(self.spec)
+        altered_spec["active_rules"][-1]["text_hu"]=policy["rule"]["text_hu"]
+        altered_export=copy.deepcopy(self.export)
+        surface=json.loads((ROOT/SURFACE).read_text("utf-8"))
+        with tempfile.TemporaryDirectory() as temp:
+            custom_root=Path(temp)
+            target=custom_root/source
+            target.parent.mkdir(parents=True,exist_ok=True)
+            raw=(json.dumps(policy,ensure_ascii=False,indent=2)+"\n").encode("utf-8")
+            target.write_bytes(raw)
+            forged_sha=git_blob_sha(raw)
+            for rec in surface["sources"]:
+                if rec["path"]==source:
+                    rec["git_blob_sha1"]=forged_sha
+                    break
+            else:
+                self.fail("approved rule policy not in surface")
+            surface_target=custom_root/SURFACE
+            surface_target.parent.mkdir(parents=True,exist_ok=True)
+            surface_target.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+            altered_export["current_rules"][-1]["source_git_blob_sha1"]=forged_sha
+            issues=validate(altered_spec,self.gov,self.coverage,altered_export,root=custom_root)
+            self.assertTrue(any("owner-approved rule text changed" in x for x in issues),issues)
+
+    def test_coverages_policy_leaf_total_must_match_surface(self):
+        for delta in (-1,1):
+            tampered=copy.deepcopy(self.coverage)
+            tampered["canonical_policy_leaf_fields_enumerated"]+=delta
+            with self.subTest(delta=delta):
+                self.assertTrue(self.check(coverage=tampered))
 
     def test_every_repeated_active_rule_count_and_status_is_checked(self):
         cases=(

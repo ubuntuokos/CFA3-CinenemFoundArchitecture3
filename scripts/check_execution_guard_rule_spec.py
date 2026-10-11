@@ -131,7 +131,15 @@ def validate(spec,gov,coverage,reference,root=ROOT):
     if not isinstance(summary,str) or f"{rule_count} aktív szabály" not in summary or "RULE-ADMISSION-001" not in summary or "CFA3-SEQUENTIAL-COMMAND-001" in summary:
         issues.append("governance export summary inconsistent with active owner rules")
     try:
+        from check_guard_policy_surface import validate_catalog_policy_leaf_total
+        policy_surface=json.loads((root/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
+        issues.extend(validate_catalog_policy_leaf_total(policy_surface,coverage))
+    except (OSError,ValueError,TypeError,ImportError,KeyError):
+        issues.append("canonical policy total/surface unavailable")
+    try:
         new_policy=json.loads((root/RULE_ADMISSION_POLICY).read_text("utf-8"))
+        from check_bootstrap import validate_rule_admission
+        issues.extend(validate_rule_admission(new_policy))
         new_owner_rule=active["RULE-ADMISSION-001"]
         if (new_owner_rule.get("code")!=new_policy["rule"]["code"] or
                 new_owner_rule.get("text_hu")!=new_policy["rule"]["text_hu"] or
@@ -143,7 +151,7 @@ def validate(spec,gov,coverage,reference,root=ROOT):
                 reference["current_rules"][-1],new_policy["rule"],
                 RULE_ADMISSION_POLICY,policy_surface):
             issues.append("new owner rule provenance record does not match canonical source")
-    except (OSError,ValueError,TypeError,KeyError,StopIteration):
+    except (OSError,ValueError,TypeError,KeyError,StopIteration,ImportError):
         issues.append("new owner rule canonical source unavailable")
     amend=spec.get("owner_amendments")
     if not isinstance(amend,list) or {x.get("id") for x in amend if isinstance(x,dict)}!=AMENDMENTS or any(any(id not in expected for id in a.get("mapped_to",[])) for a in amend):

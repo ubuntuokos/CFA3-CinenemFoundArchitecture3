@@ -365,5 +365,74 @@ class DonorLookupIntegrityTests(unittest.TestCase):
         self.assertEqual(lookup_snapshot(trusted, donor_id=sid)["donor_id"], sid)
         self.assertIsNone(lookup_snapshot(trusted, donor_id="unknown-source-id"))
 
+    def test_pinned_transfer_rejects_self_consistent_forged_history(self):
+        altered = copy.deepcopy(self.snapshot)
+        row = altered["records"][0]
+        row["reference_record"]["historical_status"] = "FORGED_STATUS"
+        altered["record_set_sha256"] = transfer_donors.digest(altered["records"])
+        self.assertEqual(altered["record_count"], len(altered["records"]))
+        with self.assertRaisesRegex(ValueError, "preserved transfer evidence"):
+            lookup_snapshot(altered, donor_id=row["source_id"])
+        with self.assertRaisesRegex(ValueError, "preserved transfer evidence"):
+            ValidatedSnapshot(altered)
+
+    def test_owner_approval_ledger_forgery_fails_even_with_matching_index_digest(self):
+        sid = "FA3-DONOR-TAHOMA2D-001"
+        with tempfile.TemporaryDirectory() as tmp:
+            reg = Path(tmp)
+            for name in integrity.PROJECTION_INPUTS:
+                shutil.copyfile(integrity.REG / name, reg / name)
+            approval = reg / integrity.OWNER_APPROVAL_NAME
+            doc = json.loads(approval.read_text())
+            row = next(rec for rec in doc["records"] if rec["id"] == sid)
+            row["owner_donor_approval"] = "FORGED_OWNER_APPROVAL"
+            approval.write_text(json.dumps(doc))
+            forged = copy.deepcopy(self.index)
+            forged["input_sha256"][integrity.OWNER_APPROVAL_NAME] = hashlib.sha256(
+                approval.read_bytes()).hexdigest()
+            next(rec for rec in forged["source_records"]
+                 if rec["source_id"] == sid)["prior_decision"]["owner_approval"] = row
+            with patch.object(integrity, "REG", reg):
+                self.assertEqual(evaluate("https://github.com/tahoma2d/tahoma2d", forged)
+                                 ["disposition"], "BLOCKED_INDEX_CONFLICT")
+                with self.assertRaisesRegex(ValueError, "owner approval ledger Git blob"):
+                    integrity.expected_lifecycle_projection()
+
+    def test_support_ended_never_silently_reuses_prior_decision(self):
+        observation = {
+            "verification": "VERIFIED_BY_AUTHORIZED_REVIEW",
+            "evidence_ref": "regression-verified-support-end-conflict",
+            "checked_at": "2026-10-11",
+            "event": "SUPPORT_ENDED",
+            "support_status": "SUPPORTED",
+            "observed_revision": "72f3f6fa0b2fc38b8517f408ab616f0f2bd229e6",
+        }
+        url = "https://github.com/agentscope-ai/agentscope"
+        self.assertEqual(evaluate(url, self.index, observation)["disposition"],
+                         "BLOCKED_UNVERIFIED_OBSERVATION")
+        observation["support_status"] = "UNKNOWN"
+        self.assertEqual(evaluate(url, self.index, observation)["disposition"],
+                         "BLOCKED_UNVERIFIED_OBSERVATION")
+        observation["support_status"] = "UNMAINTAINED"
+        self.assertEqual(evaluate(url, self.index, observation)["disposition"],
+                         "REPLACEMENT_PLAN_REQUIRED")
+
+    def test_index_selector_and_authority_fields_cannot_disable_historical_routes(self):
+        url = "https://github.com/lurcher/unixODBC"
+        for field, value in {
+            "active_reference_snapshot": "FORGED",
+            "id": "FORGED",
+            "source_status": "FORGED",
+            "migration_authority": "FORGED",
+            "repository_snapshot_transfer_complete": False,
+        }.items():
+            with self.subTest(field=field):
+                forged = copy.deepcopy(self.index)
+                forged[field] = value
+                self.assertEqual(evaluate(url, forged)["disposition"],
+                                 "BLOCKED_INDEX_CONFLICT")
+        self.assertEqual(evaluate(url, self.index)["disposition"],
+                         "CHANGE_CHECK_REQUIRED")
+
 if __name__ == "__main__":
     unittest.main()

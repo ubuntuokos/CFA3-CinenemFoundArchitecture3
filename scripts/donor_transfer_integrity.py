@@ -16,6 +16,8 @@ REJECTION_ARCHIVE = (Path(__file__).resolve().parents[1] /
     "archive/donor-source-migration/2026-10-09/FA3-DONOR-REJECTION-AUDIT-001.json")
 REJECTION_ARCHIVE_BLOB = "1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8"
 TRANSFER_SNAPSHOT_BLOB = "c863fe31d2c300bf15c9996432f86a70f9a18d74"
+OWNER_APPROVAL_NAME = "CFA3-DONOR-OWNER-APPROVAL-19-26-20261010.json"
+OWNER_APPROVAL_BLOB = "de4d26675981859cef91ad845b668c56bdd3b84d"
 
 
 def verified_rejection_audit():
@@ -85,6 +87,20 @@ def validate_snapshot(data):
     expected_audit_digest = digest(verified_rejection_audit())
     payload = marshal.dumps(data, 2)
     _validate_snapshot_payload(payload, expected_audit_digest)
+    # Internal consistency is insufficient; authenticate all caller fields.
+    path = REG / TRANSFER_NAME
+    if digest(data) != _pinned_snapshot_value_digest(path, file_signature(path)):
+        raise ValueError("Historical source snapshot differs from preserved transfer evidence")
+
+
+@lru_cache(maxsize=4)
+def _pinned_snapshot_value_digest(path, signature):
+    raw = path.read_bytes()
+    blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+    if blob != TRANSFER_SNAPSHOT_BLOB:
+        raise ValueError("Preserved transfer snapshot Git blob changed")
+    return digest(json.loads(raw))
 
 
 @lru_cache(maxsize=2)
@@ -251,6 +267,13 @@ def expected_lifecycle_projection():
 @lru_cache(maxsize=2)
 def _expected_lifecycle_projection(reg, signatures):
     raw = {name: (reg / name).read_bytes() for name in PROJECTION_INPUTS}
+    # Authenticate the current owner's ledger independently of self-signed
+    # index input hashes before projecting unconfirmed historical approvals.
+    ledger = raw[OWNER_APPROVAL_NAME]
+    ledger_blob = hashlib.sha1(
+        b"blob " + str(len(ledger)).encode("ascii") + b"\0" + ledger).hexdigest()
+    if ledger_blob != OWNER_APPROVAL_BLOB:
+        raise ValueError("Preserved owner approval ledger Git blob changed")
     staged, routing, approvals, registered, transfer, confirmation = (
         json.loads(raw[name]) for name in PROJECTION_INPUTS)
     _, transfer_sha = _trusted_snapshot()

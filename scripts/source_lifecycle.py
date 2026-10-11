@@ -82,6 +82,13 @@ def validate_migrated_index(index):
     """Validate explicit historical routes without collapsing related identities."""
     if index.get("complete") is not False or index.get("global_l1_completed") is not False:
         raise ValueError("Migrated reference lookup cannot certify global completeness")
+    if (index.get("id") != "CFA3-SOURCE-LIFECYCLE-INDEX-001"
+            or index.get("source_status") != "KNOWN_DONOR_LOOKUP_AVAILABLE_GLOBAL_COVERAGE_PENDING"
+            or index.get("migration_authority") != "PRESERVED_EXISTING_RECORDS_NO_NEW_DONOR_APPROVAL"
+            or index.get("repository_snapshot_transfer_complete") is not True
+            or index.get("active_reference_snapshot") !=
+                "CFA3-DONOR-TRANSFER-SNAPSHOT-001"):
+        raise ValueError("Lifecycle snapshot selector or authority metadata was altered")
     records, routes = index.get("source_records"), index.get("locator_routes")
     if not isinstance(records, list) or not isinstance(routes, list):
         raise ValueError("Missing migrated records or routes")
@@ -301,6 +308,10 @@ def evaluate(url, index, observation=None):
     if support not in ("SUPPORTED", "UNMAINTAINED", "UNKNOWN"):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source,
                       reason="Verified observation must classify upstream support")
+    # SUPPORT_ENDED cannot reuse a prior decision on the same upstream SHA.
+    if observation.get("event") == "SUPPORT_ENDED" and support != "UNMAINTAINED":
+        return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source,
+                      reason="SUPPORT_ENDED requires verified UNMAINTAINED support classification")
     if support == "UNMAINTAINED":
         rights = observation.get("rights", source.get("rights", {}))
         may_reuse = isinstance(rights, dict) and rights.get("verified") is True and rights.get("may_modify_and_distribute") is True

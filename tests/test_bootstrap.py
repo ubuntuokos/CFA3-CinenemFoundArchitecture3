@@ -214,6 +214,11 @@ class BootstrapPolicyTests(unittest.TestCase):
             "tree": [{"path":r[0], "sha":r[1], "size":r[2], "type":"blob"}
                      for r in frozen["files"]]
         }
+        # Real Git tree has 121 directory entries in addition to its 3159 blobs.
+        sample["tree"].extend(
+            {"path": "_synthetic_directory_%03d" % i, "type": "tree"}
+            for i in range(frozen["tree_entry_count"] - len(sample["tree"]))
+        )
         self.assertEqual([], validate_complete_inventory(frozen, sample))
         bad = copy.deepcopy(frozen)
         bad["files"][0][1] = "a" * 40 if bad["files"][0][1] != "a" * 40 else "b" * 40

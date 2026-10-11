@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from execution_guard import load, GOV, LEDGER, CATALOG
 from check_execution_rule_evidence import (
     RuleEvidenceBlocked, SCHEMA, bytes_canonical, expected_rules,
-    request_digest, verify_rule_receipts
+    request_digest, verify_rule_receipts, EVIDENCE_SCHEMA
 )
 
 KEY = b"t" * 32
@@ -25,6 +25,16 @@ def task():
         "source_hashes": {GOV: hashlib.sha256((ROOT / GOV).read_bytes()).hexdigest()}
     }
 
+def evidence_bytes(receipt):
+    fields = ("rule_id", "code", "task_sha256", "governance_sha256",
+              "main_sha", "gate_id", "verdict", "checked_at")
+    body = {field: receipt[field] for field in fields}
+    body["schema"] = EVIDENCE_SCHEMA
+    body["evaluator_sha256"] = hashlib.sha256(
+        b"SYNTHETIC-UNIT-TEST-EVALUATOR-ONLY"
+    ).hexdigest()
+    return bytes_canonical(body)
+
 def receipts(task_contract, governance):
     out = []
     for ident, code in expected_rules(governance).items():
@@ -34,9 +44,9 @@ def receipts(task_contract, governance):
             "task_sha256": request_digest(task_contract),
             "governance_sha256": task_contract["source_hashes"][GOV],
             "main_sha": task_contract["main_sha"], "verdict": "PASS",
-            "checked_at": NOW - 1, "expires_at": NOW + 10,
-            "evidence_sha256": hashlib.sha256(ident.encode()).hexdigest()
+            "checked_at": NOW - 1, "expires_at": NOW + 10
         }
+        row["evidence_sha256"] = hashlib.sha256(evidence_bytes(row)).hexdigest()
         row["signature"] = hmac.new(
             KEY, bytes_canonical(row), hashlib.sha256).hexdigest()
         out.append(row)
@@ -46,11 +56,19 @@ class RuleReceiptTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.governance = load(ROOT, GOV)
+        reference = receipts(task(), cls.governance)
+        cls.content_store = {
+            row["rule_id"]: evidence_bytes(row) for row in reference
+        }
 
-    def check(self, bundle, task_contract=None, governance=None, secret=KEY):
+    def resolver(self, ident, digest):
+        return self.content_store.get(ident)
+
+    def check(self, bundle, task_contract=None, governance=None, secret=KEY, resolver=None):
         return verify_rule_receipts(
             task() if task_contract is None else task_contract,
-            bundle, self.governance if governance is None else governance, secret, now=NOW)
+            bundle, self.governance if governance is None else governance, secret,
+            now=NOW, evidence_resolver=self.resolver if resolver is None else resolver)
 
     def test_only_full_24_source_bound_receipts_pass_structurally(self):
         self.assertEqual(24, len(expected_rules(self.governance)))
@@ -136,6 +154,48 @@ class RuleReceiptTests(unittest.TestCase):
         self.assertFalse(ledger["inventory_complete"])
         self.assertFalse(catalog["coverage_complete"])
         self.assertFalse(catalog["independent_evidence_verified"])
+
+    def test_missing_content_resolver_fails_before_admission(self):
+        valid = receipts(task(), self.governance)
+        with self.assertRaises(RuleEvidenceBlocked):
+            verify_rule_receipts(task(), valid, self.governance, KEY, now=NOW)
+
+    def test_missing_or_wrong_evidence_bytes_fail(self):
+        valid = receipts(task(), self.governance)
+        for value in (None, b"", b"not-a-json-document", b"{}", b"\x00"*131073):
+            with self.subTest(value_type=type(value).__name__), self.assertRaises(RuleEvidenceBlocked):
+                self.check(valid, resolver=lambda *_: value)
+
+    def test_cross_rule_evidence_substitution_fails_for_every_rule(self):
+        valid = receipts(task(), self.governance)
+        order = list(self.content_store)
+        for i, ident in enumerate(order):
+            altered = dict(self.content_store)
+            altered[ident] = self.content_store[order[(i + 1) % len(order)]]
+            with self.subTest(rule=ident), self.assertRaises(RuleEvidenceBlocked):
+                self.check(valid, resolver=lambda name, digest: altered.get(name))
+
+    def test_signed_matching_digest_with_wrong_content_binding_fails(self):
+        valid = receipts(task(), self.governance)
+        forged = copy.deepcopy(valid)
+        wrong_body = copy.deepcopy(__import__("json").loads(evidence_bytes(forged[0])))
+        wrong_body["rule_id"] = "AI-99"
+        raw = bytes_canonical(wrong_body)
+        forged[0]["evidence_sha256"] = hashlib.sha256(raw).hexdigest()
+        forged[0]["signature"] = hmac.new(KEY, bytes_canonical(
+            {k:v for k,v in forged[0].items() if k!="signature"}
+        ), hashlib.sha256).hexdigest()
+        altered = dict(self.content_store)
+        altered[forged[0]["rule_id"]] = raw
+        with self.assertRaises(RuleEvidenceBlocked):
+            self.check(forged, resolver=lambda name, digest: altered.get(name))
+
+    def test_evidence_provider_exception_is_denied(self):
+        valid = receipts(task(), self.governance)
+        def unavailable(*_):
+            raise OSError("protected evidence store unavailable")
+        with self.assertRaises(RuleEvidenceBlocked):
+            self.check(valid, resolver=unavailable)
 
 if __name__ == "__main__":
     unittest.main()

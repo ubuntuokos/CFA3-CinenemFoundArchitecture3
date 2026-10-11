@@ -17,6 +17,8 @@ SCHEMA = "cfa3.execution-guard-rule-receipt.v1"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 GOV = "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json"
 MAX_AGE_SECONDS = 60
+MAX_EVIDENCE_BYTES = 131072
+EVIDENCE_SCHEMA = "cfa3.execution-guard-rule-evidence.v1"
 
 class RuleEvidenceBlocked(ValueError):
     pass
@@ -55,10 +57,51 @@ def expected_rules(governance):
         raise RuleEvidenceBlocked("canonical rule count mismatch")
     return expected
 
-def verify_rule_receipts(task, receipts, governance, attestation_secret, now=None):
+def verify_evidence_bytes(receipt, evidence_resolver):
+    """Content-addressed independent evidence, not a hash-only assertion.
+
+    The resolver must fetch from a protected evidence store, not from the
+    requesting agent. Matching JSON metadata is necessary, never sufficient
+    to prove a gate actually ran; the real producer remains separately trusted.
+    """
+    if not callable(evidence_resolver):
+        raise RuleEvidenceBlocked("trusted evidence content resolver missing")
+    ident = receipt["rule_id"]
+    digest = receipt["evidence_sha256"]
+    try:
+        raw = evidence_resolver(ident, digest)
+    except Exception as exc:
+        raise RuleEvidenceBlocked("independent rule evidence unreadable: " + ident) from exc
+    if type(raw) is not bytes or not 0 < len(raw) <= MAX_EVIDENCE_BYTES:
+        raise RuleEvidenceBlocked("rule evidence missing or oversized: " + ident)
+    observed = hashlib.sha256(raw).hexdigest()
+    if not hmac.compare_digest(observed, digest):
+        raise RuleEvidenceBlocked("rule evidence body SHA-256 mismatch: " + ident)
+    try:
+        body = json.loads(raw.decode("utf-8"))
+        if (type(body) is not dict or bytes_canonical(body) != raw):
+            raise ValueError("evidence encoding not canonical")
+    except (UnicodeError, ValueError, TypeError) as exc:
+        raise RuleEvidenceBlocked("rule evidence not canonical JSON: " + ident) from exc
+    expected_fields = ("rule_id", "code", "task_sha256", "governance_sha256",
+                       "main_sha", "gate_id", "verdict", "checked_at")
+    for field in expected_fields:
+        if body.get(field) != receipt.get(field) or type(body.get(field)) is not type(receipt.get(field)):
+            raise RuleEvidenceBlocked("rule evidence content disagrees with signed receipt: " + ident + ":" + field)
+    if body.get("schema") != EVIDENCE_SCHEMA:
+        raise RuleEvidenceBlocked("unrecognized rule evidence schema: " + ident)
+    implementation = body.get("evaluator_sha256")
+    if not isinstance(implementation, str) or SHA256.fullmatch(implementation) is None:
+        raise RuleEvidenceBlocked("rule evaluator implementation fingerprint absent: " + ident)
+    return True
+
+def verify_rule_receipts(task, receipts, governance, attestation_secret, now=None,
+                         evidence_resolver=None):
     """All 24 signed, scoped, fresh receipts required. No untrusted model PASS."""
     if (not isinstance(attestation_secret, bytes) or len(attestation_secret) < 32):
         raise RuleEvidenceBlocked("trusted independent attestation key missing")
+    if not callable(evidence_resolver):
+        raise RuleEvidenceBlocked("trusted independent evidence resolver missing")
     if not isinstance(receipts, list):
         raise RuleEvidenceBlocked("signed rule evidence must be a list")
     expected = expected_rules(governance)
@@ -108,6 +151,7 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
                           hashlib.sha256).hexdigest()
         if not hmac.compare_digest(sig, actual):
             raise RuleEvidenceBlocked("tampered or unauthenticated rule proof: " + ident)
+        verify_evidence_bytes(receipt, evidence_resolver)
     if found != set(expected):
         raise RuleEvidenceBlocked("missing canonical rule proofs")
     return True

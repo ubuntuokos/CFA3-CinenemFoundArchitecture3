@@ -134,7 +134,8 @@
     "EXHAUSTIVE_GIT_TREE_IS_NOT_ALL_RULES_RECONCILED",
     "COMPLETE_POLICY_JSON_FIELD_INVENTORY_NOT_SEMANTIC_RULE_ACCEPTANCE",
     "GITHUB_REST_BYPASS_ACTORS_REQUIRE_RULESET_WRITE_PERMISSION_TO_READ",
-    "RULE_RECEIPTS_REQUIRE_A_REAL_INDEPENDENT_ATTESTER_NOT_SYNTHETIC_TEST_KEYS"
+    "RULE_RECEIPTS_REQUIRE_A_REAL_INDEPENDENT_ATTESTER_NOT_SYNTHETIC_TEST_KEYS",
+    "SIGNED_HASH_WITHOUT_INDEPENDENT_CONTENT_READBACK_IS_NOT_AN_ADMISSIBLE_RULE_PROOF"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
   "canonical_policy_leaf_fields_enumerated": 431,
@@ -164,6 +165,14 @@
     "task_source_binding": "CANONICAL_REQUEST_DIGEST_AND_GOVERNANCE_SHA256",
     "require_all_24_verdicts": "MANDATORY",
     "current_trusted_attester_deployed": false,
-    "state": "IMPLEMENTED_RECEIPT_VALIDATION_NOT_INDEPENDENT_RUNTIME_RULE_PROOFS"
+    "state": "IMPLEMENTED_RECEIPT_VALIDATION_NOT_INDEPENDENT_RUNTIME_RULE_PROOFS",
+    "content_evidence": {
+      "schema": "cfa3.execution-guard-rule-evidence.v1",
+      "content_addressed_sha256_verification": "IMPLEMENTED",
+      "canonical_json_content_binding": "IMPLEMENTED",
+      "independent_evidence_resolver_deployed": false,
+      "evaluator_implementation_runtime_verified": false,
+      "trusted_content_store_deployed": false
+    }
   }
 }

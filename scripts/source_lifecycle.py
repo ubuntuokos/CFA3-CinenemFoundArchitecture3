@@ -131,12 +131,47 @@ def resolve_migrated_url(url, exact):
     return next(iter(matches), None)
 
 @lru_cache(maxsize=1)
-def historical_upstream_evidence():
-    """Use exact preserved records; never infer a current upstream revision."""
+def transferred_snapshot():
+    """Unmodified archival data; never an authority for runtime admission."""
     path = ROOT / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
     transfer = json.loads(path.read_text(encoding="utf-8"))
-    if transfer.get("schema") != "cfa3.donor-transfer-snapshot.v1":
-        raise ValueError("Historical source snapshot schema is invalid")
+    if (transfer.get("schema") != "cfa3.donor-transfer-snapshot.v1"
+            or transfer.get("runtime_admission") is not False
+            or transfer.get("code_or_license_admission") is not False):
+        raise ValueError("Historical source snapshot schema or authority is invalid")
+    return transfer
+
+
+@lru_cache(maxsize=1)
+def historical_rejections():
+    """Exact rejected identities remain blocked but searchable as decisions."""
+    transfer = transferred_snapshot()
+    routes = {}
+    for history in transfer["rejection_audit"]["entries"]:
+        item = history["donor"]
+        sid = item["donor_id"]
+        if item.get("status") != "REJECTED" or sid in transfer["lookup_by_id"]:
+            raise ValueError("Invalid rejected-source history or active reentry")
+        source = {
+            "source_id": sid,
+            "prior_decision": {
+                "decision_id": "preserved-rejection:" + sid,
+                "outcome": "REJECTED",
+                "historical_rejection": history,
+            },
+            "runtime_admission": False,
+        }
+        for locator in (item["source"]["locator"], item["source"]["normalized_key"]):
+            if locator in routes and routes[locator]["source_id"] != sid:
+                raise ValueError("Conflicting historical rejection locators")
+            routes[locator] = source
+    return routes
+
+
+@lru_cache(maxsize=1)
+def historical_upstream_evidence():
+    """Use exact preserved records; never infer a current upstream revision."""
+    transfer = transferred_snapshot()
     keys = ("upstream_snapshot", "upstream_observation", "source_snapshot",
             "observed_commit", "upstream_repository_references")
     return {
@@ -173,7 +208,11 @@ def evaluate(url, index, observation=None):
         alias_map = validate_index(index)
         migrated = index.get("schema") == "cfa3.source-lifecycle-index.v2"
         if migrated:
-            # First preserve exact historical locators, including project:* identifiers.
+            rejected = historical_rejections().get(url)
+            if rejected is not None:
+                return result("BLOCKED_REJECTED_SOURCE", source=rejected,
+                              action="PRESERVE_REJECTION_NO_REACTIVATION")
+            # Exact historical locators include non-HTTP project:* identifiers.
             sid = resolve_migrated_url(url, alias_map)
             key = normalize_url(url) if sid is None else None
         else:
@@ -225,13 +264,23 @@ def evaluate(url, index, observation=None):
     if previous_revision is None and "reference_state" in source:
         archived = historical_upstream_evidence().get(source["source_id"])
         if archived is not None and archived[0] == source["prior_decision"].get("revision"):
-            old_snapshot = archived[1].get("upstream_snapshot")
-            if (isinstance(old_snapshot, dict) and old_snapshot.get("checked_at")
-                    and old_snapshot.get("source") == "GitHub repository API"):
-                old_commit = old_snapshot.get("commit_sha")
-                if isinstance(old_commit, str) and len(old_commit) == 40 and all(
-                        c in "0123456789abcdef" for c in old_commit.lower()):
-                    previous_revision = old_commit
+            evidence = archived[1]
+            versions = []
+            upstream = evidence.get("upstream_snapshot")
+            if isinstance(upstream, dict):
+                if upstream.get("checked_at") and upstream.get("source") == "GitHub repository API":
+                    versions.append(upstream.get("commit_sha"))
+                if upstream.get("observed_at"):
+                    versions.append(upstream.get("head_sha"))
+            snapshot = evidence.get("source_snapshot")
+            if isinstance(snapshot, dict) and snapshot.get("observed_at"):
+                versions.extend((snapshot.get("commit"), snapshot.get("default_branch_commit")))
+            versions.append(evidence.get("observed_commit"))
+            revisions = {v.lower() for v in versions
+                         if isinstance(v, str) and len(v) == 40
+                         and all(c in "0123456789abcdefABCDEF" for c in v)}
+            if len(revisions) == 1:
+                previous_revision = next(iter(revisions))
     if observation.get("event") in ("VERSION_UPDATE", "FUNCTIONAL_MODERNIZATION") or (
             observation["observed_revision"] != previous_revision):
         return result("CHANGE_REVIEW_REQUIRED", source=source,

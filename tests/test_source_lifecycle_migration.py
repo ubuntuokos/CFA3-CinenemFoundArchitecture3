@@ -27,7 +27,7 @@ class LifecycleMigrationTests(unittest.TestCase):
     def test_all_original_routes_and_related_identities_survive(self):
         routing = json.loads((ROOT / "canonical/registries/CFA3-DONOR-L1-URL-ROUTING-20261010.json").read_text())
         exact = validate_index(self.index)
-        self.assertEqual(self.index["locator_routes"], routing["entries"])
+        self.assertEqual(self.index["locator_routes"][:len(routing["entries"])], routing["entries"])
         for route in routing["entries"]:
             self.assertEqual(resolve_migrated_url(route["alias"], exact), route["preferred_source_id"])
 

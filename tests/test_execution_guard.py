@@ -166,7 +166,8 @@ class GuardTests(unittest.TestCase):
                   independent_proof_verified=True)
         state = dict(main_current=True, head_current=True, no_overlap=True,
                      checks_passed=True, review_threads_clear=True,
-                     owner_scope_approved=True, main_ruleset_verified=True,
+                     owner_scope_approved=True,
+                     owner_grant_signature_verified=True, main_ruleset_verified=True,
                      privileged_bypass_actors_verified=True,
                      actual_main_sha=t["main_sha"])
         called = []

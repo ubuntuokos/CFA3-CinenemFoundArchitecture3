@@ -29,6 +29,7 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_guard_ruleset.py",
     "scripts/check_execution_rule_evidence.py",
     "scripts/check_execution_guard_github_state.py",
+    "scripts/check_execution_guard_owner_grant.py",
     "scripts/execution_guard.py",
 })
 
@@ -317,6 +318,7 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
             "main_current", "head_current", "no_overlap", "checks_passed",
             "review_threads_clear", "owner_scope_approved",
+            "owner_grant_signature_verified",
             "main_ruleset_verified", "privileged_bypass_actors_verified")):
         raise Blocked("fresh exact-state authorization failed")
     if proof.get("actual_main_sha") != task["main_sha"]:

@@ -100,9 +100,9 @@ class LiveGithubStateTests(unittest.TestCase):
     def test_missing_token_or_owner_verifier_blocks(self):
         for token in (None,""):
             with self.subTest(token=token),self.assertRaises(LiveStateBlocked):
-                live_state_callback(token,13,lambda _:True)
+                live_state_callback(token,13,lambda _:True,b"x"*32)
         with self.assertRaises(LiveStateBlocked):
-            live_state_callback("synthetic-no-network",13,None)
+            live_state_callback("synthetic-no-network",13,None,b"x"*32)
 
 if __name__=="__main__":
     unittest.main()

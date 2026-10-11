@@ -10,6 +10,7 @@ import re
 from urllib.request import Request, urlopen
 
 from check_execution_guard_ruleset import validate_ruleset
+from check_execution_guard_owner_grant import verify_owner_grant, OwnerGrantBlocked
 
 OWNER = "ubuntuokos"
 REPO = "CFA3-CinenemFoundArchitecture3"
@@ -216,16 +217,22 @@ class TrustedGithubReader:
                                  "app_id": (x.get("app") or {}).get("id")} for x in check_runs],
                 "ruleset": self.request("/rulesets/" + str(RULESET))}
 
-def live_state_callback(token, pr_number, owner_scope_verifier):
-    """Bind a trusted *separate* owner grant verifier; never infer approval."""
-    if not callable(owner_scope_verifier):
-        raise LiveStateBlocked("external owner authority verifier unavailable")
+def live_state_callback(token, pr_number, owner_grant_loader, owner_grant_key):
+    """Independently verify the exact owner signature; a bare True cannot authorize.
+
+    Loader, signing key and GitHub token belong to a separate trusted service.
+    """
+    if not callable(owner_grant_loader) or type(owner_grant_key) is not bytes or len(owner_grant_key) < 32:
+        raise LiveStateBlocked("trusted owner grant loader and signing key missing")
     reader = TrustedGithubReader(token)
     def verify(task):
         proof = validate_snapshot(task, reader.snapshot(task, pr_number))
-        # Only an isolated authorization service may return True for a signed grant.
-        proof["owner_scope_approved"] = owner_scope_verifier(task) is True
-        if not proof["owner_scope_approved"]:
-            raise LiveStateBlocked("independent signed owner scope grant missing")
+        try:
+            receipt = owner_grant_loader(task)
+            verify_owner_grant(task, receipt, owner_grant_key)
+        except OwnerGrantBlocked as exc:
+            raise LiveStateBlocked("independent owner-signed authorization failed") from exc
+        proof["owner_scope_approved"] = True
+        proof["owner_grant_signature_verified"] = True
         return proof
     return verify

@@ -199,5 +199,34 @@ class BootstrapPolicyTests(unittest.TestCase):
         altered["source_main_commit"]="f"*40
         self.assertTrue(validate_frozen_tree(altered,original))
 
+    def test_exhaustive_frozen_tree_manifest(self):
+        from check_legacy_rule_blobs import validate_complete_inventory
+        frozen = load("canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json")
+        self.assertEqual(3159, frozen["blob_count"])
+        self.assertEqual(3159, len(frozen["files"]))
+        self.assertTrue(frozen["no_files_excluded_from_rule_review"])
+        self.assertEqual("UNREVIEWED_RULE_APPLICABILITY", frozen["review_status_default"])
+        paths = [row[0] for row in frozen["files"]]
+        self.assertEqual(sorted(paths), paths)
+        self.assertEqual(len(paths), len(set(paths)))
+        sample = {
+            "sha": frozen["commit"], "truncated": False,
+            "tree": [{"path":r[0], "sha":r[1], "size":r[2], "type":"blob"}
+                     for r in frozen["files"]]
+        }
+        self.assertEqual([], validate_complete_inventory(frozen, sample))
+        bad = copy.deepcopy(frozen)
+        bad["files"][0][1] = "a" * 40 if bad["files"][0][1] != "a" * 40 else "b" * 40
+        self.assertTrue(validate_complete_inventory(bad, sample))
+        bad = copy.deepcopy(frozen)
+        bad["files"] = bad["files"][1:]
+        self.assertTrue(validate_complete_inventory(bad, sample))
+        bad = copy.deepcopy(frozen)
+        bad["no_files_excluded_from_rule_review"] = False
+        self.assertTrue(validate_complete_inventory(bad, sample))
+        bad = copy.deepcopy(sample)
+        bad["truncated"] = True
+        self.assertTrue(validate_complete_inventory(frozen, bad))
+
 if __name__=="__main__":
     unittest.main()

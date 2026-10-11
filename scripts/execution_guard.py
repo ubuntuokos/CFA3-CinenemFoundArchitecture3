@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GOV = "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json"
 LEDGER = "canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json"
 CATALOG = "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json"
+FROZEN_TREE = "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json"
 ACTIONS = {"GUI_RENDER", "REPOSITORY_WRITE", "WORKFLOW_START", "ARTIFACT_EXPORT"}
 
 class Blocked(RuntimeError):
@@ -62,6 +63,21 @@ def policy_issues(root=ROOT):
     if (set(catalog.get("policy_files", [])) != policy_files or
             len(catalog.get("policy_files", [])) != len(policy_files)):
         issues.append("canonical policy file coverage incomplete")
+    try:
+        frozen = load(root, FROZEN_TREE)
+        frozen_rows = frozen.get("files", [])
+        mapped = {record[0]: record[1] for record in frozen_rows
+                  if isinstance(record, list) and len(record) == 3}
+        if (frozen.get("schema") != "cfa3.legacy-frozen-tree.v1" or
+                frozen.get("commit") != ledger.get("source_main_commit") or
+                frozen.get("blob_count") != 3159 or
+                len(frozen_rows) != 3159 or len(mapped) != len(frozen_rows) or
+                frozen.get("no_files_excluded_from_rule_review") is not True or
+                any(mapped.get(record.get("path")) != record.get("blob_sha")
+                    for record in ledger.get("source_records", []))):
+            issues.append("full frozen file inventory invalid or missing seed bindings")
+    except (Blocked, ValueError, TypeError, KeyError, IndexError):
+        issues.append("full frozen file inventory absent or malformed")
     if ledger.get("inventory_complete") is not True:
         issues.append("historical rule inventory incomplete")
     if gov.get("legacy_policy_transfer", {}).get("rule_inventory_complete") is not True:

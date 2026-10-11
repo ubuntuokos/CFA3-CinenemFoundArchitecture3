@@ -112,7 +112,11 @@
     "commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
     "files": 3159,
     "content_reviewed": 21,
-    "inventory_complete": false
+    "inventory_complete": false,
+    "path_inventory": "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
+    "pinned_tree_blob_enumeration_complete": true,
+    "pinned_tree_blob_count": 3159,
+    "rule_content_review_complete": false
   },
   "coverage_complete": false,
   "missing_rules": null,
@@ -126,6 +130,7 @@
     "NO_VERIFIED_FULL_GUI_DESIGN",
     "RULE_GATE_PROOFS_PENDING",
     "NO_REQUIRED_GITHUB_CHECKS",
-    "NO_PHYSICAL_CURRENT_HOST_PASS"
+    "NO_PHYSICAL_CURRENT_HOST_PASS",
+    "EXHAUSTIVE_GIT_TREE_IS_NOT_ALL_RULES_RECONCILED"
   ]
 }

@@ -74,6 +74,70 @@ def validate_frozen_tree(ledger, tree):
             errors.append("ledger SHA mismatches frozen Git tree: " + path)
     return errors
 
+def validate_complete_inventory(manifest, tree):
+    """Verify exhaustive, path-by-path frozen blob inventory; no policy admission."""
+    issues = []
+    if not isinstance(manifest, dict) or not isinstance(tree, dict):
+        return ["frozen inventory and tree must be objects"]
+    if (manifest.get("schema") != "cfa3.legacy-frozen-tree.v1"
+            or manifest.get("repository") != LEGACY_REPOSITORY
+            or manifest.get("commit") != FROZEN_COMMIT):
+        issues.append("frozen inventory authority mismatch")
+    if (manifest.get("review_status_default") != "UNREVIEWED_RULE_APPLICABILITY"
+            or manifest.get("no_files_excluded_from_rule_review") is not True):
+        issues.append("unreviewed source files cannot be excluded or admitted")
+    if tree.get("sha") != FROZEN_COMMIT or tree.get("truncated") is not False:
+        issues.append("Git response not the complete pinned historical tree")
+    entries = tree.get("tree")
+    rows = manifest.get("files")
+    if not isinstance(entries, list) or not isinstance(rows, list):
+        return issues + ["historical tree rows not supplied"]
+    if (manifest.get("blob_count") != EXPECTED_TRACKED_BLOBS or
+            len(rows) != EXPECTED_TRACKED_BLOBS or
+            manifest.get("tree_entry_count") != len(entries) or
+            manifest.get("git_tree_truncated") is not False or
+            manifest.get("file_tuple") != ["path", "git_blob_sha1", "size_bytes"]):
+        issues.append("frozen tree manifest structure or count mismatch")
+    blobs = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            issues.append("malformed Git tree element")
+            continue
+        if entry.get("type") != "blob":
+            continue
+        path, sha, size = (entry.get(k) for k in ("path", "sha", "size"))
+        if (not isinstance(path, str) or not isinstance(sha, str)
+                or SHA40.fullmatch(sha) is None or
+                type(size) is not int or size < 0):
+            issues.append("invalid Git blob record")
+            continue
+        if path in blobs:
+            issues.append("duplicate historical Git blob")
+        blobs[path] = (sha, size)
+    if len(blobs) != EXPECTED_TRACKED_BLOBS:
+        issues.append("frozen Git tree count mismatch")
+    previous = None
+    seen = set()
+    for row in rows:
+        if not isinstance(row, list) or len(row) != 3:
+            issues.append("malformed manifest row")
+            continue
+        path, sha, size = row
+        if (not isinstance(path, str) or not path or
+                not isinstance(sha, str) or SHA40.fullmatch(sha) is None or
+                type(size) is not int or size < 0):
+            issues.append("manifest row has invalid path/SHA/size")
+            continue
+        if path in seen or (previous is not None and path <= previous):
+            issues.append("manifest paths not unique and strictly sorted")
+        seen.add(path)
+        previous = path
+        if blobs.get(path) != (sha, size):
+            issues.append("manifest path/SHA/size differs from Git tree: " + path)
+    if seen != set(blobs):
+        issues.append("manifest omits or invents historical Git paths")
+    return issues
+
 def fetch_frozen_tree():
     """Single immutable-source GitHub API GET; missing network means fail closed."""
     url = ("https://api.github.com/repos/" + LEGACY_REPOSITORY +
@@ -94,7 +158,11 @@ def main():
     from check_bootstrap import load
     try:
         ledger = load("canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json")
-        issues = validate_frozen_tree(ledger, fetch_frozen_tree())
+        from check_bootstrap import load as load_json
+        manifest = load_json("canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json")
+        observed = fetch_frozen_tree()
+        issues = validate_frozen_tree(ledger, observed)
+        issues.extend(validate_complete_inventory(manifest, observed))
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, TypeError) as exc:
         issues = ["frozen historical source could not be verified: " +
                   type(exc).__name__]
@@ -102,8 +170,8 @@ def main():
         for issue in issues:
             print("LEGACY_SOURCE_BLOB_FAIL:", issue, file=sys.stderr)
         return 1
-    print("LEGACY_SOURCE_BLOB_VERIFIED: all ledger entries match pinned Git tree; "
-          "NOT full historical rule inventory or policy admission")
+    print("LEGACY_SOURCE_TREE_VERIFIED: 3159 Git blobs and all ledger seeds match frozen tree; "
+          "NOT complete rule classification, policy admission or enforcement")
     return 0
 
 if __name__ == "__main__":

@@ -162,5 +162,12 @@ class GuardTests(unittest.TestCase):
             self.assertEqual([], called)
             self.assertFalse((Path(location) / "receipts.json").exists())
 
+    def test_full_legacy_tree_is_explicitly_pending_rule_review(self):
+        frozen = load(ROOT, "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json")
+        self.assertEqual("UNREVIEWED_RULE_APPLICABILITY", frozen["review_status_default"])
+        self.assertEqual(3159, len(frozen["files"]))
+        self.assertTrue(any("historical rule inventory incomplete" in x
+                            for x in policy_issues(ROOT)))
+
 if __name__ == "__main__":
     unittest.main()

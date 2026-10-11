@@ -30,6 +30,7 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_rule_evidence.py",
     "scripts/check_execution_guard_github_state.py",
     "scripts/check_execution_guard_owner_grant.py",
+    "scripts/check_execution_guard_audit.py",
     "scripts/execution_guard.py",
 })
 
@@ -284,7 +285,7 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
                     live_state=None, preflight=None, executor=None,
                     verify_result=None, audit=None, state_dir=None,
                     rule_attester=None, rule_attestation_secret=None,
-                    rule_evidence_resolver=None):
+                    rule_evidence_resolver=None, audit_attestation_secret=None):
     """Requires a separately isolated trusted service with exclusive credentials.
 
     It cannot intercept native ChatGPT tools or other unguarded service routes.
@@ -302,6 +303,11 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
             len(rule_attestation_secret) < 32 or
             hmac.compare_digest(secret, rule_attestation_secret)):
         raise Blocked("separate trusted rule proof key required")
+    if (type(audit_attestation_secret) is not bytes or
+            len(audit_attestation_secret) < 32 or
+            hmac.compare_digest(secret, audit_attestation_secret) or
+            hmac.compare_digest(rule_attestation_secret, audit_attestation_secret)):
+        raise Blocked("independently held audit signing key required")
     from check_execution_rule_evidence import verify_rule_receipts, RuleEvidenceBlocked
     try:
         verify_rule_receipts(task, rule_attester(task), load(root, GOV),
@@ -333,8 +339,13 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         raise Blocked("trusted preflight failed")
     if task["operation"] == "GUI_RENDER" and checked.get("design_verified") is not True:
         raise Blocked("GUI design must be independently verified")
+    from check_execution_guard_audit import verify_audit_receipt, AuditBlocked
     _reserve(state_dir, task)
-    audit(task, "RESERVED")  # if audit fails, execution does not start; quota is consumed
+    try:
+        first = verify_audit_receipt(
+            task, audit(task, "RESERVED"), audit_attestation_secret, "RESERVED")
+    except AuditBlocked as exc:
+        raise Blocked("AUDIT_GATE: reserved event not independently acknowledged") from exc
     try:
         outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
@@ -342,9 +353,19 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         if verify_result(task, outputs) is not True:
             raise Blocked("RESULT_GATE: independent output validation failed")
     except Exception:
-        audit(task, "FAILED")
+        try:
+            verify_audit_receipt(
+                task, audit(task, "FAILED"), audit_attestation_secret,
+                "FAILED", previous=first)
+        except AuditBlocked as exc:
+            raise Blocked("AUDIT_GATE: failure event not independently acknowledged") from exc
         raise
-    audit(task, "VERIFIED")
+    try:
+        verify_audit_receipt(
+            task, audit(task, "VERIFIED"), audit_attestation_secret,
+            "VERIFIED", previous=first)
+    except AuditBlocked as exc:
+        raise Blocked("AUDIT_GATE: completion event not independently acknowledged") from exc
     return outputs
 
 if __name__ == "__main__":

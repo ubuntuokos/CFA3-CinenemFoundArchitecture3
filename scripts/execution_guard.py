@@ -17,6 +17,19 @@ CATALOG = "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json"
 FROZEN_TREE = "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json"
 POLICY_SURFACE = "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json"
 ACTIONS = {"GUI_RENDER", "REPOSITORY_WRITE", "WORKFLOW_START", "ARTIFACT_EXPORT"}
+# Every task authorization must bind these exact source bytes, in addition to
+# all dynamically discovered canonical/policies/*.json files.
+GUARD_SOURCE_BINDINGS = frozenset({
+    GOV, LEDGER, CATALOG, FROZEN_TREE, POLICY_SURFACE, "AGENTS.md",
+    "docs/branding/CFA3-BRANDING.md",
+    ".github/workflows/cfa3-bootstrap.yml",
+    "scripts/check_bootstrap.py",
+    "scripts/check_guard_policy_surface.py",
+    "scripts/check_legacy_rule_blobs.py",
+    "scripts/check_execution_guard_ruleset.py",
+    "scripts/check_execution_rule_evidence.py",
+    "scripts/execution_guard.py",
+})
 
 class Blocked(RuntimeError):
     pass
@@ -192,10 +205,14 @@ def check_task(root, task, now=None):
     hashes = task["source_hashes"]
     if not isinstance(hashes, dict):
         raise Blocked("invalid source digest map")
-    mandatory = {GOV, LEDGER, CATALOG, "AGENTS.md"}
-    mandatory.update(load(root, CATALOG).get("policy_files", []))
+    mandatory = set(GUARD_SOURCE_BINDINGS)
+    declared = load(root, CATALOG).get("policy_files", [])
+    if not isinstance(declared, list) or not all(isinstance(x, str) for x in declared):
+        raise Blocked("invalid canonical policy-source declarations")
+    mandatory.update(declared)
     if not mandatory.issubset(hashes):
-        raise Blocked("missing mandatory policy/source hash")
+        missing = sorted(mandatory.difference(hashes))
+        raise Blocked("missing mandatory policy/guard source hashes: " + ", ".join(missing))
     for name, digest in hashes.items():
         if not isinstance(digest, str) or len(digest) != 64:
             raise Blocked("bad source digest")

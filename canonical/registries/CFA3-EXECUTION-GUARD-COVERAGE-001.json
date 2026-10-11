@@ -174,5 +174,27 @@
       "evaluator_implementation_runtime_verified": false,
       "trusted_content_store_deployed": false
     }
+  },
+  "task_source_provenance_binding": {
+    "status": "CODED_AND_NEGATIVE_TESTED_NOT_DEPLOYED",
+    "mandatory_guard_sources": [
+      "AGENTS.md",
+      "docs/branding/CFA3-BRANDING.md",
+      ".github/workflows/cfa3-bootstrap.yml",
+      "scripts/check_bootstrap.py",
+      "scripts/check_guard_policy_surface.py",
+      "scripts/check_legacy_rule_blobs.py",
+      "scripts/check_execution_guard_ruleset.py",
+      "scripts/check_execution_rule_evidence.py",
+      "scripts/execution_guard.py",
+      "canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json",
+      "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
+      "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
+      "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json",
+      "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json"
+    ],
+    "plus_all_current_policy_files": true,
+    "source_hash_type": "SHA256_FILE_BYTES",
+    "scope": "AUTHORIZE_ONLY_EXACT_CHECKER_VERSION_AND_TRUSTED_SOURCE_STATE"
   }
 }

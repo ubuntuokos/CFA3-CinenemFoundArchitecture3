@@ -14,10 +14,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from execution_guard import (Blocked, GOV, LEDGER, CATALOG, canonical_bytes,
                              check_task, guarded_execute, load, local_path,
                              policy_issues, verify_signature, _reserve,
-                             validate_current_rule_map)
+                             validate_current_rule_map, GUARD_SOURCE_BINDINGS)
 
 def sample():
-    sources = [GOV, LEDGER, CATALOG, "AGENTS.md"] + load(ROOT, CATALOG)["policy_files"]
+    sources = sorted(GUARD_SOURCE_BINDINGS.union(load(ROOT, CATALOG)["policy_files"]))
     return {"task_id": "synthetic-test", "nonce": "single",
             "operation": "ARTIFACT_EXPORT", "target": "docs/out.txt",
             "scope_targets": ["docs/out.txt"], "main_sha": "a" * 40,
@@ -208,6 +208,26 @@ class GuardTests(unittest.TestCase):
                 broken[section][i]["code"] = "REPLACED_WITH_AN_ASSUMPTION"
                 with self.subTest(section=section, index=i):
                     self.assertTrue(validate_current_rule_map(broken, catalog))
+
+    def test_all_guard_and_authoritative_manifests_bound_in_signed_contract(self):
+        self.assertGreaterEqual(len(GUARD_SOURCE_BINDINGS), 14)
+        for name in sorted(GUARD_SOURCE_BINDINGS):
+            self.assertTrue((ROOT / name).is_file(), name)
+            bad = sample()
+            del bad["source_hashes"][name]
+            with self.subTest(name=name, mutation="missing"), self.assertRaises(Blocked):
+                check_task(ROOT, bad)
+            bad = sample()
+            bad["source_hashes"][name] = "0" * 64
+            with self.subTest(name=name, mutation="modified"), self.assertRaises(Blocked):
+                check_task(ROOT, bad)
+
+    def test_all_canonical_policy_source_hashes_mandatory(self):
+        for name in load(ROOT, CATALOG)["policy_files"]:
+            bad = sample()
+            del bad["source_hashes"][name]
+            with self.subTest(name=name), self.assertRaises(Blocked):
+                check_task(ROOT, bad)
 
 if __name__ == "__main__":
     unittest.main()

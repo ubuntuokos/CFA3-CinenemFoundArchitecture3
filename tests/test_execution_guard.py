@@ -149,7 +149,8 @@ class GuardTests(unittest.TestCase):
                   all_conflicts_resolved=True, independent_proof_verified=True)
         state = dict(main_current=True, head_current=True, no_overlap=True,
                      checks_passed=True, review_threads_clear=True,
-                     owner_scope_approved=True, actual_main_sha=t["main_sha"])
+                     owner_scope_approved=True, main_ruleset_verified=True,
+                     actual_main_sha=t["main_sha"])
         called = []
         with tempfile.TemporaryDirectory() as location:
             with patch("execution_guard.policy_issues", return_value=[]):

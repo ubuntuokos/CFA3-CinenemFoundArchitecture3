@@ -258,7 +258,8 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
     proof = live_state(task)
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
             "main_current", "head_current", "no_overlap", "checks_passed",
-            "review_threads_clear", "owner_scope_approved")):
+            "review_threads_clear", "owner_scope_approved",
+            "main_ruleset_verified")):
         raise Blocked("fresh exact-state authorization failed")
     if proof.get("actual_main_sha") != task["main_sha"]:
         raise Blocked("main SHA drift")

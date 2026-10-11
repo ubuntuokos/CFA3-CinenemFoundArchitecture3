@@ -129,7 +129,7 @@
     "NATIVE_CHATGPT_TOOLS_NOT_INTERCEPTED",
     "NO_VERIFIED_FULL_GUI_DESIGN",
     "RULE_GATE_PROOFS_PENDING",
-    "NO_REQUIRED_GITHUB_CHECKS",
+    "REQUIRED_CHECKS_CONFIGURED_BUT_RUNTIMES_NOT_FULLY_QUALIFIED",
     "NO_PHYSICAL_CURRENT_HOST_PASS",
     "EXHAUSTIVE_GIT_TREE_IS_NOT_ALL_RULES_RECONCILED",
     "COMPLETE_POLICY_JSON_FIELD_INVENTORY_NOT_SEMANTIC_RULE_ACCEPTANCE"
@@ -137,5 +137,17 @@
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
   "canonical_policy_leaf_fields_enumerated": 431,
   "canonical_policy_field_enumeration_complete": true,
-  "canonical_policy_semantic_rule_enforcement_complete": false
+  "canonical_policy_semantic_rule_enforcement_complete": false,
+  "github_main_protection_ruleset": {
+    "ruleset_id": 24804719,
+    "ruleset_name": "CFA3-MAIN-PROTECTION",
+    "required_ci_contexts": [
+      "bootstrap",
+      "qt68-linux"
+    ],
+    "source_integration_id": 15368,
+    "verified_current_config_from_github": "2026-10-11",
+    "ci_drift_detection": "SOURCE_BOUND_RUNTIME_CHECK_PENDING_CI_PASS",
+    "scope": "MAIN_BRANCH_PR_PROTECTION_ONLY_NOT_ALL_RUNTIME_OPERATIONS"
+  }
 }

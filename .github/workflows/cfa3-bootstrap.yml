@@ -22,6 +22,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 scripts/check_legacy_rule_blobs.py
+      - name: Verify actual main-protection required checks and no bypass
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/check_execution_guard_ruleset.py
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v
       - name: Verify Rust-first contract workspace

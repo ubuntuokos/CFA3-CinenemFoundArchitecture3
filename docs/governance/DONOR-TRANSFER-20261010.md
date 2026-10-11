@@ -92,6 +92,63 @@ továbbra sem tekinthető teljesítettnek. Ezeket nem oldja fel egy állapotjelz
 
 ## Párhuzamos munka védelme
 
-A donorátvitel a meglévő #7 implementációs PR-ben marad. A #8 dokumentációs PR
+A donorátvitel első állománya a #7 PR-rel került főágra. A tulajdonos 2026. október
+11-i utasítása alapján az összevonás után jelzett öt keresési/lifecycle-hibát
+ugyanennek a feladatnak a célzott javítása kezeli, védett főág esetén javító PR-ben.
+A #8 dokumentációs PR
 README- és képfájljait nem módosítja. Az új CFA3 termékkoncepciója, a közös
 Foundation, a 200 képesség célja és az L1–L5 szabályai változatlanok.
+
+## Összevonás utáni keresési és lifecycle-javítás
+
+- Az eredeti transfer snapshot változatlan: Git blob
+  `c863fe31d2c300bf15c9996432f86a70f9a18d74`, 1981 megőrzött identitás.
+- A lifecycle-projekció az eredeti 3946 útvonal mellé 33 további egyedi,
+  kifejezetten megőrzött történeti aliast rendel: összesen 3979 tárolt útvonal.
+  A 574 történeti delta-alias feloldása is megmarad; ezek nem mind különböznek
+  a tárolt útvonalaktól, ezért a számlálók nem adhatók egyszerűen össze.
+- A történeti notes mező visszaolvasható. Egyértelmű, teljes upstream commit
+  hiányzó strukturált verzió esetén összehasonlítható; PR-proveniencia,
+  rövidített hash vagy többértelmű megfigyelés nem ad változatlansági igazolást.
+- A kapu újraszámolja a történeti rekordok és rekordhalmaz ellenőrzőösszegét,
+  majd ellenőrzi a lifecycle-indexhez kötött transfer-fájl SHA-256 értékét.
+- Mind az 56 jelenlegi tulajdonosi megerősítés konkrét rekordja szerepel a
+  korábbi döntésben. A megerősítési fájl ellenőrzőösszege a projekció része;
+  törlés, eltérő kötés és megváltozott állomány blokkolja a lifecycle-lekérdezést.
+- Létező locator hiányzó célazonosítóval integritási hibát ad, nem egyszerű
+  „nem található” eredményt.
+
+## Friss ellenőrzési bizonyíték a #11 javításhoz (2026-10-11)
+
+A korábbi 111 tesztes bejegyzés történeti, nem tekinthető a javított kódállapot
+végső bizonyítékának. Az ellenőrzött, `main`-nel szinkronizált kódcommit:
+`8f024c7b0d04e86e7a24473c2ecc555991f3817c` (a főági szülő
+`bd26ce9f24eb31a5e4c810a3c97c79c23ed21521`).
+
+- GitHub Actions `CFA3 bootstrap reference checks`:
+  https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/38148020871
+  — `success`; a **teljes Python unittest-discovery 128 tesztet futtatott**,
+  `Ran 128 tests in 114.601s`, `OK`.
+- Az új `test_tuple_container_cannot_bypass_validated_snapshot_deep_freeze`
+  negatív regresszió ezen a pontos commiton `ok`. A GitHub CI
+  Rust-first workspace-ellenőrzése is `success`.
+- GitHub Actions `CFA3 Qt 6.8 Linux environment`:
+  https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/38148020917
+  — `success`.
+- A korábban javított integritási-, jóváhagyási-, locator- és lifecycle-hibák
+  tesztjei ugyanezen teljes tesztfutás részei. A teljes snapshot, az elutasítási
+  napló és a tulajdonosi bizonyítékok hitelesítését a regressziók is ellenőrzik.
+
+Ez a bizonyíték **csak a megjelölt kódcommitra** vonatkozik. A dokumentációs
+commitra és a végleges PR HEAD-re a GitHub kötelező ellenőrzéseit külön, friss
+állapotból kell visszaigazolni, a független code review-val együtt. A szintetikus
+CI soha nem fizikai Current Host PASS, és nem igazolja az eredeti B, a teljes
+történeti beküldéskészlet vagy az L1–L5 lezárását.
+
+A #11 első független review-jának négy kiegészítő észrevétele is regressziós
+tesztet kapott. A referencia-kereső a teljes snapshotot és mindkét lookup-indexet
+ellenőrzi, így másik donor sérülése sem marad észrevétlen. A lifecycle-index
+minden döntési, proveniencia- és útvonalmezőjének egyeznie kell a megőrzött
+bemenetekből előállított projekcióval. A tulajdonosi megerősítés dokumentumazonosítója,
+forráscommitja és cél-snapshotja is kötött. A belső gyorsítótár teljes, típushelyes
+adatérték alapján működik; változott adat nem használhat korábbi sikeres ellenőrzést.

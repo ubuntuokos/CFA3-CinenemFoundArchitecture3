@@ -5,18 +5,101 @@ A donor reference is not a license, download, model, provider or runtime admissi
 This does not mark the global L1 migration as complete.
 """
 import argparse
+import copy
 import json
+from collections.abc import Mapping
 from pathlib import Path
 import sys
+from types import MappingProxyType
+from weakref import WeakKeyDictionary
 
 from donor_delta_routes import delta_aliases
+from donor_transfer_integrity import preserved_aliases, validate_snapshot, verified_rejection_audit
 
 REGISTRY = Path(__file__).resolve().parents[1] / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
+
+
+def _freeze(value):
+    """No caller-owned mutable child may survive in the validated handle."""
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze(child) for key, child in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze(child) for child in value)
+    return value
+
+
+def _detach(value):
+    """Only the requested row is copied; the 8 MB snapshot is never copied per hit."""
+    if isinstance(value, Mapping):
+        return {key: _detach(child) for key, child in value.items()}
+    if isinstance(value, tuple):
+        return [_detach(child) for child in value]
+    return value
+
+
+# The registry owns every trusted handle's state. A fake object created via
+# object.__new__ or a bypassed constructor is NOT registered and fails closed.
+# Weak keys prevent a long-lived process from retaining discarded 8 MB handles.
+_VALIDATED_HANDLES = WeakKeyDictionary()
+
+
+class ValidatedSnapshot:
+    """Opaque, write-once validated handle for safe indexed batch reads.
+
+    A tuple subclass is unsafe here: tuple.__new__ bypasses validation. Instances
+    have no mutable fields; only the authentic constructor can add their private,
+    deeply frozen lookup state to the identity-keyed weak registry.
+    """
+    __slots__ = ("__weakref__",)
+
+    def __new__(cls, data):
+        if cls is not ValidatedSnapshot:
+            raise TypeError("ValidatedSnapshot does not allow subclasses")
+        copied = copy.deepcopy(data)
+        validate_snapshot(copied)
+        previous = MappingProxyType(preserved_aliases(copied["records"]))
+        delta = MappingProxyType(delta_aliases(copied["records"]))
+        handle = object.__new__(cls)
+        _VALIDATED_HANDLES[handle] = (_freeze(copied), previous, delta)
+        return handle
+
+    def _trusted(self):
+        state = _VALIDATED_HANDLES.get(self)
+        if state is None:
+            raise ValueError("Unvalidated donor snapshot handle")
+        return state
+
+    @property
+    def _data(self):
+        return self._trusted()[0]
+
+    @property
+    def _previous(self):
+        return self._trusted()[1]
+
+    @property
+    def _delta(self):
+        return self._trusted()[2]
 
 
 def lookup_snapshot(data, *, donor_id=None, original_url=None):
     if (donor_id is None) == (original_url is None):
         raise ValueError("Exactly one of donor_id or original_url must be supplied")
+    if isinstance(data, ValidatedSnapshot) and type(data) is not ValidatedSnapshot:
+        raise ValueError("Unvalidated donor snapshot handle subclass")
+    prepared = data if type(data) is ValidatedSnapshot else None
+    if prepared is None:
+        validate_snapshot(data)
+    else:
+        # Accessing the trusted registry MUST precede the fast path. Constructor
+        # bypass and malformed cloned handles have no entry and are rejected.
+        data = prepared._data
+        verified_rejection_audit()  # fail closed if the pinned archive changed
+    def alias_id(alias):
+        if prepared is not None:
+            return prepared._previous.get(alias) or prepared._delta.get(alias)
+        return (preserved_aliases(data["records"]).get(alias)
+                or delta_aliases(data["records"]).get(alias))
     if (data.get("schema") != "cfa3.donor-transfer-snapshot.v1"
             or data.get("runtime_admission") is not False
             or data.get("code_or_license_admission") is not False):
@@ -30,12 +113,12 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
                 raise ValueError("Rejected source was reactivated")
             return {"donor_id": original["donor_id"], "donor_registration": "REJECTED_REFERENCE_NOT_ACTIVE",
                     "runtime_admission": False, "code_copy_authorized": False, "license_authorized": False,
-                    "model_provider_admission": False, "rejection_history": rejected}
+                    "model_provider_admission": False, "rejection_history": _detach(rejected) if prepared is not None else rejected}
     if donor_id is None:
         position = data["lookup_by_locator"].get(original_url)
         if position is None:
             # Preserve original delta URL variants without introducing donor IDs.
-            donor_id = delta_aliases(data["records"]).get(original_url)
+            donor_id = alias_id(original_url)
             if donor_id is None:
                 return None
         else:
@@ -47,12 +130,17 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
             donor_id = route["preferred_source_id"]
     position = data["lookup_by_id"].get(donor_id)
     if position is None:
+        if original_url is not None:
+            raise ValueError("Resolved locator targets a missing donor identity")
         return None
     if type(position) is not int or not 0 <= position < len(data["records"]):
         raise ValueError("Corrupted donor ID index")
     envelope = data["records"][position]
     record = envelope["reference_record"]
-    from transfer_donors import STATES, current_owner_confirmations
+    from transfer_donors import STATES, current_owner_confirmations, digest
+    if (prepared is None and
+            digest(envelope["historical_record"]) != envelope["historical_record_sha256"]):
+        raise ValueError("Historical donor record digest mismatch")
     if (envelope.get("pre_transfer_status") == "OWNER_APPROVED_PENDING_PUBLICATION"
             and envelope.get("historical_record", {}).get("intake_provenance", {}).get(
                 "canonical_approval_admitted") is False):
@@ -65,12 +153,12 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
             or STATES.get(envelope.get("pre_transfer_status")) != envelope.get("reference_state")
             or record.get("donor_registration") != envelope.get("reference_state")
             or (original_url is not None and original_url not in envelope["aliases"]
-                and delta_aliases(data["records"]).get(original_url) != donor_id)):
+                and alias_id(original_url) != donor_id)):
         raise ValueError("Inconsistent donor identity or alias")
     if any(record.get(k) is not False for k in
            ("runtime_admission", "code_copy_authorized", "license_authorized", "model_provider_admission")):
         raise ValueError("Unexpected runtime/license authority in donor reference")
-    return record
+    return _detach(record) if prepared is not None else record
 
 
 def lookup(*, donor_id=None, original_url=None, registry_path=REGISTRY):
@@ -79,7 +167,7 @@ def lookup(*, donor_id=None, original_url=None, registry_path=REGISTRY):
         raise ValueError("Exactly one of donor_id or original_url must be supplied")
     data = json.loads(Path(registry_path).read_text(encoding="utf-8"))
     if data.get("schema") == "cfa3.donor-transfer-snapshot.v1":
-        return lookup_snapshot(data, donor_id=donor_id, original_url=original_url)
+        return lookup_snapshot(ValidatedSnapshot(data), donor_id=donor_id, original_url=original_url)
     if data.get("schema") != "cfa3.canonical-donor-reference-registry.v1":
         raise ValueError("Unexpected canonical donor registry schema")
     if data.get("registration_state") != "PARTIAL_CANONICAL_REFERENCES_REGISTERED":

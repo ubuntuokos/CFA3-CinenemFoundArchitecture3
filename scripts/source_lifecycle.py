@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Read-only CFA3 source-identity / prior-decision gate. Never fetches or registers."""
 import argparse
-from functools import lru_cache
+import copy
 import json
 import pathlib
+import re
 import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from donor_delta_routes import delta_aliases
+import donor_transfer_integrity as integrity
+from donor_transfer_integrity import (verified_snapshot, _trusted_snapshot, _detach,
+                                      confirmation_evidence, TRANSFER_NAME, CONFIRMATION_NAME)
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_INDEX = ROOT / "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json"
@@ -78,9 +82,32 @@ def validate_migrated_index(index):
     """Validate explicit historical routes without collapsing related identities."""
     if index.get("complete") is not False or index.get("global_l1_completed") is not False:
         raise ValueError("Migrated reference lookup cannot certify global completeness")
+    if (index.get("id") != "CFA3-SOURCE-LIFECYCLE-INDEX-001"
+            or index.get("source_status") != "KNOWN_DONOR_LOOKUP_AVAILABLE_GLOBAL_COVERAGE_PENDING"
+            or index.get("migration_authority") != "PRESERVED_EXISTING_RECORDS_NO_NEW_DONOR_APPROVAL"
+            or index.get("repository_snapshot_transfer_complete") is not True
+            or index.get("active_reference_snapshot") !=
+                "CFA3-DONOR-TRANSFER-SNAPSHOT-001"):
+        raise ValueError("Lifecycle snapshot selector or authority metadata was altered")
     records, routes = index.get("source_records"), index.get("locator_routes")
     if not isinstance(records, list) or not isinstance(routes, list):
         raise ValueError("Missing migrated records or routes")
+    transfer, transfer_sha = _trusted_snapshot()
+    confirmations, confirmation_sha = confirmation_evidence()
+    inputs = index.get("input_sha256", {})
+    if inputs.get(TRANSFER_NAME) != transfer_sha:
+        raise ValueError("Lifecycle transfer-file digest mismatch")
+    if inputs.get(CONFIRMATION_NAME) != confirmation_sha:
+        raise ValueError("Lifecycle owner-confirmation digest mismatch")
+    # Internal validation uses the cached projection without cloning all records.
+    # The public projection API remains defensively detached.
+    signatures = tuple(integrity.file_signature(integrity.REG / name)
+                       for name in integrity.PROJECTION_INPUTS)
+    expected = integrity._expected_lifecycle_projection(integrity.REG, signatures)
+    for field in ("input_sha256", "source_records", "locator_routes"):
+        if index.get(field) != expected[field]:
+            raise ValueError("Lifecycle projection differs from authenticated inputs: " + field)
+    history = {row["source_id"]: row for row in transfer["records"]}
     names = set()
     for record in records:
         sid, decision = record.get("source_id"), record.get("prior_decision")
@@ -93,6 +120,15 @@ def validate_migrated_index(index):
             raise ValueError("Missing prior decision provenance")
         if record.get("runtime_admission") is not False:
             raise ValueError("Lookup cannot grant runtime admission")
+        archived = history.get(sid)
+        if (archived is None or decision["revision"] != archived["historical_record_sha256"]
+                or record.get("reference_state") != archived["reference_state"]
+                or decision.get("canonical_reference_registration") != _detach(archived["reference_record"])):
+            raise ValueError("Lifecycle decision differs from preserved donor history")
+        if sid in confirmations and decision.get("owner_approval") != confirmations[sid]:
+            raise ValueError("Lifecycle decision lacks current owner confirmation")
+    if names != set(history):
+        raise ValueError("Lifecycle donor identity coverage mismatch")
     exact = {}
     for route in routes:
         alias, preferred = route.get("alias"), route.get("preferred_source_id")
@@ -130,22 +166,14 @@ def resolve_migrated_url(url, exact):
         raise ValueError("Normalized URL matches different historical decisions")
     return next(iter(matches), None)
 
-@lru_cache(maxsize=1)
 def transferred_snapshot():
     """Unmodified archival data; never an authority for runtime admission."""
-    path = ROOT / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
-    transfer = json.loads(path.read_text(encoding="utf-8"))
-    if (transfer.get("schema") != "cfa3.donor-transfer-snapshot.v1"
-            or transfer.get("runtime_admission") is not False
-            or transfer.get("code_or_license_admission") is not False):
-        raise ValueError("Historical source snapshot schema or authority is invalid")
-    return transfer
+    return verified_snapshot()[0]
 
 
-@lru_cache(maxsize=1)
 def historical_rejections():
     """Exact rejected identities remain blocked but searchable as decisions."""
-    transfer = transferred_snapshot()
+    transfer, _ = _trusted_snapshot()
     routes = {}
     for history in transfer["rejection_audit"]["entries"]:
         item = history["donor"]
@@ -157,7 +185,7 @@ def historical_rejections():
             "prior_decision": {
                 "decision_id": "preserved-rejection:" + sid,
                 "outcome": "REJECTED",
-                "historical_rejection": history,
+                "historical_rejection": _detach(history),
             },
             "runtime_admission": False,
         }
@@ -168,19 +196,50 @@ def historical_rejections():
     return routes
 
 
-@lru_cache(maxsize=1)
-def historical_upstream_evidence():
-    """Use exact preserved records; never infer a current upstream revision."""
-    transfer = transferred_snapshot()
+def _historical_upstream_for(source_id):
+    """Constant-time internal access to one authenticated historical record."""
+    transfer, _ = _trusted_snapshot()
+    position = transfer["lookup_by_id"].get(source_id)
+    if position is None:
+        return None
+    row = transfer["records"][position]
     keys = ("upstream_snapshot", "upstream_observation", "source_snapshot",
-            "observed_commit", "upstream_repository_references")
-    return {
-        row["source_id"]: (
-            row["historical_record_sha256"],
-            {key: row["historical_record"][key] for key in keys
+            "observed_commit", "upstream_repository_references", "notes")
+    return (row["historical_record_sha256"],
+            {key: _detach(row["historical_record"][key]) for key in keys
              if key in row["historical_record"]})
-        for row in transfer["records"]
-    }
+
+
+def historical_upstream_evidence():
+    """Detached full history when explicitly requested, not on every lookup."""
+    transfer, _ = _trusted_snapshot()
+    return {row["source_id"]: _historical_upstream_for(row["source_id"])
+            for row in transfer["records"]}
+
+
+def note_revisions(notes):
+    """Conservative fallback: explicit upstream/inspected commits, never PR SHAs.
+
+    Keep all notes in the response; ambiguous revisions do not authorize reuse.
+    Structured observations take precedence over separately dated note snapshots.
+    """
+    if isinstance(notes, str):
+        notes = [notes]
+    if not isinstance(notes, list):
+        return set()
+    revisions = set()
+    for note in notes:
+        if not isinstance(note, str):
+            continue
+        for sentence in re.split(r"(?<=[.;])\s+", note):
+            if not (re.search(r"\bupstream\b", sentence, re.I)
+                    or re.match(r"Inspected commit\b", sentence, re.I)):
+                continue
+            if re.search(r"\b(?:PR|pull request|donor.intake)\s*#?\d", sentence, re.I):
+                continue
+            revisions.update(v.lower() for v in re.findall(
+                r"(?<![a-zA-Z0-9])[a-fA-F0-9]{40}(?![a-zA-Z0-9])", sentence))
+    return revisions
 
 
 def result(state, *, source=None, **details):
@@ -190,10 +249,10 @@ def result(state, *, source=None, **details):
         value["source_id"] = source["source_id"]
         prior = source["prior_decision"]
         if "reference_state" in source:  # migrated v2 source
-            archived = historical_upstream_evidence().get(source["source_id"])
+            archived = _historical_upstream_for(source["source_id"])
             if archived is not None and archived[0] == prior.get("revision"):
                 prior = {**prior, "historical_upstream_evidence": archived[1]}
-        value["prior_decision"] = prior
+        value["prior_decision"] = copy.deepcopy(prior)
     value.update(details)
     return value
 
@@ -218,7 +277,7 @@ def evaluate(url, index, observation=None):
         else:
             key = normalize_url(url)
             sid = alias_map.get(key)
-    except (TypeError, ValueError, AttributeError) as exc:
+    except (TypeError, ValueError, AttributeError, KeyError, OSError) as exc:
         return result("BLOCKED_INDEX_CONFLICT", reason=str(exc))
     by_id = {x["source_id"]: x for x in index["source_records"]}
     source = by_id.get(sid)
@@ -249,6 +308,10 @@ def evaluate(url, index, observation=None):
     if support not in ("SUPPORTED", "UNMAINTAINED", "UNKNOWN"):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source,
                       reason="Verified observation must classify upstream support")
+    # SUPPORT_ENDED cannot reuse a prior decision on the same upstream SHA.
+    if observation.get("event") == "SUPPORT_ENDED" and support != "UNMAINTAINED":
+        return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source,
+                      reason="SUPPORT_ENDED requires verified UNMAINTAINED support classification")
     if support == "UNMAINTAINED":
         rights = observation.get("rights", source.get("rights", {}))
         may_reuse = isinstance(rights, dict) and rights.get("verified") is True and rights.get("may_modify_and_distribute") is True
@@ -262,7 +325,7 @@ def evaluate(url, index, observation=None):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source, reason="No upstream revision proof")
     previous_revision = source.get("observed_revision")
     if previous_revision is None and "reference_state" in source:
-        archived = historical_upstream_evidence().get(source["source_id"])
+        archived = _historical_upstream_for(source["source_id"])
         if archived is not None and archived[0] == source["prior_decision"].get("revision"):
             evidence = archived[1]
             versions = []
@@ -279,6 +342,8 @@ def evaluate(url, index, observation=None):
             revisions = {v.lower() for v in versions
                          if isinstance(v, str) and len(v) == 40
                          and all(c in "0123456789abcdefABCDEF" for c in v)}
+            if not revisions:
+                revisions = note_revisions(evidence.get("notes", []))
             if len(revisions) == 1:
                 previous_revision = next(iter(revisions))
     if observation.get("event") in ("VERSION_UPDATE", "FUNCTIONAL_MODERNIZATION") or (

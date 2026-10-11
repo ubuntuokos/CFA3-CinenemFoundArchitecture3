@@ -10,6 +10,7 @@ from pathlib import Path
 
 from donor_l1 import frozen_sources
 from source_lifecycle import validate_index
+from donor_transfer_integrity import confirmation_evidence, preserved_aliases, CONFIRMATION_NAME
 
 ROOT = Path(__file__).resolve().parents[1]
 REG = ROOT / "canonical/registries"
@@ -24,6 +25,8 @@ def build():
              "CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"]
     inputs = {name: json.loads((REG / name).read_text()) for name in names}
     staged, routing, approvals, registered, transfer = (inputs[name] for name in names)
+    confirmations, _ = confirmation_evidence()
+    names.append(CONFIRMATION_NAME)
     originals = {entry["donor_id"]: entry for entry, _, _ in frozen_sources()}
     approval_by_id = {r["id"]: r for r in approvals["records"]}
     registered_by_id = {r["source_id"]: r["reference_record"] for r in transfer["records"]}
@@ -47,7 +50,7 @@ def build():
                 "historical_outcome": original["status"],
                 "submission_review": original.get("submission_review", {}),
                 "intake_provenance": original.get("intake_provenance", {}),
-                "owner_approval": approval_by_id.get(sid),
+                "owner_approval": confirmations.get(sid, approval_by_id.get(sid)),
                 "canonical_reference_registration": registered_by_id.get(sid),
             },
             "observed_revision": None, "support_status": "UNKNOWN",
@@ -55,6 +58,18 @@ def build():
             "runtime_admission": False,
             "reference_state": registered_by_id[sid]["donor_registration"],
         })
+    routes = [dict(route) for route in routing["entries"]]
+    by_alias = {route["alias"]: route for route in routes}
+    for alias, sid in sorted(preserved_aliases(transfer["records"]).items()):
+        if alias in by_alias:
+            if by_alias[alias]["preferred_source_id"] != sid:
+                raise ValueError("Preserved alias conflicts with existing route")
+        else:
+            route = {"alias": alias, "preferred_source_id": sid,
+                     "related_source_ids": [sid],
+                     "authority": "PRESERVED_HISTORICAL_LOCATOR"}
+            routes.append(route)
+            by_alias[alias] = route
     index = {
         "schema": "cfa3.source-lifecycle-index.v2",
         "id": "CFA3-SOURCE-LIFECYCLE-INDEX-001",
@@ -64,7 +79,7 @@ def build():
         "active_reference_snapshot": transfer["id"],
         "migration_authority": "PRESERVED_EXISTING_RECORDS_NO_NEW_DONOR_APPROVAL",
         "input_sha256": {name: hashlib.sha256((REG / name).read_bytes()).hexdigest() for name in names},
-        "source_records": records, "locator_routes": routing["entries"],
+        "source_records": records, "locator_routes": routes,
     }
     validate_index(index)
     return index

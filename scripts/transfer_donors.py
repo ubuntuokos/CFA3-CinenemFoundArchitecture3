@@ -17,6 +17,7 @@ from donor_l1 import ROOT, REGISTRY, frozen_sources, stage, sha_blob
 
 REG = ROOT / "canonical/registries"
 OUTPUT = REG / "CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
+OWNER_CONFIRMATION = REG / "CFA3-DONOR-CURRENT-OWNER-CONFIRMATION-20261011.json"
 STATES = {
     "ACCEPTED_REFERENCE": "CANONICAL_REFERENCE_REGISTERED",
     "OWNER_APPROVED_PENDING_PUBLICATION": "CANONICAL_REFERENCE_REGISTERED",
@@ -30,6 +31,33 @@ STATES = {
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
                                     separators=(",", ":")).encode()).hexdigest()
+
+
+def current_owner_confirmations():
+    """Current owner approval is separate from historical message reconstruction."""
+    data = json.loads(OWNER_CONFIRMATION.read_text(encoding="utf-8"))
+    if (data.get("schema") != "cfa3.current-owner-reference-approval-confirmation.v1"
+            or data.get("current_owner_reference_approval") is not True
+            or data.get("historical_source_records_immutable") is not True
+            or data.get("does_not_reconstruct_original_chat_evidence") is not True
+            or data.get("discovered_child_sources_automatically_approved") is not False
+            or data.get("rejected_sources_reactivated") is not False
+            or data.get("automatic_runtime_code_license_provider_or_model_admission") is not False
+            or data.get("authorization_scope") !=
+                "HISTORICAL_USER_SUBMITTED_LINKS_ALREADY_STAGED_AS_OWNER_APPROVED_PENDING_PUBLICATION"):
+        raise ValueError("Current owner reference approval evidence invalid")
+    approvals = {}
+    for row in data.get("confirmed_records", []):
+        sid, locator, sha = (row.get("source_id"), row.get("original_locator"),
+                             row.get("historical_record_sha256"))
+        if (not isinstance(sid, str) or not sid or sid in approvals
+                or not isinstance(locator, str) or not locator
+                or not isinstance(sha, str) or len(sha) != 64):
+            raise ValueError("Current owner approval identity mismatch")
+        approvals[sid] = (locator, sha)
+    if len(approvals) != data.get("confirmed_pending_record_count"):
+        raise ValueError("Current owner approval count mismatch")
+    return approvals
 
 
 def build():
@@ -77,6 +105,18 @@ def build():
                     "provenance": provenance, "owner_approvals": approvals,
                     "runtime_admission": False,
                 })
+    confirmations = current_owner_confirmations()
+    pending = {
+        r["source_id"]: r for r in records
+        if r["pre_transfer_status"] == "OWNER_APPROVED_PENDING_PUBLICATION"
+        and r["historical_record"].get("intake_provenance", {}).get(
+            "canonical_approval_admitted") is False
+    }
+    if (set(confirmations) != set(pending)
+            or any(confirmations[sid] != (
+                row["historical_record"]["source"]["locator"],
+                row["historical_record_sha256"]) for sid, row in pending.items())):
+        raise ValueError("Current owner approval and staged historical links differ")
     legacy_ids = {r["donor_id"] for r in json.loads(REGISTRY.read_text())["entries"]}
     ids = {r["source_id"] for r in records}
     if not legacy_ids <= ids or len(ids) != len(records):

@@ -202,14 +202,165 @@ def lookup(*, donor_id=None, original_url=None, registry_path=REGISTRY):
     return record
 
 
+
+# A source-file publication is searchable independently of global L1 admission.
+# The legacy transfer snapshot remains available through the unchanged default path.
+PUBLISHED_FIRST = Path(__file__).resolve().parents[1] / (
+    "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json"
+)
+PUBLISHED_FIRST_ARCHIVE = Path(__file__).resolve().parents[1] / (
+    "archive/donor-source-migration/2026-10-09/FA3-DONOR-REFERENCE-REGISTRY-001.json"
+)
+
+PUBLISHED_SOURCE_UNION = Path(__file__).resolve().parents[1] / (
+    "archive/donor-source-migration/2026-10-09/CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json"
+)
+PUBLISHED_EXACT_ALIASES = Path(__file__).resolve().parents[1] / (
+    "canonical/registries/CFA3-DONOR-PUBLISHED-ORIGINAL-URL-ALIASES-20261012.json"
+)
+
+
+def _verified_published_original_aliases(doc):
+    """Verify every A/B source URL and the exact 15 missing routes, fail closed."""
+    import hashlib
+
+    def blob_sha(raw):
+        return hashlib.sha1(
+            b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw
+        ).hexdigest()
+
+    union_raw = PUBLISHED_SOURCE_UNION.read_bytes()
+    catalog_raw = PUBLISHED_FIRST.read_bytes()
+    union_pin = "d22dce8bfe3d9697a1121033ff7b387d051a638a"
+    catalog_pin = "7de979fd2d975ff99573f41e4a0035a57925bb52"
+    if blob_sha(union_raw) != union_pin or blob_sha(catalog_raw) != catalog_pin:
+        raise ValueError("Published donor source or original URL evidence changed")
+    if json.loads(catalog_raw) != doc:
+        raise ValueError("Published donor catalog changed during alias lookup")
+    union = json.loads(union_raw)
+    supplement = json.loads(PUBLISHED_EXACT_ALIASES.read_text(encoding="utf-8"))
+    if (union.get("schema") != "cfa3.donor-baseline-user-source-union.v1"
+            or union.get("normalized_union_count") != 445
+            or supplement.get("schema") != "cfa3.donor-published-original-url-alias-supplement.v1"
+            or supplement.get("id") != "CFA3-DONOR-PUBLISHED-ORIGINAL-URL-ALIASES-20261012"
+            or supplement.get("publication_state") != "CANONICAL_REFERENCE_URL_SEARCH_EXTENSION"
+            or supplement.get("publication_scope") != "TWO_RECOVERED_OWNER_SOURCE_FILES_ONLY"
+            or supplement.get("historical_union_git_blob_sha") != union_pin
+            or supplement.get("first_published_catalog_git_blob_sha") != catalog_pin
+            or supplement.get("historical_source_url_counts") != {"A": 133, "B": 312}
+            or supplement.get("already_searchable_urls") != 430
+            or supplement.get("added_exact_url_alias_count") != 15
+            or supplement.get("alias_registration_only") is not True
+            or supplement.get("existing_donor_id_and_status_preserved") is not True
+            or supplement.get("global_l1_completed") is not False
+            or any(supplement.get(key) is not False for key in (
+                "new_owner_donor_approval", "runtime_admission", "code_copy_authorized",
+                "license_authorized", "model_provider_admission"))):
+        raise ValueError("Donor original URL alias scope or authority changed")
+
+    existing = doc["lookup_by_locator"]
+    by_id = doc["lookup_by_id"]
+    records = doc["records"]
+    expected = []
+    seen = set()
+    source_counts = {"A": 0, "B": 0}
+    for item in union["source_coverage"]:
+        url, source_id = item["canonical_locator"], item["donor_id"]
+        sets = item["source_sets"]
+        if (url in seen or sets not in (["A"], ["B"])
+                or source_id not in by_id
+                or type(by_id[source_id]) is not int
+                or not 0 <= by_id[source_id] < len(records)):
+            raise ValueError("Original URL coverage has duplicate or unknown donor")
+        seen.add(url)
+        source_counts[sets[0]] += 1
+        donor = records[by_id[source_id]]
+        if (donor["donor_id"] != source_id
+                or donor["historical_status"] != item["status"]
+                or donor["normalized_key"] != item["normalized_key"]
+                or (donor["donor_registration"] == "CANONICAL_REFERENCE_REGISTERED")
+                   != (item["status"] == "ACCEPTED_REFERENCE")
+                or any(donor.get(key) is not False for key in (
+                    "runtime_admission", "code_copy_authorized",
+                    "license_authorized", "model_provider_admission"))):
+            raise ValueError("Original URL alias would change a donor decision")
+        route = existing.get(url)
+        if route is not None:
+            if route != source_id:
+                raise ValueError("Original URL conflicts with an existing canonical identity")
+        else:
+            expected.append({
+                "original_url": url, "donor_id": source_id,
+                "source_set": sets[0], "historical_status": item["status"]
+            })
+    if (len(seen) != 445 or source_counts != {"A": 133, "B": 312}
+            or len(expected) != 15
+            or sorted(expected, key=lambda x: x["original_url"]) != sorted(
+                supplement.get("aliases", []), key=lambda x: x["original_url"])):
+        raise ValueError("Published donor original URL alias coverage mismatch")
+    return {item["original_url"]: item["donor_id"] for item in expected}
+
+
+
+def lookup_published(*, donor_id=None, original_url=None):
+    """Read the first canonically available file, excluding other staged sources."""
+    if (donor_id is None) == (original_url is None):
+        raise ValueError("Exactly one donor ID or original URL is required")
+    import hashlib
+    doc = json.loads(PUBLISHED_FIRST.read_text(encoding="utf-8"))
+    raw = PUBLISHED_FIRST_ARCHIVE.read_bytes()
+    old_blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw
+    ).hexdigest()
+    records = doc.get("records", [])
+    index = doc.get("lookup_by_id", {})
+    routes = doc.get("lookup_by_locator", {})
+    if (doc.get("schema") != "cfa3.donor-source-file-publication.v1"
+            or doc.get("source_file_sequence") != 1
+            or doc.get("source_git_blob_sha") != old_blob
+            or old_blob != "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b"
+            or doc.get("publication_state") != "CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1"
+            or doc.get("global_l1_completed") is not False
+            or doc.get("runtime_admission") is not False
+            or len(records) != doc.get("source_count") or len(records) != 1919
+            or len(index) != 1919 or len(routes) != 1997
+            or doc.get("alias_index_size") != len(routes)):
+        raise ValueError("Published donor source-file integrity check failed")
+    supplementary_alias = False
+    if original_url is not None:
+        donor_id = routes.get(original_url)
+        if donor_id is None:
+            donor_id = _verified_published_original_aliases(doc).get(original_url)
+            supplementary_alias = donor_id is not None
+            if donor_id is None:
+                return None
+    position = index.get(donor_id)
+    if position is None:
+        return None
+    if type(position) is not int or not 0 <= position < len(records):
+        raise ValueError("Invalid published donor index entry")
+    row = records[position]
+    if (row.get("donor_id") != donor_id
+            or (original_url is not None and not supplementary_alias
+                and original_url not in row.get("lookup_aliases", []))
+            or row.get("runtime_admission") is not False
+            or row.get("code_copy_authorized") is not False
+            or row.get("license_authorized") is not False
+            or row.get("model_provider_admission") is not False):
+        raise ValueError("Inconsistent published donor record")
+    return row
+
 def main():
     parser = argparse.ArgumentParser(description="Read-only lookup of registered CFA3 donor references")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--id", dest="donor_id", help="Exact donor identifier")
     group.add_argument("--url", dest="original_url", help="Exact original submitted URL")
+    parser.add_argument("--published-only", action="store_true",
+                        help="Search only canonically published donor source files")
     args = parser.parse_args()
     try:
-        record = lookup(donor_id=args.donor_id, original_url=args.original_url)
+        query = lookup_published if args.published_only else lookup
+        record = query(donor_id=args.donor_id, original_url=args.original_url)
     except (ValueError, KeyError, OSError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2

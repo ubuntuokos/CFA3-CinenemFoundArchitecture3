@@ -1,0 +1,114 @@
+{
+  "schema": "cfa3.donor-published-original-url-alias-supplement.v1",
+  "id": "CFA3-DONOR-PUBLISHED-ORIGINAL-URL-ALIASES-20261012",
+  "publication_state": "CANONICAL_REFERENCE_URL_SEARCH_EXTENSION",
+  "publication_scope": "TWO_RECOVERED_OWNER_SOURCE_FILES_ONLY",
+  "historical_union_git_blob_sha": "d22dce8bfe3d9697a1121033ff7b387d051a638a",
+  "first_published_catalog_git_blob_sha": "7de979fd2d975ff99573f41e4a0035a57925bb52",
+  "historical_source_url_counts": {
+    "A": 133,
+    "B": 312
+  },
+  "already_searchable_urls": 430,
+  "added_exact_url_alias_count": 15,
+  "alias_registration_only": true,
+  "existing_donor_id_and_status_preserved": true,
+  "new_owner_donor_approval": false,
+  "runtime_admission": false,
+  "code_copy_authorized": false,
+  "license_authorized": false,
+  "model_provider_admission": false,
+  "global_l1_completed": false,
+  "aliases": [
+    {
+      "original_url": "http://www.misfitcode.com/misfitmodel3d",
+      "donor_id": "FA3-DONOR-MISFIT-MODEL-3D-LEGACY-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://alternativeto.net/software/octane-render?p=1",
+      "donor_id": "FA3-DONOR-ALTERNATIVETO-OCTANE-ALTERNATIVES-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://chufengxiao.github.io/SketchHairSalon",
+      "donor_id": "FA3-DONOR-SKETCHHAIRSALON-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://devblogs.microsoft.com/directx/directx-heart-linux",
+      "donor_id": "FA3-DONOR-MICROSOFT-DIRECTX-LINUX-WSL-ARTICLE-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://github.com/Comfy-Org",
+      "donor_id": "FA3-DONOR-COMFY-ORG-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://github.com/doitsujin/DXVK",
+      "donor_id": "FA3-DONOR-DOITSUJIN-DXVK-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://github.com/MengTo/skills",
+      "donor_id": "FA3-DONOR-MENGTO-SKILLS-001",
+      "source_set": "A",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://github.com/microsoft/directxtk",
+      "donor_id": "FA3-DONOR-MICROSOFT-DIRECTXTK-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://github.com/orgs/AOMediaCodec/repositories",
+      "donor_id": "FA3-DONOR-AOMEDIACODEC-ORG-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://github.com/yils-lin/short-video-factory",
+      "donor_id": "FA3-DONOR-YILS-LIN-SHORT-VIDEO-FACTORY-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://haiminluo.github.io/hairgpt",
+      "donor_id": "FA3-DONOR-HAIRGPT-001",
+      "source_set": "B",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://humanaigc.github.io/animate-anyone",
+      "donor_id": "FA3-DONOR-HUMANAIGC-ANIMATE-ANYONE-001",
+      "source_set": "A",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://humanaigc.github.io/wan-animate",
+      "donor_id": "FA3-DONOR-HUMANAIGC-WAN-ANIMATE-001",
+      "source_set": "A",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://nilooy.github.io/character-animation-combiner",
+      "donor_id": "FA3-DONOR-NILOOY-CHARACTER-ANIMATION-COMBINER-001",
+      "source_set": "A",
+      "historical_status": "ACCEPTED_REFERENCE"
+    },
+    {
+      "original_url": "https://research.nvidia.com/labs/sil/projects/kimodo",
+      "donor_id": "FA3-DONOR-NVIDIA-KIMODO-RESEARCH-001",
+      "source_set": "A",
+      "historical_status": "ACCEPTED_REFERENCE"
+    }
+  ]
+}

@@ -434,5 +434,42 @@ class DonorLookupIntegrityTests(unittest.TestCase):
         self.assertEqual(evaluate(url, self.index)["disposition"],
                          "CHANGE_CHECK_REQUIRED")
 
+    def test_staged_locator_forgery_is_rejected_even_with_recomputed_index(self):
+        sid = "FA3-DONOR-TAHOMA2D-001"
+        other_id = "FA3-DONOR-AGENTSCOPE-AI-AGENTSCOPE-001"
+        with tempfile.TemporaryDirectory() as tmp:
+            reg = Path(tmp)
+            for name in integrity.PROJECTION_INPUTS:
+                shutil.copyfile(integrity.REG / name, reg / name)
+            path = reg / integrity.STAGED_SOURCE_NAME
+            document = json.loads(path.read_text())
+            target = next(row for row in document["sources"] if row["id"] == sid)
+            other = next(row for row in document["sources"] if row["id"] == other_id)
+            target["url"], target["key"] = other["url"], other["key"]
+            path.write_text(json.dumps(document))
+            forged = copy.deepcopy(self.index)
+            forged["input_sha256"][integrity.STAGED_SOURCE_NAME] = hashlib.sha256(
+                path.read_bytes()).hexdigest()
+            index_row = next(row for row in forged["source_records"] if row["source_id"] == sid)
+            index_row["canonical_url"], index_row["normalized_key"] = other["url"], other["key"]
+            with patch.object(integrity, "REG", reg):
+                with self.assertRaisesRegex(ValueError, "staged source Git blob"):
+                    integrity.expected_lifecycle_projection()
+                self.assertEqual(evaluate("https://github.com/tahoma2d/tahoma2d", forged)
+                                 ["disposition"], "BLOCKED_INDEX_CONFLICT")
+
+    def test_confirmation_additional_fields_do_not_create_new_approval(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            confirmation_path = Path(tmp) / integrity.CONFIRMATION_NAME
+            doc = json.loads(transfer_donors.OWNER_CONFIRMATION.read_text())
+            doc["confirmed_records"][0]["owner_donor_approval"] = "FORGED_OWNER_APPROVAL"
+            confirmation_path.write_text(json.dumps(doc))
+            with patch.object(transfer_donors, "OWNER_CONFIRMATION", confirmation_path), \
+                 patch.object(integrity, "OWNER_CONFIRMATION", confirmation_path):
+                with self.assertRaisesRegex(ValueError, "confirmation Git blob"):
+                    integrity.confirmation_evidence()
+                self.assertEqual(evaluate("https://github.com/ExistentialAudio/BlackHole",
+                                          self.index)["disposition"], "BLOCKED_INDEX_CONFLICT")
+
 if __name__ == "__main__":
     unittest.main()

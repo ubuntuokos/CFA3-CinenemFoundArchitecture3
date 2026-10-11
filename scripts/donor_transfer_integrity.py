@@ -18,6 +18,9 @@ REJECTION_ARCHIVE_BLOB = "1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8"
 TRANSFER_SNAPSHOT_BLOB = "c863fe31d2c300bf15c9996432f86a70f9a18d74"
 OWNER_APPROVAL_NAME = "CFA3-DONOR-OWNER-APPROVAL-19-26-20261010.json"
 OWNER_APPROVAL_BLOB = "de4d26675981859cef91ad845b668c56bdd3b84d"
+STAGED_SOURCE_NAME = "CFA3-DONOR-L1-STAGED-DIRECT-ACCESS-20261010.json"
+STAGED_SOURCE_BLOB = "5464c2787157dfc630c7faa99501c557741c7ced"
+OWNER_CONFIRMATION_BLOB = "e857460b21783b30e2ffc04a7c2e2a72dcdfbcfe"
 
 
 def verified_rejection_audit():
@@ -220,7 +223,16 @@ def confirmation_evidence():
                               row["historical_record_sha256"]):
             raise ValueError("Current owner confirmation binding mismatch")
     raw = OWNER_CONFIRMATION.read_bytes()
+    confirmation_blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+    if confirmation_blob != OWNER_CONFIRMATION_BLOB:
+        raise ValueError("Current owner confirmation Git blob changed")
     doc = json.loads(raw)
+    allowed_row_keys = {"source_id", "original_locator", "historical_record_sha256"}
+    if (not isinstance(doc.get("confirmed_records"), list)
+            or any(type(row) is not dict or set(row) != allowed_row_keys
+                   for row in doc["confirmed_records"])):
+        raise ValueError("Current owner confirmation row schema altered")
     if (doc.get("source_commit") != data["source_commit"]
             or doc.get("transfer_snapshot_id") != data["id"]):
         raise ValueError("Current owner confirmation snapshot binding mismatch")
@@ -269,6 +281,13 @@ def _expected_lifecycle_projection(reg, signatures):
     raw = {name: (reg / name).read_bytes() for name in PROJECTION_INPUTS}
     # Authenticate the current owner's ledger independently of self-signed
     # index input hashes before projecting unconfirmed historical approvals.
+    # Staged display locators are evidence, not a new authority. Bind them
+    # to the unchanged staged archive before considering any derived index.
+    staged_raw = raw[STAGED_SOURCE_NAME]
+    staged_blob = hashlib.sha1(
+        b"blob " + str(len(staged_raw)).encode("ascii") + b"\0" + staged_raw).hexdigest()
+    if staged_blob != STAGED_SOURCE_BLOB:
+        raise ValueError("Preserved staged source Git blob changed")
     ledger = raw[OWNER_APPROVAL_NAME]
     ledger_blob = hashlib.sha1(
         b"blob " + str(len(ledger)).encode("ascii") + b"\0" + ledger).hexdigest()
@@ -294,6 +313,10 @@ def _expected_lifecycle_projection(reg, signatures):
         original = archived["historical_record"]
         if row["status"] != archived["pre_transfer_status"]:
             raise ValueError("Staged donor status differs from transferred history")
+        preserved_source = original["source"]
+        if (row["url"] != preserved_source["locator"]
+                or row["key"] != preserved_source["normalized_key"]):
+            raise ValueError("Staged donor locator differs from authenticated history")
         records.append({
             "source_id": sid, "canonical_url": row["url"], "normalized_key": row["key"],
             "prior_decision": {

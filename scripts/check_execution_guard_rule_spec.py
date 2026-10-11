@@ -41,7 +41,7 @@ def active_expected_codes(gov,spec):
                     raise ValueError("new rule missing exact owner policy provenance")
             elif ident=="CFA3-SEQUENTIAL-COMMAND-001":
                 if row.get("provenance")!="OWNER_SUPPLIED_2026_10_11" or row.get("canonical_policy_path")!=SEQUENTIAL_COMMAND_POLICY:
-                    raise ValueError("sequential rule without independent owner policy provenance")
+                    raise ValueError("sequential rule missing exact owner policy provenance")
             elif row.get("provenance")!="OWNER_RECONFIRMED_2026_10_11" or not isinstance(row.get("historical_source"),dict):
                 raise ValueError("additional historical rule without owner source")
             expected[ident]=code
@@ -135,7 +135,15 @@ def validate(spec,gov,coverage,reference,root=ROOT):
     if not isinstance(summary,str) or f"{rule_count} aktív szabály" not in summary or "RULE-ADMISSION-001" not in summary or "CFA3-SEQUENTIAL-COMMAND-001" not in summary:
         issues.append("governance export summary inconsistent with active owner rules")
     try:
+        from check_guard_policy_surface import validate_catalog_policy_leaf_total
+        policy_surface=json.loads((root/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
+        issues.extend(validate_catalog_policy_leaf_total(policy_surface,coverage))
+    except (OSError,ValueError,TypeError,ImportError,KeyError):
+        issues.append("canonical policy total/surface unavailable")
+    try:
         new_policy=json.loads((root/RULE_ADMISSION_POLICY).read_text("utf-8"))
+        from check_bootstrap import validate_rule_admission
+        issues.extend(validate_rule_admission(new_policy))
         new_owner_rule=active["RULE-ADMISSION-001"]
         if (new_owner_rule.get("code")!=new_policy["rule"]["code"] or
                 new_owner_rule.get("text_hu")!=new_policy["rule"]["text_hu"] or
@@ -147,7 +155,7 @@ def validate(spec,gov,coverage,reference,root=ROOT):
                 reference["current_rules"][-2],new_policy["rule"],
                 RULE_ADMISSION_POLICY,policy_surface):
             issues.append("new owner rule provenance record does not match canonical source")
-    except (OSError,ValueError,TypeError,KeyError,StopIteration):
+    except (OSError,ValueError,TypeError,KeyError,StopIteration,ImportError):
         issues.append("new owner rule canonical source unavailable")
     try:
         sequential_policy=json.loads((root/SEQUENTIAL_COMMAND_POLICY).read_text("utf-8"))

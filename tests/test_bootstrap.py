@@ -237,6 +237,12 @@ class BootstrapPolicyTests(unittest.TestCase):
         from check_bootstrap import validate_rule_admission
         policy = load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json")
         self.assertEqual([], validate_rule_admission(policy))
+        broken = copy.deepcopy(policy)
+        broken["requirements"]["independent_owner_task_may_share_existing_pr"] = True
+        self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["owner_decision_date"] = "2026-10-12"
+        self.assertTrue(validate_rule_admission(broken))
         for key in policy["requirements"]:
             broken = copy.deepcopy(policy)
             broken["requirements"][key] = False
@@ -254,6 +260,14 @@ class BootstrapPolicyTests(unittest.TestCase):
             broken = copy.deepcopy(policy)
             broken["responsibility"][field] = "UNVERIFIED_ROLE_SWAP"
             with self.subTest(exact_role=field):
+                self.assertTrue(validate_rule_admission(broken))
+        for replacement in (
+            "Nem jóváhagyott szabályszöveg; " * 12,
+            policy["rule"]["text_hu"] + " Tiltott, tulajdonos által nem engedélyezett szövegbővítés.",
+        ):
+            broken = copy.deepcopy(policy)
+            broken["rule"]["text_hu"] = replacement
+            with self.subTest(owner_text_tampering=replacement[:30]):
                 self.assertTrue(validate_rule_admission(broken))
         broken = copy.deepcopy(policy)
         broken["rule"]["runtime_verified"] = True
@@ -280,6 +294,14 @@ class BootstrapPolicyTests(unittest.TestCase):
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
         self.assertEqual(8, surface["source_policy_count"])
+        from check_guard_policy_surface import validate_catalog_policy_leaf_total
+        coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
+        self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))
+        bad_catalog = copy.deepcopy(coverage)
+        bad_catalog["canonical_policy_leaf_fields_enumerated"] += 1
+        self.assertTrue(validate_catalog_policy_leaf_total(surface, bad_catalog))
+        bad_catalog["canonical_policy_leaf_fields_enumerated"] -= 2
+        self.assertTrue(validate_catalog_policy_leaf_total(surface, bad_catalog))
         self.assertFalse(surface["semantic_rule_admission"])
         self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
                          sum(s["leaf_count"] for s in surface["sources"]))

@@ -1,0 +1,298 @@
+{
+  "schema": "cfa3.current-owner-reference-approval-confirmation.v1",
+  "id": "CFA3-DONOR-CURRENT-OWNER-APPROVAL-CONFIRMATION-20261011",
+  "recorded_on": "2026-10-11",
+  "authorization_source": "Current owner instruction in donor-transfer conversation: all submitted historical links are authorized for donor/reference processing",
+  "authorization_scope": "HISTORICAL_USER_SUBMITTED_LINKS_ALREADY_STAGED_AS_OWNER_APPROVED_PENDING_PUBLICATION",
+  "does_not_reconstruct_original_chat_evidence": true,
+  "historical_source_records_immutable": true,
+  "current_owner_reference_approval": true,
+  "discovered_child_sources_automatically_approved": false,
+  "rejected_sources_reactivated": false,
+  "automatic_runtime_code_license_provider_or_model_admission": false,
+  "source_commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+  "transfer_snapshot_id": "CFA3-DONOR-TRANSFER-SNAPSHOT-001",
+  "confirmed_pending_record_count": 56,
+  "confirmed_records": [
+    {
+      "source_id": "CFA3-DONOR-EXISTENTIALAUDIO-BLACKHOLE-001",
+      "original_locator": "https://github.com/ExistentialAudio/BlackHole",
+      "historical_record_sha256": "548d4834fededf0cf49c92636d6e48c14058c475578d863604122ff5eea9c81f"
+    },
+    {
+      "source_id": "CFA3-DONOR-EXISTENTIALAUDIO-ORG-001",
+      "original_locator": "https://github.com/ExistentialAudio",
+      "historical_record_sha256": "5996d72c5b4736a706b9e20d800fa3bba4045cb76162905a9dcd4935260a08e1"
+    },
+    {
+      "source_id": "CFA3-DONOR-UPSTASH-ORG-001",
+      "original_locator": "https://github.com/upstash",
+      "historical_record_sha256": "103f0d70af2f97d1e839c4c54d397165dfd5691b0ce63a861a0233fb80f0c092"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ANIMATE1978-MB-LAB-001",
+      "original_locator": "https://github.com/animate1978/MB-Lab",
+      "historical_record_sha256": "b7e2033ef1636f2fb02668b57b4da00ffa25f8fd411c8bd2c289a428af77dbdd"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ANONYMOUSNOMAD-COVERT-CODER-001",
+      "original_locator": "https://github.com/AnonymousNomad/covert-coder",
+      "historical_record_sha256": "92e79e976ca4fd1d10eea17c34215ba2fdd8622d51f5bb826c939e6671c1a240"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ANTHROPICS-ORG-001",
+      "original_locator": "https://github.com/anthropics",
+      "historical_record_sha256": "2ba9e27d7652aca66249de70ffc414c4a2f31363b0ed92f68ea43539dc0f1e36"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ARTISYNTH-ARTISYNTH-CORE-001",
+      "original_locator": "https://github.com/artisynth/artisynth_core",
+      "historical_record_sha256": "f39dd20d278e03cea472c62259e042d8e1035d7b7275e689f7b8c5e07bcbd4ea"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ARTISYNTH-ARTISYNTH-MODELS-001",
+      "original_locator": "https://github.com/artisynth/artisynth_models",
+      "historical_record_sha256": "7a64cc638560b863e267d1dec765f7014a269e9f1c91c224468d9ebf7c5816b9"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ARUNSR1NI-DATABRICKS-ONTOLOGY-GENERATOR-001",
+      "original_locator": "https://github.com/arunsr1ni/databricks-ontology-generator",
+      "historical_record_sha256": "800ec38f5e8224443fe77a609f73b779d79e6b9eae5531ece70ee8c8fb96b65c"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-EVELYNFAN-FACEFORMER-001",
+      "original_locator": "https://github.com/EvelynFan/FaceFormer",
+      "historical_record_sha256": "5c2c1b12774a5cc8da32ce1570e918f7f5fb39eca1c981553e0e7db138c2a6bd"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-FLOWSINT-001",
+      "original_locator": "https://github.com/reconurge/flowsint",
+      "historical_record_sha256": "fb3ecb08c676c76e3d1b5d0ef4d7167031157326e1ee7593654240dc5c35d971"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-INFRANODUS-ONTOLOGY-CREATOR-001",
+      "original_locator": "https://infranodus.com/skills/ontology-creator",
+      "historical_record_sha256": "21b6b26f3b89212435b324009ff44d6b91e22176ce441cdca3da9755e8765c78"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-KITWARE-IMSTK-001",
+      "original_locator": "https://github.com/Kitware/iMSTK",
+      "historical_record_sha256": "77a16f88885419061e1cebcaefd2e478fb1ce2e9ec1ac8c945682a47914a2d7d"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-KRATER-AI-001",
+      "original_locator": "https://krater.ai/",
+      "historical_record_sha256": "71ebd63d43e179647bbb36603ba700774b9ee65fe650775e417994a7c00e19a6"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-MAKEHUMANCOMMUNITY-MAKEHUMAN-001",
+      "original_locator": "https://github.com/makehumancommunity/makehuman",
+      "historical_record_sha256": "86577d7c6b36c6d18b6f1eaf0e955bd83b0b6673930040732eb6725b15021050"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-MICROSOFT-ONTOLOGY-PLAYGROUND-001",
+      "original_locator": "https://github.com/microsoft/Ontology-Playground",
+      "historical_record_sha256": "2b226de94135077213721d2d76f479456f7b2fc59c07d799d733807d94bcb759"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-NICOVLR-SMART-ONTOLOGY-GENERATOR-001",
+      "original_locator": "https://github.com/nicovlr/smart-ontology-generator",
+      "historical_record_sha256": "0197c2ad53d9dfdf1edfbcd9ad2fbda9d0f5cc2269d0cd0fc3b55582680b26cc"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-ONTOLOGY-DEVELOPMENT-TOPIC-001",
+      "original_locator": "https://github.com/topics/ontology-development",
+      "historical_record_sha256": "4fc88385448f14cb65e76bd1921441ee7ecd144d10553e6dfc52408dba92203b"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-OPEN-ONTOLOGIES-001",
+      "original_locator": "https://github.com/fabio-rovai/open-ontologies",
+      "historical_record_sha256": "5bb8333b71aec5de08ff11af2ab0da93eca08e2060238a8efaefd8afbb570e90"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-OPENSIM-ORG-OPENSIM-CORE-001",
+      "original_locator": "https://github.com/opensim-org/opensim-core",
+      "historical_record_sha256": "47e5d2028bfd474ba8a3493ebc4ff310dae2a12d49bbf60dacbd1f6f35e83dad"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-OZEKIK-AWESOME-ONTOLOGY-001",
+      "original_locator": "https://github.com/ozekik/awesome-ontology",
+      "historical_record_sha256": "4357c23556dc9c865db2c7c722bbb79ceb36b4923d4dcd32a87426b049c115cc"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-SCRAPEGRAPHAI-001",
+      "original_locator": "https://github.com/scrapegraphai/scrapegraph-ai",
+      "historical_record_sha256": "4d941a6dc94d6569cf30dda9263add349a88d8af73f400feee1b2fb902ffc879"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-SENTRY-001",
+      "original_locator": "https://github.com/getsentry/sentry",
+      "historical_record_sha256": "44ade5f310f7f4f014ba73335fdcfafdc2bf53bf0f98656a8ad92910a6a5128f"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-SLICER-SLICERSOFA-001",
+      "original_locator": "https://github.com/Slicer/SlicerSOFA",
+      "historical_record_sha256": "9b81000201f9f7737056ebdcdb01cd221950c50c82fee88b9a2c6dc800dc0f55"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-SOFA-FRAMEWORK-SOFA-001",
+      "original_locator": "https://github.com/sofa-framework/sofa",
+      "historical_record_sha256": "5ec15c4aed68a02dba6859c118b79e33cf6697bea3d88ebd03e9ef691a28af0b"
+    },
+    {
+      "source_id": "CFA3-L1-RECONCILE-TADASBALTRUSAITIS-OPENFACE-001",
+      "original_locator": "https://github.com/TadasBaltrusaitis/OpenFace",
+      "historical_record_sha256": "236cdd7df12648544fa5bb09ef50761d81f87baebf161f05237176e882ce2d74"
+    },
+    {
+      "source_id": "FA3-DONOR-FLACK-PROFILE-001",
+      "original_locator": "https://github.com/flack",
+      "historical_record_sha256": "8d44b50e09c0778b438070dd750da84e809d514c97f2345e8496d28a316e536b"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-3D-ASSET-MANAGEMENT-001",
+      "original_locator": "https://github.com/topics/3d-asset-management",
+      "historical_record_sha256": "bcfd1e9e435c412567e171bd8d59d611cae415844572bf00f224554afcbb3a6e"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-C4D-001",
+      "original_locator": "https://github.com/topics/c4d",
+      "historical_record_sha256": "93d14f20df7178438e2078c5c396490be2f9b66ac9c95769c9d2952ace0176e6"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-C4D-PLUGIN-001",
+      "original_locator": "https://github.com/topics/c4d-plugin",
+      "historical_record_sha256": "f4eba7a396cb86d0e4b21834f2e7ccf8c21ab6658e3d4a32fe55b94f12cdf1e7"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CHARACTER-DESIGN-001",
+      "original_locator": "https://github.com/topics/character-design",
+      "historical_record_sha256": "7d0246a79b933628974b6e7b28f911c902a36f7304f8cd280ef0ec6cfde19b53"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-001",
+      "original_locator": "https://github.com/topics/cinema-4d",
+      "historical_record_sha256": "84436cceef23adbd2ce83155e484c6f4544d9658b9faec07a62cb24097a643bf"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-FREE-001",
+      "original_locator": "https://github.com/topics/cinema-4d-free",
+      "historical_record_sha256": "e6628fab4401feedd585963bb38e6d77ca906390efb47531307030b5b971a1b0"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-CINEMA-4D-PLUGIN-001",
+      "original_locator": "https://github.com/topics/cinema-4d-plugin",
+      "historical_record_sha256": "c88dc35713a6c4336658c1fd95d4a8154f6342dc7911f06b3428da0e98567fa9"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-HARD-SURFACE-MODELING-001",
+      "original_locator": "https://github.com/topics/hard-surface-modeling",
+      "historical_record_sha256": "06455a796afdaba811478db56cf899888b817bc7a6b76dc569f0a241cc8144e1"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-POSE-ESTIMATION-001",
+      "original_locator": "https://github.com/topics/pose-estimation",
+      "historical_record_sha256": "e6a5a86e2e2c0968adf7fd4b6ce40ce6d86ea008067dfbc0cd5efb7116e1230f"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-POSE-TRACKING-001",
+      "original_locator": "https://github.com/topics/pose-tracking",
+      "historical_record_sha256": "3752503d2813971cfe2296d692e925eb84d220b66bda12f498f4746171bf339e"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-POSER-LATEST-VERSION-001",
+      "original_locator": "https://github.com/topics/poser-latest-version",
+      "historical_record_sha256": "405be4460bd53329e07ada8c006ab1cd1666b864842a18c978f0e5232477facb"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-001",
+      "original_locator": "https://github.com/topics/unity",
+      "historical_record_sha256": "bee4588d4aea20a2b82e009e454ecdd243db096deef9ba387e28b1edfb83d6b4"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-001",
+      "original_locator": "https://github.com/topics/unity-3d",
+      "historical_record_sha256": "84c8e6a912d16b23f293187c3b9eee693d51f7d36b5f478526248cf60387a1d7"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-GAME-001",
+      "original_locator": "https://github.com/topics/unity-3d-game",
+      "historical_record_sha256": "9c6c4dd2b53bf589afa4b45f368cb2240b7f573f73a3396da7d9b0029849a1be"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-3D-URP-001",
+      "original_locator": "https://github.com/topics/unity-3d-urp",
+      "historical_record_sha256": "9be60d7cce4a734e08487c0603d84d0cacbd0fa4faa853b876cbe48e2eea53a4"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-EXAMPLE-001",
+      "original_locator": "https://github.com/topics/unity-example",
+      "historical_record_sha256": "881986b0adf955999fd53636a25b7b03726a72cde5124e1a7a3e9f66f885d691"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY-FRAMEWORK-001",
+      "original_locator": "https://github.com/topics/unity-framework",
+      "historical_record_sha256": "180957438366fc41938307ab630e9c19e0d31146e315aab580e842099f2e3a58"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-001",
+      "original_locator": "https://github.com/topics/unity3d",
+      "historical_record_sha256": "090cd9d94d804a5720c7f0d99f1fb6797f26e31ab909acbdc842f4da3f4c00be"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAME-001",
+      "original_locator": "https://github.com/topics/unity3d-game",
+      "historical_record_sha256": "658dcb48463dda4401fcb338b526021d6b3418e7a0bcac47c5559f80c8caeb13"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-GAMES-001",
+      "original_locator": "https://github.com/topics/unity3d-games",
+      "historical_record_sha256": "9f8f7a1909026ef64aa4bd67c7ef5b5c8aeb415c817d397a6ba412466807cf6c"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-UNITY3D-SCRIPT-001",
+      "original_locator": "https://github.com/topics/unity3d-script",
+      "historical_record_sha256": "d5f907a43a220807fae04b208b4c55f34567703c65fa4c73797e8ec66ce079d5"
+    },
+    {
+      "source_id": "FA3-DONOR-GITHUB-TOPIC-ZBRUSH-PC-001",
+      "original_locator": "https://github.com/topics/zbrush-pc",
+      "historical_record_sha256": "78accf6d3103e90e0ec98b411f42893bde6b95ec4535d32966f030b8a4a3b66d"
+    },
+    {
+      "source_id": "FA3-DONOR-MAXON-COMPUTER-ORG-001",
+      "original_locator": "https://github.com/Maxon-Computer",
+      "historical_record_sha256": "6f8966e8d7cf7a591c4dac683b054c89e2c2daf80463916ca1c213b5802f9f15"
+    },
+    {
+      "source_id": "FA3-DONOR-MAXON-COMPUTER-ZBRUSH-PYTHON-API-EXAMPLES-001",
+      "original_locator": "https://github.com/Maxon-Computer/ZBrush-Python-API-Examples",
+      "historical_record_sha256": "ec89cbe0c658c4a150d74a593069c6d8fb9bfb7035732b0a0fff8d1942ec4c4e"
+    },
+    {
+      "source_id": "FA3-DONOR-PACKTPUBLISHING-ZBRUSH-COOKBOOK-001",
+      "original_locator": "https://github.com/PacktPublishing/ZBrush-Cookbook",
+      "historical_record_sha256": "e80a32e4ab82011a51c1adaa114a4aed5412497ad856369019d5972b6ffa594a"
+    },
+    {
+      "source_id": "FA3-DONOR-PNM4SFIX-POSER-001",
+      "original_locator": "https://github.com/pnm4sfix/PoseR",
+      "historical_record_sha256": "1ce9c218de0e64e8d468a5e894b3e837d72bccec55be05a038fef9033f6d85e6"
+    },
+    {
+      "source_id": "FA3-DONOR-PNM4SFIX-PROFILE-001",
+      "original_locator": "https://github.com/pnm4sfix",
+      "historical_record_sha256": "16dd10dceb8269c039c5cb889585e8b2e880f1a913358a02c1d3356cb18ed395"
+    },
+    {
+      "source_id": "FA3-DONOR-SEVDEAWESOME-POSER-001",
+      "original_locator": "https://github.com/sevdeawesome/POSER",
+      "historical_record_sha256": "2740968e90e8aef24483de39bd280f89ec1271350455d46545b7e6ea47e9c452"
+    },
+    {
+      "source_id": "FA3-DONOR-ZBRUSH-TOOL-PROFILE-001",
+      "original_locator": "https://github.com/ZBrush-Tool",
+      "historical_record_sha256": "65b97c84222685e5b95a0c87ef9cb17479c87397748e788dc84c79245ff39b0b"
+    }
+  ]
+}

@@ -36,21 +36,32 @@ def _detach(value):
     return value
 
 
-class ValidatedSnapshot:
-    """Explicitly validated, deeply immutable batch lookup input.
+class ValidatedSnapshot(tuple):
+    """Deeply immutable, explicitly validated snapshot for indexed batch reads.
 
-    Mutable dictionaries still undergo full value validation on EVERY lookup.
-    This handle first takes its own copy, then validates and freezes it; its
-    lookup indexes and historical aliases cannot be poisoned by callers.
+    Both the handle itself and all reachable content are immutable. Construction
+    never retains a reference to caller-owned mutable objects.
     """
-    __slots__ = ("_data", "_previous", "_delta")
+    __slots__ = ()
 
-    def __init__(self, data):
+    def __new__(cls, data):
         copied = copy.deepcopy(data)
         validate_snapshot(copied)
-        self._previous = MappingProxyType(preserved_aliases(copied["records"]))
-        self._delta = MappingProxyType(delta_aliases(copied["records"]))
-        self._data = _freeze(copied)
+        previous = MappingProxyType(preserved_aliases(copied["records"]))
+        delta = MappingProxyType(delta_aliases(copied["records"]))
+        return tuple.__new__(cls, (_freeze(copied), previous, delta))
+
+    @property
+    def _data(self):
+        return self[0]
+
+    @property
+    def _previous(self):
+        return self[1]
+
+    @property
+    def _delta(self):
+        return self[2]
 
 
 def lookup_snapshot(data, *, donor_id=None, original_url=None):

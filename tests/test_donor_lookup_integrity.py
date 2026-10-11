@@ -232,6 +232,12 @@ class DonorLookupIntegrityTests(unittest.TestCase):
         self.assertNotEqual(lookup_snapshot(handle, donor_id=first_id)["donor_registration"], "FORGED")
         with self.assertRaises(TypeError):
             handle._data["records"][0]["reference_record"]["donor_registration"] = "FORGED"
+        with self.assertRaises(AttributeError):
+            handle._data = self.snapshot
+        with self.assertRaises(AttributeError):
+            handle._previous = {"unverified-alias": first_id}
+        with self.assertRaises(TypeError):
+            handle[0] = self.snapshot
         # Both public lookup indexes must be usable without whole-snapshot hashing.
         with patch("donor_reference_lookup.validate_snapshot",
                    side_effect=AssertionError("revalidation in immutable batch")):

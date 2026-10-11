@@ -1,4 +1,4 @@
-"""81 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
+"""82 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
 import copy
 import json
 from pathlib import Path
@@ -18,15 +18,15 @@ class OwnerRuleSpecTests(unittest.TestCase):
                         self.export if export is None else export)
     def test_exact_81_current_rules_and_all_78_admitted(self):
         self.assertEqual([],self.check())
-        self.assertEqual(81,len(active_expected_codes(self.gov,self.spec)))
-        self.assertEqual(81,len(self.spec["active_rules"]))
+        self.assertEqual(82,len(active_expected_codes(self.gov,self.spec)))
+        self.assertEqual(82,len(self.spec["active_rules"]))
         self.assertEqual(78,len(self.spec["historical_candidates"]))
         self.assertEqual(0,self.spec["historical_reconciliation"]["excluded_for_conflict"])
         self.assertEqual(22,self.spec["historical_reconciliation"]["mapped_existing"])
         self.assertEqual(56,self.spec["historical_reconciliation"]["admitted_new"])
         self.assertTrue(all(not r["runtime_verified"] for r in self.spec["active_rules"]))
     def test_each_missing_owner_rule_denied(self):
-        for index in range(81):
+        for index in range(82):
             bad=copy.deepcopy(self.spec);bad["active_rules"].pop(index)
             with self.subTest(index=index):
                 self.assertTrue(self.check(bad))
@@ -49,14 +49,25 @@ class OwnerRuleSpecTests(unittest.TestCase):
         self.assertTrue(self.check(coverage=bad))
     def test_new_rule_is_exactly_source_bound(self):
         bad = copy.deepcopy(self.spec)
-        bad["active_rules"][-1]["text_hu"] = "This is an unauthorized change."
+        bad["active_rules"][-2]["text_hu"] = "This is an unauthorized change."
         self.assertTrue(self.check(bad))
         bad = copy.deepcopy(self.spec)
-        bad["active_rules"][-1]["canonical_policy_path"] = "wrong.json"
+        bad["active_rules"][-2]["canonical_policy_path"] = "wrong.json"
         self.assertTrue(self.check(bad))
         broken_export = copy.deepcopy(self.export)
         broken_export["current_rules"].pop()
         self.assertTrue(self.check(export=broken_export))
+
+    def test_sequential_rule_source_bound_and_negative(self):
+        bad = copy.deepcopy(self.spec)
+        bad["active_rules"][-1]["text_hu"] = "Unauthorized replacement sentence."
+        self.assertTrue(self.check(bad))
+        bad = copy.deepcopy(self.spec)
+        bad["active_rules"][-1]["canonical_policy_path"] = "wrong.json"
+        self.assertTrue(self.check(bad))
+        bad = copy.deepcopy(self.export)
+        bad["current_rules"][-1]["source_git_blob_sha1"] = "0"*40
+        self.assertTrue(self.check(export=bad))
 
     def test_no_fake_runtime_pass(self):
         bad=copy.deepcopy(self.spec);bad["active_rules"][79]["runtime_verified"]=True

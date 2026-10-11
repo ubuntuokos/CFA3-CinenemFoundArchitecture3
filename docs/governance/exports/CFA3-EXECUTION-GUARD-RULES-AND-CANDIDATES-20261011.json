@@ -6,7 +6,7 @@
   "historical_repo": "ubuntuokos/Final-Architecture-v3.0",
   "historical_commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
   "counts": {
-    "current_canonical": 81,
+    "current_canonical": 82,
     "historical_candidates": 78,
     "legacy_dev_ai": 22,
     "legacy_quality": 29,
@@ -910,6 +910,17 @@
       "source_path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
       "source_json_pointer": "/rule",
       "source_git_blob_sha1": "b61383e9c4d6ca401e41958ba616c1d26952f1d1"
+    },
+    {
+      "type": "OWNER_CURRENT_RULE",
+      "id": "CFA3-SEQUENTIAL-COMMAND-001",
+      "code": "ONE_COMMAND_ONE_RESPONSE",
+      "authority": "OWNER_2026_10_11",
+      "active_rule_receipt_scope": true,
+      "excluded_by_request": false,
+      "source_path": "canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",
+      "source_json_pointer": "/rule",
+      "source_git_blob_sha1": "c97398821e1b9d5c7d69723204e695dbf53f6026"
     }
   ],
   "historical_rule_candidates": [
@@ -2273,7 +2284,7 @@
     "mapped_existing": 22,
     "added_active": 56,
     "excluded_for_conflict": 0,
-    "total": 81,
-    "post_historical_rule_admissions": 1
+    "total": 82,
+    "post_historical_rule_admissions": 2
   }
 }

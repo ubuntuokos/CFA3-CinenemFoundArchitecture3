@@ -3,7 +3,7 @@
   "id": "CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001",
   "source_type": "EXPLICIT_OWNER_SUPPLIED_TEXT_2026_10_11",
   "authority": "CURRENT_24_PLUS_OWNER_RECONFIRMED_56; 22 LEGACY_DEV_AI_MAPPED",
-  "active_rule_count": 81,
+  "active_rule_count": 82,
   "active_rules": [
     {
       "id": "DEV-01",
@@ -933,6 +933,15 @@
       "runtime_verified": false,
       "provenance": "OWNER_SUPPLIED_2026_10_11",
       "canonical_policy_path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json"
+    },
+    {
+      "id": "CFA3-SEQUENTIAL-COMMAND-001",
+      "code": "ONE_COMMAND_ONE_RESPONSE",
+      "text_hu": "Ha egy probléma megoldásához több, a felhasználó által végrehajtandó parancs vagy teszt szükséges, az AI egyszerre kizárólag egyetlen futtatható parancsot vagy tesztet adhat meg, és egyértelműen megjelöli, milyen eredményt vár. A felhasználó végrehajtja és visszaküldi a teljes eredményt. Az AI köteles kiértékelni a tényleges eredményt, és csak ezt követően adhatja ki a következő szükséges parancsot vagy tesztet. Sikertelen eredménynél az AI először azonosítja a hibát, és kizárólag a közvetlenül szükséges következő diagnosztikai vagy javítási lépést adhatja meg. Tilos több parancs előzetes kiadása, a felhasználó válasza nélküli továbblépés, az eredmény feltételezése és a nem bizonyított PASS elfogadása.",
+      "proof_mode": "USER_COMMAND_RESULT_STEP_SEQUENCE",
+      "runtime_verified": false,
+      "provenance": "OWNER_SUPPLIED_2026_10_11",
+      "canonical_policy_path": "canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json"
     }
   ],
   "owner_amendments": [
@@ -1844,9 +1853,9 @@
     "mapped_existing": 22,
     "admitted_new": 56,
     "excluded_for_conflict": 0,
-    "active_count": 81,
+    "active_count": 82,
     "all_source_rules_accounted_for": true,
     "authority": "OWNER_2026_10_11",
-    "post_historical_rule_admissions": 1
+    "post_historical_rule_admissions": 2
   }
 }

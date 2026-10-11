@@ -249,11 +249,27 @@ class BootstrapPolicyTests(unittest.TestCase):
         broken["rule"]["runtime_verified"] = True
         self.assertTrue(validate_rule_admission(broken))
 
+    def test_one_command_one_response_policy_positive_and_negative(self):
+        from check_bootstrap import validate_sequential_command_policy
+        policy = load("canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json")
+        self.assertEqual([], validate_sequential_command_policy(policy))
+        for key in policy["requirements"]:
+            bad = copy.deepcopy(policy)
+            bad["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_sequential_command_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["sequence"].pop(1)
+        self.assertTrue(validate_sequential_command_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_sequential_command_policy(bad))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(7, surface["source_policy_count"])
+        self.assertEqual(8, surface["source_policy_count"])
         self.assertFalse(surface["semantic_rule_admission"])
         self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
                          sum(s["leaf_count"] for s in surface["sources"]))

@@ -34,11 +34,11 @@ class GuardTests(unittest.TestCase):
                     for r in gov[section]}
         self.assertEqual(24, len(expected))
         self.assertTrue(expected.issubset(set(catalog["rules"])))
-        self.assertEqual(81,len(catalog["rules"]))
+        self.assertEqual(82,len(catalog["rules"]))
 
     def test_78_owner_rules_active_with_24_original_unmodified(self):
         catalog=load(ROOT,CATALOG)
-        self.assertEqual(81,len(catalog["rules"]))
+        self.assertEqual(82,len(catalog["rules"]))
         restored=catalog["owner_historical_reconciliation"]
         self.assertEqual(78,restored["source_count"])
         self.assertEqual(22,restored["mapped_existing"])
@@ -266,7 +266,7 @@ class GuardTests(unittest.TestCase):
 
     def test_unverified_independent_services_block_before_rule_evaluation(self):
         catalog = load(ROOT, CATALOG)
-        self.assertEqual(81, len(catalog["rules"]))
+        self.assertEqual(82, len(catalog["rules"]))
         missing = trusted_runtime_issues(catalog)
         for part in ("rule attester", "rule evaluator", "evidence resolver",
                      "content store", "mutation audit", "owner signing service"):
@@ -283,7 +283,7 @@ class GuardTests(unittest.TestCase):
     def test_current_rule_code_drift_and_pending_proof_still_block(self):
         gov = load(ROOT, GOV)
         cat = load(ROOT, CATALOG)
-        self.assertEqual(81, len(cat["rules"]))
+        self.assertEqual(82, len(cat["rules"]))
         self.assertEqual([], validate_current_rule_map(gov, cat))
         self.assertTrue(any("active per-rule" in x for x in policy_issues(ROOT)))
         self.assertTrue(any("independent gate" in x for x in policy_issues(ROOT)))

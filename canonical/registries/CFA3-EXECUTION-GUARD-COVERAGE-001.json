@@ -9,6 +9,7 @@
     "canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json",
     "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
     "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
+    "canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",
     "canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json"
   ],
   "rules": {
@@ -335,6 +336,10 @@
     "RULE-ADMISSION-001": {
       "code": "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
       "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "CFA3-SEQUENTIAL-COMMAND-001": {
+      "code": "ONE_COMMAND_ONE_RESPONSE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
     }
   },
   "historical": {
@@ -374,7 +379,7 @@
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
-  "canonical_policy_leaf_fields_enumerated": 521,
+  "canonical_policy_leaf_fields_enumerated": 546,
   "canonical_policy_field_enumeration_complete": true,
   "canonical_policy_semantic_rule_enforcement_complete": false,
   "github_main_protection_ruleset": {
@@ -483,11 +488,11 @@
   "owner_rule_specification": {
     "path": "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "validator": "scripts/check_execution_guard_rule_spec.py",
-    "active_texts": 81,
+    "active_texts": 82,
     "owner_amendments": 5,
     "description_finalized": true,
     "independent_runtime_proofs_verified": false,
-    "status": "OWNER_81_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS",
+    "status": "OWNER_82_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS",
     "current_historical_source_texts": 78
   },
   "runtime_preflight_separation": {
@@ -506,10 +511,10 @@
     "mapped_existing": 22,
     "admitted_new": 56,
     "excluded_for_conflict": 0,
-    "active_count": 81,
+    "active_count": 82,
     "all_source_rules_accounted_for": true,
     "history_completeness_required_for_active_gate": false,
     "original_24_preserved": true,
-    "post_historical_rule_admissions": 1
+    "post_historical_rule_admissions": 2
   }
 }

@@ -1,0 +1,35 @@
+{
+  "schema": "cfa3.sequential-command-policy.v1",
+  "id": "CFA3-SEQUENTIAL-COMMAND-POLICY-001",
+  "status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+  "owner_decision_date": "2026-10-11",
+  "rule": {
+    "id": "CFA3-SEQUENTIAL-COMMAND-001",
+    "code": "ONE_COMMAND_ONE_RESPONSE",
+    "text_hu": "Ha egy probléma megoldásához több, a felhasználó által végrehajtandó parancs vagy teszt szükséges, az AI egyszerre kizárólag egyetlen futtatható parancsot vagy tesztet adhat meg, és egyértelműen megjelöli, milyen eredményt vár. A felhasználó végrehajtja és visszaküldi a teljes eredményt. Az AI köteles kiértékelni a tényleges eredményt, és csak ezt követően adhatja ki a következő szükséges parancsot vagy tesztet. Sikertelen eredménynél az AI először azonosítja a hibát, és kizárólag a közvetlenül szükséges következő diagnosztikai vagy javítási lépést adhatja meg. Tilos több parancs előzetes kiadása, a felhasználó válasza nélküli továbblépés, az eredmény feltételezése és a nem bizonyított PASS elfogadása.",
+    "scope": "USER_EXECUTED_MULTI_STEP_COMMANDS_AND_TESTS",
+    "runtime_verified": false
+  },
+  "requirements": {
+    "one_executable_command_or_test_per_ai_response": true,
+    "explicitly_state_expected_result": true,
+    "user_executes_and_returns_complete_result": true,
+    "ai_analyzes_actual_result_before_next_command": true,
+    "next_command_only_after_response_analysis": true,
+    "failed_result_requires_minimal_diagnostic_or_repair_next_step": true,
+    "prohibit_preissued_command_batches": true,
+    "prohibit_skipping_user_response": true,
+    "prohibit_assumed_execution_or_fabricated_pass": true,
+    "require_stepwise_error_isolation": true
+  },
+  "sequence": [
+    "AI_ISSUES_ONE_COMMAND_AND_EXPECTED_RESULT",
+    "USER_EXECUTES_AND_RETURNS_COMPLETE_RESULT",
+    "AI_ANALYZES_ACTUAL_RESULT",
+    "AI_ISSUES_ONLY_NEXT_NECESSARY_COMMAND_OR_REPORTS_BLOCKER"
+  ],
+  "admission_boundary": {
+    "structural_bootstrap_pass_is_runtime_proof": false,
+    "independent_execution_gate_pass": false
+  }
+}

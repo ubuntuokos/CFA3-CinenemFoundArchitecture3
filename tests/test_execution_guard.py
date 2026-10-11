@@ -1,5 +1,6 @@
 """Negative-path guard tests; NOT full CFA3 admission or physical-host proof."""
 import hashlib
+import copy
 import tempfile
 from unittest.mock import patch
 import hmac
@@ -12,7 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from execution_guard import (Blocked, GOV, LEDGER, CATALOG, canonical_bytes,
                              check_task, guarded_execute, load, local_path,
-                             policy_issues, verify_signature, _reserve)
+                             policy_issues, verify_signature, _reserve,
+                             validate_current_rule_map)
 
 def sample():
     sources = [GOV, LEDGER, CATALOG, "AGENTS.md"] + load(ROOT, CATALOG)["policy_files"]
@@ -176,6 +178,36 @@ class GuardTests(unittest.TestCase):
         manifest = load(ROOT, "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertFalse(manifest["semantic_rule_admission"])
         self.assertEqual([], validate_snapshot(manifest, ROOT))
+
+    def test_rule_catalog_exact_code_and_status_must_match_authority(self):
+        gov = load(ROOT, GOV)
+        catalog = load(ROOT, CATALOG)
+        self.assertEqual([], validate_current_rule_map(gov, catalog))
+        for ident in catalog["rules"]:
+            bad = copy.deepcopy(catalog)
+            bad["rules"][ident]["code"] += "_TAMPERED"
+            with self.subTest(rule=ident, mutation="code"):
+                self.assertTrue(validate_current_rule_map(gov, bad))
+            bad = copy.deepcopy(catalog)
+            bad["rules"][ident]["status"] = "UNKNOWN_AUTOPASS"
+            with self.subTest(rule=ident, mutation="status"):
+                self.assertTrue(validate_current_rule_map(gov, bad))
+            bad = copy.deepcopy(catalog)
+            del bad["rules"][ident]
+            with self.subTest(rule=ident, mutation="omitted"):
+                self.assertTrue(validate_current_rule_map(gov, bad))
+        bad = copy.deepcopy(catalog)
+        bad["rules"]["DEV-99"] = {"code": "IMAGINARY", "status": "VERIFIED_GATE"}
+        self.assertTrue(validate_current_rule_map(gov, bad))
+
+    def test_modified_canonical_governance_rule_code_detected(self):
+        gov, catalog = load(ROOT, GOV), load(ROOT, CATALOG)
+        for section in ("development_rules", "ai_behavior_rules"):
+            for i in range(12):
+                broken = copy.deepcopy(gov)
+                broken[section][i]["code"] = "REPLACED_WITH_AN_ASSUMPTION"
+                with self.subTest(section=section, index=i):
+                    self.assertTrue(validate_current_rule_map(broken, catalog))
 
 if __name__ == "__main__":
     unittest.main()

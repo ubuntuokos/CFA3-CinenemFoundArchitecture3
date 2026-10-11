@@ -43,6 +43,45 @@ def load(root, name):
     except (OSError, ValueError, TypeError) as exc:
         raise Blocked("authoritative source unavailable: " + name) from exc
 
+def validate_current_rule_map(governance, catalog):
+    """Exact current canonical rule-code and evidence-state mapping.
+
+    A catalog that only contains the right IDs but swaps the meaning of one
+    code is invalid. Mapping is NOT a verified runtime policy implementation.
+    """
+    issues = []
+    if not isinstance(governance, dict) or not isinstance(catalog, dict):
+        return ["canonical governance or rule catalog is not an object"]
+    mapped = catalog.get("rules")
+    if not isinstance(mapped, dict):
+        return ["DEV/AI catalog rules missing"]
+    expected = {}
+    for section, prefix in (("development_rules", "DEV"), ("ai_behavior_rules", "AI")):
+        records = governance.get(section)
+        if not isinstance(records, list) or len(records) != 12:
+            issues.append("current canonical rule section must have 12 entries: " + section)
+            continue
+        for n, item in enumerate(records, 1):
+            if not isinstance(item, dict):
+                issues.append("malformed canonical rule")
+                continue
+            ident, code = item.get("id"), item.get("code")
+            if ident != "%s-%02d" % (prefix, n) or not isinstance(code, str) or not code:
+                issues.append("canonical rule ID/code/sequence invalid: " + section)
+                continue
+            if ident in expected:
+                issues.append("duplicate canonical rule ID")
+            expected[ident] = code
+    if len(expected) != 24 or set(mapped) != set(expected):
+        issues.append("DEV/AI inventory differs from 24 canonical rule identities")
+    for ident, code in expected.items():
+        row = mapped.get(ident)
+        if not isinstance(row, dict) or row.get("code") != code:
+            issues.append("DEV/AI canonical code mismatch: " + ident)
+        elif row.get("status") not in ("PENDING_RUNTIME_GATE_AND_PROOF", "VERIFIED_GATE"):
+            issues.append("unknown gate state: " + ident)
+    return issues
+
 def policy_issues(root=ROOT):
     """Unknown legacy rules and incomplete runtime gates MUST prevent all effects."""
     try:
@@ -52,12 +91,11 @@ def policy_issues(root=ROOT):
     issues = []
     if catalog.get("schema") != "cfa3.execution-guard-coverage.v1":
         issues.append("invalid coverage catalog")
-    expected = {r["id"] for section in ("development_rules", "ai_behavior_rules")
-                for r in gov.get(section, []) if isinstance(r, dict) and "id" in r}
-    rules = catalog.get("rules")
-    if len(expected) != 24 or not isinstance(rules, dict) or set(rules) != expected:
-        issues.append("DEV/AI inventory does not match canonical policy")
-    elif any(record.get("status") != "VERIFIED_GATE" for record in rules.values()):
+    issues.extend(validate_current_rule_map(gov, catalog))
+    rules = catalog.get("rules", {})
+    if not isinstance(rules, dict) or any(
+            not isinstance(record, dict) or record.get("status") != "VERIFIED_GATE"
+            for record in rules.values()):
         issues.append("DEV/AI per-rule execution gates not verified")
     policy_files = {str(p.relative_to(root)) for p in
                     (Path(root) / "canonical/policies").glob("*.json")}

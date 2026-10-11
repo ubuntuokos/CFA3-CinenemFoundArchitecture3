@@ -52,7 +52,14 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
         raise ValueError("Corrupted donor ID index")
     envelope = data["records"][position]
     record = envelope["reference_record"]
-    from transfer_donors import STATES
+    from transfer_donors import STATES, current_owner_confirmations
+    if (envelope.get("pre_transfer_status") == "OWNER_APPROVED_PENDING_PUBLICATION"
+            and envelope.get("historical_record", {}).get("intake_provenance", {}).get(
+                "canonical_approval_admitted") is False):
+        observed = (envelope["historical_record"]["source"]["locator"],
+                    envelope["historical_record_sha256"])
+        if current_owner_confirmations().get(donor_id) != observed:
+            raise ValueError("Pending historical donor lacks current owner confirmation")
     if (envelope["source_id"] != donor_id or record["donor_id"] != donor_id
             or envelope.get("runtime_admission") is not False
             or STATES.get(envelope.get("pre_transfer_status")) != envelope.get("reference_state")

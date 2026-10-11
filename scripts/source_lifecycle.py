@@ -284,6 +284,18 @@ def evaluate(url, index, observation=None):
     if observation is not None and not observation_verified(observation):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source)
     if source is None:
+        if migrated:
+            # Proposals rejected from active admission remain visible to the
+            # required prior-decision gate without becoming canonical routes.
+            try:
+                from donor_unmerged_proposals import lookup_proposal
+                pending = lookup_proposal(original_url=url)
+            except (ValueError, OSError, KeyError) as exc:
+                return result("BLOCKED_INDEX_CONFLICT", reason=str(exc))
+            if pending is not None:
+                return result("HISTORICAL_PROPOSAL_REVIEW_REQUIRED",
+                              historical_proposal=pending,
+                              action="KEEP_UNMERGED_PROPOSAL_UNADMITTED_AND_REKEY_UNAPPLIED")
         if observation and observation.get("event") == "RELOCATED":
             previous = by_id.get(observation.get("previous_source_id"))
             if previous is None:

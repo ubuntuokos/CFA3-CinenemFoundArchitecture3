@@ -105,6 +105,28 @@ class DonorTransferTests(unittest.TestCase):
         candidate["reference_record"]["donor_registration"] = "CANONICAL_REFERENCE_REGISTERED"
         self.assertRaises(ValueError, lookup_snapshot, bad, donor_id=candidate["source_id"])
 
+    def test_all_56_pending_historical_links_have_current_owner_authorization(self):
+        from transfer_donors import current_owner_confirmations
+        confirmed = current_owner_confirmations()
+        pending = {
+            r["source_id"]: r for r in self.snapshot["records"]
+            if r["pre_transfer_status"] == "OWNER_APPROVED_PENDING_PUBLICATION"
+            and r["historical_record"].get("intake_provenance", {}).get(
+                "canonical_approval_admitted") is False
+        }
+        self.assertEqual(len(pending), 56)
+        self.assertEqual(set(confirmed), set(pending))
+        for donor_id, row in pending.items():
+            self.assertEqual(confirmed[donor_id], (
+                row["historical_record"]["source"]["locator"],
+                row["historical_record_sha256"]))
+            self.assertEqual(lookup_snapshot(self.snapshot, donor_id=donor_id),
+                             row["reference_record"])
+        altered = copy.deepcopy(self.snapshot)
+        donor_id = next(iter(pending))
+        altered["records"][altered["lookup_by_id"][donor_id]]["historical_record_sha256"] = "0" * 64
+        self.assertRaises(ValueError, lookup_snapshot, altered, donor_id=donor_id)
+
     def test_snapshot_reproduces_from_preserved_inputs(self):
         self.assertEqual(build(), self.snapshot)
         self.assertEqual(digest(self.snapshot["records"]), self.snapshot["record_set_sha256"])

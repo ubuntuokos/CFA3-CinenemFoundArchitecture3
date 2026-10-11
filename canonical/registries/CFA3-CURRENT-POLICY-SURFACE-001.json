@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 7,
+  "source_policy_count": 8,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -1949,6 +1949,115 @@
         ],
         [
           "/schema",
+          "string"
+        ],
+        [
+          "/status",
+          "string"
+        ]
+      ]
+    },
+    {
+      "path": "canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",
+      "git_blob_sha1": "c97398821e1b9d5c7d69723204e695dbf53f6026",
+      "canonical_id": "CFA3-SEQUENTIAL-COMMAND-POLICY-001",
+      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "leaf_count": 25,
+      "leaves": [
+        [
+          "/admission_boundary/independent_execution_gate_pass",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/structural_bootstrap_pass_is_runtime_proof",
+          "boolean"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/ai_analyzes_actual_result_before_next_command",
+          "boolean"
+        ],
+        [
+          "/requirements/explicitly_state_expected_result",
+          "boolean"
+        ],
+        [
+          "/requirements/failed_result_requires_minimal_diagnostic_or_repair_next_step",
+          "boolean"
+        ],
+        [
+          "/requirements/next_command_only_after_response_analysis",
+          "boolean"
+        ],
+        [
+          "/requirements/one_executable_command_or_test_per_ai_response",
+          "boolean"
+        ],
+        [
+          "/requirements/prohibit_assumed_execution_or_fabricated_pass",
+          "boolean"
+        ],
+        [
+          "/requirements/prohibit_preissued_command_batches",
+          "boolean"
+        ],
+        [
+          "/requirements/prohibit_skipping_user_response",
+          "boolean"
+        ],
+        [
+          "/requirements/require_stepwise_error_isolation",
+          "boolean"
+        ],
+        [
+          "/requirements/user_executes_and_returns_complete_result",
+          "boolean"
+        ],
+        [
+          "/rule/code",
+          "string"
+        ],
+        [
+          "/rule/id",
+          "string"
+        ],
+        [
+          "/rule/runtime_verified",
+          "boolean"
+        ],
+        [
+          "/rule/scope",
+          "string"
+        ],
+        [
+          "/rule/text_hu",
+          "string"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/sequence/0",
+          "string"
+        ],
+        [
+          "/sequence/1",
+          "string"
+        ],
+        [
+          "/sequence/2",
+          "string"
+        ],
+        [
+          "/sequence/3",
           "string"
         ],
         [

@@ -24,7 +24,7 @@ jobs:
         run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
       - name: Verify owner-supplied normative text with all owner-admitted historical provisions
         run: python3 scripts/check_execution_guard_rule_spec.py
-      - name: Validate 81 owner-admitted rule identities without forcing conditional runtime incidents
+      - name: Validate 82 owner-admitted rule identities without forcing conditional runtime incidents
         run: python3 scripts/check_execution_rule_evidence.py --bootstrap-report
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v

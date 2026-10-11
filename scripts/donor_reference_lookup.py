@@ -221,7 +221,7 @@ def lookup_published(*, donor_id=None, original_url=None):
     doc = json.loads(PUBLISHED_FIRST.read_text(encoding="utf-8"))
     raw = PUBLISHED_FIRST_ARCHIVE.read_bytes()
     old_blob = hashlib.sha1(
-        b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw
     ).hexdigest()
     records = doc.get("records", [])
     index = doc.get("lookup_by_id", {})

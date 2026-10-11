@@ -98,6 +98,21 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["boundaries"]["status_of_actual_migration"]="COMPLETED"
         self.assertTrue(validate_donor_classification_plan(bad,decision))
 
+    def test_mandatory_execution_compliance_cannot_be_weakened(self):
+        self.assertEqual([], validate_objects(self.gov, self.cpu, self.platform, self.ledger))
+        for key in ("assumption_based_execution", "task_definition",
+                    "approved_guidelines_rules_and_architecture",
+                    "approved_cfa3_design_description", "approved_cfa3_branding_and_identity",
+                    "unverified_or_missing_mandatory_requirement"):
+            invalid = copy.deepcopy(self.gov)
+            invalid["execution_integrity_policy"]["requirements"][key] = "OPTIONAL"
+            self.assertTrue(validate_objects(invalid, self.cpu, self.platform, self.ledger), key)
+        invalid = copy.deepcopy(self.gov)
+        invalid["development_rules"] = [rule for rule in invalid["development_rules"] if rule["id"] != "DEV-12"]
+        self.assertTrue(validate_objects(invalid, self.cpu, self.platform, self.ledger))
+        invalid = copy.deepcopy(self.gov)
+        invalid["ai_behavior_rules"] = [rule for rule in invalid["ai_behavior_rules"] if rule["id"] != "AI-12"]
+        self.assertTrue(validate_objects(invalid, self.cpu, self.platform, self.ledger))
     def test_disabling_blocker_stop_is_rejected(self):
         gov=copy.deepcopy(self.gov)
         gov["task_policy"]["blocker_means_stop"]=False

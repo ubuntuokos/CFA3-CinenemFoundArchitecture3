@@ -58,6 +58,10 @@
     {
       "id": "DEV-11",
       "code": "NARROW_SELF_CORRECTION_EXCEPTION"
+    },
+    {
+      "id": "DEV-12",
+      "code": "NO_ASSUMPTIONS_EXACT_SCOPE_AND_CANONICAL_DESIGN"
     }
   ],
   "ai_behavior_rules": [
@@ -104,6 +108,10 @@
     {
       "id": "AI-11",
       "code": "NARROW_SELF_CORRECTION_EXCEPTION"
+    },
+    {
+      "id": "AI-12",
+      "code": "NO_ASSUMPTIONS_AND_MANDATORY_CFA3_COMPLIANCE"
     }
   ],
   "task_policy": {
@@ -120,6 +128,36 @@
     "overlap_means_stop": true,
     "do_not_auto_start_workflows": true,
     "report_each_mutation": true
+  },
+  "execution_integrity_policy": {
+    "id": "CFA3-TASK-EXECUTION-COMPLIANCE-001",
+    "status": "FINAL_MANDATORY",
+    "effective_date": "2026-10-11",
+    "interpretation": "PROHIBITION_NOT_PREFERENCE",
+    "applicability": [
+      "CFA3_AND_FA3",
+      "ALL_DEVELOPMENT_AND_PLANNING",
+      "GUI_AND_VISUAL_DESIGN",
+      "AI_AGENT_EXECUTION",
+      "INTEGRATIONS_AND_IMPLEMENTATIONS",
+      "VERIFICATION_AND_VALIDATION"
+    ],
+    "requirements": {
+      "assumption_based_execution": "FORBIDDEN",
+      "task_definition": "EXACT_DESCRIPTION_GOAL_SCOPE_AND_CONSTRAINTS_MANDATORY",
+      "unrequested_task_expansion": "FORBIDDEN",
+      "approved_guidelines_rules_and_architecture": "MANDATORY_NO_DEVIATION",
+      "approved_cfa3_design_description": "MANDATORY_NO_DEVIATION",
+      "approved_cfa3_branding_and_identity": "MANDATORY_NO_DEVIATION",
+      "self_invented_or_substitute_design": "FORBIDDEN",
+      "current_authoritative_or_deterministic_source_verification": "REQUIRED_BEFORE_EACH_RELEVANT_OPERATION",
+      "unverified_or_missing_mandatory_requirement": "STOP_AND_REPORT_BLOCKER",
+      "autonomous_bypass_or_workaround": "FORBIDDEN"
+    },
+    "verified_branding_reference": "docs/branding/CFA3-BRANDING.md",
+    "verified_logo_record": "docs/branding/CFA3-OFFICIAL-LOGO-001.json",
+    "design_source_requirement": "Use the actual, accepted CFA3 Design specification verified for the task; never infer, invent or replace unspecified design details.",
+    "binding_rule_hu": "TILOS bármely CFA3 fejlesztési, tervezési, grafikai, GUI-, integrációs, implementációs vagy ellenőrzési feladatot feltételezésre alapozni. A feladat pontos leírása, célja, határai és korlátozásai kötelezők; önálló eltérés és feladatbővítés TILOS. A CFA3 valamennyi alkalmazandó, elfogadott irányelvét, szabályát, architekturális döntését, Design-leírását és arculati előírását kötelező ellenőrizni és változatlan követelményként alkalmazni. Ezeket feltételezett, önkényesen kitalált vagy helyettesítő megoldásokkal kiváltani TILOS. Minden érintett művelet előtt az aktuális, hiteles vagy determinisztikus forrásból ellenőrzött állapot az irányadó. Hiányzó vagy nem igazolható kötelező előírás esetén STOP/BLOCKER: az érintett végrehajtást meg kell állítani, az akadályt jelenteni kell. A 'nem lehet eltérni' minden esetben tiltást jelent, nem ajánlást."
   },
   "evidence_policy": {
     "physical_current_host_evidence_only_from_physical_run": true,

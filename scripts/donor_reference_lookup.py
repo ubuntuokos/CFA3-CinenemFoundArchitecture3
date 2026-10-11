@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from pathlib import Path
 import sys
 from types import MappingProxyType
+from weakref import WeakKeyDictionary
 
 from donor_delta_routes import delta_aliases
 from donor_transfer_integrity import preserved_aliases, validate_snapshot, verified_rejection_audit
@@ -36,43 +37,64 @@ def _detach(value):
     return value
 
 
-class ValidatedSnapshot(tuple):
-    """Deeply immutable, explicitly validated snapshot for indexed batch reads.
+# The registry owns every trusted handle's state. A fake object created via
+# object.__new__ or a bypassed constructor is NOT registered and fails closed.
+# Weak keys prevent a long-lived process from retaining discarded 8 MB handles.
+_VALIDATED_HANDLES = WeakKeyDictionary()
 
-    Both the handle itself and all reachable content are immutable. Construction
-    never retains a reference to caller-owned mutable objects.
+
+class ValidatedSnapshot:
+    """Opaque, write-once validated handle for safe indexed batch reads.
+
+    A tuple subclass is unsafe here: tuple.__new__ bypasses validation. Instances
+    have no mutable fields; only the authentic constructor can add their private,
+    deeply frozen lookup state to the identity-keyed weak registry.
     """
-    __slots__ = ()
+    __slots__ = ("__weakref__",)
 
     def __new__(cls, data):
+        if cls is not ValidatedSnapshot:
+            raise TypeError("ValidatedSnapshot does not allow subclasses")
         copied = copy.deepcopy(data)
         validate_snapshot(copied)
         previous = MappingProxyType(preserved_aliases(copied["records"]))
         delta = MappingProxyType(delta_aliases(copied["records"]))
-        return tuple.__new__(cls, (_freeze(copied), previous, delta))
+        handle = object.__new__(cls)
+        _VALIDATED_HANDLES[handle] = (_freeze(copied), previous, delta)
+        return handle
+
+    def _trusted(self):
+        state = _VALIDATED_HANDLES.get(self)
+        if state is None:
+            raise ValueError("Unvalidated donor snapshot handle")
+        return state
 
     @property
     def _data(self):
-        return self[0]
+        return self._trusted()[0]
 
     @property
     def _previous(self):
-        return self[1]
+        return self._trusted()[1]
 
     @property
     def _delta(self):
-        return self[2]
+        return self._trusted()[2]
 
 
 def lookup_snapshot(data, *, donor_id=None, original_url=None):
     if (donor_id is None) == (original_url is None):
         raise ValueError("Exactly one of donor_id or original_url must be supplied")
-    prepared = data if isinstance(data, ValidatedSnapshot) else None
+    if isinstance(data, ValidatedSnapshot) and type(data) is not ValidatedSnapshot:
+        raise ValueError("Unvalidated donor snapshot handle subclass")
+    prepared = data if type(data) is ValidatedSnapshot else None
     if prepared is None:
         validate_snapshot(data)
     else:
-        verified_rejection_audit()  # fail closed if the pinned archive changed
+        # Accessing the trusted registry MUST precede the fast path. Constructor
+        # bypass and malformed cloned handles have no entry and are rejected.
         data = prepared._data
+        verified_rejection_audit()  # fail closed if the pinned archive changed
     def alias_id(alias):
         if prepared is not None:
             return prepared._previous.get(alias) or prepared._delta.get(alias)

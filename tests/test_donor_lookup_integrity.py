@@ -345,5 +345,25 @@ class DonorLookupIntegrityTests(unittest.TestCase):
             for _ in range(12):
                 self.assertEqual(evaluate(url, self.index)["disposition"], "CHANGE_CHECK_REQUIRED")
 
+    def test_constructor_bypass_cannot_become_validated_snapshot(self):
+        sid = self.snapshot["records"][0]["source_id"]
+        forged = copy.deepcopy(self.snapshot)
+        forged["records"][0]["reference_record"]["historical_status"] = "FORGED"
+        # The original tuple.__new__ exploit must fail at construction.
+        with self.assertRaises(TypeError):
+            tuple.__new__(ValidatedSnapshot, (forged, {}, {}))
+        # An object allocated without the validating constructor has no
+        # authenticated internal state, even if callers control its identity.
+        untrusted = object.__new__(ValidatedSnapshot)
+        with self.assertRaisesRegex(ValueError, "Unvalidated donor snapshot handle"):
+            lookup_snapshot(untrusted, donor_id=sid)
+        with self.assertRaisesRegex(ValueError, "Unvalidated donor snapshot handle"):
+            _ = untrusted._data
+        trusted = ValidatedSnapshot(self.snapshot)
+        with self.assertRaises(AttributeError):
+            object.__setattr__(trusted, "_data", forged)
+        self.assertEqual(lookup_snapshot(trusted, donor_id=sid)["donor_id"], sid)
+        self.assertIsNone(lookup_snapshot(trusted, donor_id="unknown-source-id"))
+
 if __name__ == "__main__":
     unittest.main()

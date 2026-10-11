@@ -1,11 +1,14 @@
 """Rule-by-rule evidence receipts; tests use synthetic keys, NEVER real authority."""
 import copy
+import io
 import hashlib
 import hmac
 from pathlib import Path
 import sys
 import time
 import unittest
+from contextlib import redirect_stdout
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -208,6 +211,22 @@ class RuleReceiptTests(unittest.TestCase):
         self.assertEqual({"PENDING_RUNTIME_GATE_AND_PROOF"}, {row[2] for row in matrix})
         self.assertFalse(catalog["coverage_complete"])
         self.assertFalse(catalog["independent_evidence_verified"])
+
+    def test_bootstrap_never_requires_untriggered_runtime_incident(self):
+        """Without an observed blocker, a current rule stays pending, not failed."""
+        from check_execution_rule_evidence import bootstrap_main
+        output = io.StringIO()
+        with patch("sys.argv", ["check_execution_rule_evidence.py", "--bootstrap-report"]), \
+                patch("check_execution_rule_evidence.verify_rule_receipts",
+                      side_effect=AssertionError("runtime receipt called from bootstrap")), \
+                patch("check_execution_rule_evidence.verify_evidence_bytes",
+                      side_effect=AssertionError("runtime evidence called from bootstrap")), \
+                redirect_stdout(output):
+            self.assertEqual(0, bootstrap_main())
+        rendered = output.getvalue()
+        self.assertEqual(24, rendered.count("CFA3_RULE:"))
+        self.assertIn("conditional runtime events are NOT required by bootstrap", rendered)
+        self.assertIn("NOT execution authorization", rendered)
 
     def test_bootstrap_each_rule_code_presence_and_status_are_checked(self):
         from check_execution_rule_evidence import bootstrap_rule_report

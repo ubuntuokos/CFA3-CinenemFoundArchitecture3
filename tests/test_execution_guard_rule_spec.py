@@ -26,7 +26,8 @@ class OwnerRuleSpecTests(unittest.TestCase):
         for index in range(24):
             other=copy.deepcopy(self.spec)
             other["active_rules"][index]["text_hu"]=""
-            with self.subTest(index=index),self.assertTrue(self.check(other))
+            with self.subTest(index=index):
+                self.assertTrue(self.check(other))
     def test_no_forged_current_rule_authority(self):
         other=copy.deepcopy(self.spec);other["active_rules"][0]["code"]="INVENTED_CODE"
         self.assertTrue(self.check(other))
@@ -39,7 +40,8 @@ class OwnerRuleSpecTests(unittest.TestCase):
             other=copy.deepcopy(self.spec)
             chosen=next(x for x in other["excluded_historical_candidates"] if x["type"]==typ)
             chosen["active_execution_check"]=True
-            with self.subTest(typ=typ),self.assertTrue(self.check(other))
+            with self.subTest(typ=typ):
+                self.assertTrue(self.check(other))
     def test_missing_78_reference_or_wrong_provenance_blocks(self):
         other=copy.deepcopy(self.spec)
         other["excluded_historical_candidates"].pop()

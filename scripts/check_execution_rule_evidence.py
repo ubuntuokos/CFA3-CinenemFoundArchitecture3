@@ -157,7 +157,11 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
     return True
 
 def bootstrap_rule_report(governance, catalog):
-    """Report 24 admitted DEV/AI identities in reference CI, never runtime PASS."""
+    """Validate 24 canonical IDs/codes/status integrity, not unpredictable incidents.
+
+    Bootstrap must neither cause an incident nor demand that a spontaneous
+    violation has occurred. Runtime enforcers remain separately fail-closed.
+    """
     from execution_guard import validate_current_rule_map
     issues = validate_current_rule_map(governance, catalog)
     try:
@@ -190,7 +194,7 @@ def bootstrap_rule_report(governance, catalog):
 
 
 def bootstrap_main():
-    """Structural status reporting is not per-rule runtime gate execution."""
+    """This always remains a source/contract check, never a runtime event replay."""
     import sys
     from pathlib import Path
     from execution_guard import load, GOV, CATALOG
@@ -211,7 +215,8 @@ def bootstrap_main():
         return 1
     pending = sum(state != "VERIFIED_GATE" for _, _, state in matrix)
     print("CFA3_RULE_MATRIX_STRUCTURAL_PASS: 24 current DEV/AI rule identities;"
-          " pending runtime gates:", pending, "; NOT execution authorization")
+          " conditional runtime events are NOT required by bootstrap;"
+          " pending rule statuses:", pending, "(informational); NOT execution authorization")
     return 0
 
 

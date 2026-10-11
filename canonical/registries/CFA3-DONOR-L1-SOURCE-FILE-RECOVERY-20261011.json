@@ -1,0 +1,69 @@
+{
+  "schema": "cfa3.donor-l1-source-file-recovery-evidence.v1",
+  "id": "CFA3-DONOR-L1-SOURCE-FILE-RECOVERY-20261011",
+  "recorded_on": "2026-10-11",
+  "state": "RECOVERED_FILE_SETS_RECONCILED_NOT_GLOBAL_L1_PASS",
+  "evidence_scope": "TWO_RECOVERED_OWNER_LIBRARY_FILES_VS_FROZEN_HISTORICAL_SOURCE_UNION",
+  "source_files": [
+    {
+      "set": "A",
+      "original_filename": "Beillesztett markdown.md",
+      "source_file_sha256": "49f6487dbe133e59bc0b6f70b0c516bc651bb4c349e88ee459208824edf71d99",
+      "original_bytes": 15991,
+      "all_url_occurrences_in_uploaded_rendering": 268,
+      "original_section_occurrences": 134,
+      "historical_archive_count_after_excluded_nonarchived_occurrences": 266,
+      "unique_urls_in_original_section": 134,
+      "matched_unique_historical_urls": 133,
+      "unmatched_archive_source_urls": 0,
+      "source_urls_missing_in_recovered_file": 0,
+      "excluded_from_historical_union": {
+        "count_distinct": 1,
+        "occurrences_in_full_rendering": 2,
+        "reason": "NONARCHIVED_LOCAL_WEBSOCKET_ADDRESS",
+        "address_value_retained_outside_repository": true
+      }
+    },
+    {
+      "set": "B",
+      "original_filename": "Beillesztett markdown (2).md",
+      "source_file_sha256": "aae6324596d6287a3dbdda46db7cd5b12c65b6e39871d9b53eee769d4a215dce",
+      "original_bytes": 27836,
+      "all_url_occurrences_in_uploaded_rendering": 625,
+      "original_section_occurrences": 313,
+      "historical_archive_count": 625,
+      "unique_urls_in_original_section": 312,
+      "matched_unique_historical_urls": 312,
+      "unmatched_archive_source_urls": 0,
+      "source_urls_missing_in_recovered_file": 0
+    }
+  ],
+  "historical_union": {
+    "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+    "archived_file": "archive/donor-source-migration/2026-10-09/CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json",
+    "historical_git_blob_sha": "d22dce8bfe3d9697a1121033ff7b387d051a638a",
+    "source_set_A_distinct": 133,
+    "source_set_B_distinct": 312,
+    "distinct_coverage": 445,
+    "source_set_overlap": 0,
+    "missing_original_url_locators_in_frozen_coverage": 0,
+    "historical_owner_decisions_changed": 0
+  },
+  "method": "Read recovered file bytes and compute SHA-256. Split each file at its trailing deduplicated URL-list heading; extract URLs from the primary source section and the trailing list, unescape Markdown URL punctuation, and compare exact original locators with the 445-entry immutable historical source union by recorded A/B memberships. Exclude one nonarchived local WebSocket URL without publishing its address. This recovers file-based evidence, not unseen historical conversations.",
+  "global_l1_evidence_boundary": {
+    "original_frozen_L1_input_link_record_count_B": null,
+    "all_historical_conversations_and_owner_approved_submissions_exhaustively_checked": false,
+    "legacy_open_PR545_17_proposals_and_three_rekeys_fully_adjudicated": false,
+    "canonical_L1_classification_final": false,
+    "L1_PUBLISHED_AND_VERIFIED_PASS": false,
+    "L2_to_L5_admitted": false,
+    "missing_all_historical_sources_proven_zero": false
+  },
+  "authority_boundaries": {
+    "source_files_stored_in_repository": false,
+    "new_donor_approval_granted": false,
+    "historical_statuses_rewritten": false,
+    "runtime_or_dependency_admission": false,
+    "legacy_repo_written": false
+  }
+}

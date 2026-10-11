@@ -288,6 +288,47 @@ def validate_rule_admission(policy):
             "independent gate PASS may not be fabricated")
     return errors
 
+def validate_sequential_command_policy(policy):
+    """Validate one-command/one-response owner requirements; not runtime proof."""
+    errors = []
+    def require(condition, message):
+        if not condition:
+            errors.append("sequential command: " + message)
+    require(policy.get("schema") == "cfa3.sequential-command-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-SEQUENTIAL-COMMAND-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    rule = policy.get("rule", {})
+    require(rule.get("id") == "CFA3-SEQUENTIAL-COMMAND-001" and
+            rule.get("code") == "ONE_COMMAND_ONE_RESPONSE", "rule identity/code mismatch")
+    require(isinstance(rule.get("text_hu"), str) and len(rule["text_hu"]) > 100,
+            "mandatory owner text missing")
+    require(rule.get("scope") == "USER_EXECUTED_MULTI_STEP_COMMANDS_AND_TESTS",
+            "rule scope drift")
+    require(rule.get("runtime_verified") is False, "unverified runtime PASS")
+    for key in ("one_executable_command_or_test_per_ai_response",
+                "explicitly_state_expected_result",
+                "user_executes_and_returns_complete_result",
+                "ai_analyzes_actual_result_before_next_command",
+                "next_command_only_after_response_analysis",
+                "failed_result_requires_minimal_diagnostic_or_repair_next_step",
+                "prohibit_preissued_command_batches",
+                "prohibit_skipping_user_response",
+                "prohibit_assumed_execution_or_fabricated_pass",
+                "require_stepwise_error_isolation"):
+        require(policy.get("requirements", {}).get(key) is True,
+                "mandatory step requirement missing: " + key)
+    require(policy.get("sequence") == [
+        "AI_ISSUES_ONE_COMMAND_AND_EXPECTED_RESULT",
+        "USER_EXECUTES_AND_RETURNS_COMPLETE_RESULT",
+        "AI_ANALYZES_ACTUAL_RESULT",
+        "AI_ISSUES_ONLY_NEXT_NECESSARY_COMMAND_OR_REPORTS_BLOCKER"
+    ], "sequential handshake drift")
+    for field in ("structural_bootstrap_pass_is_runtime_proof",
+                  "independent_execution_gate_pass"):
+        require(policy.get("admission_boundary", {}).get(field) is False,
+                "unverified runtime admission: " + field)
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -302,6 +343,8 @@ def check(root=ROOT):
     errors.extend(validate_donor_classification_plan(donor_policy,donor_decision))
     rule_admission=load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",root)
     errors.extend(validate_rule_admission(rule_admission))
+    sequential_command=load("canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",root)
+    errors.extend(validate_sequential_command_policy(sequential_command))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

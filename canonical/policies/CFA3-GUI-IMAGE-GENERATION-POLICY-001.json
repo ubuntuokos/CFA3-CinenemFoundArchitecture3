@@ -1,0 +1,98 @@
+{
+  "schema": "cfa3.gui-image-generation-policy.v1",
+  "id": "CFA3-GUI-IMAGE-GENERATION-POLICY-001",
+  "title_hu": "GUI-terveket bemutató képek készítésének kötelező szabálya",
+  "status": "OWNER_DIRECTIVE_APPROVED_PENDING_REPOSITORY_ADMISSION",
+  "effective_owner_decision_date": "2026-10-11",
+  "authority": "EXPLICIT_CURRENT_OWNER_DIRECTIVE",
+  "target_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "intended_canonical_path": "canonical/policies/CFA3-GUI-IMAGE-GENERATION-POLICY-001.json",
+  "applies_to": [
+    "CFA3 összes alkalmazása",
+    "CFA3 platform- és közös szolgáltatások GUI-ja",
+    "GUI-mockupok és kezelőfelületet bemutató képek",
+    "GUI-látványtervek és vizuális felülettervek",
+    "AI-val vagy más képgeneráló eszközzel előállított GUI-tervképek"
+  ],
+  "approved_sources_required": {
+    "application_gui_plan": "Előzetesen kifejezetten elfogadott, azonosítható alkalmazás- vagy GUI-terv",
+    "shared_design": "CFA3 Blue Design System – jóváhagyott 1.1-es megvalósítási terv és annak későbbi, tulajdonos által jóváhagyott módosításai",
+    "branding": "Véglegesnek megjelölt, hitelesített hivatalos CFA3-logó; helyettesítő logó tilos",
+    "current_applicable_rules": "Az új CFA3 aktuálisan elfogadott szabályai, architektúrája és arculata",
+    "verification": "A kép létrehozása előtt a kötelező források hitelességét és alkalmazhatóságát ellenőrizni kell"
+  },
+  "mandatory_rules": [
+    {
+      "id": "GUI-IMG-01",
+      "code": "APPROVED_PLAN_ONLY",
+      "text_hu": "CFA3 GUI-tervet bemutató kép kizárólag az érintett alkalmazás előzetesen elfogadott terve és a jóváhagyott CFA3 Blue Design System alapján készíthető. Jóváhagyott terv nélkül képet generálni TILOS."
+    },
+    {
+      "id": "GUI-IMG-02",
+      "code": "ZERO_UNAPPROVED_DEVIATION",
+      "text_hu": "A jóváhagyott tervtől eltérni TILOS. Nem adható hozzá, nem távolítható el és nem alakítható át önkényesen funkció, vezérlőelem, panel, elrendezés, működési logika, színvilág, felirat vagy arculati elem."
+    },
+    {
+      "id": "GUI-IMG-03",
+      "code": "NO_ASSUMED_DESIGN_FILL",
+      "text_hu": "A tervben nem meghatározott, a kép elkészítéséhez szükséges részleteket tilos találgatással, saját sablonnal, önkényes pótlással vagy más alkalmazás megoldásának automatikus átvételével kitölteni. Ilyen esetben STOP/BLOCKER és tulajdonosi tisztázás szükséges."
+    },
+    {
+      "id": "GUI-IMG-04",
+      "code": "OFFICIAL_IDENTITY_ONLY",
+      "text_hu": "Kizárólag a véglegesnek megjelölt CFA3-logó és a jóváhagyott CFA3 Blue Dark, Light vagy High Contrast téma használható, az adott képre vonatkozó terv szerint. Helyettesítő, újrarajzolt vagy kitalált logó TILOS."
+    },
+    {
+      "id": "GUI-IMG-05",
+      "code": "EXACT_REQUESTED_IMAGE_COUNT",
+      "text_hu": "A felhasználó által kért képszám pontosan és szigorúan betartandó. N kép kérése N darab elkészítendő és átadandó képet jelent, nem többet és nem kevesebbet. További variáció, alternatíva, tesztkép, próbakép vagy külön kép külön jóváhagyás nélkül TILOS."
+    },
+    {
+      "id": "GUI-IMG-06",
+      "code": "NO_UNAUTHORIZED_RETRY_OR_VARIANT",
+      "text_hu": "Sikertelen vagy hibás generálás nem jelent automatikus jogosultságot ismételt generálásra vagy további változat készítésére. A teljesítés állapotát jelenteni kell; új próbálkozás csak a felhasználó kifejezett döntése alapján engedélyezett."
+    },
+    {
+      "id": "GUI-IMG-07",
+      "code": "PREFLIGHT_EXACT_STATE_GUARD",
+      "text_hu": "Minden generálás előtt ellenőrizendő: a jóváhagyott alkalmazásterv azonosítója/verziója, az aktuális CFA3 Blue Design System, a végleges logó forrása, az érintett GUI-elemek, a kért témaváltozat és a képek pontos darabszáma. Hiányzó vagy nem igazolható adat esetén STOP/BLOCKER."
+    },
+    {
+      "id": "GUI-IMG-08",
+      "code": "IMAGE_OUTPUT_SCOPE_LOCK",
+      "text_hu": "A képgenerálás csak a felhasználó által kért GUI-részletre és képszámra terjedhet ki. A képek nem szolgálhatnak új alkalmazásfunkció, tervmódosítás, PR, implementáció vagy más feladat hallgatólagos jóváhagyásaként."
+    },
+    {
+      "id": "GUI-IMG-09",
+      "code": "CHECK_AND_REPORT_COUNT",
+      "text_hu": "Átadás előtt ellenőrizni kell a ténylegesen elkészült és átadott képek számát, valamint a tervvel való megfelelést. Az elkészítetlen, hibás vagy nem igazolt képet tilos késznek jelenteni."
+    }
+  ],
+  "generation_gate": {
+    "requires_all": [
+      "APPROVED_APPLICATION_OR_GUI_PLAN_VERIFIED",
+      "APPROVED_CFA3_BLUE_DESIGN_VERIFIED",
+      "OFFICIAL_LOGO_VERIFIED_WHEN_DISPLAYED",
+      "REQUESTED_IMAGE_COUNT_EXPLICIT_AND_UNAMBIGUOUS",
+      "REQUESTED_VIEW_AND_THEME_KNOWN",
+      "NO_UNAPPROVED_DEVIATION",
+      "NO_SCOPE_OR_AUTHORITY_CONFLICT"
+    ],
+    "if_any_missing": "STOP_BLOCKER_REPORT_REQUEST_CLARIFICATION",
+    "unapproved_extra_generation": "FORBIDDEN",
+    "automatic_retry": "FORBIDDEN"
+  },
+  "acceptance": {
+    "delivered_images_must_equal_requested_images": true,
+    "unapproved_variants": 0,
+    "unapproved_design_deviations": 0,
+    "fictitious_or_substitute_logos": 0,
+    "verified_plan_compliance_required": true,
+    "unverified_result_must_not_be_reported_as_pass": true
+  },
+  "provenance": {
+    "source": "2026-10-11 tulajdonosi utasítás: csak elfogadott terv alapján; eltérés tilos; kért képszám szigorú betartása",
+    "rule_creation_request": "2026-10-11: Készítsd el a szabályt az új CFA3 számára; más feladat tilos",
+    "notes": "Az állomány előkészített szabály. A GitHubba történő kanonikus felvétel, PR és merge külön jogosultságot és tényleges ellenőrzést igényel; ezek itt nem történtek meg."
+  }
+}

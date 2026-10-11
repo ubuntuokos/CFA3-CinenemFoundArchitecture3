@@ -92,6 +92,34 @@ továbbra sem tekinthető teljesítettnek. Ezeket nem oldja fel egy állapotjelz
 
 ## Párhuzamos munka védelme
 
-A donorátvitel a meglévő #7 implementációs PR-ben marad. A #8 dokumentációs PR
+A donorátvitel első állománya a #7 PR-rel került főágra. A tulajdonos 2026. október
+11-i utasítása alapján az összevonás után jelzett öt keresési/lifecycle-hibát
+ugyanennek a feladatnak a célzott javítása kezeli, védett főág esetén javító PR-ben.
+A #8 dokumentációs PR
 README- és képfájljait nem módosítja. Az új CFA3 termékkoncepciója, a közös
 Foundation, a 200 képesség célja és az L1–L5 szabályai változatlanok.
+
+## Összevonás utáni keresési és lifecycle-javítás
+
+- Az eredeti transfer snapshot változatlan: Git blob
+  `c863fe31d2c300bf15c9996432f86a70f9a18d74`, 1981 megőrzött identitás.
+- A lifecycle-projekció az eredeti 3946 útvonal mellé 33 további egyedi,
+  kifejezetten megőrzött történeti aliast rendel: összesen 3979 tárolt útvonal.
+  A 574 történeti delta-alias feloldása is megmarad; ezek nem mind különböznek
+  a tárolt útvonalaktól, ezért a számlálók nem adhatók egyszerűen össze.
+- A történeti notes mező visszaolvasható. Egyértelmű, teljes upstream commit
+  hiányzó strukturált verzió esetén összehasonlítható; PR-proveniencia,
+  rövidített hash vagy többértelmű megfigyelés nem ad változatlansági igazolást.
+- A kapu újraszámolja a történeti rekordok és rekordhalmaz ellenőrzőösszegét,
+  majd ellenőrzi a lifecycle-indexhez kötött transfer-fájl SHA-256 értékét.
+- Mind az 56 jelenlegi tulajdonosi megerősítés konkrét rekordja szerepel a
+  korábbi döntésben. A megerősítési fájl ellenőrzőösszege a projekció része;
+  törlés, eltérő kötés és megváltozott állomány blokkolja a lifecycle-lekérdezést.
+- Létező locator hiányzó célazonosítóval integritási hibát ad, nem egyszerű
+  „nem található” eredményt.
+
+Helyi bizonyíték: 104 Python-teszt, bootstrap strukturális ellenőrzés és mindkét
+generátor `--check` futása sikeres. A negatív tesztek tényleges ideiglenes
+fájlmódosítással ellenőrzik a felmelegített cache utáni sérülésfelismerést is.
+Ez referencia-/keresési bizonyíték, nem fizikai Current Host PASS, nem globális
+L1–L5 lezárás. A publikált commit és a CI állapota a javító PR-ben ellenőrizhető.

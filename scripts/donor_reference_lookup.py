@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 
 from donor_delta_routes import delta_aliases
+from donor_transfer_integrity import preserved_aliases
 
 REGISTRY = Path(__file__).resolve().parents[1] / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
 
@@ -35,7 +36,8 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
         position = data["lookup_by_locator"].get(original_url)
         if position is None:
             # Preserve original delta URL variants without introducing donor IDs.
-            donor_id = delta_aliases(data["records"]).get(original_url)
+            donor_id = (preserved_aliases(data["records"]).get(original_url)
+                        or delta_aliases(data["records"]).get(original_url))
             if donor_id is None:
                 return None
         else:
@@ -47,12 +49,16 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
             donor_id = route["preferred_source_id"]
     position = data["lookup_by_id"].get(donor_id)
     if position is None:
+        if original_url is not None:
+            raise ValueError("Resolved locator targets a missing donor identity")
         return None
     if type(position) is not int or not 0 <= position < len(data["records"]):
         raise ValueError("Corrupted donor ID index")
     envelope = data["records"][position]
     record = envelope["reference_record"]
-    from transfer_donors import STATES, current_owner_confirmations
+    from transfer_donors import STATES, current_owner_confirmations, digest
+    if digest(envelope["historical_record"]) != envelope["historical_record_sha256"]:
+        raise ValueError("Historical donor record digest mismatch")
     if (envelope.get("pre_transfer_status") == "OWNER_APPROVED_PENDING_PUBLICATION"
             and envelope.get("historical_record", {}).get("intake_provenance", {}).get(
                 "canonical_approval_admitted") is False):
@@ -65,6 +71,7 @@ def lookup_snapshot(data, *, donor_id=None, original_url=None):
             or STATES.get(envelope.get("pre_transfer_status")) != envelope.get("reference_state")
             or record.get("donor_registration") != envelope.get("reference_state")
             or (original_url is not None and original_url not in envelope["aliases"]
+                and preserved_aliases(data["records"]).get(original_url) != donor_id
                 and delta_aliases(data["records"]).get(original_url) != donor_id)):
         raise ValueError("Inconsistent donor identity or alias")
     if any(record.get(k) is not False for k in

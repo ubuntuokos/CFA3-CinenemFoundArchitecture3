@@ -10,7 +10,7 @@ from transfer_donors import digest, current_owner_confirmations, OWNER_CONFIRMAT
 REG = Path(__file__).resolve().parents[1] / "canonical/registries"
 REJECTION_ARCHIVE = (Path(__file__).resolve().parents[1] /
     "archive/donor-source-migration/2026-10-09/FA3-DONOR-REJECTION-AUDIT-001.json")
-REJECTION_ARCHIVE_BLOB = "1bb853ef2dc9a15231ab4acda136ee5c02c9e2"
+REJECTION_ARCHIVE_BLOB = "1bb853ef2dc9a15231ab4acda136ee5c02c9e2c8"
 
 
 def verified_rejection_audit():

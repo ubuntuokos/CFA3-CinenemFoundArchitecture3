@@ -264,5 +264,40 @@ class DonorLookupIntegrityTests(unittest.TestCase):
             lookup_snapshot(original, donor_id=sid)
 
 
+    def test_verified_snapshot_cache_is_not_mutable_by_lookup_callers(self):
+        original = self.snapshot["records"][0]["pre_transfer_status"]
+        dirty, sha = integrity.verified_snapshot()
+        dirty["records"][0]["pre_transfer_status"] = "FORGED_STATUS"
+        dirty["rejection_audit"]["entries"][0]["donor"]["source"]["locator"] = "project:forged"
+        fresh, fresh_sha = integrity.verified_snapshot()
+        self.assertEqual(sha, fresh_sha)
+        self.assertEqual(fresh["records"][0]["pre_transfer_status"], original)
+        self.assertEqual(fresh["rejection_audit"]["entries"][0]["donor"]["source"]["locator"],
+                         "project:donutbrowser")
+        self.assertNotEqual(evaluate("project:forged", self.index)["disposition"],
+                            "BLOCKED_REJECTED_SOURCE")
+        self.assertEqual(evaluate("project:donutbrowser", self.index)["disposition"],
+                         "BLOCKED_REJECTED_SOURCE")
+
+    def test_lifecycle_expected_projection_cache_cannot_be_poisoned(self):
+        expected = integrity.expected_lifecycle_projection()
+        route_preferred = self.index["locator_routes"][0]["preferred_source_id"]
+        sid = next(row["source_id"] for row in self.index["source_records"]
+                   if row["source_id"] != route_preferred)
+        expected["source_records"][0]["prior_decision"]["outcome"] = "FORGED_DECISION"
+        expected["locator_routes"][0]["preferred_source_id"] = sid
+        fresh = integrity.expected_lifecycle_projection()
+        self.assertNotEqual(fresh["source_records"][0]["prior_decision"]["outcome"], "FORGED_DECISION")
+        self.assertEqual(fresh["locator_routes"], self.index["locator_routes"])
+        bad = copy.deepcopy(self.index)
+        bad["source_records"][0]["prior_decision"]["outcome"] = "FORGED_DECISION"
+        self.assertEqual(evaluate(bad["source_records"][0]["canonical_url"], bad)["disposition"],
+                         "BLOCKED_INDEX_CONFLICT")
+        bad_route = copy.deepcopy(self.index)
+        bad_route["locator_routes"][0]["preferred_source_id"] = sid
+        self.assertEqual(evaluate(bad_route["source_records"][0]["canonical_url"], bad_route)["disposition"],
+                         "BLOCKED_INDEX_CONFLICT")
+
+
 if __name__ == "__main__":
     unittest.main()

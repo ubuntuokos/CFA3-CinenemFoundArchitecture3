@@ -1,5 +1,6 @@
 """Validated, read-only donor history inputs shared by lookup and lifecycle."""
 from functools import lru_cache
+from copy import deepcopy
 import hashlib
 import json
 import marshal
@@ -126,8 +127,13 @@ def _validate_snapshot_payload(payload, expected_audit_digest):
 
 
 def verified_snapshot():
+    """Return an isolated snapshot; never expose the mutable cached object."""
     path = REG / TRANSFER_NAME
-    return _read_snapshot(path, file_signature(path))
+    cached, sha = _read_snapshot(path, file_signature(path))
+    # The rejected-history archive is a separate pinned evidence input;
+    # fail closed if it changes even if the file cache is warm.
+    verified_rejection_audit()
+    return deepcopy(cached), sha
 
 
 def confirmation_evidence():
@@ -186,8 +192,9 @@ PROJECTION_INPUTS = (
 
 
 def expected_lifecycle_projection():
+    """Return an isolated projection; caller mutations never poison validation."""
     signatures = tuple(file_signature(REG / name) for name in PROJECTION_INPUTS)
-    return _expected_lifecycle_projection(REG, signatures)
+    return deepcopy(_expected_lifecycle_projection(REG, signatures))
 
 
 @lru_cache(maxsize=2)

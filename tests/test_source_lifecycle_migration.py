@@ -126,6 +126,46 @@ class LifecycleMigrationTests(unittest.TestCase):
         self.assertEqual(evaluate("https://github.com/6174/recut", self.index, unverified)["disposition"],
                          "BLOCKED_UNVERIFIED_OBSERVATION")
 
+    def test_all_preserved_historical_commit_forms_reuse_a_verified_revision(self):
+        known = {row["source_id"]: row for row in self.index["source_records"]}
+        cases = {
+            "FA3-DONOR-CATPPUCCIN-RENOISE-001":
+                "47d7b7ba9f282ae0b310b2b6186bed95466fecac",
+            "FA3-DONOR-JBSOFTWARE-GEN-AI-STARTER-001":
+                "a274dee5f55670e1c63e2d8777baf9714ca287ce",
+            "FA3-DONOR-PIXAR-OPENUSD-001":
+                "2a9a571d0f9957bad5c4a59ba859ebb8df518c51",
+            "FA3-DONOR-CIMG-001":
+                "b89ff2b8f1b6cbfbbfb5100d8d5b6897b9294c6e",
+        }
+        for donor_id, revision in cases.items():
+            with self.subTest(donor=donor_id):
+                row = known[donor_id]
+                observation = {
+                    "verification": "VERIFIED_BY_AUTHORIZED_REVIEW",
+                    "evidence_ref": "verified-historical-commit-regression",
+                    "checked_at": "2026-10-11",
+                    "support_status": "SUPPORTED",
+                    "observed_revision": revision,
+                }
+                response = evaluate(row["canonical_url"], self.index, observation)
+                self.assertEqual(response["disposition"], "REUSE_PRIOR_DECISION")
+                self.assertEqual(response["source_id"], donor_id)
+                changed = dict(observation, observed_revision="0" * 40)
+                self.assertEqual(evaluate(row["canonical_url"], self.index, changed)["disposition"],
+                                 "CHANGE_REVIEW_REQUIRED")
+
+    def test_rejected_historical_source_is_searchable_but_never_admitted(self):
+        for locator in ("project:donutbrowser",):
+            response = evaluate(locator, self.index)
+            self.assertEqual(response["disposition"], "BLOCKED_REJECTED_SOURCE")
+            self.assertEqual(response["source_id"], "FA3-DONOR-DONUTBROWSER-001")
+            self.assertEqual(response["prior_decision"]["outcome"], "REJECTED")
+            self.assertEqual(response["prior_decision"]["historical_rejection"]
+                             ["donor"]["status"], "REJECTED")
+            self.assertFalse(response["automatic_donor_registration"])
+            self.assertFalse(response["automatic_code_import"])
+
     def test_unknown_is_not_declared_new_and_no_upstream_version_is_invented(self):
         self.assertEqual(evaluate("https://unknown.invalid/unregistered", self.index)["disposition"],
                          "BLOCKED_INDEX_INCOMPLETE")

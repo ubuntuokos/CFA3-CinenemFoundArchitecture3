@@ -8,6 +8,7 @@ import unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"scripts"))
 from check_bootstrap import check,load,validate_objects
+from check_legacy_rule_blobs import validate_frozen_tree, FROZEN_COMMIT, EXPECTED_TRACKED_BLOBS
 
 class BootstrapPolicyTests(unittest.TestCase):
     @classmethod
@@ -147,6 +148,56 @@ class BootstrapPolicyTests(unittest.TestCase):
         platform=copy.deepcopy(self.platform)
         platform["gui"]["technology"]="Web-only"
         self.assertTrue(validate_objects(self.gov,self.cpu,platform,self.ledger))
+
+    def test_every_legacy_seed_sha_format(self):
+        self.assertEqual(21, len(self.ledger["source_records"]))
+        invalid=copy.deepcopy(self.ledger)
+        invalid["source_records"][0]["blob_sha"]="abcd"
+        self.assertTrue(validate_objects(self.gov,self.cpu,self.platform,invalid))
+        invalid=copy.deepcopy(self.ledger)
+        invalid["source_records"][0]["blob_sha"]="z"*40
+        self.assertTrue(validate_objects(self.gov,self.cpu,self.platform,invalid))
+        invalid=copy.deepcopy(self.ledger)
+        invalid["source_records"][0]["blob_sha"]=None
+        self.assertTrue(validate_objects(self.gov,self.cpu,self.platform,invalid))
+
+    @staticmethod
+    def _frozen_tree_fixture(ledger):
+        entries = [{"type":"blob","path":r["path"],"sha":r["blob_sha"]}
+                   for r in ledger["source_records"]]
+        for i in range(EXPECTED_TRACKED_BLOBS-len(entries)):
+            entries.append({"type":"blob",
+                            "path":"unrelated/file-" + str(i).zfill(5),
+                            "sha":"0"*40})
+        return {"sha":FROZEN_COMMIT,"truncated":False,"tree":entries}
+
+    def test_tree_comparison_rejects_missing_and_mutated_sources(self):
+        frozen=self._frozen_tree_fixture(self.ledger)
+        self.assertEqual([],validate_frozen_tree(self.ledger,frozen))
+        altered=copy.deepcopy(self.ledger)
+        altered["source_records"][0]["blob_sha"]="f"*40
+        self.assertTrue(any("mismatches" in e for e in validate_frozen_tree(altered,frozen)))
+        altered=copy.deepcopy(self.ledger)
+        altered["source_records"][0]["blob_sha"]="a"*39
+        self.assertTrue(any("invalid 40" in e for e in validate_frozen_tree(altered,frozen)))
+        altered=copy.deepcopy(frozen)
+        altered["tree"][0]["path"]="unrelated/replacement"
+        self.assertTrue(any("absent" in e for e in validate_frozen_tree(self.ledger,altered)))
+
+    def test_frozen_tree_identity_and_truncation_required(self):
+        original=self._frozen_tree_fixture(self.ledger)
+        for change in (
+            {"sha":"a"*40},
+            {"truncated":True},
+            {"truncated":None},
+            {"tree":[]},
+        ):
+            modified=copy.deepcopy(original)
+            modified.update(change)
+            self.assertTrue(validate_frozen_tree(self.ledger,modified))
+        altered=copy.deepcopy(self.ledger)
+        altered["source_main_commit"]="f"*40
+        self.assertTrue(validate_frozen_tree(altered,original))
 
 if __name__=="__main__":
     unittest.main()

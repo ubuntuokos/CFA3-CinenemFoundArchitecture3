@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Structural bootstrap guard: never issues CFA3 runtime/admission PASS."""
 import json
+import re
 import pathlib
 import sys
 
@@ -76,6 +77,10 @@ def validate_objects(gov, cpu, platform, ledger):
     require(all(r.get("code_reuse_authorized") is False for r in ledger.get("source_records", [])), "unreviewed code reuse is forbidden")
     paths = [r.get("path") for r in ledger.get("source_records", [])]
     require(len(paths) == len(set(paths)), "duplicate source ledger paths")
+    for record in ledger.get("source_records", []):
+        sha = record.get("blob_sha")
+        require(isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{40}", sha) is not None,
+                "legacy source record has invalid Git blob SHA: " + str(record.get("path")))
     return errors
 
 def validate_source_lifecycle(policy, index):

@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import donor_transfer_integrity as integrity
 import transfer_donors
-from donor_reference_lookup import lookup_snapshot
+from donor_reference_lookup import lookup_snapshot, ValidatedSnapshot
 from source_lifecycle import evaluate, note_revisions
 
 
@@ -191,6 +191,71 @@ class DonorLookupIntegrityTests(unittest.TestCase):
         self.assertEqual(held, again)
         self.assertEqual(after.misses, before.misses)
         self.assertEqual(after.hits, before.hits + 1)
+
+
+    def test_all_rejections_are_bound_to_pinned_archive(self):
+        sid = self.snapshot["records"][0]["source_id"]
+        original = self.snapshot["rejection_audit"]["entries"][0]
+        changes = [
+            lambda d: d["rejection_audit"]["entries"].clear(),
+            lambda d: d["rejection_audit"]["entries"][0]["donor"].__setitem__("status", "VERIFIED_SAFE"),
+            lambda d: d["rejection_audit"]["entries"].append(copy.deepcopy(original)),
+            lambda d: d["rejection_audit"].__setitem__("authority", True),
+            lambda d: d["rejection_audit"]["entries"][0]["donor"]["source"].__setitem__(
+                "locator", "project:forged"),
+        ]
+        for change in changes:
+            bad = copy.deepcopy(self.snapshot)
+            change(bad)
+            with self.assertRaisesRegex(ValueError, "rejection audit"):
+                lookup_snapshot(bad, donor_id=sid)
+            with self.assertRaisesRegex(ValueError, "rejection audit"):
+                ValidatedSnapshot(bad)
+
+    def test_archive_tampering_cannot_use_warm_validation_cache(self):
+        sid = self.snapshot["records"][0]["source_id"]
+        lookup_snapshot(self.snapshot, donor_id=sid)  # warm whole-snapshot cache
+        with tempfile.TemporaryDirectory() as tmp:
+            archive = Path(tmp) / integrity.REJECTION_ARCHIVE.name
+            archive.write_bytes(integrity.REJECTION_ARCHIVE.read_bytes())
+            with patch.object(integrity, "REJECTION_ARCHIVE", archive):
+                self.assertEqual(lookup_snapshot(self.snapshot, donor_id=sid)["donor_id"], sid)
+                archive.write_bytes(archive.read_bytes() + b" ")
+                with self.assertRaisesRegex(ValueError, "rejection audit Git blob"):
+                    lookup_snapshot(self.snapshot, donor_id=sid)
+
+    def test_immutable_handle_preserves_full_batch_identity_and_isolation(self):
+        handle = ValidatedSnapshot(self.snapshot)
+        first_id = self.snapshot["records"][0]["source_id"]
+        record = lookup_snapshot(handle, donor_id=first_id)
+        record["donor_registration"] = "FORGED"
+        self.assertNotEqual(lookup_snapshot(handle, donor_id=first_id)["donor_registration"], "FORGED")
+        with self.assertRaises(TypeError):
+            handle._data["records"][0]["reference_record"]["donor_registration"] = "FORGED"
+        # Both public lookup indexes must be usable without whole-snapshot hashing.
+        with patch("donor_reference_lookup.validate_snapshot",
+                   side_effect=AssertionError("revalidation in immutable batch")):
+            for row in self.snapshot["records"]:
+                result = lookup_snapshot(handle, donor_id=row["source_id"])
+                self.assertEqual(result["donor_id"], row["source_id"])
+            for route in self.snapshot["locator_routes"]:
+                result = lookup_snapshot(handle, original_url=route["alias"])
+                self.assertEqual(result["donor_id"], route["preferred_source_id"])
+        self.assertIsNone(lookup_snapshot(handle, donor_id="unknown-source-id"))
+        rejected = lookup_snapshot(handle, original_url="project:donutbrowser")
+        self.assertEqual(rejected["donor_registration"], "REJECTED_REFERENCE_NOT_ACTIVE")
+        rejected["rejection_history"]["donor"]["status"] = "FORGED"
+        self.assertEqual(lookup_snapshot(handle, original_url="project:donutbrowser")
+                         ["rejection_history"]["donor"]["status"], "REJECTED")
+
+    def test_mutating_original_after_handle_creation_cannot_poison_batch(self):
+        original = copy.deepcopy(self.snapshot)
+        handle = ValidatedSnapshot(original)
+        sid = original["records"][0]["source_id"]
+        original["records"][0]["historical_record"]["notes"] = ["POISON"]
+        self.assertEqual(lookup_snapshot(handle, donor_id=sid)["donor_id"], sid)
+        with self.assertRaises(ValueError):
+            lookup_snapshot(original, donor_id=sid)
 
 
 if __name__ == "__main__":

@@ -8,6 +8,26 @@ from pathlib import Path
 from transfer_donors import digest, current_owner_confirmations, OWNER_CONFIRMATION, STATES
 
 REG = Path(__file__).resolve().parents[1] / "canonical/registries"
+REJECTION_ARCHIVE = (Path(__file__).resolve().parents[1] /
+    "archive/donor-source-migration/2026-10-09/FA3-DONOR-REJECTION-AUDIT-001.json")
+REJECTION_ARCHIVE_BLOB = "1bb853ef2dc9a15231ab4acda136ee5c02c9e2"
+
+
+def verified_rejection_audit():
+    """Read and authenticate the unchanged, explicitly rejected history."""
+    raw = REJECTION_ARCHIVE.read_bytes()
+    git_blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+    if git_blob != REJECTION_ARCHIVE_BLOB:
+        raise ValueError("Preserved rejection audit Git blob changed")
+    audit = json.loads(raw)
+    if (audit.get("schema") != "fa3.donor-rejection-audit.v1"
+            or audit.get("id") != "FA3-DONOR-REJECTION-AUDIT-001"
+            or audit.get("authority") is not False
+            or audit.get("active_donor_registry") is not False
+            or not isinstance(audit.get("entries"), list)):
+        raise ValueError("Preserved rejection audit authority invalid")
+    return audit
 TRANSFER_NAME = "CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
 CONFIRMATION_NAME = OWNER_CONFIRMATION.name
 
@@ -33,12 +53,15 @@ def validate_snapshot(data):
     # without serializing the entire JSON text for each lookup in a batch.
     # Version 2 has no reference-sharing flags: retaining a returned object
     # cannot change the encoding of otherwise identical JSON values.
+    # Authentication of the archived audit is deliberately outside the cache:
+    # changing the archive must fail even after a warm snapshot cache hit.
+    expected_audit_digest = digest(verified_rejection_audit())
     payload = marshal.dumps(data, 2)
-    _validate_snapshot_payload(payload)
+    _validate_snapshot_payload(payload, expected_audit_digest)
 
 
 @lru_cache(maxsize=2)
-def _validate_snapshot_payload(payload):
+def _validate_snapshot_payload(payload, expected_audit_digest):
     data = marshal.loads(payload)
     if (data.get("schema") != "cfa3.donor-transfer-snapshot.v1"
             or data.get("runtime_admission") is not False
@@ -81,6 +104,25 @@ def _validate_snapshot_payload(payload):
     if (locators != data["lookup_by_locator"]
             or any(type(v) is not int for v in data["lookup_by_locator"].values())):
         raise ValueError("Historical locator lookup index mismatch")
+    # Records-only digests do not authenticate negative donor decisions.
+    # Bind the COMPLETE rejection audit to the pinned historical Git blob.
+    if digest(data.get("rejection_audit")) != expected_audit_digest:
+        raise ValueError("Historical rejection audit differs from preserved evidence")
+    rejected_ids, rejected_locators = set(), set()
+    for entry in data["rejection_audit"]["entries"]:
+        rejected = entry["donor"]
+        sid = rejected["donor_id"]
+        source = rejected["source"]
+        if (rejected.get("status") != "REJECTED" or sid in rejected_ids
+                or sid in ids or not isinstance(sid, str) or not sid):
+            raise ValueError("Historical rejected source identity was altered or reactivated")
+        rejected_ids.add(sid)
+        locators_for_rejected = {source["locator"], source["normalized_key"]}
+        if (any(not isinstance(locator, str) or not locator or locator in locators
+                for locator in locators_for_rejected)
+                or locators_for_rejected & rejected_locators):
+            raise ValueError("Historical rejected locator was reactivated or duplicated")
+        rejected_locators.update(locators_for_rejected)
 
 
 def verified_snapshot():

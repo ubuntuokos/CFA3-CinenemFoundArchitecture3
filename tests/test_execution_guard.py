@@ -1,5 +1,7 @@
 """Negative-path guard tests; NOT full CFA3 admission or physical-host proof."""
 import hashlib
+import tempfile
+from unittest.mock import patch
 import hmac
 from pathlib import Path
 import sys
@@ -10,10 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from execution_guard import (Blocked, GOV, LEDGER, CATALOG, canonical_bytes,
                              check_task, guarded_execute, load, local_path,
-                             policy_issues, verify_signature)
+                             policy_issues, verify_signature, _reserve)
 
 def sample():
-    sources = [GOV, LEDGER, CATALOG]
+    sources = [GOV, LEDGER, CATALOG, "AGENTS.md"] + load(ROOT, CATALOG)["policy_files"]
     return {"task_id": "synthetic-test", "nonce": "single",
             "operation": "ARTIFACT_EXPORT", "target": "docs/out.txt",
             "scope_targets": ["docs/out.txt"], "main_sha": "a" * 40,
@@ -58,6 +60,7 @@ class GuardTests(unittest.TestCase):
         t = sample()
         t["operation"] = "REPOSITORY_WRITE"
         t["branch"] = "main"
+        t["head_sha"] = "b" * 40
         with self.assertRaises(Blocked):
             check_task(ROOT, t)
         t["branch"], t["target"], t["scope_targets"] = "guard/example", "legacy/x", ["legacy/x"]
@@ -94,6 +97,70 @@ class GuardTests(unittest.TestCase):
                             executor=lambda _: calls.append(True),
                             verify_result=lambda *_: True, state_dir=ROOT / "tests")
         self.assertEqual([], calls)
+
+    def test_quota_contract_bound_across_all_authorizations(self):
+        with tempfile.TemporaryDirectory() as location:
+            t = sample()
+            _reserve(location, t)
+            with self.assertRaises(Blocked):
+                _reserve(location, dict(t, nonce="next", max_units=999))
+            with self.assertRaises(Blocked):
+                _reserve(location, dict(t, nonce="next", scope_targets=["docs/out.txt", "docs/new.txt"]))
+
+    def test_cross_task_nonce_replay_forbidden(self):
+        with tempfile.TemporaryDirectory() as location:
+            t = sample()
+            _reserve(location, t)
+            with self.assertRaises(Blocked):
+                _reserve(location, dict(t, task_id="different"))
+
+    def test_exhaustion_and_replay_forbidden(self):
+        with tempfile.TemporaryDirectory() as location:
+            t = sample()
+            _reserve(location, t)
+            with self.assertRaises(Blocked):
+                _reserve(location, t)
+            _reserve(location, dict(t, nonce="second"))
+            with self.assertRaises(Blocked):
+                _reserve(location, dict(t, nonce="third"))
+
+    def test_workflow_missing_approval_and_head_denied(self):
+        t = sample()
+        t["operation"], t["branch"] = "WORKFLOW_START", "guard/branch"
+        with self.assertRaises(Blocked):
+            check_task(ROOT, t)
+        t["head_sha"] = "b" * 40
+        with self.assertRaises(Blocked):
+            check_task(ROOT, t)
+
+    def test_nan_and_noncanonical_paths_denied(self):
+        for name in ("docs//out.txt", "docs/./out.txt", "docs/out.txt/"):
+            with self.assertRaises(Blocked):
+                local_path(ROOT, name)
+        t = sample()
+        t["expires_at"] = float("nan")
+        with self.assertRaises(Blocked):
+            check_task(ROOT, t)
+
+    def test_preflight_failure_consumes_no_quota(self):
+        t, key = sample(), b"x" * 32
+        t["signature"] = hmac.new(key, canonical_bytes(t), hashlib.sha256).hexdigest()
+        ok = dict(complete_rule_inventory=True, rule_gates_verified=True,
+                  all_conflicts_resolved=True, independent_proof_verified=True)
+        state = dict(main_current=True, head_current=True, no_overlap=True,
+                     checks_passed=True, review_threads_clear=True,
+                     owner_scope_approved=True, actual_main_sha=t["main_sha"])
+        called = []
+        with tempfile.TemporaryDirectory() as location:
+            with patch("execution_guard.policy_issues", return_value=[]):
+                with self.assertRaises(Blocked):
+                    guarded_execute(t, root=ROOT, secret=key,
+                                    admission=lambda _: ok, live_state=lambda _: state,
+                                    preflight=lambda _: {}, executor=lambda _: called.append(True),
+                                    verify_result=lambda *_: True, audit=lambda *_: None,
+                                    state_dir=location)
+            self.assertEqual([], called)
+            self.assertFalse((Path(location) / "receipts.json").exists())
 
 if __name__ == "__main__":
     unittest.main()

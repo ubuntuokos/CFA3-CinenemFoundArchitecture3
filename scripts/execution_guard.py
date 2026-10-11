@@ -4,6 +4,7 @@ import fcntl
 import hashlib
 import hmac
 import json
+import math
 import os
 from pathlib import Path, PurePosixPath
 import sys
@@ -26,7 +27,7 @@ def local_path(root, relative):
     if not isinstance(relative, str) or not relative or "\\" in relative:
         raise Blocked("invalid path")
     p = PurePosixPath(relative)
-    if p.is_absolute() or ".." in p.parts or "." in p.parts:
+    if p.is_absolute() or ".." in p.parts or "." in p.parts or str(p) != relative:
         raise Blocked("path traversal")
     root = Path(root).resolve()
     result = (root / str(p)).resolve()
@@ -58,7 +59,8 @@ def policy_issues(root=ROOT):
         issues.append("DEV/AI per-rule execution gates not verified")
     policy_files = {str(p.relative_to(root)) for p in
                     (Path(root) / "canonical/policies").glob("*.json")}
-    if set(catalog.get("policy_files", [])) != policy_files:
+    if (set(catalog.get("policy_files", [])) != policy_files or
+            len(catalog.get("policy_files", [])) != len(policy_files)):
         issues.append("canonical policy file coverage incomplete")
     if ledger.get("inventory_complete") is not True:
         issues.append("historical rule inventory incomplete")
@@ -100,8 +102,9 @@ def check_task(root, task, now=None):
     if not isinstance(sha, str) or len(sha) != 40 or any(
             c not in "0123456789abcdef" for c in sha):
         raise Blocked("invalid main/head revision")
-    if type(task["expires_at"]) not in (int, float) or (
-            time.time() if now is None else now) >= task["expires_at"]:
+    if (type(task["expires_at"]) not in (int, float) or
+            not math.isfinite(task["expires_at"]) or
+            (time.time() if now is None else now) >= task["expires_at"]):
         raise Blocked("expired task authorization")
     for key in ("expected_outputs", "units", "max_calls", "max_units"):
         if type(task[key]) is not int or task[key] < 1:
@@ -114,14 +117,24 @@ def check_task(root, task, now=None):
         raise Blocked("target not included in signed exact scope")
     for item in scopes:
         local_path(root, item)
-    if task["operation"] == "REPOSITORY_WRITE" and (
-            task.get("branch") in (None, "", "main", "master")):
-        raise Blocked("direct main write not authorized")
+    if task["operation"] in ("REPOSITORY_WRITE", "WORKFLOW_START"):
+        if task.get("branch") in (None, "", "main", "master"):
+            raise Blocked("missing or protected branch")
+        rev = task.get("head_sha")
+        if not isinstance(rev, str) or len(rev) != 40 or any(
+                c not in "0123456789abcdef" for c in rev):
+            raise Blocked("exact head SHA required")
+    if task["operation"] == "WORKFLOW_START" and task.get("explicit_workflow_approval") is not True:
+        raise Blocked("explicit signed workflow authorization required")
     if task["target"].startswith(("legacy/", "archive/legacy/")):
         raise Blocked("legacy source is read-only")
     hashes = task["source_hashes"]
-    if not isinstance(hashes, dict) or not {GOV, LEDGER, CATALOG}.issubset(hashes):
-        raise Blocked("mandatory source digests missing")
+    if not isinstance(hashes, dict):
+        raise Blocked("invalid source digest map")
+    mandatory = {GOV, LEDGER, CATALOG, "AGENTS.md"}
+    mandatory.update(load(root, CATALOG).get("policy_files", []))
+    if not mandatory.issubset(hashes):
+        raise Blocked("missing mandatory policy/source hash")
     for name, digest in hashes.items():
         if not isinstance(digest, str) or len(digest) != 64:
             raise Blocked("bad source digest")
@@ -137,77 +150,118 @@ def check_task(root, task, now=None):
         if not design or not plan or design not in hashes or plan not in hashes or (
                 design not in catalog.get("approved_design_sources", [])):
             raise Blocked("accepted design specification and plan not verified")
-    if task.get("claims_physical_pass") is True:
+    if task.get("claims_physical_pass"):
         raise Blocked("reference CI cannot certify physical Current Host PASS")
     return True
 
 def _reserve(folder, task):
-    """Atomic task-quota/one-use nonce reservation BEFORE irreversible tool call."""
+    """Durable task-envelope binding, global nonce replay and quota protection."""
     folder = Path(folder)
-    if not folder.is_dir() or folder.is_symlink():
-        raise Blocked("private trusted budget store missing")
+    if not folder.is_dir() or folder.is_symlink() or (folder / "lock").is_symlink():
+        raise Blocked("trusted private quota store unavailable")
+    fields = ("task_id", "operation", "target", "scope_targets", "main_sha",
+              "head_sha", "branch", "expires_at", "expected_outputs",
+              "max_calls", "max_units", "source_hashes", "design_source",
+              "approved_plan_source", "explicit_workflow_approval")
+    binding = hashlib.sha256(canonical_bytes({k: task.get(k) for k in fields})).hexdigest()
     with (folder / "lock").open("a+b") as lock:
         fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
         ledger = folder / "receipts.json"
+        if ledger.is_symlink():
+            raise Blocked("symlinked quota state forbidden")
         try:
             data = json.loads(ledger.read_text("utf-8")) if ledger.exists() else {}
             if not isinstance(data, dict):
-                raise ValueError("invalid budget ledger")
-        except (OSError, ValueError) as exc:
-            raise Blocked("budget ledger corrupt") from exc
-        row = data.get(task["task_id"], {"nonces": [], "units": 0, "calls": 0})
-        if task["nonce"] in row["nonces"]:
-            raise Blocked("single-use authorization replay")
+                raise ValueError("bad ledger type")
+            used = data.get("_used_nonces", [])
+            row = data.get(task["task_id"],
+                           {"nonces": [], "units": 0, "calls": 0, "binding": binding})
+            if not isinstance(used, list) or not isinstance(row, dict) or any(
+                    k not in row for k in ("nonces", "units", "calls", "binding")):
+                raise ValueError("invalid quota data")
+        except (OSError, ValueError, TypeError) as exc:
+            raise Blocked("quota ledger invalid") from exc
+        if row["binding"] != binding:
+            raise Blocked("immutable task scope or resource ceiling changed")
+        if task["nonce"] in used or task["nonce"] in row["nonces"]:
+            raise Blocked("single-use nonce replay")
         if row["calls"] + 1 > task["max_calls"] or (
                 row["units"] + task["units"] > task["max_units"]):
-            raise Blocked("resource limit reached")
+            raise Blocked("task resource budget exhausted")
+        used.append(task["nonce"])
         row["nonces"].append(task["nonce"])
         row["units"] += task["units"]
         row["calls"] += 1
-        data[task["task_id"]] = row
-        temp = folder / ("receipts.%d.tmp" % os.getpid())
+        data["_used_nonces"], data[task["task_id"]] = used, row
+        tmp = folder / ("receipts.%d.tmp" % os.getpid())
         try:
-            with temp.open("x", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, sort_keys=True)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(temp, ledger)
+            with tmp.open("x", encoding="utf-8") as out:
+                json.dump(data, out, ensure_ascii=False, sort_keys=True)
+                out.flush()
+                os.fsync(out.fileno())
+            os.replace(tmp, ledger)
+            descriptor = os.open(folder, os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
         except OSError as exc:
-            raise Blocked("cannot persist resource reservation") from exc
+            raise Blocked("quota reservation could not be persisted") from exc
         finally:
-            if temp.exists():
-                temp.unlink()
+            if tmp.exists():
+                tmp.unlink()
 
-def guarded_execute(task, *, root=ROOT, secret=None, live_state=None,
-                    executor=None, verify_result=None, state_dir=None):
-    """Only a separate trusted service holding tool credentials may invoke this.
+def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
+                    live_state=None, preflight=None, executor=None,
+                    verify_result=None, audit=None, state_dir=None):
+    """Requires a separately isolated trusted service with exclusive credentials.
 
-    Native ChatGPT tools and any external route outside this gateway are NOT
-    intercepted. Current incomplete policy inventory causes denial.
+    It cannot intercept native ChatGPT tools or other unguarded service routes.
     """
     issues = policy_issues(root)
     if issues:
         raise Blocked("POLICY_INCOMPLETE: " + "; ".join(issues))
     check_task(root, task)
     verify_signature(task, secret)
-    if not all(callable(f) for f in (live_state, executor, verify_result)) or (
+    if not all(callable(f) for f in (
+            admission, live_state, preflight, executor, verify_result, audit)) or (
             state_dir is None):
-        raise Blocked("trusted live-state / result / execution adapters absent")
+        raise Blocked("trusted execution/admission/audit adapter missing")
+    evidence = admission(task)
+    if not isinstance(evidence, dict) or any(evidence.get(x) is not True for x in (
+            "complete_rule_inventory", "rule_gates_verified",
+            "all_conflicts_resolved", "independent_proof_verified")):
+        raise Blocked("independent full-rule admission not verified")
     proof = live_state(task)
-    fields = ("main_current", "head_current", "no_overlap", "checks_passed",
-              "review_threads_clear", "owner_scope_approved")
-    if not isinstance(proof, dict) or any(proof.get(k) is not True for k in fields):
-        raise Blocked("fresh exact-state or owner authority not verified")
+    if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
+            "main_current", "head_current", "no_overlap", "checks_passed",
+            "review_threads_clear", "owner_scope_approved")):
+        raise Blocked("fresh exact-state authorization failed")
     if proof.get("actual_main_sha") != task["main_sha"]:
-        raise Blocked("main drift")
+        raise Blocked("main SHA drift")
+    if task["operation"] in ("REPOSITORY_WRITE", "WORKFLOW_START"):
+        if proof.get("actual_head_sha") != task["head_sha"]:
+            raise Blocked("head SHA drift")
+    checked = preflight(task)
+    if not isinstance(checked, dict) or any(checked.get(x) is not True for x in (
+            "source_verified", "scope_verified", "resource_verified",
+            "output_contract_verified")):
+        raise Blocked("trusted preflight failed")
+    if task["operation"] == "GUI_RENDER" and checked.get("design_verified") is not True:
+        raise Blocked("GUI design must be independently verified")
     _reserve(state_dir, task)
-    artifacts = executor(task)
-    if not isinstance(artifacts, (list, tuple)) or (
-            len(artifacts) != task["expected_outputs"]):
-        raise Blocked("RESULT_GATE: requested result count not met")
-    if verify_result(task, artifacts) is not True:
-        raise Blocked("RESULT_GATE: independent verification failed")
-    return artifacts
+    audit(task, "RESERVED")  # if audit fails, execution does not start; quota is consumed
+    try:
+        outputs = executor(task)
+        if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
+            raise Blocked("RESULT_GATE: wrong output count")
+        if verify_result(task, outputs) is not True:
+            raise Blocked("RESULT_GATE: independent output validation failed")
+    except Exception:
+        audit(task, "FAILED")
+        raise
+    audit(task, "VERIFIED")
+    return outputs
 
 if __name__ == "__main__":
     if sys.argv[1:] != ["--status"]:

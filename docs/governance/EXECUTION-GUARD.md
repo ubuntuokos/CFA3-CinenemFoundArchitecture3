@@ -19,3 +19,8 @@ The status command is expected to exit nonzero while rules are unresolved; do no
 
 ## Before actual execution admission
 Complete historical rule reconciliation; prove MISSING=0 and UNRESOLVED_CONFLICT=0; verify each runtime rule gate and accepted GUI design source; provide trusted live adapters, GitHub required status checks, replay/quota/concurrency evidence and true physical Current Host evidence where applicable. No old 175 capability proof or donor evidence is inherited. Main protection remains mandatory.
+
+## Hardening: immutable budget and preflight
+The first reserved signed task envelope pins its task scope, source hashes, expiry, result count and budget. Subsequent authorization cannot silently raise the limit. Nonces are unique across task identifiers. Linux quota ledger reservations are serialized, persisted before side effects, and do not refund or automatically retry failures.
+
+A trusted admission callback must independently confirm complete policy reconciliation. Fresh main/head evidence, an independently verified preflight and an audit adapter are required before the executor is called. GUI designs must have an independently verified source. Native ChatGPT tools remain outside this gateway. These unit tests use mocks and are NOT physical/admission evidence.

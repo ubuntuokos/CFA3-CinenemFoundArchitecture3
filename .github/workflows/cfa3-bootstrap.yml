@@ -16,6 +16,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate new-CFA3 bootstrap candidate policies
         run: python3 scripts/check_bootstrap.py
+      - name: Verify full current canonical policy JSON surface
+        run: python3 scripts/check_guard_policy_surface.py
+      - name: Verify actual main-protection required checks and no bypass
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
+      - name: Verify owner-supplied normative text without admitting excluded history
+        run: python3 scripts/check_execution_guard_rule_spec.py
+      - name: Validate 24 current rule identities without forcing conditional runtime incidents
+        run: python3 scripts/check_execution_rule_evidence.py --bootstrap-report
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v
       - name: Verify Rust-first contract workspace

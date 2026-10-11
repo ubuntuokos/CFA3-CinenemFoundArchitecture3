@@ -8,6 +8,7 @@ import unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"scripts"))
 from check_bootstrap import check,load,validate_objects
+from check_legacy_rule_blobs import validate_frozen_tree, FROZEN_COMMIT, EXPECTED_TRACKED_BLOBS
 
 class BootstrapPolicyTests(unittest.TestCase):
     @classmethod
@@ -147,6 +148,111 @@ class BootstrapPolicyTests(unittest.TestCase):
         platform=copy.deepcopy(self.platform)
         platform["gui"]["technology"]="Web-only"
         self.assertTrue(validate_objects(self.gov,self.cpu,platform,self.ledger))
+
+    def test_every_legacy_seed_sha_format(self):
+        self.assertEqual(21, len(self.ledger["source_records"]))
+        invalid=copy.deepcopy(self.ledger)
+        invalid["source_records"][0]["blob_sha"]="abcd"
+        self.assertTrue(validate_objects(self.gov,self.cpu,self.platform,invalid))
+        invalid=copy.deepcopy(self.ledger)
+        invalid["source_records"][0]["blob_sha"]="z"*40
+        self.assertTrue(validate_objects(self.gov,self.cpu,self.platform,invalid))
+        invalid=copy.deepcopy(self.ledger)
+        invalid["source_records"][0]["blob_sha"]=None
+        self.assertTrue(validate_objects(self.gov,self.cpu,self.platform,invalid))
+
+    @staticmethod
+    def _frozen_tree_fixture(ledger):
+        entries = [{"type":"blob","path":r["path"],"sha":r["blob_sha"]}
+                   for r in ledger["source_records"]]
+        for i in range(EXPECTED_TRACKED_BLOBS-len(entries)):
+            entries.append({"type":"blob",
+                            "path":"unrelated/file-" + str(i).zfill(5),
+                            "sha":"0"*40})
+        return {"sha":FROZEN_COMMIT,"truncated":False,"tree":entries}
+
+    def test_tree_comparison_rejects_missing_and_mutated_sources(self):
+        frozen=self._frozen_tree_fixture(self.ledger)
+        self.assertEqual([],validate_frozen_tree(self.ledger,frozen))
+        altered=copy.deepcopy(self.ledger)
+        altered["source_records"][0]["blob_sha"]="f"*40
+        self.assertTrue(any("mismatches" in e for e in validate_frozen_tree(altered,frozen)))
+        altered=copy.deepcopy(self.ledger)
+        altered["source_records"][0]["blob_sha"]="a"*39
+        self.assertTrue(any("invalid 40" in e for e in validate_frozen_tree(altered,frozen)))
+        altered=copy.deepcopy(frozen)
+        altered["tree"][0]["path"]="unrelated/replacement"
+        self.assertTrue(any("absent" in e for e in validate_frozen_tree(self.ledger,altered)))
+
+    def test_frozen_tree_identity_and_truncation_required(self):
+        original=self._frozen_tree_fixture(self.ledger)
+        for change in (
+            {"sha":"a"*40},
+            {"truncated":True},
+            {"truncated":None},
+            {"tree":[]},
+        ):
+            modified=copy.deepcopy(original)
+            modified.update(change)
+            self.assertTrue(validate_frozen_tree(self.ledger,modified))
+        altered=copy.deepcopy(self.ledger)
+        altered["source_main_commit"]="f"*40
+        self.assertTrue(validate_frozen_tree(altered,original))
+
+    def test_exhaustive_frozen_tree_manifest(self):
+        from check_legacy_rule_blobs import validate_complete_inventory
+        frozen = load("canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json")
+        self.assertEqual(3159, frozen["blob_count"])
+        self.assertEqual(3159, len(frozen["files"]))
+        self.assertTrue(frozen["no_files_excluded_from_rule_review"])
+        self.assertEqual("UNREVIEWED_RULE_APPLICABILITY", frozen["review_status_default"])
+        paths = [row[0] for row in frozen["files"]]
+        self.assertEqual(sorted(paths), paths)
+        self.assertEqual(len(paths), len(set(paths)))
+        sample = {
+            "sha": frozen["commit"], "truncated": False,
+            "tree": [{"path":r[0], "sha":r[1], "size":r[2], "type":"blob"}
+                     for r in frozen["files"]]
+        }
+        # Real Git tree has 121 directory entries in addition to its 3159 blobs.
+        sample["tree"].extend(
+            {"path": "_synthetic_directory_%03d" % i, "type": "tree"}
+            for i in range(frozen["tree_entry_count"] - len(sample["tree"]))
+        )
+        self.assertEqual([], validate_complete_inventory(frozen, sample))
+        bad = copy.deepcopy(frozen)
+        bad["files"][0][1] = "a" * 40 if bad["files"][0][1] != "a" * 40 else "b" * 40
+        self.assertTrue(validate_complete_inventory(bad, sample))
+        bad = copy.deepcopy(frozen)
+        bad["files"] = bad["files"][1:]
+        self.assertTrue(validate_complete_inventory(bad, sample))
+        bad = copy.deepcopy(frozen)
+        bad["no_files_excluded_from_rule_review"] = False
+        self.assertTrue(validate_complete_inventory(bad, sample))
+        bad = copy.deepcopy(sample)
+        bad["truncated"] = True
+        self.assertTrue(validate_complete_inventory(frozen, bad))
+
+    def test_policy_surface_all_current_canonical_fields(self):
+        from check_guard_policy_surface import validate_snapshot
+        surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
+        self.assertEqual([], validate_snapshot(surface, ROOT))
+        self.assertEqual(5, surface["source_policy_count"])
+        self.assertFalse(surface["semantic_rule_admission"])
+        self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
+                         sum(s["leaf_count"] for s in surface["sources"]))
+        broken = copy.deepcopy(surface)
+        broken["sources"][0]["leaves"] = broken["sources"][0]["leaves"][1:]
+        self.assertTrue(validate_snapshot(broken, ROOT))
+        broken = copy.deepcopy(surface)
+        broken["sources"][0]["git_blob_sha1"] = "0" * 40
+        self.assertTrue(validate_snapshot(broken, ROOT))
+        broken = copy.deepcopy(surface)
+        broken["sources"] = broken["sources"][1:]
+        self.assertTrue(validate_snapshot(broken, ROOT))
+        broken = copy.deepcopy(surface)
+        broken["semantic_rule_admission"] = True
+        self.assertTrue(validate_snapshot(broken, ROOT))
 
 if __name__=="__main__":
     unittest.main()

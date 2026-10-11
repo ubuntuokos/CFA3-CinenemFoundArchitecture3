@@ -1,0 +1,317 @@
+{
+  "schema": "cfa3.execution-guard-coverage.v1",
+  "id": "CFA3-EXECUTION-GUARD-COVERAGE-001",
+  "status": "PARTIAL_FOUNDATION_DENY_ALL_SIDE_EFFECTS",
+  "policy_files": [
+    "canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",
+    "canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",
+    "canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json",
+    "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
+    "canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json"
+  ],
+  "rules": {
+    "DEV-01": {
+      "code": "STOP_ON_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-02": {
+      "code": "NO_AUTONOMOUS_WORKAROUND",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-03": {
+      "code": "THREAD_SCOPE_LOCK",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-04": {
+      "code": "FRESH_STATE_BEFORE_WRITE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-05": {
+      "code": "OVERLAP_IS_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-06": {
+      "code": "NO_AUTOMATIC_WORKFLOW_OR_GATE_START",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-07": {
+      "code": "REPORT_AFTER_EVERY_MUTATION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-08": {
+      "code": "EXACT_HEAD_BEFORE_MERGE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-09": {
+      "code": "NO_SILENT_REDESIGN_OR_REPAIR",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-10": {
+      "code": "CURRENT_OWNER_RESTRICTION_WINS",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-11": {
+      "code": "NARROW_SELF_CORRECTION_EXCEPTION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "DEV-12": {
+      "code": "NO_ASSUMPTIONS_EXACT_SCOPE_AND_CANONICAL_DESIGN",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-01": {
+      "code": "STOP_ON_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-02": {
+      "code": "NO_INFERRED_BYPASS",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-03": {
+      "code": "EXPLICIT_SCOPE_BINDING",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-04": {
+      "code": "FRESH_STATE_OVER_CACHE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-05": {
+      "code": "CROSS_AGENT_COLLISION_BLOCK",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-06": {
+      "code": "EXPLICIT_SIDE_EFFECT_LEVEL",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-07": {
+      "code": "MUTATION_AUDIT",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-08": {
+      "code": "EXACT_STATE_AUTHORIZATION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-09": {
+      "code": "UNKNOWN_IS_BLOCKER",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-10": {
+      "code": "LATEST_OWNER_CONSTRAINT_WINS",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-11": {
+      "code": "NARROW_SELF_CORRECTION_EXCEPTION",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    },
+    "AI-12": {
+      "code": "NO_ASSUMPTIONS_AND_MANDATORY_CFA3_COMPLIANCE",
+      "status": "PENDING_RUNTIME_GATE_AND_PROOF"
+    }
+  },
+  "historical": {
+    "repository": "ubuntuokos/Final-Architecture-v3.0",
+    "commit": "a9c724da62bf49f3353c694990fc51443e634b4a",
+    "files": 3159,
+    "content_reviewed": 21,
+    "inventory_complete": false,
+    "path_inventory": "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
+    "pinned_tree_blob_enumeration_complete": true,
+    "pinned_tree_blob_count": 3159,
+    "rule_content_review_complete": false,
+    "rule_reconciliation_register": "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
+    "known_structured_candidates": 78,
+    "source_dispositions_verified": 0,
+    "full_rule_applicability_review_complete": false
+  },
+  "coverage_complete": false,
+  "missing_rules": null,
+  "unresolved_conflicts": null,
+  "independent_evidence_verified": false,
+  "approved_design_sources": [],
+  "limitations": [
+    "NO_FULL_LEGACY_INVENTORY",
+    "NO_TRUSTED_EXECUTION_ADAPTER",
+    "NATIVE_CHATGPT_TOOLS_NOT_INTERCEPTED",
+    "NO_VERIFIED_FULL_GUI_DESIGN",
+    "RULE_GATE_PROOFS_PENDING",
+    "REQUIRED_CHECKS_CONFIGURED_BUT_RUNTIMES_NOT_FULLY_QUALIFIED",
+    "NO_PHYSICAL_CURRENT_HOST_PASS",
+    "EXHAUSTIVE_GIT_TREE_IS_NOT_ALL_RULES_RECONCILED",
+    "COMPLETE_POLICY_JSON_FIELD_INVENTORY_NOT_SEMANTIC_RULE_ACCEPTANCE",
+    "GITHUB_REST_BYPASS_ACTORS_REQUIRE_RULESET_WRITE_PERMISSION_TO_READ",
+    "RULE_RECEIPTS_REQUIRE_A_REAL_INDEPENDENT_ATTESTER_NOT_SYNTHETIC_TEST_KEYS",
+    "SIGNED_HASH_WITHOUT_INDEPENDENT_CONTENT_READBACK_IS_NOT_AN_ADMISSIBLE_RULE_PROOF",
+    "HISTORICAL_3159_FILE_AUTHORITY_AND_APPLICABILITY_DISPOSITIONS_UNRESOLVED",
+    "INDEPENDENT_OWNER_GRANT_SIGNER_AND_PROTECTED_GRANT_STORE_NOT_YET_DEPLOYED",
+    "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
+  ],
+  "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
+  "canonical_policy_leaf_fields_enumerated": 431,
+  "canonical_policy_field_enumeration_complete": true,
+  "canonical_policy_semantic_rule_enforcement_complete": false,
+  "github_main_protection_ruleset": {
+    "ruleset_id": 24804719,
+    "ruleset_name": "CFA3-MAIN-PROTECTION",
+    "required_ci_contexts": [
+      "bootstrap",
+      "qt68-linux"
+    ],
+    "source_integration_id": 15368,
+    "verified_current_config_from_github": "2026-10-11",
+    "ci_drift_detection": "SOURCE_BOUND_RUNTIME_CHECK_PENDING_CI_PASS",
+    "scope": "MAIN_BRANCH_PR_PROTECTION_ONLY_NOT_ALL_RUNTIME_OPERATIONS",
+    "ci_visibility": "CONFIG_VISIBLE_BYPASS_UNVERIFIABLE_WITH_DEFAULT_GITHUB_TOKEN",
+    "privileged_bypass_empty_proof": "SEPARATE_REQUIRED_READ_NO_DEPLOYED_ATTESTATION",
+    "ci_runtime_verdict": "VISIBLE_CONFIG_ONLY_NOT_COMPLETE_RULESET_ADMISSION"
+  },
+  "rule_receipt_protocol": {
+    "schema": "cfa3.execution-guard-rule-receipt.v1",
+    "validator": "scripts/check_execution_rule_evidence.py",
+    "testing": "tests/test_execution_rule_evidence.py",
+    "known_current_governance_rule_count": 24,
+    "receipt_signature": "INDEPENDENT_HMAC_SHA256",
+    "task_source_binding": "CANONICAL_REQUEST_DIGEST_AND_GOVERNANCE_SHA256",
+    "require_all_24_verdicts": "MANDATORY",
+    "current_trusted_attester_deployed": false,
+    "state": "IMPLEMENTED_RECEIPT_VALIDATION_NOT_INDEPENDENT_RUNTIME_RULE_PROOFS",
+    "content_evidence": {
+      "schema": "cfa3.execution-guard-rule-evidence.v1",
+      "content_addressed_sha256_verification": "IMPLEMENTED",
+      "canonical_json_content_binding": "IMPLEMENTED",
+      "independent_evidence_resolver_deployed": false,
+      "evaluator_implementation_runtime_verified": false,
+      "trusted_content_store_deployed": false
+    }
+  },
+  "task_source_provenance_binding": {
+    "status": "CODED_AND_NEGATIVE_TESTED_NOT_DEPLOYED",
+    "mandatory_guard_sources": [
+      "AGENTS.md",
+      "docs/branding/CFA3-BRANDING.md",
+      ".github/workflows/cfa3-bootstrap.yml",
+      "scripts/check_bootstrap.py",
+      "scripts/check_guard_policy_surface.py",
+      "scripts/check_legacy_rule_blobs.py",
+      "scripts/check_execution_guard_ruleset.py",
+      "scripts/check_execution_rule_evidence.py",
+      "scripts/execution_guard.py",
+      "canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json",
+      "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json",
+      "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
+      "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json",
+      "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json"
+    ],
+    "plus_all_current_policy_files": true,
+    "source_hash_type": "SHA256_FILE_BYTES",
+    "scope": "AUTHORIZE_ONLY_EXACT_CHECKER_VERSION_AND_TRUSTED_SOURCE_STATE"
+  },
+  "live_github_state_adapter": {
+    "path": "scripts/check_execution_guard_github_state.py",
+    "tests": "tests/test_execution_guard_github_state.py",
+    "state": "READ_ONLY_ADAPTER_AND_NEGATIVE_TESTS_NOT_DEPLOYED",
+    "checks": [
+      "exact_main_and_head",
+      "PR_file_scope_and_overlap",
+      "required_check_runs_bound_to_head",
+      "review_thread_resolved",
+      "privileged_ruleset_bypass_list",
+      "separate_signed_owner_grant"
+    ],
+    "limitations": [
+      "requires separately controlled GitHub token",
+      "requires independent signed owner grant authority",
+      "does not intercept non-GitHub side effects",
+      "not a global tool admission"
+    ],
+    "owner_authorization": {
+      "validator": "scripts/check_execution_guard_owner_grant.py",
+      "evidence_schema": "cfa3.execution-guard-owner-authorization.v1",
+      "separate_signer_key": "MANDATORY_IN_TRUSTED_SERVICE",
+      "signature": "HMAC-SHA256",
+      "exact_task_contract_digest": true,
+      "task_main_head_branch_and_scope_binding": true,
+      "single_use_nonce_task_binding": true,
+      "fresh_expiry_and_budget_binding": true,
+      "untrusted_boolean_callback_rejected": true,
+      "deployment": "PENDING",
+      "status": "STRUCTURALLY_IMPLEMENTED_WITH_SYNTHETIC_TESTS_NO_LIVE_OWNER_ISSUER"
+    }
+  },
+  "historical_execution_exclusion": {
+    "scope": "EXECUTION_GUARD_ACTIVE_DEV_AI_ONLY",
+    "owner_instruction_date": "2026-10-11",
+    "excluded_historical_candidate_count": 78,
+    "historical_candidate_groups": {
+      "DEV_AI": 22,
+      "QUALITY": 29,
+      "TASK_SCOPE": 27
+    },
+    "history_completeness_required_for_active_gate": false,
+    "candidates_admitted_to_current_rule_set": false,
+    "current_required_rule_count": 24,
+    "current_rule_ids": [
+      "AI-01",
+      "AI-02",
+      "AI-03",
+      "AI-04",
+      "AI-05",
+      "AI-06",
+      "AI-07",
+      "AI-08",
+      "AI-09",
+      "AI-10",
+      "AI-11",
+      "AI-12",
+      "DEV-01",
+      "DEV-02",
+      "DEV-03",
+      "DEV-04",
+      "DEV-05",
+      "DEV-06",
+      "DEV-07",
+      "DEV-08",
+      "DEV-09",
+      "DEV-10",
+      "DEV-11",
+      "DEV-12"
+    ],
+    "reference_register": "canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json",
+    "export_json": "docs/governance/exports/CFA3-EXECUTION-GUARD-RULES-AND-CANDIDATES-20261011.json",
+    "still_requires_current_rule_proofs": true,
+    "note": "Explicit owner-scoped removal from Execution Guard active evaluation only. Historical source data remains unreviewed and cannot become new-CFA3 authority. No global full-governance PASS."
+  },
+  "audit_receipt_gate": {
+    "schema": "cfa3.execution-guard-audit-receipt.v1",
+    "validator": "scripts/check_execution_guard_audit.py",
+    "tests": "tests/test_execution_guard_audit.py",
+    "related_rules": [
+      "DEV-07",
+      "AI-07"
+    ],
+    "requires_separate_signing_key": true,
+    "before_executor_requires_independent_signed_durable_ack": true,
+    "requires_chain_on_failed_and_verified": true,
+    "no_op_audit_callback_fails_closed": true,
+    "trusted_durable_writer_deployed": false,
+    "status": "REFERENCE_VALIDATOR_TESTED_NOT_INDEPENDENT_RUNTIME_PROOF"
+  },
+  "owner_rule_specification": {
+    "path": "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
+    "validator": "scripts/check_execution_guard_rule_spec.py",
+    "active_texts": 24,
+    "archived_excluded_texts": 78,
+    "owner_amendments": 5,
+    "description_finalized": true,
+    "independent_runtime_proofs_verified": false,
+    "status": "OWNER_TEXT_CANONICAL_MAPPING_IMPLEMENTED_BUT_RUNTIME_PROOFS_PENDING"
+  },
+  "runtime_preflight_separation": {
+    "static_contract_validation": "policy_issues(require_prior_runtime_proofs=False)",
+    "independent_service_prerequisites": "trusted_runtime_issues",
+    "required_task_receipts": "verify_rule_receipts AFTER immutable policy, service and task validation",
+    "bootstrap_random_incidents_required": false,
+    "current_24_global_status_not_sufficient_for_task_authority": true,
+    "protected_service_deployments_verified": false,
+    "conditional_runtime_gate_status": "PENDING",
+    "status": "STRUCTURAL_IMPLEMENTATION_TESTED_NOT_LIVE_ADMITTED"
+  }
+}

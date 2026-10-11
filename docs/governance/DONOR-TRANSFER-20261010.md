@@ -118,12 +118,32 @@ Foundation, a 200 képesség célja és az L1–L5 szabályai változatlanok.
 - Létező locator hiányzó célazonosítóval integritási hibát ad, nem egyszerű
   „nem található” eredményt.
 
-Helyi bizonyíték az aktuális `bd26ce9f24eb31a5e4c810a3c97c79c23ed21521`
-főági szabályokkal együtt: 111 Python-teszt, bootstrap strukturális ellenőrzés és mindkét
-generátor `--check` futása sikeres. A negatív tesztek tényleges ideiglenes
-fájlmódosítással ellenőrzik a felmelegített cache utáni sérülésfelismerést is.
-Ez referencia-/keresési bizonyíték, nem fizikai Current Host PASS, nem globális
-L1–L5 lezárás. A publikált commit és a CI állapota a javító PR-ben ellenőrizhető.
+## Friss ellenőrzési bizonyíték a #11 javításhoz (2026-10-11)
+
+A korábbi 111 tesztes bejegyzés történeti, nem tekinthető a javított kódállapot
+végső bizonyítékának. Az ellenőrzött, `main`-nel szinkronizált kódcommit:
+`8f024c7b0d04e86e7a24473c2ecc555991f3817c` (a főági szülő
+`bd26ce9f24eb31a5e4c810a3c97c79c23ed21521`).
+
+- GitHub Actions `CFA3 bootstrap reference checks`:
+  https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/38148020871
+  — `success`; a **teljes Python unittest-discovery 128 tesztet futtatott**,
+  `Ran 128 tests in 114.601s`, `OK`.
+- Az új `test_tuple_container_cannot_bypass_validated_snapshot_deep_freeze`
+  negatív regresszió ezen a pontos commiton `ok`. A GitHub CI
+  Rust-first workspace-ellenőrzése is `success`.
+- GitHub Actions `CFA3 Qt 6.8 Linux environment`:
+  https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/actions/runs/38148020917
+  — `success`.
+- A korábban javított integritási-, jóváhagyási-, locator- és lifecycle-hibák
+  tesztjei ugyanezen teljes tesztfutás részei. A teljes snapshot, az elutasítási
+  napló és a tulajdonosi bizonyítékok hitelesítését a regressziók is ellenőrzik.
+
+Ez a bizonyíték **csak a megjelölt kódcommitra** vonatkozik. A dokumentációs
+commitra és a végleges PR HEAD-re a GitHub kötelező ellenőrzéseit külön, friss
+állapotból kell visszaigazolni, a független code review-val együtt. A szintetikus
+CI soha nem fizikai Current Host PASS, és nem igazolja az eredeti B, a teljes
+történeti beküldéskészlet vagy az L1–L5 lezárását.
 
 A #11 első független review-jának négy kiegészítő észrevétele is regressziós
 tesztet kapott. A referencia-kereső a teljes snapshotot és mindkét lookup-indexet

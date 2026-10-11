@@ -86,7 +86,10 @@ class DonorL1ArchiveTests(unittest.TestCase):
         self.assertTrue(self.manifest["no_new_l2_crawl"])
         index = read(ROOT / "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json")
         self.assertFalse(index["complete"])
-        self.assertEqual(index["source_records"],[])
+        self.assertFalse(index["global_l1_completed"])
+        staged = read(ROOT / "canonical/registries/CFA3-DONOR-L1-STAGED-DIRECT-ACCESS-20261010.json")
+        self.assertEqual({r["source_id"] for r in index["source_records"]},
+                         {r["id"] for r in staged["sources"]})
 
 
 if __name__ == "__main__":

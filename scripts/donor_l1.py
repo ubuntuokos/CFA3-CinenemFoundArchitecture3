@@ -5,6 +5,7 @@ No network activity, no source approval, no dependency/runtime admission.
 Requires explicit audited coverage evidence before publishing.
 """
 import argparse
+from contextlib import closing
 import hashlib
 import json
 import os
@@ -743,7 +744,7 @@ def prepare(db, sources, run_id):
     ))
 
 def verify(path, expected):
-    with sqlite3.connect(path) as db:
+    with closing(sqlite3.connect(path)) as db:
         total = db.execute("SELECT count(*) FROM sources").fetchone()[0]
         if total != expected:
             raise ValueError("Read-back source cardinality mismatch")
@@ -900,7 +901,7 @@ def stage(output, run_id):
     with tempfile.NamedTemporaryFile(prefix="cfa3-l1-",suffix=".sqlite",dir=output.parent,delete=False) as tmp:
         provisional = Path(tmp.name)
     try:
-        with sqlite3.connect(provisional) as db:
+        with closing(sqlite3.connect(provisional)) as db:
             with db:
                 prepare(db,sources,run_id)
         evidence = verify(provisional,len(sources))
@@ -915,7 +916,7 @@ def stage(output, run_id):
 
 def lookup(path, term, by):
     column = {"id":"source_id","key":"normalized_key","url":"locator"}[by] if by in ("id","key","url") else None
-    with sqlite3.connect(path) as db:
+    with closing(sqlite3.connect(path)) as db:
         if by == "url":
             query = ("SELECT s.source_id,s.locator,s.current_status FROM sources s "
                      "JOIN url_resolution r ON r.preferred_source_id=s.source_id WHERE r.alias=?")

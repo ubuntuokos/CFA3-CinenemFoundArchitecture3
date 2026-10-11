@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Read-only CFA3 source-identity / prior-decision gate. Never fetches or registers."""
 import argparse
+from functools import lru_cache
 import json
 import pathlib
 import sys
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+from donor_delta_routes import delta_aliases
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_INDEX = ROOT / "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json"
@@ -44,6 +47,8 @@ def normalize_url(url):
                        host, path, urlencode(query), ""))
 
 def validate_index(index):
+    if isinstance(index, dict) and index.get("schema") == "cfa3.source-lifecycle-index.v2":
+        return validate_migrated_index(index)
     if not isinstance(index, dict) or index.get("schema") != "cfa3.source-lifecycle-index.v1":
         raise ValueError("Source index schema missing or wrong")
     if not isinstance(index.get("complete"), bool) or not isinstance(index.get("source_records"), list):
@@ -69,12 +74,126 @@ def validate_index(index):
             urls[key] = sid
     return urls
 
+def validate_migrated_index(index):
+    """Validate explicit historical routes without collapsing related identities."""
+    if index.get("complete") is not False or index.get("global_l1_completed") is not False:
+        raise ValueError("Migrated reference lookup cannot certify global completeness")
+    records, routes = index.get("source_records"), index.get("locator_routes")
+    if not isinstance(records, list) or not isinstance(routes, list):
+        raise ValueError("Missing migrated records or routes")
+    names = set()
+    for record in records:
+        sid, decision = record.get("source_id"), record.get("prior_decision")
+        if not isinstance(sid, str) or not sid or sid in names:
+            raise ValueError("Missing or duplicated source_id")
+        names.add(sid)
+        if not isinstance(record.get("canonical_url"), str) or not record["canonical_url"]:
+            raise ValueError("Missing historical source locator")
+        if not isinstance(decision, dict) or not all(decision.get(k) for k in ("decision_id", "revision", "outcome")):
+            raise ValueError("Missing prior decision provenance")
+        if record.get("runtime_admission") is not False:
+            raise ValueError("Lookup cannot grant runtime admission")
+    exact = {}
+    for route in routes:
+        alias, preferred = route.get("alias"), route.get("preferred_source_id")
+        related = route.get("related_source_ids")
+        if (not isinstance(alias, str) or not alias or alias in exact
+                or not isinstance(related, list) or not related
+                or any(sid not in names for sid in related)
+                or len(set(related)) != len(related) or preferred not in related
+                or not route.get("authority")):
+            raise ValueError("Invalid historical locator route")
+        exact[alias] = preferred
+    if any(r["canonical_url"] not in exact for r in records):
+        raise ValueError("Historical source locator is not routed")
+    if index.get("active_reference_snapshot") == "CFA3-DONOR-TRANSFER-SNAPSHOT-001":
+        for alias, sid in delta_aliases(records).items():
+            if alias in exact and exact[alias] != sid:
+                raise ValueError("Historical delta URL conflicts with canonical locator route")
+            exact[alias] = sid
+    return exact
+
+def resolve_migrated_url(url, exact):
+    # Original URL spelling is authoritative. Normalization may be used only
+    # when all matching historical routes select the same preferred identity.
+    if url in exact:
+        return exact[url]
+    key = normalize_url(url)
+    matches = set()
+    for alias, sid in exact.items():
+        try:
+            if normalize_url(alias) == key:
+                matches.add(sid)
+        except ValueError:
+            continue  # non-HTTP source keys are preserved, not fabricated URLs
+    if len(matches) > 1:
+        raise ValueError("Normalized URL matches different historical decisions")
+    return next(iter(matches), None)
+
+@lru_cache(maxsize=1)
+def transferred_snapshot():
+    """Unmodified archival data; never an authority for runtime admission."""
+    path = ROOT / "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json"
+    transfer = json.loads(path.read_text(encoding="utf-8"))
+    if (transfer.get("schema") != "cfa3.donor-transfer-snapshot.v1"
+            or transfer.get("runtime_admission") is not False
+            or transfer.get("code_or_license_admission") is not False):
+        raise ValueError("Historical source snapshot schema or authority is invalid")
+    return transfer
+
+
+@lru_cache(maxsize=1)
+def historical_rejections():
+    """Exact rejected identities remain blocked but searchable as decisions."""
+    transfer = transferred_snapshot()
+    routes = {}
+    for history in transfer["rejection_audit"]["entries"]:
+        item = history["donor"]
+        sid = item["donor_id"]
+        if item.get("status") != "REJECTED" or sid in transfer["lookup_by_id"]:
+            raise ValueError("Invalid rejected-source history or active reentry")
+        source = {
+            "source_id": sid,
+            "prior_decision": {
+                "decision_id": "preserved-rejection:" + sid,
+                "outcome": "REJECTED",
+                "historical_rejection": history,
+            },
+            "runtime_admission": False,
+        }
+        for locator in (item["source"]["locator"], item["source"]["normalized_key"]):
+            if locator in routes and routes[locator]["source_id"] != sid:
+                raise ValueError("Conflicting historical rejection locators")
+            routes[locator] = source
+    return routes
+
+
+@lru_cache(maxsize=1)
+def historical_upstream_evidence():
+    """Use exact preserved records; never infer a current upstream revision."""
+    transfer = transferred_snapshot()
+    keys = ("upstream_snapshot", "upstream_observation", "source_snapshot",
+            "observed_commit", "upstream_repository_references")
+    return {
+        row["source_id"]: (
+            row["historical_record_sha256"],
+            {key: row["historical_record"][key] for key in keys
+             if key in row["historical_record"]})
+        for row in transfer["records"]
+    }
+
+
 def result(state, *, source=None, **details):
     value = {"disposition": state, "automatic_code_import": False,
              "automatic_donor_registration": False, "prior_decision_overwritten": False}
     if source is not None:
         value["source_id"] = source["source_id"]
-        value["prior_decision"] = source["prior_decision"]
+        prior = source["prior_decision"]
+        if "reference_state" in source:  # migrated v2 source
+            archived = historical_upstream_evidence().get(source["source_id"])
+            if archived is not None and archived[0] == prior.get("revision"):
+                prior = {**prior, "historical_upstream_evidence": archived[1]}
+        value["prior_decision"] = prior
     value.update(details)
     return value
 
@@ -86,12 +205,23 @@ def observation_verified(observation):
 
 def evaluate(url, index, observation=None):
     try:
-        key = normalize_url(url)
         alias_map = validate_index(index)
+        migrated = index.get("schema") == "cfa3.source-lifecycle-index.v2"
+        if migrated:
+            rejected = historical_rejections().get(url)
+            if rejected is not None:
+                return result("BLOCKED_REJECTED_SOURCE", source=rejected,
+                              action="PRESERVE_REJECTION_NO_REACTIVATION")
+            # Exact historical locators include non-HTTP project:* identifiers.
+            sid = resolve_migrated_url(url, alias_map)
+            key = normalize_url(url) if sid is None else None
+        else:
+            key = normalize_url(url)
+            sid = alias_map.get(key)
     except (TypeError, ValueError, AttributeError) as exc:
         return result("BLOCKED_INDEX_CONFLICT", reason=str(exc))
     by_id = {x["source_id"]: x for x in index["source_records"]}
-    source = by_id.get(alias_map[key]) if key in alias_map else None
+    source = by_id.get(sid)
     if observation is not None and not observation_verified(observation):
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source)
     if source is None:
@@ -130,8 +260,29 @@ def evaluate(url, index, observation=None):
         return result("CHANGE_CHECK_REQUIRED", source=source, reason="Upstream support remains unknown")
     if not isinstance(observation.get("observed_revision"), str) or not observation["observed_revision"]:
         return result("BLOCKED_UNVERIFIED_OBSERVATION", source=source, reason="No upstream revision proof")
+    previous_revision = source.get("observed_revision")
+    if previous_revision is None and "reference_state" in source:
+        archived = historical_upstream_evidence().get(source["source_id"])
+        if archived is not None and archived[0] == source["prior_decision"].get("revision"):
+            evidence = archived[1]
+            versions = []
+            upstream = evidence.get("upstream_snapshot")
+            if isinstance(upstream, dict):
+                if upstream.get("checked_at") and upstream.get("source") == "GitHub repository API":
+                    versions.append(upstream.get("commit_sha"))
+                if upstream.get("observed_at"):
+                    versions.append(upstream.get("head_sha"))
+            snapshot = evidence.get("source_snapshot")
+            if isinstance(snapshot, dict) and snapshot.get("observed_at"):
+                versions.extend((snapshot.get("commit"), snapshot.get("default_branch_commit")))
+            versions.append(evidence.get("observed_commit"))
+            revisions = {v.lower() for v in versions
+                         if isinstance(v, str) and len(v) == 40
+                         and all(c in "0123456789abcdefABCDEF" for c in v)}
+            if len(revisions) == 1:
+                previous_revision = next(iter(revisions))
     if observation.get("event") in ("VERSION_UPDATE", "FUNCTIONAL_MODERNIZATION") or (
-            observation["observed_revision"] != source.get("observed_revision")):
+            observation["observed_revision"] != previous_revision):
         return result("CHANGE_REVIEW_REQUIRED", source=source,
                       new_revision=observation["observed_revision"],
                       action="APPEND_ASSESSMENT_KEEP_PREVIOUS_DECISION")

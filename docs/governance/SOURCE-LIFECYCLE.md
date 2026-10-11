@@ -40,3 +40,18 @@ An observation JSON can contain `evidence_ref`, `checked_at`, `verification: "VE
 - An observation/review is not donor registration, a usage edge, SDK adoption, runtime admission or Current Host evidence.
 - Historical decisions are append-only. A genuinely erroneous old decision is addressed through **explicit owner-authorized correction**, not silent reinterpretation of a re-submitted URL.
 - The source lifecycle policy can be structurally checked in CI while the full donor migration remains **PENDING**.
+# Current lookup integration
+
+The default lifecycle index is generated offline from the existing staged donor
+index, original donor evidence, owner-approval ledger, registered references and
+the exact URL routing table. It contains 1981 source identities and preserves all
+3946 locator routes, including related historical identities. Regenerate with
+`python3 scripts/build_source_lifecycle_index.py`; verify reproducibility with
+`python3 scripts/build_source_lifecycle_index.py --check`.
+
+Schema v2 preserves non-HTTP historical locators without manufacturing URLs.
+An original URL uses its preserved preferred identity; normalized variants may
+resolve only if they have one unambiguous preferred identity. Upstream revisions
+and reuse rights remain unknown unless separately verified. Known links now
+return prior decision evidence; unknown links remain blocked while global source
+coverage is incomplete. Lookup availability does not complete L1 publication.

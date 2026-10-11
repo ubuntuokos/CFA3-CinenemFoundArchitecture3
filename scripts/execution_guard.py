@@ -236,7 +236,8 @@ def _reserve(folder, task):
 
 def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
                     live_state=None, preflight=None, executor=None,
-                    verify_result=None, audit=None, state_dir=None):
+                    verify_result=None, audit=None, state_dir=None,
+                    rule_attester=None, rule_attestation_secret=None):
     """Requires a separately isolated trusted service with exclusive credentials.
 
     It cannot intercept native ChatGPT tools or other unguarded service routes.
@@ -247,9 +248,19 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
     check_task(root, task)
     verify_signature(task, secret)
     if not all(callable(f) for f in (
-            admission, live_state, preflight, executor, verify_result, audit)) or (
-            state_dir is None):
-        raise Blocked("trusted execution/admission/audit adapter missing")
+            admission, live_state, preflight, executor, verify_result, audit,
+            rule_attester)) or state_dir is None:
+        raise Blocked("trusted rule attester/execution/admission/audit adapter missing")
+    if (not isinstance(rule_attestation_secret, bytes) or
+            len(rule_attestation_secret) < 32 or
+            hmac.compare_digest(secret, rule_attestation_secret)):
+        raise Blocked("separate trusted rule proof key required")
+    from check_execution_rule_evidence import verify_rule_receipts, RuleEvidenceBlocked
+    try:
+        verify_rule_receipts(task, rule_attester(task), load(root, GOV),
+                             rule_attestation_secret)
+    except RuleEvidenceBlocked as exc:
+        raise Blocked("RULE_GATE: " + str(exc)) from exc
     evidence = admission(task)
     if not isinstance(evidence, dict) or any(evidence.get(x) is not True for x in (
             "complete_rule_inventory", "rule_gates_verified",

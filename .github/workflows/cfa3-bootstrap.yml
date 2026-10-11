@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate new-CFA3 bootstrap candidate policies
         run: python3 scripts/check_bootstrap.py
+      - name: Verify full current canonical policy JSON surface
+        run: python3 scripts/check_guard_policy_surface.py
       - name: Verify every historical rule ledger blob against frozen Git tree
         env:
           GITHUB_TOKEN: ${{ github.token }}

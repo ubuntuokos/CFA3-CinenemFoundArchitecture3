@@ -233,5 +233,26 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["truncated"] = True
         self.assertTrue(validate_complete_inventory(frozen, bad))
 
+    def test_policy_surface_all_current_canonical_fields(self):
+        from check_guard_policy_surface import validate_snapshot
+        surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
+        self.assertEqual([], validate_snapshot(surface, ROOT))
+        self.assertEqual(5, surface["source_policy_count"])
+        self.assertFalse(surface["semantic_rule_admission"])
+        self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
+                         sum(s["leaf_count"] for s in surface["sources"]))
+        broken = copy.deepcopy(surface)
+        broken["sources"][0]["leaves"] = broken["sources"][0]["leaves"][1:]
+        self.assertTrue(validate_snapshot(broken, ROOT))
+        broken = copy.deepcopy(surface)
+        broken["sources"][0]["git_blob_sha1"] = "0" * 40
+        self.assertTrue(validate_snapshot(broken, ROOT))
+        broken = copy.deepcopy(surface)
+        broken["sources"] = broken["sources"][1:]
+        self.assertTrue(validate_snapshot(broken, ROOT))
+        broken = copy.deepcopy(surface)
+        broken["semantic_rule_admission"] = True
+        self.assertTrue(validate_snapshot(broken, ROOT))
+
 if __name__=="__main__":
     unittest.main()

@@ -15,6 +15,7 @@ GOV = "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json"
 LEDGER = "canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json"
 CATALOG = "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json"
 FROZEN_TREE = "canonical/registries/CFA3-LEGACY-FROZEN-TREE-001.json"
+POLICY_SURFACE = "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json"
 ACTIONS = {"GUI_RENDER", "REPOSITORY_WRITE", "WORKFLOW_START", "ARTIFACT_EXPORT"}
 
 class Blocked(RuntimeError):
@@ -78,6 +79,12 @@ def policy_issues(root=ROOT):
             issues.append("full frozen file inventory invalid or missing seed bindings")
     except (Blocked, ValueError, TypeError, KeyError, IndexError):
         issues.append("full frozen file inventory absent or malformed")
+    try:
+        from check_guard_policy_surface import validate_snapshot
+        surface = load(root, POLICY_SURFACE)
+        issues.extend(validate_snapshot(surface, root))
+    except (Blocked, OSError, ValueError, TypeError, ImportError):
+        issues.append("canonical policy field snapshot unavailable or inconsistent")
     if ledger.get("inventory_complete") is not True:
         issues.append("historical rule inventory incomplete")
     if gov.get("legacy_policy_transfer", {}).get("rule_inventory_complete") is not True:

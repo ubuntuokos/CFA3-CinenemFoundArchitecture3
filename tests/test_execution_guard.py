@@ -169,5 +169,11 @@ class GuardTests(unittest.TestCase):
         self.assertTrue(any("historical rule inventory incomplete" in x
                             for x in policy_issues(ROOT)))
 
+    def test_policy_surface_contains_all_current_leaf_fields(self):
+        from check_guard_policy_surface import validate_snapshot
+        manifest = load(ROOT, "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
+        self.assertFalse(manifest["semantic_rule_admission"])
+        self.assertEqual([], validate_snapshot(manifest, ROOT))
+
 if __name__ == "__main__":
     unittest.main()

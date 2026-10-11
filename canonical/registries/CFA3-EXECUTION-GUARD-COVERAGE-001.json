@@ -131,6 +131,11 @@
     "RULE_GATE_PROOFS_PENDING",
     "NO_REQUIRED_GITHUB_CHECKS",
     "NO_PHYSICAL_CURRENT_HOST_PASS",
-    "EXHAUSTIVE_GIT_TREE_IS_NOT_ALL_RULES_RECONCILED"
-  ]
+    "EXHAUSTIVE_GIT_TREE_IS_NOT_ALL_RULES_RECONCILED",
+    "COMPLETE_POLICY_JSON_FIELD_INVENTORY_NOT_SEMANTIC_RULE_ACCEPTANCE"
+  ],
+  "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
+  "canonical_policy_leaf_fields_enumerated": 431,
+  "canonical_policy_field_enumeration_complete": true,
+  "canonical_policy_semantic_rule_enforcement_complete": false
 }

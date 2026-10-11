@@ -77,7 +77,7 @@ class FirstDonorFilePublicationTests(unittest.TestCase):
         canonical = self.canonical
         self.assertEqual(canonical["donor_count"], 81)
         self.assertEqual(len(canonical["records"]), 81)
-        self.assertEqual(len(canonical["sequential_file_publications"]), 1)
+        self.assertEqual(len(canonical["sequential_file_publications"]), 2)
         first = canonical["sequential_file_publications"][0]
         self.assertEqual(first["source_sequence"], 1)
         self.assertEqual(first["source_records"], 1919)

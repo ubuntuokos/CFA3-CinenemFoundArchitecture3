@@ -70,7 +70,7 @@
   "no_automatic_promotion": true,
   "no_new_l2_crawl": true,
   "physical_host_pass": false,
-  "current_stage": "A_IMMUTABLE_SOURCE_ARCHIVE",
+  "current_stage": "A_SOURCE_ARCHIVE_WITH_SEQUENTIAL_PARTIAL_L1_FILE_PUBLICATIONS",
   "next_gate": "RECONCILE_ALL_OWNER_APPROVED_SUBMISSIONS_AND_CLASSIFY_L1_THEN_PUBLISH_WITH_READBACK",
   "plan_id": "CFA3-DONOR-MIGRATION-AND-CLASSIFICATION-V2-001",
   "policy_id": "CFA3-DONOR-BOUNDED-CLASSIFICATION-001",
@@ -91,8 +91,9 @@
       "owner_approval_status_override_ids": [
         "FA3-DONOR-OPENCUT-001"
       ],
-      "canonical_l1_published": false,
-      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+      "canonical_l1_published": true,
+      "verification": "SOURCE_FILE_CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1_NOT_GLOBAL_L1_PASS",
+      "published_catalog": "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json"
     },
     {
       "source_path": "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json",
@@ -109,8 +110,9 @@
       "legacy_superseded_original_key_preserved_by_routing": true,
       "raw_markdown_files_independently_replayed": false,
       "original_B_assumed_from_union": false,
-      "canonical_l1_published": false,
-      "verification": "FILE_REPLAY_READBACK_PASS_NOT_LEVEL_PUBLISH_PASS"
+      "canonical_l1_published": true,
+      "verification": "SOURCE_FILE_CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1_NOT_GLOBAL_L1_PASS",
+      "published_catalog": "canonical/registries/CFA3-DONOR-SOURCE-FILE-002.json"
     },
     {
       "source_path": "canonical/deltas/CFA3-DONOR-AGENTSCOPE-EMBABEL-SHGAF-BATCH-2026-10-06.json",

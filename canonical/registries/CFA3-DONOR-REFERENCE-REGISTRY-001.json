@@ -1490,6 +1490,35 @@
     "https://github.com/Maggi-Chen/Inspector": "FA3-DONOR-MAGGI-CHEN-INSPECTOR-001"
   },
   "sequential_file_publications": [
-    {"source_sequence":1,"source_file":"canonical/FA3-DONOR-REFERENCE-REGISTRY-001.json","published_catalog":"canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json","historical_blob_sha":"062b7b27aeeaf74819ac315f30c5cbde4ed2c95b","status":"CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1","source_records":1919,"accepted_reference_records":825,"candidates":963,"analyzed":130,"superseded":1,"aliases":1997,"previous_statuses_unchanged":true,"full_L1_level_pass":false}
+    {
+      "source_sequence": 1,
+      "source_file": "canonical/FA3-DONOR-REFERENCE-REGISTRY-001.json",
+      "published_catalog": "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json",
+      "historical_blob_sha": "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b",
+      "status": "CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1",
+      "source_records": 1919,
+      "accepted_reference_records": 825,
+      "candidates": 963,
+      "analyzed": 130,
+      "superseded": 1,
+      "aliases": 1997,
+      "previous_statuses_unchanged": true,
+      "full_L1_level_pass": false
+    },
+    {
+      "source_sequence": 2,
+      "source_file": "CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json",
+      "published_catalog": "canonical/registries/CFA3-DONOR-SOURCE-FILE-002.json",
+      "historical_blob_sha": "d22dce8bfe3d9697a1121033ff7b387d051a638a",
+      "status": "CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1",
+      "source_records": 445,
+      "unique_donor_ids": 444,
+      "accepted_reference_records": 444,
+      "superseded": 1,
+      "original_url_routes": 494,
+      "existing_identities_only": true,
+      "previous_statuses_unchanged": true,
+      "full_L1_level_pass": false
+    }
   ]
 }

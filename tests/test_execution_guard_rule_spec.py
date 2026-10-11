@@ -16,7 +16,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
         return validate(self.spec if spec is None else spec,self.gov,
                         self.coverage if coverage is None else coverage,
                         self.export if export is None else export)
-    def test_exact_81_current_rules_and_all_78_admitted(self):
+    def test_exact_82_current_rules_and_all_78_admitted(self):
         self.assertEqual([],self.check())
         self.assertEqual(82,len(active_expected_codes(self.gov,self.spec)))
         self.assertEqual(82,len(self.spec["active_rules"]))
@@ -68,6 +68,39 @@ class OwnerRuleSpecTests(unittest.TestCase):
         bad = copy.deepcopy(self.export)
         bad["current_rules"][-1]["source_git_blob_sha1"] = "0"*40
         self.assertTrue(self.check(export=bad))
+
+    def test_every_repeated_active_rule_count_and_status_is_checked(self):
+        cases=(
+            ("rule_receipt_protocol","known_current_governance_rule_count",81),
+            ("owner_rule_specification","active_texts",81),
+            ("owner_rule_specification","status","OWNER_81_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS"),
+            ("runtime_preflight_separation","required_task_receipts",
+             "verify_rule_receipts FOR_OWNER_APPROVED_81"),
+        )
+        for section,field,value in cases:
+            with self.subTest(section=section,field=field):
+                bad=copy.deepcopy(self.coverage)
+                bad[section][field]=value
+                self.assertTrue(self.check(coverage=bad))
+
+    def test_provenance_fields_fail_closed_for_each_new_rule(self):
+        tamper={
+            "type":"OTHER_SOURCE",
+            "id":"FAKE-001",
+            "code":"FAKE_CODE",
+            "authority":"UNAPPROVED",
+            "active_rule_receipt_scope":False,
+            "excluded_by_request":True,
+            "source_path":"wrong-policy.json",
+            "source_json_pointer":"/wrong",
+            "source_git_blob_sha1":"0"*40,
+        }
+        for index in (-2,-1):
+            for field,value in tamper.items():
+                with self.subTest(index=index,field=field):
+                    bad=copy.deepcopy(self.export)
+                    bad["current_rules"][index][field]=value
+                    self.assertTrue(self.check(export=bad))
 
     def test_no_fake_runtime_pass(self):
         bad=copy.deepcopy(self.spec);bad["active_rules"][79]["runtime_verified"]=True

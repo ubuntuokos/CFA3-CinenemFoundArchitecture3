@@ -401,7 +401,7 @@
     "schema": "cfa3.execution-guard-rule-receipt.v1",
     "validator": "scripts/check_execution_rule_evidence.py",
     "testing": "tests/test_execution_rule_evidence.py",
-    "known_current_governance_rule_count": 81,
+    "known_current_governance_rule_count": 82,
     "receipt_signature": "INDEPENDENT_HMAC_SHA256",
     "task_source_binding": "CANONICAL_REQUEST_DIGEST_AND_GOVERNANCE_SHA256",
     "current_trusted_attester_deployed": false,
@@ -498,7 +498,7 @@
   "runtime_preflight_separation": {
     "static_contract_validation": "policy_issues(require_prior_runtime_proofs=False)",
     "independent_service_prerequisites": "trusted_runtime_issues",
-    "required_task_receipts": "verify_rule_receipts FOR_OWNER_APPROVED_81",
+    "required_task_receipts": "verify_rule_receipts FOR_OWNER_APPROVED_82",
     "bootstrap_random_incidents_required": false,
     "current_24_global_status_not_sufficient_for_task_authority": true,
     "protected_service_deployments_verified": false,

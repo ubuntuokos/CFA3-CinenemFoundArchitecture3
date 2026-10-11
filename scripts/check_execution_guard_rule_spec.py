@@ -48,6 +48,25 @@ def active_expected_codes(gov,spec):
     if len(expected)!=82 or found!=set(expected):
         raise ValueError("current 82 active rules incomplete")
     return expected
+def canonical_provenance_matches(row,rule,policy_path,surface):
+    """Validate every authoritative field of a newly admitted owner's source record."""
+    record=next((x for x in surface["sources"] if x["path"]==policy_path),None)
+    if not isinstance(row,dict) or not isinstance(record,dict):
+        return False
+    expected={
+        "type":"OWNER_CURRENT_RULE",
+        "id":rule["id"],
+        "code":rule["code"],
+        "authority":"OWNER_2026_10_11",
+        "active_rule_receipt_scope":True,
+        "excluded_by_request":False,
+        "source_path":policy_path,
+        "source_json_pointer":"/rule",
+        "source_git_blob_sha1":record["git_blob_sha1"],
+    }
+    return set(row)==set(expected) and all(
+        type(row[k]) is type(v) and row[k]==v for k,v in expected.items())
+
 def validate(spec,gov,coverage,reference):
     if not all(isinstance(x,dict) for x in (spec,gov,coverage,reference)):
         return ["rule source not an object"]
@@ -62,6 +81,20 @@ def validate(spec,gov,coverage,reference):
             row=rules[ident]
             if not isinstance(row,dict) or row.get("code")!=code or row.get("status") not in ("PENDING_RUNTIME_GATE_AND_PROOF","VERIFIED_GATE"):
                 issues.append("current active code/status drift: "+ident)
+    rule_count=len(expected)
+    receipt=coverage.get("rule_receipt_protocol",{})
+    owner_spec=coverage.get("owner_rule_specification",{})
+    preflight=coverage.get("runtime_preflight_separation",{})
+    if (not isinstance(receipt,dict) or
+            receipt.get("known_current_governance_rule_count")!=rule_count):
+        issues.append("rule receipt protocol count disagrees with active rules")
+    if (not isinstance(owner_spec,dict) or
+            owner_spec.get("active_texts")!=rule_count or
+            owner_spec.get("status")!=f"OWNER_{rule_count}_RULES_SOURCE_ACCOUNTED_NO_RUNTIME_PASS"):
+        issues.append("owner rule specification count/status inconsistent")
+    if (not isinstance(preflight,dict) or
+            preflight.get("required_task_receipts")!=f"verify_rule_receipts FOR_OWNER_APPROVED_{rule_count}"):
+        issues.append("required task receipt count inconsistent")
     for row in spec["active_rules"]:
         if not isinstance(row.get("text_hu"),str) or len(row["text_hu"].strip())<20 or row.get("runtime_verified") is not False or not row.get("proof_mode"):
             issues.append("owner text or runtime status invalid")
@@ -101,28 +134,26 @@ def validate(spec,gov,coverage,reference):
                 new_policy["rule"]["id"]!="RULE-ADMISSION-001" or
                 new_owner_rule.get("runtime_verified") is not False):
             issues.append("new owner rule does not match its canonical policy")
-        if (reference["current_rules"][-2].get("id")!="RULE-ADMISSION-001" or
-                reference["current_rules"][-2].get("source_git_blob_sha1")!=
-                next(s["git_blob_sha1"] for s in
-                     json.loads((ROOT/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))["sources"]
-                     if s["path"]==RULE_ADMISSION_POLICY)):
-            issues.append("new owner rule source is not the policy-surface revision")
+        policy_surface=json.loads((ROOT/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
+        if not canonical_provenance_matches(
+                reference["current_rules"][-2],new_policy["rule"],
+                RULE_ADMISSION_POLICY,policy_surface):
+            issues.append("new owner rule provenance record does not match canonical source")
     except (OSError,ValueError,TypeError,KeyError,StopIteration):
         issues.append("new owner rule canonical source unavailable")
     try:
         sequential_policy=json.loads((ROOT/SEQUENTIAL_COMMAND_POLICY).read_text("utf-8"))
         sequential_rule=active["CFA3-SEQUENTIAL-COMMAND-001"]
         policy_surface=json.loads((ROOT/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
-        source_sha=next(row["git_blob_sha1"] for row in policy_surface["sources"]
-                        if row["path"]==SEQUENTIAL_COMMAND_POLICY)
         if (sequential_policy.get("id")!="CFA3-SEQUENTIAL-COMMAND-POLICY-001" or
                 sequential_policy["rule"].get("id")!="CFA3-SEQUENTIAL-COMMAND-001" or
                 sequential_rule.get("code")!=sequential_policy["rule"].get("code") or
                 sequential_rule.get("text_hu")!=sequential_policy["rule"].get("text_hu") or
                 sequential_rule.get("runtime_verified") is not False or
-                reference["current_rules"][-1].get("id")!="CFA3-SEQUENTIAL-COMMAND-001" or
-                reference["current_rules"][-1].get("source_git_blob_sha1")!=source_sha):
-            issues.append("sequential command rule does not match its canonical source")
+                not canonical_provenance_matches(
+                    reference["current_rules"][-1],sequential_policy["rule"],
+                    SEQUENTIAL_COMMAND_POLICY,policy_surface)):
+            issues.append("sequential command rule does not match its canonical source or provenance")
     except (OSError,ValueError,TypeError,KeyError,StopIteration):
         issues.append("sequential command rule canonical source unavailable")
     amend=spec.get("owner_amendments")

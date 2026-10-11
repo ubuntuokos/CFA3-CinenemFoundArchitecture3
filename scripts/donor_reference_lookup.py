@@ -202,14 +202,71 @@ def lookup(*, donor_id=None, original_url=None, registry_path=REGISTRY):
     return record
 
 
+
+# A source-file publication is searchable independently of global L1 admission.
+# The legacy transfer snapshot remains available through the unchanged default path.
+PUBLISHED_FIRST = Path(__file__).resolve().parents[1] / (
+    "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json"
+)
+PUBLISHED_FIRST_ARCHIVE = Path(__file__).resolve().parents[1] / (
+    "archive/donor-source-migration/2026-10-09/FA3-DONOR-REFERENCE-REGISTRY-001.json"
+)
+
+
+def lookup_published(*, donor_id=None, original_url=None):
+    """Read the first canonically available file, excluding other staged sources."""
+    if (donor_id is None) == (original_url is None):
+        raise ValueError("Exactly one donor ID or original URL is required")
+    import hashlib
+    doc = json.loads(PUBLISHED_FIRST.read_text(encoding="utf-8"))
+    raw = PUBLISHED_FIRST_ARCHIVE.read_bytes()
+    old_blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw
+    ).hexdigest()
+    records = doc.get("records", [])
+    index = doc.get("lookup_by_id", {})
+    routes = doc.get("lookup_by_locator", {})
+    if (doc.get("schema") != "cfa3.donor-source-file-publication.v1"
+            or doc.get("source_file_sequence") != 1
+            or doc.get("source_git_blob_sha") != old_blob
+            or old_blob != "062b7b27aeeaf74819ac315f30c5cbde4ed2c95b"
+            or doc.get("publication_state") != "CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1"
+            or doc.get("global_l1_completed") is not False
+            or doc.get("runtime_admission") is not False
+            or len(records) != doc.get("source_count") or len(records) != 1919
+            or len(index) != 1919 or len(routes) != 1997
+            or doc.get("alias_index_size") != len(routes)):
+        raise ValueError("Published donor source-file integrity check failed")
+    if original_url is not None:
+        donor_id = routes.get(original_url)
+        if donor_id is None:
+            return None
+    position = index.get(donor_id)
+    if position is None:
+        return None
+    if type(position) is not int or not 0 <= position < len(records):
+        raise ValueError("Invalid published donor index entry")
+    row = records[position]
+    if (row.get("donor_id") != donor_id
+            or (original_url is not None and original_url not in row.get("lookup_aliases", []))
+            or row.get("runtime_admission") is not False
+            or row.get("code_copy_authorized") is not False
+            or row.get("license_authorized") is not False
+            or row.get("model_provider_admission") is not False):
+        raise ValueError("Inconsistent published donor record")
+    return row
+
 def main():
     parser = argparse.ArgumentParser(description="Read-only lookup of registered CFA3 donor references")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--id", dest="donor_id", help="Exact donor identifier")
     group.add_argument("--url", dest="original_url", help="Exact original submitted URL")
+    parser.add_argument("--published-only", action="store_true",
+                        help="Search only canonically published donor source files")
     args = parser.parse_args()
     try:
-        record = lookup(donor_id=args.donor_id, original_url=args.original_url)
+        query = lookup_published if args.published_only else lookup
+        record = query(donor_id=args.donor_id, original_url=args.original_url)
     except (ValueError, KeyError, OSError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2

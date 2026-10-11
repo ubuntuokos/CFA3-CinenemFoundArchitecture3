@@ -101,7 +101,7 @@ def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
         owner_spec = load(root, SPEC)
         evidence_export = load(root, EXPORT)
         issues.extend(validate_current_rule_map(gov,catalog,owner_spec))
-        issues.extend(validate(owner_spec,gov,catalog,evidence_export))
+        issues.extend(validate(owner_spec,gov,catalog,evidence_export,root=root))
     except (Blocked, ImportError, OSError, TypeError, ValueError, KeyError):
         issues.append("owner-provided 82-rule normative source unavailable")
     if require_prior_runtime_proofs:

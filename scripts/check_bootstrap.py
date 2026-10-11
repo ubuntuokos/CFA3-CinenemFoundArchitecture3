@@ -275,6 +275,12 @@ def validate_rule_admission(policy):
     require(responsibility.get("unverifiable_cause") ==
             "STOP_AND_REPORT_UNVERIFIED_CAUSE_NO_FALSE_ATTRIBUTION",
             "uncertain cause must not be invented")
+    require(responsibility.get("if_both_roles_are_same_actor") ==
+            "REPORT_BOTH_ROLES_WITH_SPECIFIC_CAUSE",
+            "same actor must report both roles and concrete cause")
+    require(responsibility.get("attribution_basis") ==
+            "DETERMINISTIC_CHECK_LOGS_AND_EXACT_CHANGED_FILES",
+            "responsibility requires deterministic evidence and exact changed files")
     require(policy.get("admission_boundary", {}).get("bootstrap_structural_pass_is_runtime_proof") is False,
             "bootstrap may not fake runtime gate proof")
     require(policy.get("admission_boundary", {}).get("independent_execution_gate_pass") is False,

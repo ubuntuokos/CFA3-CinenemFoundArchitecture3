@@ -18,7 +18,7 @@ A referenciaimplementáció önmagában nem avatkozik be minden natív ChatGPT-e
 
 ## Elhatárolás
 
-A feladat kizárólag a korábbi 78 szabály jóváhagyott reintegrálása a meglévő Execution Guardba, a 24 jelenlegi DEV/AI-szabály megőrzésével. A donor-PR, SDK-PR, más alkalmazás, történeti 3159-fájlos feldolgozás és fizikai Current Host nem része a feladatnak. A `main` védelme és a kötelező `bootstrap` / `qt68-linux` check változatlan.
+**Történeti feladathatár:** az eredeti szabály-visszaállítási feladat kizárólag a korábbi 78 szabály jóváhagyott reintegrálása volt, a 24 eredeti DEV/AI-szabály megőrzésével. A később, külön tulajdonosi utasítás alapján jóváhagyott `RULE-ADMISSION-001` és `CFA3-SEQUENTIAL-COMMAND-001` bevezetése ettől elkülönülő szabályfelvételi döntés; a közös nyilvántartásban mindkettő saját azonosítóval és forrással szerepel. A donor-PR, SDK-PR, más alkalmazás, történeti 3159-fájlos feldolgozás és fizikai Current Host nem része a feladatnak. A `main` védelme és a kötelező `bootstrap` / `qt68-linux` check változatlan.
 
 ## Új szabály felvétele és Bootstrap-elszámoltathatóság
 

@@ -102,6 +102,26 @@ class OwnerRuleSpecTests(unittest.TestCase):
                     bad["current_rules"][index][field]=value
                     self.assertTrue(self.check(export=bad))
 
+    def test_preflight_active_count_flag_is_current_and_required(self):
+        for change in ("remove", "false", "stale"):
+            bad=copy.deepcopy(self.coverage)
+            flags=bad["runtime_preflight_separation"]
+            if change=="remove":
+                del flags["current_82_global_status_not_sufficient_for_task_authority"]
+            elif change=="false":
+                flags["current_82_global_status_not_sufficient_for_task_authority"]=False
+            else:
+                flags["current_81_global_status_not_sufficient_for_task_authority"]=True
+            with self.subTest(change=change):
+                self.assertTrue(self.check(coverage=bad))
+
+    def test_export_summary_covers_both_current_admissions(self):
+        for bad_text in ("81 aktív szabály", "82 aktív szabály, csak RULE-ADMISSION-001"):
+            bad=copy.deepcopy(self.export)
+            bad["important"]=bad_text
+            with self.subTest(summary=bad_text):
+                self.assertTrue(self.check(export=bad))
+
     def test_no_fake_runtime_pass(self):
         bad=copy.deepcopy(self.spec);bad["active_rules"][79]["runtime_verified"]=True
         self.assertTrue(self.check(bad))

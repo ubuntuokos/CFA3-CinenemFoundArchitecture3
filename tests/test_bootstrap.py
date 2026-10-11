@@ -245,6 +245,11 @@ class BootstrapPolicyTests(unittest.TestCase):
         broken = copy.deepcopy(policy)
         broken["responsibility"]["ai_developer"] = ""
         self.assertTrue(validate_rule_admission(broken))
+        for field in ("if_both_roles_are_same_actor", "attribution_basis"):
+            broken = copy.deepcopy(policy)
+            broken["responsibility"][field] = "UNVERIFIED_GUESS"
+            with self.subTest(responsibility=field):
+                self.assertTrue(validate_rule_admission(broken))
         broken = copy.deepcopy(policy)
         broken["rule"]["runtime_verified"] = True
         self.assertTrue(validate_rule_admission(broken))

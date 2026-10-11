@@ -18,7 +18,7 @@
     "added_active": 56,
     "excluded_on_conflict": 0
   },
-  "important": "A tulajdonos 2026-10-11-i visszaküldött 78 szabálya az Execution Guardban aktív: 22 meglévő DEV/AI azonosítóhoz hozzárendelve, 56 új aktív minőségi/feladatvezérlési szabály. Kizárás 0. Futásidejű bizonyíték továbbra is PENDING; kivételes események előidézése nem szükséges. Új, külön tulajdonosi RULE-ADMISSION-001 szabály: 81 aktív szabály; a történeti 78/78 feldolgozás változatlan.",
+  "important": "A tulajdonos 2026-10-11-i visszaküldött 78 szabálya az Execution Guardban aktív: 22 meglévő DEV/AI azonosítóhoz hozzárendelve, 56 új aktív minőségi/feladatvezérlési szabály. Kizárás 0. Futásidejű bizonyíték továbbra is PENDING; kivételes események előidézése nem szükséges. Két külön tulajdonosi döntés alapján felvett új szabály: RULE-ADMISSION-001 és CFA3-SEQUENTIAL-COMMAND-001; összesen 82 aktív szabály. A történeti 78/78 feldolgozás változatlan.",
   "current_rules": [
     {
       "type": "CURRENT_CANONICAL_RULE",

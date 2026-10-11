@@ -67,7 +67,8 @@ def canonical_provenance_matches(row,rule,policy_path,surface):
     return set(row)==set(expected) and all(
         type(row[k]) is type(v) and row[k]==v for k,v in expected.items())
 
-def validate(spec,gov,coverage,reference):
+def validate(spec,gov,coverage,reference,root=ROOT):
+    root=Path(root)
     if not all(isinstance(x,dict) for x in (spec,gov,coverage,reference)):
         return ["rule source not an object"]
     try: expected=active_expected_codes(gov,spec)
@@ -95,6 +96,10 @@ def validate(spec,gov,coverage,reference):
     if (not isinstance(preflight,dict) or
             preflight.get("required_task_receipts")!=f"verify_rule_receipts FOR_OWNER_APPROVED_{rule_count}"):
         issues.append("required task receipt count inconsistent")
+    if (not isinstance(preflight,dict) or
+            preflight.get(f"current_{rule_count}_global_status_not_sufficient_for_task_authority") is not True or
+            any(key.startswith("current_") and key.endswith("_global_status_not_sufficient_for_task_authority") and key not in ("current_24_global_status_not_sufficient_for_task_authority",f"current_{rule_count}_global_status_not_sufficient_for_task_authority") for key in preflight)):
+        issues.append("current active rule count preflight flag missing or stale")
     for row in spec["active_rules"]:
         if not isinstance(row.get("text_hu"),str) or len(row["text_hu"].strip())<20 or row.get("runtime_verified") is not False or not row.get("proof_mode"):
             issues.append("owner text or runtime status invalid")
@@ -126,15 +131,18 @@ def validate(spec,gov,coverage,reference):
             reference.get("counts",{}).get("current_canonical")!=82 or
             len(reference.get("current_rules",[]))!=82):
         issues.append("provenance export incorrectly excludes current rules")
+    summary=reference.get("important")
+    if not isinstance(summary,str) or f"{rule_count} aktív szabály" not in summary or "RULE-ADMISSION-001" not in summary or "CFA3-SEQUENTIAL-COMMAND-001" not in summary or "81 aktív szabály" in summary:
+        issues.append("governance export summary inconsistent with active owner rules")
     try:
-        new_policy=json.loads((ROOT/RULE_ADMISSION_POLICY).read_text("utf-8"))
+        new_policy=json.loads((root/RULE_ADMISSION_POLICY).read_text("utf-8"))
         new_owner_rule=active["RULE-ADMISSION-001"]
         if (new_owner_rule.get("code")!=new_policy["rule"]["code"] or
                 new_owner_rule.get("text_hu")!=new_policy["rule"]["text_hu"] or
                 new_policy["rule"]["id"]!="RULE-ADMISSION-001" or
                 new_owner_rule.get("runtime_verified") is not False):
             issues.append("new owner rule does not match its canonical policy")
-        policy_surface=json.loads((ROOT/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
+        policy_surface=json.loads((root/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
         if not canonical_provenance_matches(
                 reference["current_rules"][-2],new_policy["rule"],
                 RULE_ADMISSION_POLICY,policy_surface):
@@ -142,9 +150,9 @@ def validate(spec,gov,coverage,reference):
     except (OSError,ValueError,TypeError,KeyError,StopIteration):
         issues.append("new owner rule canonical source unavailable")
     try:
-        sequential_policy=json.loads((ROOT/SEQUENTIAL_COMMAND_POLICY).read_text("utf-8"))
+        sequential_policy=json.loads((root/SEQUENTIAL_COMMAND_POLICY).read_text("utf-8"))
         sequential_rule=active["CFA3-SEQUENTIAL-COMMAND-001"]
-        policy_surface=json.loads((ROOT/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
+        policy_surface=json.loads((root/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
         if (sequential_policy.get("id")!="CFA3-SEQUENTIAL-COMMAND-POLICY-001" or
                 sequential_policy["rule"].get("id")!="CFA3-SEQUENTIAL-COMMAND-001" or
                 sequential_rule.get("code")!=sequential_policy["rule"].get("code") or

@@ -584,6 +584,45 @@ def validate_ai_rule_acceptance_policy(policy):
             "unknown admission authority field")
     return errors
 
+def validate_rule_consistency_loop_prevention(policy):
+    """Check the approved contract, without claiming runtime cycle detection."""
+    issues = []
+    if not isinstance(policy, dict):
+        return ["rule consistency: invalid policy"]
+    def expect(ok, reason):
+        if not ok:
+            issues.append("rule consistency: " + reason)
+    expect(policy.get("schema") == "cfa3.rule-consistency-loop-prevention.v1", "schema")
+    expect(policy.get("id") == "CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001", "identity")
+    expect(policy.get("status") == "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF", "status")
+    clauses = policy.get("mandatory_clauses")
+    expected_codes = ["NO_CONTRADICTORY_RULE_CREATION","NO_NONTERMINATING_DECISION","LOOP_DETECTION_AND_IMMEDIATE_REPORT","HALT_UNPRODUCTIVE_LOOP","OWNER_RESOLVES_RULE_CONFLICT","BOUNDED_RULE_ADMISSION_CHECK"]
+    expect(isinstance(clauses, list) and
+           [(v.get("id"), v.get("code")) for v in clauses if isinstance(v, dict)]
+           == [(f"RC-{i:02d}", code) for i, code in enumerate(expected_codes, 1)],
+           "required clauses")
+    if isinstance(clauses, list):
+        for clause in clauses:
+            expect(isinstance(clause, dict) and isinstance(clause.get("text_hu"), str)
+                   and len(clause["text_hu"].strip()) >= 80, "clause text")
+    required = ["detect_conflicting_rules_before_admission","prohibit_simultaneously_effective_contradictory_rules","prohibit_nonterminating_owner_decisions","require_progress_and_exit_criteria","signal_suspected_infinite_loop_immediately","distinguish_suspected_from_proven_loop","stop_repeating_actions_without_progress","report_specific_cycle_edges_and_evidence","prohibit_unapproved_rule_override_or_scope_expansion","owner_authority_required_for_resolution","preserve_exact_state_and_failure_provenance","maintain_bootstrap_and_policy_surface_consistency"]
+    flags = policy.get("requirements")
+    expect(isinstance(flags, dict) and set(flags) == set(required), "required flags")
+    for key in required:
+        expect(isinstance(flags, dict) and flags.get(key) is True, "missing " + key)
+    sequence = policy.get("resolution_sequence")
+    expect(isinstance(sequence, list) and len(sequence) == 6 and
+           len(set(sequence)) == 6 and
+           sequence[0] == "DETECT_AND_FREEZE_AFFECTED_REPEAT" and
+           sequence[-1] == "RESUME_ONLY_AFTER_AUTHORIZED_RESOLUTION_AND_EXACT_STATE_VERIFICATION",
+           "bounded resolution sequence")
+    boundary = policy.get("safety_boundary")
+    expect(isinstance(boundary, dict) and len(boundary) == 7
+           and all(value is True for value in boundary.values()), "safety boundaries")
+    expect(isinstance(policy.get("loop_indicators"), list)
+           and len(policy["loop_indicators"]) == 5, "loop indicators")
+    return issues
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -603,6 +642,7 @@ def check(root=ROOT):
     errors.extend(validate_donor_file_size_policy(load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json", root)))
     errors.extend(validate_github_resource_404_policy(load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",root)))
     errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
+    errors.extend(validate_rule_consistency_loop_prevention(load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json", root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

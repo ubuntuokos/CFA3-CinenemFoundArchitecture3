@@ -931,7 +931,7 @@
       "excluded_by_request": false,
       "source_path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",
       "source_json_pointer": "/rule",
-      "source_git_blob_sha1": "59c2de4a8389911069172b1c453871629cc7d2e6"
+      "source_git_blob_sha1": "3d69356355b7b5a2903660d9a7baac64974c15d4"
     }
   ],
   "historical_rule_candidates": [

@@ -1,0 +1,43 @@
+{
+  "schema": "cfa3.policy-http-409-conflict-recovery.v1",
+  "id": "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001",
+  "title_hu": "HTTP 409 Conflict hibák kötelező felismerése, célzott javítása, biztonságos újravégrehajtása és az indokolatlan blokkolások megelőzése",
+  "version": "1.0",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "classification": "MANDATORY_CFA3_HTTP_409_CONFLICT_RECOVERY",
+  "approved_text_path": "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.md",
+  "approved_text_sha256": "85ea4173b489230b44e5b733bf9ea20b9d6fb4f396bee53217d1efcddbc0020b",
+  "approved_section_count": 16,
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "MERGE",
+    "STATUS",
+    "REGISTRY",
+    "CI",
+    "MAIN"
+  ],
+  "requirements": {
+    "identify_specific_http_conflict": true,
+    "exact_state_before_repair": true,
+    "narrow_safe_self_correction": true,
+    "preserve_third_party_changes": true,
+    "serial_file_updates": true,
+    "no_blind_retry_loop": true,
+    "stop_on_real_content_blocker": true,
+    "protect_pr_and_merge_authority": true,
+    "prove_actual_recovery": true,
+    "prevent_repeat_unnecessary_checks": true,
+    "return_to_original_task": true,
+    "no_scope_expansion": true,
+    "do_not_override_existing_rules": true
+  },
+  "admission_boundary": {
+    "owner_approval_is_merge_proof": false,
+    "technical_conflict_grants_pr_authority": false,
+    "unsafe_overwrite_allowed": false,
+    "unverified_409_is_final_blocker": false,
+    "structural_ci_is_runtime_admission": false
+  }
+}

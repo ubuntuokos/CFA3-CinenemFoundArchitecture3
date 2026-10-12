@@ -623,6 +623,73 @@ def validate_rule_consistency_loop_prevention(policy):
            and len(policy["loop_indicators"]) == 5, "loop indicators")
     return issues
 
+def validate_github_merge_gate_405_policy(policy):
+    """Validate owner-approved merge-gate and self-repair invariants, not runtime PASS."""
+    if not isinstance(policy, dict):
+        return ["github 405: policy must be an object"]
+    errors = []
+    def require(condition, detail):
+        if not condition:
+            errors.append("github 405: " + detail)
+    require(set(policy) == {"schema", "id", "status", "owner_decision_date",
+                            "version", "rule", "sections", "requirements",
+                            "admission_boundary"}, "root fields differ")
+    require(policy.get("schema") == "cfa3.github-merge-gate-405-policy.v1", "schema")
+    require(policy.get("id") == "CFA3-GITHUB-MERGE-GATE-405-POLICY-001", "identity")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "status")
+    require(policy.get("owner_decision_date") == "2026-10-12", "decision date")
+    require(policy.get("version") == "1.0", "version")
+    rule = policy.get("rule")
+    rule = rule if isinstance(rule, dict) else {}
+    require(rule.get("code") == "MANDATORY_LIVE_MERGE_GATE_AND_SELF_CAUSED_405_REPAIR",
+            "approved rule code")
+    require(rule.get("runtime_verified") is False, "runtime proof not established")
+    text = rule.get("text_hu", "")
+    require(isinstance(text, str) and all(term in text for term in (
+            "CI PASS", "Merge Gate PASS", "önállóan", "nem blocker", "STOP")),
+            "owner-approved binding provisions missing")
+    sections = policy.get("sections")
+    require(isinstance(sections, list) and len(sections) == 20, "twenty sections required")
+    if isinstance(sections, list):
+        require([s.get("number") if isinstance(s, dict) else None for s in sections] ==
+                list(range(1, 21)), "section order drift")
+        require(all(isinstance(s, dict) and set(s) == {"number", "title", "text_hu"}
+                    and isinstance(s["title"], str) and len(s["title"]) > 5
+                    and isinstance(s["text_hu"], str) and len(s["text_hu"]) > 70
+                    for s in sections), "approved section content incomplete")
+    req = policy.get("requirements")
+    yes = (
+        "pre_merge_exact_main_and_head", "pre_merge_overlap_conflicts",
+        "pre_merge_file_integrity", "live_ruleset_and_strict_policy",
+        "live_required_status_checks", "required_checks_current_commit",
+        "required_review_resolution", "require_mergeable_state_clean",
+        "final_exact_state_check", "ci_pass_not_merge_gate_pass",
+        "own_caused_405_self_repair_mandatory", "independent_blocker_requires_stop",
+        "stop_requires_deterministic_evidence", "allow_lossless_conflict_free_branch_sync",
+        "resume_original_main_task", "post_merge_main_readback",
+        "historical_oversize_untouched_allowed", "unknown_405_requires_specific_diagnosis")
+    no = (
+        "own_405_alone_is_blocker", "new_approval_for_own_correction",
+        "unauthorized_rebase_or_force_push", "disable_github_protection",
+        "unapproved_pr_or_scope_expansion")
+    require(isinstance(req, dict) and set(req) == set(yes) | set(no) |
+            {"donor_max_modified_bytes"}, "mandatory requirement set mismatch")
+    for name in yes:
+        require(isinstance(req, dict) and req.get(name) is True,
+                "mandatory positive invariant: " + name)
+    for name in no:
+        require(isinstance(req, dict) and req.get(name) is False,
+                "mandatory forbidden behavior: " + name)
+    require(isinstance(req, dict) and type(req.get("donor_max_modified_bytes")) is int
+            and req.get("donor_max_modified_bytes") == 996147,
+            "donor file-size contract mismatch")
+    boundary = policy.get("admission_boundary")
+    require(isinstance(boundary, dict) and
+            boundary.get("bootstrap_structural_pass_is_runtime_proof") is False and
+            boundary.get("independent_execution_gate_pass") is False,
+            "unverified runtime PASS")
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -643,6 +710,7 @@ def check(root=ROOT):
     errors.extend(validate_github_resource_404_policy(load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",root)))
     errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
     errors.extend(validate_rule_consistency_loop_prevention(load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json", root)))
+    errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

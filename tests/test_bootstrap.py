@@ -34,6 +34,19 @@ class BootstrapPolicyTests(unittest.TestCase):
         altered = copy.deepcopy(policy)
         altered["finalization_gates"].remove("MAIN")
         self.assertTrue(validate_conversation_recovery_policy(altered))
+        for metadata_key, tampered in (
+            ("title_hu", "TAMPERED TITLE"),
+            ("scope", "UNRELATED_SCOPE"),
+        ):
+            altered = copy.deepcopy(policy)
+            altered[metadata_key] = tampered
+            self.assertTrue(validate_conversation_recovery_policy(altered))
+        altered = copy.deepcopy(policy)
+        altered["unapproved_extra_field"] = True
+        self.assertTrue(validate_conversation_recovery_policy(altered))
+        altered = copy.deepcopy(policy)
+        altered.pop("title_hu")
+        self.assertTrue(validate_conversation_recovery_policy(altered))
 
     def test_structural_seed(self):
         self.assertEqual([],check())
@@ -254,6 +267,12 @@ class BootstrapPolicyTests(unittest.TestCase):
         from check_bootstrap import validate_rule_admission
         policy = load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json")
         self.assertEqual([], validate_rule_admission(policy))
+        bad_extension = copy.deepcopy(policy)
+        bad_extension["shared_registry_integration"]["text_hu"] = "UNAPPROVED_REPLACEMENT"
+        self.assertTrue(validate_rule_admission(bad_extension))
+        bad_extension = copy.deepcopy(policy)
+        bad_extension["shared_registry_integration"]["runtime_verified"] = True
+        self.assertTrue(validate_rule_admission(bad_extension))
         broken = copy.deepcopy(policy)
         broken["requirements"]["independent_owner_task_may_share_existing_pr"] = True
         self.assertTrue(validate_rule_admission(broken))

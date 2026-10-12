@@ -247,6 +247,18 @@ APPROVED_RULE_ADMISSION_TEXT_HU = (
     "teszi közössé a két feladat hatáskörét."
 )
 
+APPROVED_RULE_ADMISSION_REGISTRY_EXTENSION_HU = (
+    "Közös szabálynyilvántartást érintő párhuzamos PR-ek integrációját sorosítani kell: minden PR csak a saját jó"
+    "váhagyott szabályának bejegyzéseit változtathatja, a többi rekordot és történeti adatot meg kell őriznie. A "
+    "nyilvántartást az aktuális main és az adott PR HEAD ellenőrzött állapotából kell összehangolni; elavult pill"
+    "anatkép nem írhat felül újabb rekordot. A szabálydarabszámot, mezőleltárt és Git-blob azonosítókat determini"
+    "sztikusan újra kell ellenőrizni, az aktuális commiton kötelező CI- és review-kapukkal együtt. Azonos fájl pá"
+    "rhuzamos módosítása vagy eltérő main/head esetén összevonás nem engedélyezett a célzott, adatvesztésmentes ö"
+    "sszehangolás és az új ellenőrzések előtt; valós, nem egyértelmű konfliktus STOP. A technikai összehangolás k"
+    "izárólag kifejezetten engedélyezett körben történhet, nem jogosít más szabály tartalmi változtatására, önáll"
+    "ó rebase-re, új PR-re vagy önkényes összevonásra."
+)
+
 def validate_rule_admission(policy):
     """Check the owner's new rule-admission contract without claiming runtime PASS."""
     errors = []
@@ -256,7 +268,7 @@ def validate_rule_admission(policy):
         if not condition:
             errors.append("rule admission: " + message)
     require(set(policy) == {"schema", "id", "status", "owner_decision_date",
-                            "rule", "requirements", "responsibility", "admission_boundary"},
+                            "rule", "requirements", "responsibility", "admission_boundary", "shared_registry_integration"},
             "unapproved or missing policy root field")
     require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
@@ -288,6 +300,11 @@ def validate_rule_admission(policy):
         "failed_check_must_report_root_cause_and_evidence",
         "no_unjustified_attribution_or_fabricated_pass",
         "failed_gate_requires_stop_and_report",
+        "shared_registry_pr_integration_must_be_serialized",
+        "unrelated_policy_registry_records_must_be_preserved",
+        "registry_update_must_use_verified_current_main_and_pr_head",
+        "canonical_registry_counts_leaf_inventory_and_blob_hashes_must_be_rechecked",
+        "unresolved_ambiguity_or_stale_head_blocks_merge",
     )
     requirements = policy.get("requirements")
     require(isinstance(requirements, dict) and set(requirements) == set(required),
@@ -295,6 +312,13 @@ def validate_rule_admission(policy):
     for name in required:
         require(isinstance(requirements, dict) and requirements.get(name) is True,
                 "mandatory requirement absent: " + name)
+    extension = policy.get("shared_registry_integration")
+    require(isinstance(extension, dict) and set(extension) == {"owner_instruction_date", "scope", "text_hu", "runtime_verified"}, "invalid registry coordination amendment fields")
+    if isinstance(extension, dict):
+        require(extension.get("owner_instruction_date") == "2026-10-13", "registry coordination approval date")
+        require(extension.get("scope") == "ONLY_EXISTING_RULE_ADMISSION_AND_SHARED_CANONICAL_REGISTRY", "registry coordination scope")
+        require(extension.get("text_hu") == APPROVED_RULE_ADMISSION_REGISTRY_EXTENSION_HU, "owner-approved registry coordination amendment changed")
+        require(extension.get("runtime_verified") is False, "registry coordination runtime proof cannot be invented")
     responsibility = policy.get("responsibility")
     require(isinstance(responsibility, dict) and set(responsibility) ==
             {"ai_assistant", "ai_developer", "unverifiable_cause",
@@ -1430,6 +1454,10 @@ def validate_conversation_recovery_policy(policy, root=ROOT):
             issues.append("conversation recovery policy: " + detail)
     if not isinstance(policy, dict):
         return ["conversation recovery policy: metadata not an object"]
+    expected_root_keys = {"schema", "id", "title_hu", "status", "owner_decision_date", "version", "approved_text_path", "approved_text_sha256", "approved_section_count", "classification", "scope", "finalization_gates", "requirements"}
+    need(set(policy) == expected_root_keys, "exact approved metadata fields")
+    need(policy.get("title_hu") == "Korábbi beszélgetések hiteles visszakeresése, jóváhagyások megőrzése és a végrehajtás indokolatlan akadályozásának tilalma", "approved policy title")
+    need(policy.get("scope") == "Minden CFA3-fejlesztés, szabályalkotás, jóváhagyás, véglegesítés és korábbi beszélgetésre épülő művelet.", "approved scope")
     need(policy.get("schema") == "cfa3.conversation-recovery-and-execution-policy.v1", "schema")
     need(policy.get("id") == "CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001", "identity")
     need(policy.get("version") == "1.0", "version")

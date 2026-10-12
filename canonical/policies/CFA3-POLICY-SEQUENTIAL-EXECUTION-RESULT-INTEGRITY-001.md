@@ -2,8 +2,8 @@
 
 **Megnevezés:** Kötelező szekvenciális feladatvégrehajtás, tényleges eredményközlés és ellenőrzési ciklusok megelőzése
 
-**Verzió:** 1.0  
-**Státusz:** JÓVÁHAGYÁSRA VÁR  
+**Verzió:** 1.2  
+**Státusz:** TULAJDONOS ÁLTAL ELRENDELT P1/P2 HIBAJAVÍTÁS – KANONIKUS FELVÉTEL ALATT  
 **Hatály:** CFA3 teljes fejlesztési rendszere, kiemelten a donoradatbázis feldolgozása
 
 ---
@@ -26,10 +26,10 @@ Az AI köteles:
 2. Az összes feldolgozandó rekordot azonosítani.
 3. Minden rekord szükséges feldolgozását végrehajtani.
 4. A duplikációkat és a korábbi döntéseket kezelni.
-5. A fájlhoz tartozó eredményt lezárni.
-6. A szükséges ellenőrzéseket elvégezni.
+5. A fájlhoz tartozó feldolgozási eredményt publikációra előkészíteni, végleges lezárás kijelentése nélkül.
+6. A szükséges ellenőrzéseket elvégezni és a publikációra kész állapotot igazolni.
 7. Az eredményt az engedélyezett GitHub-folyamatban közzétenni.
-8. A tényleges publikált állapotot igazolni.
+8. A tényleges publikált állapotot igazolni, és csak ezt követően a fájlt véglegesen lezárni.
 9. A következő forrásfájlra áttérni.
 
 A következő forrásfájl feldolgozása nem kezdhető meg az előző szabályos lezárása előtt.
@@ -93,6 +93,7 @@ Minden feldolgozási egységnek meghatározott állapotban kell lennie:
 - `PENDING` – feldolgozásra vár.
 - `IN_PROGRESS` – tényleges feldolgozás folyik.
 - `VALIDATING` – feldolgozás kész, kötelező ellenőrzés folyik.
+- `READY_FOR_PUBLICATION` – az összes kötelező publikáció előtti ellenőrzés sikeres, közzététel még nem történt.
 - `PUBLISHING` – jóváhagyott publikáció folyik.
 - `PUBLISHED` – közzététel bizonyított.
 - `BLOCKED` – igazolt akadály miatt nem fejezhető be.
@@ -149,6 +150,8 @@ Egy forrásfájl akkor tekinthető lezártnak, ha:
 6. A publikáció engedélyezetten megtörtént.
 7. A publikált GitHub-állapot ellenőrzéssel igazolt.
 8. Az eredményről végleges beszámoló készült.
+
+**A publikációra kész állapot** kizárólag az 1–5. feltétel teljesülésekor állapítható meg, és még nem jelent végleges lezárást. A 6–8. feltétel a publikáció után teljesítendő; az előzőleg igazolt publikációra kész állapot teszi lehetővé a közzétételt. A végleges fájllezárás kizárólag mind a nyolc feltétel teljesülése után igazolható.
 
 A lezárást követően az AI köteles továbblépni a következő kijelölt fájlra, amennyiben az eredeti felhasználói engedély erre kiterjed.
 
@@ -216,7 +219,7 @@ A szabály minden olyan CFA3-munkafolyamatban alkalmazandó, amely több egymás
 
 A donoradatbázisra különösen kötelező:
 
-**Egy forrásfájl → teljes feldolgozás → célzott ellenőrzés → lezárás → publikáció → bizonyított eredmény → következő forrásfájl.**
+**Egy forrásfájl → teljes feldolgozás → célzott ellenőrzés → publikációra kész állapot igazolása → publikáció → publikált állapot igazolása → végleges lezárás → következő forrásfájl.**
 
 Más CFA3-munkafolyamatokra azonos elv szerint alkalmazandó, azok saját lezárási és publikációs feltételeivel.
 

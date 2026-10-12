@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Current 82 owner-authorized rules, preserving 24 original identities and 78 sources."""
+"""Current 83 owner-authorized rules, preserving 24 original identities and 78 sources."""
 import json
 from pathlib import Path
 import sys
@@ -24,8 +24,8 @@ def active_expected_codes(gov,spec):
                 raise ValueError("original rule identity changed")
             expected[x["id"]]=x["code"]
     rows=spec.get("active_rules")
-    if not isinstance(rows,list) or len(rows)!=82 or spec.get("active_rule_count")!=82:
-        raise ValueError("82 current rules required")
+    if not isinstance(rows,list) or len(rows)!=83 or spec.get("active_rule_count")!=83:
+        raise ValueError("83 current rules required")
     found=set()
     for row in rows:
         if not isinstance(row,dict): raise ValueError("malformed active rule")
@@ -36,7 +36,10 @@ def active_expected_codes(gov,spec):
         if ident in expected and expected[ident]!=code:
             raise ValueError("original canonical ID/code changed")
         if ident not in expected:
-            if ident=="RULE-ADMISSION-001":
+            if ident=="CFA3-EXECUTION-PROOF-OBLIGATION-001":
+                if row.get("provenance")!="OWNER_APPROVED_2026_10_12" or row.get("canonical_policy_path")!="canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json":
+                    raise ValueError("execution-proof rule missing exact owner source")
+            elif ident=="RULE-ADMISSION-001":
                 if row.get("provenance")!="OWNER_SUPPLIED_2026_10_11" or row.get("canonical_policy_path")!=RULE_ADMISSION_POLICY:
                     raise ValueError("new rule missing exact owner policy provenance")
             elif ident=="CFA3-SEQUENTIAL-COMMAND-001":
@@ -45,8 +48,8 @@ def active_expected_codes(gov,spec):
             elif row.get("provenance")!="OWNER_RECONFIRMED_2026_10_11" or not isinstance(row.get("historical_source"),dict):
                 raise ValueError("additional historical rule without owner source")
             expected[ident]=code
-    if len(expected)!=82 or found!=set(expected):
-        raise ValueError("current 82 active rules incomplete")
+    if len(expected)!=83 or found!=set(expected):
+        raise ValueError("current 83 active rules incomplete")
     return expected
 def canonical_provenance_matches(row,rule,policy_path,surface):
     """Validate every authoritative field of a newly admitted owner's source record."""
@@ -57,7 +60,7 @@ def canonical_provenance_matches(row,rule,policy_path,surface):
         "type":"OWNER_CURRENT_RULE",
         "id":rule["id"],
         "code":rule["code"],
-        "authority":"OWNER_2026_10_11",
+        "authority":"OWNER_2026_10_12" if rule["id"]=="CFA3-EXECUTION-PROOF-OBLIGATION-001" else "OWNER_2026_10_11",
         "active_rule_receipt_scope":True,
         "excluded_by_request":False,
         "source_path":policy_path,
@@ -76,7 +79,7 @@ def validate(spec,gov,coverage,reference,root=ROOT):
     issues=[]
     rules=coverage.get("rules")
     if not isinstance(rules,dict) or set(rules)!=set(expected):
-        issues.append("82 active rules absent from coverage")
+        issues.append("83 active rules absent from coverage")
     else:
         for ident,code in expected.items():
             row=rules[ident]
@@ -127,11 +130,11 @@ def validate(spec,gov,coverage,reference,root=ROOT):
     if count!={"HISTORICAL_CANDIDATE_DEV_AI":22,"HISTORICAL_CANDIDATE_QUALITY":29,"HISTORICAL_CANDIDATE_TASK_SCOPE":27}:
         issues.append("22+29+27 owner sources not accounted for")
     for data in (own,reg):
-        if data.get("source_count")!=78 or data.get("mapped_existing")!=22 or data.get("admitted_new")!=56 or data.get("excluded_for_conflict")!=0 or data.get("active_count")!=82 or data.get("post_historical_rule_admissions")!=2 or data.get("all_source_rules_accounted_for") is not True:
+        if data.get("source_count")!=78 or data.get("mapped_existing")!=22 or data.get("admitted_new")!=56 or data.get("excluded_for_conflict")!=0 or data.get("active_count")!=82 or data.get("post_historical_rule_admissions")!=3 or data.get("all_source_rules_accounted_for") is not True:
             issues.append("owner reinstatement counts invalid")
-    if (reference.get("owner_reconciliation",{}).get("total")!=82 or
-            reference.get("counts",{}).get("current_canonical")!=82 or
-            len(reference.get("current_rules",[]))!=82):
+    if (reference.get("owner_reconciliation",{}).get("total")!=83 or
+            reference.get("counts",{}).get("current_canonical")!=83 or
+            len(reference.get("current_rules",[]))!=83):
         issues.append("provenance export incorrectly excludes current rules")
     exported=reference.get("current_rules")
     if (not isinstance(exported,list) or
@@ -147,7 +150,7 @@ def validate(spec,gov,coverage,reference,root=ROOT):
             issues.append("canonical export current rule ID/code set incomplete or duplicated")
     exported_reconciliation=reference.get("owner_reconciliation")
     if (not isinstance(exported_reconciliation,dict) or
-            exported_reconciliation.get("post_historical_rule_admissions")!=2 or
+            exported_reconciliation.get("post_historical_rule_admissions")!=3 or
             exported_reconciliation.get("post_historical_rule_admissions")!=own.get("post_historical_rule_admissions") or
             exported_reconciliation.get("post_historical_rule_admissions")!=reg.get("post_historical_rule_admissions")):
         issues.append("governance export post-historical admission count inconsistent")
@@ -172,7 +175,7 @@ def validate(spec,gov,coverage,reference,root=ROOT):
             issues.append("new owner rule does not match its canonical policy")
         policy_surface=json.loads((root/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
         if not canonical_provenance_matches(
-                reference["current_rules"][-2],new_policy["rule"],
+                reference["current_rules"][-3],new_policy["rule"],
                 RULE_ADMISSION_POLICY,policy_surface):
             issues.append("new owner rule provenance record does not match canonical source")
     except (OSError,ValueError,TypeError,KeyError,StopIteration,ImportError):
@@ -186,11 +189,19 @@ def validate(spec,gov,coverage,reference,root=ROOT):
                 sequential_rule.get("code")!=sequential_policy["rule"].get("code") or
                 sequential_rule.get("text_hu")!=sequential_policy["rule"].get("text_hu") or
                 sequential_rule.get("runtime_verified") is not False or
-                not canonical_provenance_matches(reference["current_rules"][-1],
+                not canonical_provenance_matches(reference["current_rules"][-2],
                     sequential_policy["rule"],SEQUENTIAL_COMMAND_POLICY,surface)):
             issues.append("sequential command rule source or provenance mismatch")
     except (OSError,ValueError,TypeError,KeyError,StopIteration):
         issues.append("sequential command rule canonical source unavailable")
+    try:
+        proof_policy=json.loads((root/"canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json").read_text("utf-8"))
+        surface=json.loads((root/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json").read_text("utf-8"))
+        owner_rule=active["CFA3-EXECUTION-PROOF-OBLIGATION-001"]
+        if owner_rule.get("code")!=proof_policy["rule"]["code"] or owner_rule.get("text_hu")!=proof_policy["rule"]["text_hu"] or not canonical_provenance_matches(reference["current_rules"][-1],proof_policy["rule"],"canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",surface):
+            issues.append("proof obligation source or provenance mismatch")
+    except (OSError,ValueError,TypeError,KeyError,StopIteration):
+        issues.append("proof obligation source unavailable")
     amend=spec.get("owner_amendments")
     if not isinstance(amend,list) or {x.get("id") for x in amend if isinstance(x,dict)}!=AMENDMENTS or any(any(id not in expected for id in a.get("mapped_to",[])) for a in amend):
         issues.append("owner clarifications missing or outside rule set")
@@ -202,6 +213,6 @@ def main():
     except (OSError,ValueError,TypeError,KeyError) as exc: issues=["unreadable owner source: "+type(exc).__name__]
     for msg in issues:print("OWNER_RULE_SPEC_BLOCKED:",msg,file=sys.stderr)
     if issues:return 1
-    print("OWNER_RULE_SPEC_STRUCTURAL_PASS: 82 current rules; 78 submitted all admitted (22 mapped, 56 additional); runtime proof remains independent")
+    print("OWNER_RULE_SPEC_STRUCTURAL_PASS: 83 current rules; 78 submitted all admitted (22 mapped, 56 additional); runtime proof remains independent")
     return 0
 if __name__=="__main__":sys.exit(main())

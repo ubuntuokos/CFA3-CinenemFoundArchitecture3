@@ -1,4 +1,4 @@
-"""82 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
+"""83 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
 import copy
 import json
 import tempfile
@@ -17,17 +17,17 @@ class OwnerRuleSpecTests(unittest.TestCase):
         return validate(self.spec if spec is None else spec,self.gov,
                         self.coverage if coverage is None else coverage,
                         self.export if export is None else export)
-    def test_exact_82_current_rules_and_all_78_admitted(self):
+    def test_exact_83_current_rules_and_all_78_admitted(self):
         self.assertEqual([],self.check())
-        self.assertEqual(82,len(active_expected_codes(self.gov,self.spec)))
-        self.assertEqual(82,len(self.spec["active_rules"]))
+        self.assertEqual(83,len(active_expected_codes(self.gov,self.spec)))
+        self.assertEqual(83,len(self.spec["active_rules"]))
         self.assertEqual(78,len(self.spec["historical_candidates"]))
         self.assertEqual(0,self.spec["historical_reconciliation"]["excluded_for_conflict"])
         self.assertEqual(22,self.spec["historical_reconciliation"]["mapped_existing"])
         self.assertEqual(56,self.spec["historical_reconciliation"]["admitted_new"])
         self.assertTrue(all(not r["runtime_verified"] for r in self.spec["active_rules"]))
     def test_each_missing_owner_rule_denied(self):
-        for index in range(82):
+        for index in range(83):
             bad=copy.deepcopy(self.spec);bad["active_rules"].pop(index)
             with self.subTest(index=index):
                 self.assertTrue(self.check(bad))
@@ -50,10 +50,10 @@ class OwnerRuleSpecTests(unittest.TestCase):
         self.assertTrue(self.check(coverage=bad))
     def test_new_rule_is_exactly_source_bound(self):
         bad = copy.deepcopy(self.spec)
-        bad["active_rules"][-2]["text_hu"] = "This is an unauthorized change."
+        bad["active_rules"][-3]["text_hu"] = "This is an unauthorized change."
         self.assertTrue(self.check(bad))
         bad = copy.deepcopy(self.spec)
-        bad["active_rules"][-2]["canonical_policy_path"] = "wrong.json"
+        bad["active_rules"][-3]["canonical_policy_path"] = "wrong.json"
         self.assertTrue(self.check(bad))
         broken_export = copy.deepcopy(self.export)
         broken_export["current_rules"].pop()
@@ -66,7 +66,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
         policy=json.loads((ROOT/source).read_text("utf-8"))
         policy["rule"]["text_hu"]="Nem jóváhagyott, módosított szabályszöveg. " * 18
         altered_spec=copy.deepcopy(self.spec)
-        altered_spec["active_rules"][-2]["text_hu"]=policy["rule"]["text_hu"]
+        altered_spec["active_rules"][-3]["text_hu"]=policy["rule"]["text_hu"]
         altered_export=copy.deepcopy(self.export)
         surface=json.loads((ROOT/SURFACE).read_text("utf-8"))
         with tempfile.TemporaryDirectory() as temp:
@@ -85,7 +85,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
             surface_target=custom_root/SURFACE
             surface_target.parent.mkdir(parents=True,exist_ok=True)
             surface_target.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-            altered_export["current_rules"][-2]["source_git_blob_sha1"]=forged_sha
+            altered_export["current_rules"][-3]["source_git_blob_sha1"]=forged_sha
             issues=validate(altered_spec,self.gov,self.coverage,altered_export,root=custom_root)
             self.assertTrue(any("owner-approved rule text changed" in x for x in issues),issues)
 
@@ -130,7 +130,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
                     self.fail("policy missing from canonical surface")
                 altered_coverage["canonical_policy_leaf_fields_enumerated"]=sum(
                     row["leaf_count"] for row in surface["sources"])
-                altered_export["current_rules"][-2]["source_git_blob_sha1"]=sha
+                altered_export["current_rules"][-3]["source_git_blob_sha1"]=sha
                 snapshot=staged/SURFACE
                 snapshot.parent.mkdir(parents=True,exist_ok=True)
                 snapshot.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",
@@ -142,7 +142,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
 
     def test_rule_admission_proof_mode_requires_approved_value(self):
         tampered=copy.deepcopy(self.spec)
-        tampered["active_rules"][-2]["proof_mode"]="NO_PROOF_REQUIRED"
+        tampered["active_rules"][-3]["proof_mode"]="NO_PROOF_REQUIRED"
         self.assertIn("rule admission proof mode changed",self.check(spec=tampered))
 
     def test_export_post_historical_admission_count_cannot_drift(self):
@@ -207,7 +207,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
             "source_json_pointer":"/wrong",
             "source_git_blob_sha1":"0"*40,
         }
-        for index in (-2,-1):
+        for index in (-3,-2,-1):
             for field,value in tamper.items():
                 with self.subTest(index=index,field=field):
                     bad=copy.deepcopy(self.export)
@@ -219,9 +219,9 @@ class OwnerRuleSpecTests(unittest.TestCase):
             bad=copy.deepcopy(self.coverage)
             flags=bad["runtime_preflight_separation"]
             if change=="remove":
-                del flags["current_82_global_status_not_sufficient_for_task_authority"]
+                del flags["current_83_global_status_not_sufficient_for_task_authority"]
             elif change=="false":
-                flags["current_82_global_status_not_sufficient_for_task_authority"]=False
+                flags["current_83_global_status_not_sufficient_for_task_authority"]=False
             else:
                 flags["current_81_global_status_not_sufficient_for_task_authority"]=True
             with self.subTest(change=change):
@@ -229,8 +229,8 @@ class OwnerRuleSpecTests(unittest.TestCase):
 
     def test_export_summary_covers_both_current_admissions(self):
         for bad_text in ("81 aktív szabály",
-                         "82 aktív szabály RULE-ADMISSION-001",
-                         "82 aktív szabály CFA3-SEQUENTIAL-COMMAND-001"):
+                         "83 aktív szabály RULE-ADMISSION-001",
+                         "83 aktív szabály CFA3-SEQUENTIAL-COMMAND-001"):
             bad=copy.deepcopy(self.export)
             bad["important"]=bad_text
             with self.subTest(summary=bad_text):

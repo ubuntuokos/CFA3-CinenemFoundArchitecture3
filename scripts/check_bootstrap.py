@@ -897,6 +897,108 @@ def validate_policy_exact_finalization(policy, root=ROOT):
     return issues
 
 
+
+def validate_exact_finalization_evidence_correction(correction, historical, root=ROOT):
+    """Fail closed unless the historical receipt's actual Git blob is unchanged."""
+    from pathlib import Path
+    import hashlib
+    import json
+    """Fail closed on the unproven TEXT gate; preserve the historic erroneous receipt."""
+    issues = []
+    def expect(condition, message):
+        if not condition:
+            issues.append("exact finalization evidence: " + message)
+    if not isinstance(correction, dict) or not isinstance(historical, dict):
+        return ["exact finalization evidence: missing correction or historical receipt"]
+    expect(set(correction) == {
+        "schema", "id", "subject_policy_id", "status",
+        "supersedes_status_claim_only", "historical_receipt_git_blob_sha1",
+        "correction_comment", "github_correction_comment_created_at",
+        "source_provenance", "corrected_gates", "full_finalization_allowed",
+        "previous_seven_of_seven_claim_withdrawn",
+        "unverified_original_timestamp", "unverified_timestamp_may_be_used_as_proof",
+        "historical_source_not_modified", "evidence_policy"
+    }, "unexpected or missing correction fields")
+    fixed = {
+        "schema": "cfa3.exact-finalization-evidence-correction.v1",
+        "id": "CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012",
+        "subject_policy_id": "CFA3-POLICY-EXACT-FINALIZATION-001",
+        "status": "MERGED_FINALIZATION_PROOF_INCOMPLETE",
+        "supersedes_status_claim_only": "canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json",
+        "historical_receipt_git_blob_sha1": "ec8f092d1fab53997b7659a54d7f2603c64fcae3",
+        "correction_comment": "https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/pull/36#issuecomment-6129912643",
+        "github_correction_comment_created_at": "2026-10-12T18:10:19Z",
+        "full_finalization_allowed": False,
+        "previous_seven_of_seven_claim_withdrawn": True,
+        "unverified_original_timestamp": "2026-10-12T19:46:55+02:00",
+        "unverified_timestamp_may_be_used_as_proof": False,
+        "historical_source_not_modified": True,
+        "evidence_policy": "FAIL_CLOSED_UNTIL_VERBATIM_OWNER_APPROVED_SOURCE_AND_RECHECK_ARE_AVAILABLE",
+    }
+    for field, value in fixed.items():
+        expect(type(correction.get(field)) is type(value) and
+               correction.get(field) == value, "mismatched " + field)
+    # The correction's stored SHA alone is not evidence that the historical
+    # receipt is still identical. Hash the actual raw bytes with Git's blob
+    # header (not the JSON serialization or the claimed value).
+    historical_path = Path(root) / fixed["supersedes_status_claim_only"]
+    try:
+        raw = historical_path.read_bytes()
+        on_disk = json.loads(raw.decode("utf-8"))
+        blob_sha = hashlib.sha1(
+            b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw
+        ).hexdigest()
+    except (OSError, UnicodeError, ValueError, TypeError):
+        expect(False, "historical receipt missing, unreadable or not valid JSON")
+    else:
+        expect(blob_sha == fixed["historical_receipt_git_blob_sha1"],
+               "historical receipt actual Git blob differs from pinned evidence")
+        expect(isinstance(on_disk, dict) and historical == on_disk,
+               "historical receipt argument does not match pinned file content")
+        expect(correction.get("historical_receipt_git_blob_sha1") == blob_sha,
+               "correction SHA does not match actual historical Git blob")
+    source = correction.get("source_provenance")
+    required_source = {
+        "user_approval_known": True,
+        "original_verbatim_chat_message_available": False,
+        "independent_approved_text_comparison_completed": False,
+        "published_markdown_sha256": "58bd436e6d78ea06a3c9a04f0e4066068f7a19237dbced6677df06df936019b4",
+        "published_sha256_proves_original_approval_match": False,
+        "original_conversation_body_required_before_text_pass": True,
+    }
+    expect(isinstance(source, dict) and set(source) == set(required_source),
+           "source provenance fields incomplete")
+    for field, value in required_source.items():
+        expect(isinstance(source, dict) and
+               type(source.get(field)) is type(value) and
+               source.get(field) == value, "unproven owner source: " + field)
+    expected_gates = {
+        "TEXT": "UNVERIFIED",
+        "STRUCTURE": "PASS_PUBLISHED_STRUCTURE_ONLY",
+        "MERGE": "PASS_VERIFIED_GITHUB",
+        "STATUS": "PARTIAL_HISTORICAL_APPROVAL_AND_MERGE",
+        "REGISTRY": "PASS_VERIFIED_GITHUB",
+        "CI": "PASS_VERIFIED_AT_REFERENCED_COMMITS",
+        "MAIN": "PASS_VERIFIED_AT_REFERENCED_COMMITS",
+    }
+    gates = correction.get("corrected_gates")
+    expect(isinstance(gates, dict) and gates == expected_gates,
+           "seven gates must not claim verified TEXT or full completion")
+    expect(historical.get("schema") == "cfa3.policy-finalization-evidence-snapshot.v1",
+           "historical schema mismatch")
+    expect(historical.get("receipt_id") ==
+           "CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012",
+           "historical receipt identity mismatch")
+    expect(historical.get("recorded_verdict") == "VERIFIED_AT_OBSERVED_MAIN_SHA",
+           "original erroneous verdict must remain documented")
+    expect(historical.get("gates", {}).get("TEXT", {}).get("result") == "PASS",
+           "original unverified TEXT PASS claim must remain auditable")
+    expect(historical.get("approved_source_evidence", {}).get(
+        "source_sha256_calculated_before_first_github_publication") ==
+        required_source["published_markdown_sha256"],
+        "historical digest must match corrected provenance")
+    return issues
+
 def validate_csa_infrastructure_isolation_policy(policy, root=ROOT):
     """Verify the entire six-section owner-approved CSA policy exactly."""
     import hashlib
@@ -994,17 +1096,19 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
                        "approved_text_path", "approved_text_sha256",
                        "approved_section_count", "finalization_gates",
                        "lifecycle_evidence_source", "processing_state_machine",
-                       "donor_data_file_max_bytes", "requirements", "admission_boundary"}
+                       "donor_data_file_max_bytes", "requirements", "admission_boundary",
+                       "revision_evidence"}
     need(set(policy) == required_fields, "metadata fields")
     need(policy.get("schema") == "cfa3.policy-sequential-execution-result-integrity.v1", "schema")
     need(policy.get("id") == "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001", "identity")
+    need(policy.get("title_hu") == "Kötelező szekvenciális feladatvégrehajtás, tényleges eredményközlés és ellenőrzési ciklusok megelőzése", "exact approved JSON title")
     need(policy.get("status") == "OWNER_APPROVED", "approval does not mean merge")
-    need(policy.get("version") == "1.0" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
+    need(policy.get("version") == "1.2" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
     need(policy.get("classification") == "MANDATORY_CFA3_SEQUENTIAL_EXECUTION_AND_RESULT_INTEGRITY", "classification")
     need(policy.get("scope") == ["CFA3 fejlesztési munkafolyamatok", "donoradatbázis-feldolgozás",
                                "GitHub publikáció", "tájékoztatás"], "scope")
     path = "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.md"
-    digest = "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b"
+    digest = "d0b0e07a9b36b0773643938d2f196ab6cf2af740689fde5691025c1aeb483a6a"
     need(policy.get("approved_text_path") == path and
          policy.get("approved_text_sha256") == digest, "approved source integrity")
     need(policy.get("approved_section_count") == 14, "14 sections")
@@ -1012,7 +1116,7 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
          ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "seven gates")
     need(policy.get("lifecycle_evidence_source") == "LIVE_GITHUB_MAIN_AND_PR_STATE", "live evidence")
     need(policy.get("processing_state_machine") ==
-         ["PENDING", "IN_PROGRESS", "VALIDATING", "PUBLISHING", "PUBLISHED", "BLOCKED"], "states")
+         ["PENDING", "IN_PROGRESS", "VALIDATING", "READY_FOR_PUBLICATION", "PUBLISHING", "PUBLISHED", "BLOCKED"], "states")
     need(type(policy.get("donor_data_file_max_bytes")) is int and
          policy.get("donor_data_file_max_bytes") == 996147, "max donor data size")
     required_flags = {
@@ -1022,11 +1126,27 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
         "explicit_owner_donor_approval_required", "progress_states_and_stagnation_detection",
         "stop_no_progress_repeat_loops", "preserve_rights_security_approval_gates",
         "enforce_996147_byte_max_donor_data_file", "preserve_history_and_searchability_when_splitting",
-        "publish_only_after_full_file_closure_and_proofs", "final_message_contains_essential_verifiable_results",
+        "publish_only_after_publication_readiness_proof", "final_message_contains_essential_verifiable_results",
         "do_not_claim_ui_message_persistence_control", "no_unverified_finalization_or_ci_shortcut",
         "self_attribution_for_in_scope_execution_failures", "no_scope_expansion_or_unauthorized_work",
         "long_term_validation_not_established_by_document"
     }
+    need(policy.get("revision_evidence") == {
+        "previous_version": "1.0",
+        "previous_markdown_sha256": "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b",
+        "prior_merge_commit": "7cc091e8acef0d821932a8845e26f9d5d2c66846",
+        "correction_scope": "P1_PREPUBLICATION_READINESS_AND_P2_EXACT_JSON_TITLE",
+        "authorization": "USER_CONTINUE_AFTER_EXPLICIT_P1_P2_DISCLOSURE_2026-10-12",
+        "followup_correction": {
+            "previous_version": "1.1",
+            "previous_markdown_sha256": "5e7d47874695f877033e85acb84ab537ea7e4b17676e308ae1a832b4d9eb4b91",
+            "previous_merge_commit": "95a7f9a6ff6eab26fc7858cde8753ce22f095a7f",
+            "reason": "P1_REVIEW_41_SECTION13_SEQUENCE_CONTRADICTED_SECTION9",
+            "change_scope": "SECTION13_MANDATORY_SEQUENCE_ONLY",
+            "authorization": "USER_CONTINUE_2026-10-12",
+            "latest_revision_verbatim_owner_approval_independently_proven": False
+        }
+    }, "immutable prior revision provenance")
     flags = policy.get("requirements")
     need(isinstance(flags, dict) and set(flags) == required_flags and
          all(flags[k] is True for k in required_flags), "19 normative safeguards")
@@ -1045,7 +1165,14 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
     need(hashlib.sha256(raw).hexdigest() == digest, "owner text edited or truncated")
     heads = re.findall(r"^## ([0-9]+)[.] § ", approved, flags=re.MULTILINE)
     need([int(x) for x in heads] == list(range(1, 15)), "14 approved chapters")
-    for phrase in ("Egy feldolgozási egység – teljes lezárás",
+    for phrase in (
+                   "5. A fájlhoz tartozó feldolgozási eredményt publikációra előkészíteni, végleges lezárás kijelentése nélkül.",
+                   "6. A szükséges ellenőrzéseket elvégezni és a publikációra kész állapotot igazolni.",
+                   "8. A tényleges publikált állapotot igazolni, és csak ezt követően a fájlt véglegesen lezárni.",
+                   "READY_FOR_PUBLICATION",
+                   "A végleges fájllezárás kizárólag mind a nyolc feltétel teljesülése után igazolható.",
+                   "Egy forrásfájl → teljes feldolgozás → célzott ellenőrzés → publikációra kész állapot igazolása → publikáció → publikált állapot igazolása → végleges lezárás → következő forrásfájl.",
+                   "Egy feldolgozási egység – teljes lezárás",
                    "Ismétlődő ellenőrzések tilalma",
                    "A donorszám növekedésének ellenőrizhetősége",
                    "Végtelen és eredménytelen ciklusok megszakítása",
@@ -1053,9 +1180,234 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
                    "Eredményközlés és válaszok megőrzése",
                    "A szabályszöveg jóváhagyása nem azonos a GitHubon végrehajtott véglegesítéssel."):
         need(phrase in approved, "mandatory approved clause: " + phrase)
+    need("célzott ellenőrzés → lezárás → publikáció" not in approved,
+         "obsolete circular order must be removed")
     return errors
 
 
+
+def validate_conversation_evidence_blocker_prevention(policy, root=ROOT):
+    """Check owner-approved text and mandatory policy gates; not runtime enforcement."""
+    import hashlib
+    errors = []
+    def need(ok, msg):
+        if not ok:
+            errors.append("conversation evidence policy: " + msg)
+    ident = "CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001"
+    path = "canonical/policies/" + ident + ".md"
+    need(policy.get("id") == ident, "identifier")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "approval status")
+    need(policy.get("approved_text_path") == path, "owner text path")
+    need(policy.get("approved_section_count") == 17, "section count")
+    need(policy.get("finalization_gates") ==
+         ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"],
+         "finalization gates")
+    digest = policy.get("approved_text_sha256")
+    need(isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest) is not None,
+         "sha256 format")
+    required = ("current_conversation_first", "original_document_full_text_comparison",
+                "search_failure_is_not_evidence_of_unavailability",
+                "reuse_proven_evidence", "source_specific_cryptographic_integrity",
+                "no_false_blockers", "mandatory_error_retraction_and_self_correction",
+                "no_repetitive_search_loops", "preserve_owner_approvals",
+                "never_replace_github_exact_state_with_chat",
+                "distinguish_ai_assertions_from_proofs", "no_unnecessary_user_burden",
+                "mandatory_pre_blocker_checklist", "prevent_scope_expansion",
+                "maintain_safety_and_ci_gates")
+    req = policy.get("requirements", {})
+    need(isinstance(req, dict) and set(req) == set(required)
+         and all(req.get(k) is True for k in required), "mandatory clauses")
+    boundary = policy.get("admission_boundary", {})
+    need(isinstance(boundary, dict) and len(boundary) == 5
+         and all(v is False for v in boundary.values()), "admission boundary")
+    try:
+        raw = (pathlib.Path(root) / path).read_bytes()
+        owner_text = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return errors + ["conversation evidence policy: owner text unavailable"]
+    need(hashlib.sha256(raw).hexdigest() == digest, "owner text SHA-256")
+    chapters = [int(n) for n in re.findall(r"^## ([0-9]+)[.] ", owner_text, re.MULTILINE)]
+    need(chapters == list(range(1, 18)), "17 ordered chapters")
+    for phrase in ("A jelenlegi beszélgetés elsődlegessége",
+                   "A hozzáférhetetlenség bizonyításának kötelezettsége",
+                   "Kriptográfiai bizonyítékok helyes használata",
+                   "Téves blokkolások tilalma",
+                   "Kötelező önkorrekció",
+                   "Jóváhagyások megőrzése",
+                   "GitHub-véglegesítés és ellenőrzés",
+                   "Kötelező záró rendelkezés"):
+        need(phrase in owner_text, "required chapter: " + phrase)
+    return errors
+
+
+
+def validate_execution_completion_and_verified_finalization(policy, root=ROOT):
+    """Verify this owner's admitted exact policy text and metadata; not runtime PASS."""
+    import hashlib
+    errors = []
+    def need(ok, name):
+        if not ok:
+            errors.append("execution-completion rule: " + name)
+    ident = "CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001"
+    title = "Kötelező feladatbefejezés, önálló végrehajtási felelősség, hibajavítás és bizonyított véglegesítés"
+    expected_digest = "c009d287a39fbf10ccb48dc99d2478a9fdfe67ccd71c8daece10372e11c25e65"
+    approved_path = "canonical/policies/" + ident + ".md"
+    need(policy.get("schema") == "cfa3.policy-execution-completion-and-verified-finalization.v1", "schema")
+    need(policy.get("id") == ident, "id")
+    need(policy.get("title_hu") == title, "exact approved title")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner-approved lifecycle state")
+    need(policy.get("owner_decision_date") == "2026-10-12", "owner decision date")
+
+    approved_keys = {
+        "schema", "id", "title_hu", "version", "status",
+        "owner_decision_date", "classification", "scope",
+        "approved_text_path", "approved_text_sha256",
+        "approved_section_count", "finalization_gates",
+        "requirements", "admission_boundary"
+    }
+    need(isinstance(policy, dict) and set(policy) == approved_keys,
+         "exact approved root keys")
+    need(policy.get("classification") ==
+         "MANDATORY_CFA3_EXECUTION_COMPLETION_AND_VERIFIED_FINALIZATION",
+         "exact approved classification")
+    need(policy.get("scope") == [
+        "CFA3 fejlesztési munkafolyamatok",
+        "donoradatbázis-feldolgozás",
+        "GitHub és PR",
+        "CI és szabályvéglegesítés"
+    ], "exact approved scope")
+    need(policy.get("approved_text_path") == approved_path, "approved text path")
+    need(policy.get("approved_text_sha256") == expected_digest, "approved original digest")
+    need(policy.get("approved_section_count") == 20, "section count metadata")
+    need(policy.get("finalization_gates") ==
+         ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "seven required gates")
+    required = (
+        "complete_authorized_task", "sequential_donor_publication",
+        "distinguish_publication_readiness_from_final_closure",
+        "no_repeated_unchanged_checks", "in_scope_self_correction",
+        "pre_merge_review_thread_inspection", "post_merge_review_remediation",
+        "independent_original_text_comparison", "exact_metadata_validation",
+        "seven_gate_finalization_proof", "scope_guard_and_security_gates"
+    )
+    req = policy.get("requirements", {})
+    need(isinstance(req, dict) and set(req) == set(required) and
+         all(req.get(k) is True for k in required), "mandatory requirements")
+    boundary = policy.get("admission_boundary", {})
+    need(isinstance(boundary, dict) and set(boundary) ==
+         {"approval_alone_is_finalization", "ci_alone_is_finalization",
+          "automatic_scope_expansion_allowed"} and
+         all(v is False for v in boundary.values()), "admission boundaries")
+    try:
+        raw = (pathlib.Path(root) / approved_path).read_bytes()
+        approved_text = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return errors + ["execution-completion rule: approved text unreadable"]
+    need(hashlib.sha256(raw).hexdigest() == expected_digest, "owner-approved full text integrity")
+    sections = [int(n) for n in re.findall(r"^## ([0-9]+)[.] §", approved_text, re.MULTILINE)]
+    need(sections == list(range(1, 21)), "20 ordered clauses")
+    for phrase in (
+        "A *publikációs készenlét* nem azonos a *végleges lezárással*.",
+        "A feltöltött fájlból számított SHA-256 lenyomat önmagában nem igazolja",
+        "A 7/7 PASS kizárólag a hét kapu tényleges teljesülése esetén jelenthető ki.",
+        "Valós jogosultsági, biztonsági, jóváhagyási vagy ütközési akadály esetén",
+        "A jóváhagyás, a GitHub-publikáció és a bizonyított véglegesítés három különböző"
+    ):
+        need(phrase in approved_text, "required exact clause: " + phrase)
+    return errors
+
+
+
+def validate_http_409_conflict_recovery(policy, root=ROOT):
+    """Structural proof for owner-approved HTTP 409 recovery rule; not runtime PASS."""
+    import hashlib
+    errors = []
+    def need(ok, message):
+        if not ok:
+            errors.append("HTTP 409 recovery policy: " + message)
+    ident = "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001"
+    need(policy.get("id") == ident, "identifier")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner approval")
+    need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
+    need(policy.get("approved_section_count") == 16, "section count")
+    need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
+    required = ("identify_specific_http_conflict", "exact_state_before_repair",
+                "narrow_safe_self_correction", "preserve_third_party_changes",
+                "serial_file_updates", "no_blind_retry_loop",
+                "stop_on_real_content_blocker", "protect_pr_and_merge_authority",
+                "prove_actual_recovery", "prevent_repeat_unnecessary_checks",
+                "return_to_original_task", "no_scope_expansion",
+                "do_not_override_existing_rules")
+    flags = policy.get("requirements", {})
+    need(isinstance(flags, dict) and set(flags) == set(required)
+         and all(flags.get(key) is True for key in required), "mandatory requirements")
+    boundary = policy.get("admission_boundary", {})
+    need(isinstance(boundary, dict) and all(value is False for value in boundary.values())
+         and len(boundary) == 5, "authority boundary")
+    source = root / "canonical/policies" / (ident + ".md")
+    if not source.is_file():
+        need(False, "approved Markdown missing")
+        return errors
+    raw = source.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    need(policy.get("approved_text_sha256") == digest, "approved source SHA256")
+    text = raw.decode("utf-8")
+    need(len(re.findall(r"^## [0-9]+\. §", text, re.M)) == 16, "all 16 sections")
+    for phrase in ("HTTP 409 Conflict önmagában nem tekinthető végleges blokkolásnak",
+                   "Ugyanazt a műveletet változatlan előfeltételekkel ismételni tilos",
+                   "Valódi blokkolás esetén a végrehajtásnak meg kell állnia",
+                   "A konfliktus feloldása nem jelenti automatikusan"):
+        need(phrase in text, "mandatory text: " + phrase)
+    return errors
+
+def validate_execution_and_proof_obligation(policy, root=ROOT):
+    """Fail-closed owner-approved text and identity check; not runtime admission."""
+    import hashlib
+    errors = []
+    ident = "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001"
+    def need(ok, reason):
+        if not ok:
+            errors.append("execution and proof obligation: " + reason)
+    need(policy.get("id") == ident, "identity")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner decision")
+    need(policy.get("owner_decision_date") == "2026-10-12", "owner decision date")
+    need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
+    need(policy.get("approved_section_count") == 16, "section count")
+    need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
+    required = ("approved_work_must_be_executed", "missing_proof_not_impossibility",
+                "verbatim_text_preservation", "sha256_verification",
+                "do_not_repeat_approval_request", "no_unjustified_stop",
+                "no_scope_expansion", "only_proven_pass")
+    flags = policy.get("requirements")
+    need(isinstance(flags, dict) and set(flags) == set(required)
+         and all(flags.get(key) is True for key in required), "required conditions")
+    rule = policy.get("rule")
+    need(isinstance(rule, dict) and rule.get("id") == "CFA3-EXECUTION-PROOF-OBLIGATION-001"
+         and rule.get("code") == "EXECUTE_APPROVED_TASK_AND_PROVE_RESULT"
+         and rule.get("proof_mode") == "SOURCE_BOUND_SIGNED_TASK_RECEIPT"
+         and rule.get("runtime_verified") is False
+         and rule.get("text_hu") == "Az AI köteles a jóváhagyott feladatot az engedélyezett műveleti körben végrehajtani, majd az eredményt tényleges bizonyítékokkal alátámasztani.", "owner-approved source-bound rule identity")
+    expected = "a16adffae8f164ee4f97c119657546921eeeca81e508661e76a3395949ae63f1"
+    need(policy.get("approved_text_sha256") == expected, "pinned owner text SHA-256")
+    source = pathlib.Path(root) / "canonical/policies" / (ident + ".md")
+    try:
+        raw = source.read_bytes()
+        content = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        need(False, "approved source missing or invalid UTF-8")
+        return errors
+    need(hashlib.sha256(raw).hexdigest() == expected, "approved source contents SHA-256")
+    need([int(x) for x in re.findall(r"^## (\d+)\. §", content, re.MULTILINE)] == list(range(1, 17)), "ordered 16 sections")
+    for phrase in (
+        "A végre nem hajtott ellenőrzés nem azonos a sikertelen ellenőrzéssel",
+        "VÉGLEGESÍTVE kizárólag 7/7 igazolt PASS esetén",
+        "Tilos a hiányzó végrehajtást bizonyíthatatlanságnak",
+    ):
+        need(phrase in content, "required owner clause: " + phrase)
+    return errors
 
 def validate_conversation_recovery_policy(policy, root=ROOT):
     """Pin the approved 15-section text and its mandatory non-bypassable requirements."""
@@ -1134,9 +1486,14 @@ def check(root=ROOT):
     errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
     errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
     errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
+    errors.extend(validate_exact_finalization_evidence_correction(load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012.json",root),load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json",root)))
     errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
     errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
+    errors.extend(validate_conversation_evidence_blocker_prevention(load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",root),root))
     errors.extend(validate_conversation_recovery_policy(load("canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.json",root),root))
+    errors.extend(validate_execution_completion_and_verified_finalization(load("canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",root),root))
+    errors.extend(validate_http_409_conflict_recovery(load("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",root),root))
+    errors.extend(validate_execution_and_proof_obligation(load("canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

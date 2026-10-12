@@ -1,0 +1,55 @@
+{
+  "schema": "cfa3.policy-mandatory-rule-creation-integrity.v1",
+  "id": "CFA3-POLICY-MANDATORY-RULE-CREATION-INTEGRITY-001",
+  "title_hu": "Megkerülhetetlen szabályalkotási feladatok végrehajtási integritása és kötelező, bizonyított lezárása",
+  "version": "1.0",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-13",
+  "classification": "MANDATORY_CFA3_RULE_CREATION_EXECUTION_INTEGRITY",
+  "scope": [
+    "CFA3 szabályalkotás",
+    "CFA3 szabálymódosítás",
+    "CFA3 szabálybevezetés",
+    "CFA3 szabályvéglegesítés"
+  ],
+  "approved_text_path": "canonical/policies/CFA3-POLICY-MANDATORY-RULE-CREATION-INTEGRITY-001.md",
+  "approved_original_text_sha256": "3e590e20f3d50e04297776b43e22d91cbd9b0a417c4687810e75992913c10ba8",
+  "published_text_sha256": "c1c177c260b46f0139cb9d435b96bf301d65f94e003903be815a41667c070157",
+  "lifecycle_header_update": "JÓVÁHAGYÁSRA VÁR -> JÓVÁHAGYVA; no normative content changed",
+  "approved_section_count": 16,
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "REGISTRY",
+    "STATUS",
+    "CI",
+    "MERGE",
+    "MAIN",
+    "SCOPE"
+  ],
+  "requirements": {
+    "exact_scope_guard": true,
+    "rule_drafting_completeness": true,
+    "no_task_substitution": true,
+    "donor_registry_separation": true,
+    "verbatim_normative_provisions": true,
+    "owner_approval_integrity": true,
+    "approved_original_digest_preserved": true,
+    "self_correction_only_within_scope": true,
+    "no_unbounded_check_loops": true,
+    "github_exact_state": true,
+    "mandatory_evidence_gates": true,
+    "no_false_completion": true,
+    "stop_on_true_blocker": true,
+    "do_not_change_unrelated_prs": true,
+    "no_unapproved_scope_expansion": true,
+    "stop_after_proven_completion": true
+  },
+  "admission_boundary": {
+    "owner_approval_alone_is_merge_proof": false,
+    "ci_alone_is_finalization": false,
+    "static_policy_proves_runtime_enforcement": false,
+    "unapproved_pr_or_branch_change_allowed": false,
+    "unreviewed_rule_semantics_fully_admitted": false
+  }
+}

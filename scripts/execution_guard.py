@@ -69,7 +69,7 @@ def validate_current_rule_map(governance,catalog,owner_spec=None):
         required=active_expected_codes(governance,owner_spec)
         rows=catalog.get("rules") if isinstance(catalog,dict) else None
         if not isinstance(rows,dict) or set(rows)!=set(required):
-            problems.append("82 current active rule identities incomplete")
+            problems.append("83 current active rule identities incomplete")
         else:
             for ident,code in required.items():
                 row=rows[ident]
@@ -103,7 +103,7 @@ def policy_issues(root=ROOT, *, require_prior_runtime_proofs=True):
         issues.extend(validate_current_rule_map(gov,catalog,owner_spec))
         issues.extend(validate(owner_spec,gov,catalog,evidence_export,root=root))
     except (Blocked, ImportError, OSError, TypeError, ValueError, KeyError):
-        issues.append("owner-provided 82-rule normative source unavailable")
+        issues.append("owner-provided 83-rule normative source unavailable")
     if require_prior_runtime_proofs:
         rules = catalog.get("rules", {})
         if not isinstance(rules, dict) or any(
@@ -342,9 +342,9 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         raise Blocked("RULE_GATE: " + str(exc)) from exc
     evidence = admission(task)
     if not isinstance(evidence, dict) or any(evidence.get(x) is not True for x in (
-            "current_82_rule_inventory_verified", "current_82_rule_gates_verified",
-            "current_82_conflicts_resolved", "independent_proof_verified")):
-        raise Blocked("independent current-82 rule admission not verified")
+            "current_83_rule_inventory_verified", "current_83_rule_gates_verified",
+            "current_83_conflicts_resolved", "independent_proof_verified")):
+        raise Blocked("independent current-83 rule admission not verified")
     proof = live_state(task)
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
             "main_current", "head_current", "no_overlap", "checks_passed",

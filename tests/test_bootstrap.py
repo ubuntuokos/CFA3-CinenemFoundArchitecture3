@@ -508,6 +508,70 @@ class BootstrapPolicyTests(unittest.TestCase):
         self.assertTrue(validate_policy_long_term_validation(bad))
 
 
+
+    def test_exact_finalization_evidence_correction_fail_closed(self):
+        from check_bootstrap import validate_exact_finalization_evidence_correction
+        correction = load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012.json")
+        historical = load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json")
+        self.assertEqual([], validate_exact_finalization_evidence_correction(
+            correction, historical))
+        for path, invalid in (
+            (("status",), "FINALIZED"),
+            (("full_finalization_allowed",), True),
+            (("previous_seven_of_seven_claim_withdrawn",), False),
+            (("unverified_timestamp_may_be_used_as_proof",), True),
+            (("source_provenance", "original_verbatim_chat_message_available"), True),
+            (("source_provenance", "published_sha256_proves_original_approval_match"), True),
+            (("source_provenance", "independent_approved_text_comparison_completed"), True),
+            (("corrected_gates", "TEXT"), "PASS"),
+            (("corrected_gates", "STATUS"), "PASS"),
+        ):
+            bad = copy.deepcopy(correction)
+            obj = bad
+            for part in path[:-1]:
+                obj = obj[part]
+            obj[path[-1]] = invalid
+            with self.subTest(path=path):
+                self.assertTrue(validate_exact_finalization_evidence_correction(
+                    bad, historical))
+        bad_historical = copy.deepcopy(historical)
+        bad_historical["gates"]["TEXT"]["result"] = "UNVERIFIED"
+        self.assertTrue(validate_exact_finalization_evidence_correction(
+            correction, bad_historical))
+        bad_historical = copy.deepcopy(historical)
+        bad_historical["recorded_verdict"] = "FULLY_FINALIZED"
+        self.assertTrue(validate_exact_finalization_evidence_correction(
+            correction, bad_historical))
+        # Alter a field that was previously not individually inspected:
+        # the real historical file and the supplied object must both be pinned.
+        other_historical = copy.deepcopy(historical)
+        other_historical["subject"]["policy_id"] = "TAMPERED"
+        self.assertTrue(validate_exact_finalization_evidence_correction(
+            correction, other_historical))
+        from pathlib import Path
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / correction["supersedes_status_claim_only"]
+            target.parent.mkdir(parents=True)
+            raw = (ROOT / correction["supersedes_status_claim_only"]).read_bytes()
+            target.write_bytes(raw)
+            self.assertEqual([], validate_exact_finalization_evidence_correction(
+                correction, historical, tmp))
+            # Byte-only change: JSON still parses to the exact same dict.
+            # The SHA check must nevertheless reject the altered Git blob.
+            target.write_bytes(raw + b" ")
+            self.assertTrue(validate_exact_finalization_evidence_correction(
+                correction, historical, tmp))
+            # Changes to previously unchecked fields must not pass either.
+            tampered = copy.deepcopy(historical)
+            tampered["observation"]["main_sha_at_observation"] = "0" * 40
+            target.write_text(json.dumps(tampered, ensure_ascii=False) + "\n", encoding="utf-8")
+            self.assertTrue(validate_exact_finalization_evidence_correction(
+                correction, tampered, tmp))
+            target.unlink()
+            self.assertTrue(validate_exact_finalization_evidence_correction(
+                correction, historical, tmp))
+
     def test_policy_exact_finalization_owner_text_positive_and_negative(self):
         from check_bootstrap import validate_policy_exact_finalization
         import tempfile
@@ -585,6 +649,9 @@ class BootstrapPolicyTests(unittest.TestCase):
         self.assertEqual([], validate_sequential_execution_result_integrity(p, ROOT))
         for field, invalid in (
                 ("status", "OWNER_APPROVED_MERGED_TO_MAIN"),
+                ("title_hu", "Jogosulatlanul módosított cím"),
+                ("version", "1.1"),
+                ("revision_evidence", {"previous_version": "incorrect"}),
                 ("approved_text_sha256", "0" * 64),
                 ("approved_section_count", 13),
                 ("donor_data_file_max_bytes", 996148),
@@ -594,6 +661,14 @@ class BootstrapPolicyTests(unittest.TestCase):
             damaged[field] = invalid
             with self.subTest(field=field):
                 self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
+        self.assertIn("READY_FOR_PUBLICATION", p["processing_state_machine"])
+        self.assertEqual("1.2", p["version"])
+        self.assertFalse(p["revision_evidence"]["followup_correction"]["latest_revision_verbatim_owner_approval_independently_proven"])
+        self.assertTrue(p["requirements"]["publish_only_after_publication_readiness_proof"])
+        self.assertNotIn("publish_only_after_full_file_closure_and_proofs", p["requirements"])
+        damaged = copy.deepcopy(p)
+        damaged["revision_evidence"]["followup_correction"]["latest_revision_verbatim_owner_approval_independently_proven"] = True
+        self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
         for key in p["requirements"]:
             damaged = copy.deepcopy(p)
             damaged["requirements"][key] = False
@@ -612,8 +687,46 @@ class BootstrapPolicyTests(unittest.TestCase):
                 "A donorszám növekedésének ellenőrizhetősége".encode("utf-8"),
                 "A donorszám növekedésének megkerülése".encode("utf-8"), 1))
             self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
+            target.write_bytes(original.replace(
+                "célzott ellenőrzés → publikációra kész állapot igazolása → publikáció".encode("utf-8"),
+                "célzott ellenőrzés → lezárás → publikáció".encode("utf-8"), 1))
+            self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
             target.write_bytes(original[:len(original)//2])
             self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
+
+    def test_conversation_evidence_blocker_prevention_integrity(self):
+        from check_bootstrap import validate_conversation_evidence_blocker_prevention
+        import tempfile
+        from pathlib import Path
+        policy = load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json")
+        self.assertEqual([], validate_conversation_evidence_blocker_prevention(policy, ROOT))
+        for key in ("status", "approved_text_sha256", "approved_section_count"):
+            damaged = copy.deepcopy(policy)
+            damaged[key] = "INVALID"
+            with self.subTest(key=key):
+                self.assertTrue(validate_conversation_evidence_blocker_prevention(damaged, ROOT))
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / policy["approved_text_path"]
+            target.parent.mkdir(parents=True)
+            original = (ROOT / policy["approved_text_path"]).read_bytes()
+            target.write_bytes(original.replace(
+                "Téves blokkolások tilalma".encode("utf-8"),
+                "Téves blokkolások mellőzése".encode("utf-8"), 1))
+            self.assertTrue(validate_conversation_evidence_blocker_prevention(policy, tmp))
+
+    def test_http_409_conflict_recovery_policy(self):
+        from check_bootstrap import validate_http_409_conflict_recovery
+        policy = load("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json")
+        self.assertEqual([], validate_http_409_conflict_recovery(policy, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["requirements"]["no_blind_retry_loop"] = False
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["approved_text_sha256"] = "0" * 64
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["status"] = "DRAFT"
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
 
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot

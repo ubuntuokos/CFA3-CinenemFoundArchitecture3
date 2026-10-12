@@ -245,6 +245,15 @@ APPROVED_RULE_ADMISSION_TEXT_HU = (
     "az AI asszisztens vagy az AI fejlesztő felelős. Külön tulajdonosi feladat vagy önállóan jóváhagyott új szabály csak a saját feladatához kötött ágon és "
     "PR-ben vezethető be; másik, már megnyitott feladat PR-jébe automatikusan nem helyezhető át. A közös nyilvántartás szükséges konzisztens módosítása nem "
     "teszi közössé a két feladat hatáskörét."
+    " Közös szabálynyilvántartást érintő párhuzamos PR-ek integrációját sorosítani kell: minden PR csak a saját jóváh"
+    "agyott szabályának bejegyzéseit változtathatja, a többi rekordot és történeti adatot meg kell őriznie. A nyilván"
+    "tartást az aktuális main és az adott PR HEAD ellenőrzött állapotából kell összehangolni; elavult pillanatkép nem"
+    " írhat felül újabb rekordot. A szabálydarabszámot, mezőleltárt és Git-blob azonosítókat determinisztikusan újra "
+    "kell ellenőrizni, az aktuális commiton kötelező CI- és review-kapukkal együtt. Azonos fájl párhuzamos módosítása"
+    " vagy eltérő main/head esetén összevonás nem engedélyezett a célzott, adatvesztésmentes összehangolás és az új e"
+    "llenőrzések előtt; valós, nem egyértelmű konfliktus STOP. A technikai összehangolás kizárólag kifejezetten enged"
+    "élyezett körben történhet, nem jogosít más szabály tartalmi változtatására, önálló rebase-re, új PR-re vagy önké"
+    "nyes összevonásra."
 )
 
 def validate_rule_admission(policy):
@@ -288,6 +297,11 @@ def validate_rule_admission(policy):
         "failed_check_must_report_root_cause_and_evidence",
         "no_unjustified_attribution_or_fabricated_pass",
         "failed_gate_requires_stop_and_report",
+        "shared_registry_pr_integration_must_be_serialized",
+        "unrelated_policy_registry_records_must_be_preserved",
+        "registry_update_must_use_verified_current_main_and_pr_head",
+        "canonical_registry_counts_leaf_inventory_and_blob_hashes_must_be_rechecked",
+        "unresolved_ambiguity_or_stale_head_blocks_merge",
     )
     requirements = policy.get("requirements")
     require(isinstance(requirements, dict) and set(requirements) == set(required),

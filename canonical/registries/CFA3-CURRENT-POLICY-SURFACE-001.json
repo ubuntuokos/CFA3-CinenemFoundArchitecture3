@@ -4751,10 +4751,10 @@
     },
     {
       "path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
-      "git_blob_sha1": "bba400939ba78100565aa038027092f894defe5b",
+      "git_blob_sha1": "7851d72ce9e082c434d95fd3d0fc38e12986e2be",
       "canonical_id": "CFA3-RULE-ADMISSION-POLICY-001",
       "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
-      "leaf_count": 27,
+      "leaf_count": 32,
       "leaves": [
         [
           "/admission_boundary/bootstrap_structural_pass_is_runtime_proof",
@@ -4774,6 +4774,10 @@
         ],
         [
           "/requirements/bootstrap_requirements_checked_before_pr",
+          "boolean"
+        ],
+        [
+          "/requirements/canonical_registry_counts_leaf_inventory_and_blob_hashes_must_be_rechecked",
           "boolean"
         ],
         [
@@ -4813,7 +4817,23 @@
           "boolean"
         ],
         [
+          "/requirements/registry_update_must_use_verified_current_main_and_pr_head",
+          "boolean"
+        ],
+        [
           "/requirements/rule_admission_may_not_expand_the_main_task",
+          "boolean"
+        ],
+        [
+          "/requirements/shared_registry_pr_integration_must_be_serialized",
+          "boolean"
+        ],
+        [
+          "/requirements/unrelated_policy_registry_records_must_be_preserved",
+          "boolean"
+        ],
+        [
+          "/requirements/unresolved_ambiguity_or_stale_head_blocks_merge",
           "boolean"
         ],
         [

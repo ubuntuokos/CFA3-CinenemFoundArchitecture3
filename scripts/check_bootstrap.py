@@ -1105,7 +1105,7 @@ def validate_conversation_recovery_policy(policy, root=ROOT):
     for phrase in (
         "A jóváhagyás ténye és a jóváhagyott szöveg szó szerinti azonossága külön bizonyítandó.",
         "A véglegesítést kizárólag a hét feltétel igazolt teljesülése után szabad bejelenteni.",
-        "A már ismert és bizonyított tényekből kell továbbhaladni"
+        "a már ismert és bizonyított tényekből kell továbbhaladni"
     ):
         need(phrase in owner_text, "mandatory approved clause: " + phrase)
     return issues

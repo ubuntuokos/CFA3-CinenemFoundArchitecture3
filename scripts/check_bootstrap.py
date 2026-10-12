@@ -1318,6 +1318,50 @@ def validate_execution_completion_and_verified_finalization(policy, root=ROOT):
     return errors
 
 
+
+def validate_http_409_conflict_recovery(policy, root=ROOT):
+    """Structural proof for owner-approved HTTP 409 recovery rule; not runtime PASS."""
+    import hashlib
+    errors = []
+    def need(ok, message):
+        if not ok:
+            errors.append("HTTP 409 recovery policy: " + message)
+    ident = "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001"
+    need(policy.get("id") == ident, "identifier")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner approval")
+    need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
+    need(policy.get("approved_section_count") == 16, "section count")
+    need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
+    required = ("identify_specific_http_conflict", "exact_state_before_repair",
+                "narrow_safe_self_correction", "preserve_third_party_changes",
+                "serial_file_updates", "no_blind_retry_loop",
+                "stop_on_real_content_blocker", "protect_pr_and_merge_authority",
+                "prove_actual_recovery", "prevent_repeat_unnecessary_checks",
+                "return_to_original_task", "no_scope_expansion",
+                "do_not_override_existing_rules")
+    flags = policy.get("requirements", {})
+    need(isinstance(flags, dict) and set(flags) == set(required)
+         and all(flags.get(key) is True for key in required), "mandatory requirements")
+    boundary = policy.get("admission_boundary", {})
+    need(isinstance(boundary, dict) and all(value is False for value in boundary.values())
+         and len(boundary) == 5, "authority boundary")
+    source = root / "canonical/policies" / (ident + ".md")
+    if not source.is_file():
+        need(False, "approved Markdown missing")
+        return errors
+    raw = source.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    need(policy.get("approved_text_sha256") == digest, "approved source SHA256")
+    text = raw.decode("utf-8")
+    need(len(re.findall(r"^## [0-9]+\\. §", text, re.M)) == 16, "all 16 sections")
+    for phrase in ("HTTP 409 Conflict önmagában nem tekinthető végleges blokkolásnak",
+                   "Ugyanazt a műveletet változatlan előfeltételekkel ismételni tilos",
+                   "Valódi blokkolás esetén a végrehajtásnak meg kell állnia",
+                   "A konfliktus feloldása nem jelenti automatikusan"):
+        need(phrase in text, "mandatory text: " + phrase)
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -1346,6 +1390,7 @@ def check(root=ROOT):
     errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
     errors.extend(validate_conversation_evidence_blocker_prevention(load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",root),root))
     errors.extend(validate_execution_completion_and_verified_finalization(load("canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",root),root))
+    errors.extend(validate_http_409_conflict_recovery(load("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

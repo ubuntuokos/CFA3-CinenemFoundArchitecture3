@@ -3032,10 +3032,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",
-      "git_blob_sha1": "17ef12c59af9d9824f753cf2a45cc650f1393b85",
+      "git_blob_sha1": "59c2de4a8389911069172b1c453871629cc7d2e6",
       "canonical_id": "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001",
       "source_status": "OWNER_APPROVED",
-      "leaf_count": 23,
+      "leaf_count": 28,
       "leaves": [
         [
           "/approved_section_count",
@@ -3116,6 +3116,26 @@
         [
           "/requirements/verbatim_text_preservation",
           "boolean"
+        ],
+        [
+          "/rule/code",
+          "string"
+        ],
+        [
+          "/rule/id",
+          "string"
+        ],
+        [
+          "/rule/proof_mode",
+          "string"
+        ],
+        [
+          "/rule/runtime_verified",
+          "boolean"
+        ],
+        [
+          "/rule/text_hu",
+          "string"
         ],
         [
           "/schema",

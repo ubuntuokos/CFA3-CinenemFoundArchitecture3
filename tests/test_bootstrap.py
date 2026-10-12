@@ -412,11 +412,36 @@ class BootstrapPolicyTests(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertTrue(validate_rule_consistency_loop_prevention(invalid))
 
+    def test_github_merge_gate_405_positive_and_negative(self):
+        from check_bootstrap import validate_github_merge_gate_405_policy
+        policy = load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json")
+        self.assertEqual([], validate_github_merge_gate_405_policy(policy))
+        for name, value in policy["requirements"].items():
+            invalid = copy.deepcopy(policy)
+            invalid["requirements"][name] = (996148 if name == "donor_max_modified_bytes"
+                                             else not value)
+            with self.subTest(requirement=name):
+                self.assertTrue(validate_github_merge_gate_405_policy(invalid))
+        for path, value in (
+                (("rule", "runtime_verified"), True),
+                (("rule", "text_hu"), "405 without required self-repair"),
+                (("admission_boundary", "independent_execution_gate_pass"), True),
+                (("requirements", "disable_github_protection"), True),
+                (("requirements", "own_405_alone_is_blocker"), True),
+                (("requirements", "independent_blocker_requires_stop"), False)):
+            invalid = copy.deepcopy(policy)
+            invalid[path[0]][path[1]] = value
+            with self.subTest(guard=path):
+                self.assertTrue(validate_github_merge_gate_405_policy(invalid))
+        invalid = copy.deepcopy(policy)
+        invalid["sections"].pop()
+        self.assertTrue(validate_github_merge_gate_405_policy(invalid))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(12, surface["source_policy_count"])
+        self.assertEqual(13, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

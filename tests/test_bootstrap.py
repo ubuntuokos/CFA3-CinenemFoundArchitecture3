@@ -559,6 +559,45 @@ class BootstrapPolicyTests(unittest.TestCase):
             target.write_bytes(original[:len(original) // 2])
             self.assertTrue(validate_csa_infrastructure_isolation_policy(p, tempdir))
 
+
+    def test_sequential_execution_integrity_owner_text_positive_and_negative(self):
+        from check_bootstrap import validate_sequential_execution_result_integrity
+        import tempfile
+        from pathlib import Path
+        p = load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json")
+        self.assertEqual([], validate_sequential_execution_result_integrity(p, ROOT))
+        for field, invalid in (
+                ("status", "OWNER_APPROVED_MERGED_TO_MAIN"),
+                ("approved_text_sha256", "0" * 64),
+                ("approved_section_count", 13),
+                ("donor_data_file_max_bytes", 996148),
+                ("processing_state_machine", ["PENDING"]),
+                ("finalization_gates", ["TEXT", "CI"])):
+            damaged = copy.deepcopy(p)
+            damaged[field] = invalid
+            with self.subTest(field=field):
+                self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
+        for key in p["requirements"]:
+            damaged = copy.deepcopy(p)
+            damaged["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
+        for key in p["admission_boundary"]:
+            damaged = copy.deepcopy(p)
+            damaged["admission_boundary"][key] = True
+            with self.subTest(boundary=key):
+                self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / p["approved_text_path"]
+            target.parent.mkdir(parents=True)
+            original = (ROOT / p["approved_text_path"]).read_bytes()
+            target.write_bytes(original.replace(
+                "A donorszám növekedésének ellenőrizhetősége".encode("utf-8"),
+                "A donorszám növekedésének megkerülése".encode("utf-8"), 1))
+            self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
+            target.write_bytes(original[:len(original)//2])
+            self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")

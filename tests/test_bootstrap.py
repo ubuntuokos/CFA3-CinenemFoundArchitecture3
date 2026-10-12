@@ -18,6 +18,23 @@ class BootstrapPolicyTests(unittest.TestCase):
         cls.platform=load("canonical/policies/CFA3-PLATFORM-CONSTRAINTS-001.json")
         cls.ledger=load("canonical/registries/CFA3-LEGACY-RULE-SOURCE-LEDGER-001.json")
 
+    def test_conversation_recovery_integrity_positive_and_negative(self):
+        from check_bootstrap import validate_conversation_recovery_policy
+        policy = load("canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.json")
+        self.assertEqual([], validate_conversation_recovery_policy(policy))
+        altered = copy.deepcopy(policy)
+        altered["requirements"]["verified_closure_only"] = False
+        self.assertTrue(validate_conversation_recovery_policy(altered))
+        altered = copy.deepcopy(policy)
+        altered["approved_text_sha256"] = "0" * 64
+        self.assertTrue(validate_conversation_recovery_policy(altered))
+        altered = copy.deepcopy(policy)
+        altered["approved_section_count"] = 14
+        self.assertTrue(validate_conversation_recovery_policy(altered))
+        altered = copy.deepcopy(policy)
+        altered["finalization_gates"].remove("MAIN")
+        self.assertTrue(validate_conversation_recovery_policy(altered))
+
     def test_structural_seed(self):
         self.assertEqual([],check())
 

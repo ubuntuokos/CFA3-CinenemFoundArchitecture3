@@ -14,6 +14,7 @@
     "canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",
     "canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",
     "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",
+    "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",
     "canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",
     "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",
     "canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",
@@ -391,7 +392,7 @@
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
-  "canonical_policy_leaf_fields_enumerated": 1229,
+  "canonical_policy_leaf_fields_enumerated": 1251,
   "canonical_policy_field_enumeration_complete": true,
   "canonical_policy_semantic_rule_enforcement_complete": false,
   "github_main_protection_ruleset": {

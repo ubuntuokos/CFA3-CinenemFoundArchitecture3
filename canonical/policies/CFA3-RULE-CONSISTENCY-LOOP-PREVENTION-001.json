@@ -52,7 +52,7 @@
   "requirements": {
     "detect_conflicting_rules_before_admission": true,
     "prohibit_simultaneously_effective_contradictory_rules": true,
-    "prohibit_nonterminating_owner_decisions": true,
+    "prohibit_nonterminating_developer_decisions": true,
     "require_progress_and_exit_criteria": true,
     "signal_suspected_infinite_loop_immediately": true,
     "distinguish_suspected_from_proven_loop": true,

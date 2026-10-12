@@ -1362,6 +1362,47 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
         need(phrase in text, "mandatory text: " + phrase)
     return errors
 
+def validate_execution_and_proof_obligation(policy, root=ROOT):
+    """Fail-closed owner-approved text and identity check; not runtime admission."""
+    import hashlib
+    errors = []
+    ident = "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001"
+    def need(ok, reason):
+        if not ok:
+            errors.append("execution and proof obligation: " + reason)
+    need(policy.get("id") == ident, "identity")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner decision")
+    need(policy.get("owner_decision_date") == "2026-10-12", "owner decision date")
+    need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
+    need(policy.get("approved_section_count") == 16, "section count")
+    need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
+    required = ("approved_work_must_be_executed", "missing_proof_not_impossibility",
+                "verbatim_text_preservation", "sha256_verification",
+                "do_not_repeat_approval_request", "no_unjustified_stop",
+                "no_scope_expansion", "only_proven_pass")
+    flags = policy.get("requirements")
+    need(isinstance(flags, dict) and set(flags) == set(required)
+         and all(flags.get(key) is True for key in required), "required conditions")
+    expected = "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a"
+    need(policy.get("approved_text_sha256") == expected, "pinned owner text SHA-256")
+    source = pathlib.Path(root) / "canonical/policies" / (ident + ".md")
+    try:
+        raw = source.read_bytes()
+        content = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        need(False, "approved source missing or invalid UTF-8")
+        return errors
+    need(hashlib.sha256(raw).hexdigest() == expected, "approved source contents SHA-256")
+    need([int(x) for x in re.findall(r"^## (\d+)\. §", content, re.MULTILINE)] == list(range(1, 17)), "ordered 16 sections")
+    for phrase in (
+        "A végre nem hajtott ellenőrzés nem azonos a sikertelen ellenőrzéssel",
+        "VÉGLEGESÍTVE kizárólag 7/7 igazolt PASS esetén",
+        "Tilos a hiányzó végrehajtást bizonyíthatatlanságnak",
+    ):
+        need(phrase in content, "required owner clause: " + phrase)
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -1391,6 +1432,7 @@ def check(root=ROOT):
     errors.extend(validate_conversation_evidence_blocker_prevention(load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",root),root))
     errors.extend(validate_execution_completion_and_verified_finalization(load("canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",root),root))
     errors.extend(validate_http_409_conflict_recovery(load("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",root),root))
+    errors.extend(validate_execution_and_proof_obligation(load("canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

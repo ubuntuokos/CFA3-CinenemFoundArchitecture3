@@ -3,7 +3,7 @@
   "id": "CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001",
   "source_type": "EXPLICIT_OWNER_SUPPLIED_TEXT_2026_10_11",
   "authority": "CURRENT_24_PLUS_OWNER_RECONFIRMED_56; 22 LEGACY_DEV_AI_MAPPED",
-  "active_rule_count": 82,
+  "active_rule_count": 83,
   "active_rules": [
     {
       "id": "DEV-01",
@@ -942,6 +942,15 @@
       "runtime_verified": false,
       "provenance": "OWNER_SUPPLIED_2026_10_11",
       "canonical_policy_path": "canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json"
+    },
+    {
+      "id": "CFA3-EXECUTION-PROOF-OBLIGATION-001",
+      "code": "EXECUTE_APPROVED_TASK_AND_PROVE_RESULT",
+      "text_hu": "Az AI köteles a jóváhagyott feladatot az engedélyezett műveleti körben végrehajtani, majd az eredményt tényleges bizonyítékokkal alátámasztani.",
+      "proof_mode": "SOURCE_BOUND_SIGNED_TASK_RECEIPT",
+      "runtime_verified": false,
+      "provenance": "OWNER_APPROVED_2026_10_12",
+      "canonical_policy_path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json"
     }
   ],
   "owner_amendments": [
@@ -1856,6 +1865,6 @@
     "active_count": 82,
     "all_source_rules_accounted_for": true,
     "authority": "OWNER_2026_10_11",
-    "post_historical_rule_admissions": 2
+    "post_historical_rule_admissions": 3
   }
 }

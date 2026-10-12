@@ -1056,6 +1056,61 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
     return errors
 
 
+
+def validate_conversation_recovery_policy(policy, root=ROOT):
+    """Pin the approved 15-section text and its mandatory non-bypassable requirements."""
+    import hashlib
+    from pathlib import Path
+    issues = []
+    expected_path = "canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.md"
+    expected_digest = "8ddc2700116b8b78dd8e197a2668c538fa1019047f135bf24917c7ae1ea245c3"
+    expected_keys = {
+        "precise_conversation_identification", "retrievable_source_use",
+        "prior_approval_preservation", "verbatim_source_preservation",
+        "no_redundant_checks", "self_error_correction",
+        "consistent_status_reporting", "no_artificial_blockers",
+        "execute_approved_work", "stop_infinite_loops",
+        "seven_finalization_gates", "minimize_user_burden",
+        "verified_closure_only", "scope_and_security_alignment",
+    }
+    def need(condition, detail):
+        if not condition:
+            issues.append("conversation recovery policy: " + detail)
+    if not isinstance(policy, dict):
+        return ["conversation recovery policy: metadata not an object"]
+    need(policy.get("schema") == "cfa3.conversation-recovery-and-execution-policy.v1", "schema")
+    need(policy.get("id") == "CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001", "identity")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner-approved status")
+    need(policy.get("owner_decision_date") == "2026-10-12", "approval date")
+    need(policy.get("approved_text_path") == expected_path, "approved text path")
+    need(policy.get("approved_text_sha256") == expected_digest, "approved digest metadata")
+    need(policy.get("approved_section_count") == 15, "approved section count")
+    need(policy.get("classification") == "MANDATORY_CFA3_WORKFLOW_POLICY", "classification")
+    need(policy.get("finalization_gates") == [
+        "TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"
+    ], "seven ordered finalization gates")
+    requirements = policy.get("requirements")
+    need(isinstance(requirements, dict) and set(requirements) == expected_keys and
+         all(value is True for value in requirements.values()),
+         "mandatory requirements must remain true")
+    try:
+        raw = (Path(root) / expected_path).read_bytes()
+        owner_text = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return issues + ["conversation recovery policy: approved text unavailable"]
+    need(hashlib.sha256(raw).hexdigest() == expected_digest, "verbatim owner text altered")
+    headings = re.findall(r"^## ([0-9]+)[.] ", owner_text, flags=re.MULTILINE)
+    need([int(x) for x in headings] == list(range(1, 16)), "15 section headings")
+    for phrase in (
+        "A jóváhagyás ténye és a jóváhagyott szöveg szó szerinti azonossága külön bizonyítandó.",
+        "A véglegesítést kizárólag a hét feltétel igazolt teljesülése után szabad bejelenteni.",
+        "A már ismert és bizonyított tényekből kell továbbhaladni"
+    ):
+        need(phrase in owner_text, "mandatory approved clause: " + phrase)
+    return issues
+
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -1081,6 +1136,7 @@ def check(root=ROOT):
     errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
     errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
     errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
+    errors.extend(validate_conversation_recovery_policy(load("canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

@@ -1,0 +1,40 @@
+{
+  "schema": "cfa3.csa-infrastructure-isolation-policy.v1",
+  "id": "CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001",
+  "title_hu": "CSA fejlesztési infrastruktúra és végtermék kötelező elkülönítése",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "version": "1.0",
+  "approved_text_path": "canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.md",
+  "approved_text_sha256": "7c7d73ee4ca2ebd4853f717b983d0dc8426f6e005400997d66df22ef1eeaff1d",
+  "approved_section_count": 6,
+  "classification": "MANDATORY_CFA3_DEVELOPMENT_INFRASTRUCTURE_ISOLATION",
+  "architecture_boundary": {
+    "csa_capabilities": "CFA3_DEVELOPMENT_INFRASTRUCTURE",
+    "csa_rules": "CFA3_CENTRAL_POLICY_SYSTEM",
+    "suggestions_database": "PRIVATE_INTERNAL_DEVELOPMENT_DATA_NOT_PRODUCT",
+    "storage": "PRIVATE_REPOSITORY_INTERNAL_BRANCH_WITH_SEPARATE_ACCESS_CONTROL",
+    "product_release": "SUGGESTIONS_DATABASE_EXCLUDED_FROM_ALL_INSTALLERS_AND_RELEASES",
+    "chatgpt_access": "AUTHORIZED_DEVELOPMENT_PREPARATION_ONLY"
+  },
+  "requirements": {
+    "csa_capabilities_development_infrastructure_only": true,
+    "csa_rules_in_cfa3_central_policy_system": true,
+    "suggestions_database_internal_not_product": true,
+    "suggestions_database_private_repo_internal_branch": true,
+    "separate_branch_not_sufficient_privacy": true,
+    "independent_private_access_control_mandatory": true,
+    "exclude_database_from_installers_releases_user_artifacts": true,
+    "release_exclusion_must_be_verified": true,
+    "chatgpt_authorized_development_access_preserved": true,
+    "suggestions_not_automatic_approval": true,
+    "independent_lifecycle_storage_access_and_release": true,
+    "no_unapproved_scope_expansion": true
+  },
+  "admission_boundary": {
+    "approval_is_merge_proof": false,
+    "separate_branch_is_access_control": false,
+    "static_policy_admission_is_runtime_release_exclusion_proof": false,
+    "independent_release_exclusion_verified": false
+  }
+}

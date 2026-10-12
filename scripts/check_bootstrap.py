@@ -896,6 +896,87 @@ def validate_policy_exact_finalization(policy, root=ROOT):
         require(phrase in owner_text, "mandatory full-text clause absent: " + phrase)
     return issues
 
+
+def validate_csa_infrastructure_isolation_policy(policy, root=ROOT):
+    """Verify the entire six-section owner-approved CSA policy exactly."""
+    import hashlib
+    import re
+    from pathlib import Path
+    issues = []
+    def require(condition, detail):
+        if not condition:
+            issues.append("CSA isolation policy: " + detail)
+    if not isinstance(policy, dict):
+        return ["CSA isolation policy: metadata not an object"]
+    require(set(policy) == {"schema", "id", "title_hu", "status",
+            "owner_decision_date", "version", "approved_text_path",
+            "approved_text_sha256", "approved_section_count",
+            "classification", "architecture_boundary", "requirements",
+            "admission_boundary"}, "metadata shape")
+    require(policy.get("schema") == "cfa3.csa-infrastructure-isolation-policy.v1", "schema")
+    require(policy.get("id") == "CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001", "identity")
+    require(policy.get("version") == "1.0", "version")
+    require(policy.get("status") == "OWNER_APPROVED", "approval is not merge proof")
+    require(policy.get("owner_decision_date") == "2026-10-12", "approval date")
+    require(policy.get("classification") == "MANDATORY_CFA3_DEVELOPMENT_INFRASTRUCTURE_ISOLATION", "classification")
+    path = "canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.md"
+    digest = "7c7d73ee4ca2ebd4853f717b983d0dc8426f6e005400997d66df22ef1eeaff1d"
+    require(policy.get("approved_text_path") == path, "approved text path")
+    require(policy.get("approved_text_sha256") == digest, "approved text fingerprint")
+    require(policy.get("approved_section_count") == 6, "approved section count")
+    require(policy.get("architecture_boundary") == {
+        "csa_capabilities": "CFA3_DEVELOPMENT_INFRASTRUCTURE",
+        "csa_rules": "CFA3_CENTRAL_POLICY_SYSTEM",
+        "suggestions_database": "PRIVATE_INTERNAL_DEVELOPMENT_DATA_NOT_PRODUCT",
+        "storage": "PRIVATE_REPOSITORY_INTERNAL_BRANCH_WITH_SEPARATE_ACCESS_CONTROL",
+        "product_release": "SUGGESTIONS_DATABASE_EXCLUDED_FROM_ALL_INSTALLERS_AND_RELEASES",
+        "chatgpt_access": "AUTHORIZED_DEVELOPMENT_PREPARATION_ONLY"
+    }, "architecture placement")
+    flags = policy.get("requirements")
+    required_flags = {
+        "csa_capabilities_development_infrastructure_only",
+        "csa_rules_in_cfa3_central_policy_system",
+        "suggestions_database_internal_not_product",
+        "suggestions_database_private_repo_internal_branch",
+        "separate_branch_not_sufficient_privacy",
+        "independent_private_access_control_mandatory",
+        "exclude_database_from_installers_releases_user_artifacts",
+        "release_exclusion_must_be_verified",
+        "chatgpt_authorized_development_access_preserved",
+        "suggestions_not_automatic_approval",
+        "independent_lifecycle_storage_access_and_release",
+        "no_unapproved_scope_expansion"
+    }
+    require(isinstance(flags, dict) and set(flags) == required_flags and
+            all(flags.get(k) is True for k in required_flags), "mandatory conditions")
+    boundary = policy.get("admission_boundary")
+    require(isinstance(boundary, dict) and set(boundary) == {
+        "approval_is_merge_proof", "separate_branch_is_access_control",
+        "static_policy_admission_is_runtime_release_exclusion_proof",
+        "independent_release_exclusion_verified"
+    } and all(v is False for v in boundary.values()), "false proof boundary")
+    try:
+        raw = (Path(root) / path).read_bytes()
+        approved = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return issues + ["CSA isolation policy: approved text unavailable"]
+    require(hashlib.sha256(raw).hexdigest() == digest,
+            "approved text shortened, altered or otherwise not exact")
+    headings = re.findall(r"^\*\*(\d+)\. ([^\n]+)\*\*$", approved, flags=re.MULTILINE)
+    require([int(n) for n, _ in headings] == list(range(1, 7)), "six sections missing or out of order")
+    for phrase in (
+        "CSA fejlesztési infrastruktúra és végtermék kötelező elkülönítése",
+        "A külön GitHub-ág nem biztonsági határ.",
+        "privát GitHub-repository belső ágán kell kezelni.",
+        "A CSA javaslatadatbázisa nem kerülhet:",
+        "A kiadási folyamatnak ellenőriznie kell a kizárást.",
+        "A javaslatok felhasználása nem jelenti azok automatikus jóváhagyását",
+        "Az elkülönítés nem akadályozhatja a CSA engedélyezett fejlesztéstámogató működését."
+    ):
+        require(phrase in approved, "mandatory text missing: " + phrase)
+    return issues
+
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -919,6 +1000,7 @@ def check(root=ROOT):
     errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
     errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
     errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
+    errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

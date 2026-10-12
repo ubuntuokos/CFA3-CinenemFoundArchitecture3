@@ -2802,7 +2802,7 @@
     },
     {
       "path": "canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json",
-      "git_blob_sha1": "acf15bb6c923c423ca72219190b1964f62510d2a",
+      "git_blob_sha1": "1c85bbe2f61812d7353ac5b94287fbe5adb9e1b8",
       "canonical_id": "CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001",
       "source_status": "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
       "leaf_count": 57,
@@ -2932,7 +2932,7 @@
           "boolean"
         ],
         [
-          "/requirements/prohibit_nonterminating_owner_decisions",
+          "/requirements/prohibit_nonterminating_developer_decisions",
           "boolean"
         ],
         [

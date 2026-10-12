@@ -1,0 +1,66 @@
+{
+  "schema": "cfa3.policy-sequential-execution-result-integrity.v1",
+  "id": "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001",
+  "title_hu": "Kötelező szekvenciális feladatvégrehajtás, tényleges eredményközlés és ellenőrzési ciklusok megelőzése",
+  "version": "1.0",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "classification": "MANDATORY_CFA3_SEQUENTIAL_EXECUTION_AND_RESULT_INTEGRITY",
+  "scope": [
+    "CFA3 fejlesztési munkafolyamatok",
+    "donoradatbázis-feldolgozás",
+    "GitHub publikáció",
+    "tájékoztatás"
+  ],
+  "approved_text_path": "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.md",
+  "approved_text_sha256": "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b",
+  "approved_section_count": 14,
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "MERGE",
+    "STATUS",
+    "REGISTRY",
+    "CI",
+    "MAIN"
+  ],
+  "lifecycle_evidence_source": "LIVE_GITHUB_MAIN_AND_PR_STATE",
+  "processing_state_machine": [
+    "PENDING",
+    "IN_PROGRESS",
+    "VALIDATING",
+    "PUBLISHING",
+    "PUBLISHED",
+    "BLOCKED"
+  ],
+  "donor_data_file_max_bytes": 996147,
+  "requirements": {
+    "one_file_complete_process_before_next": true,
+    "avoid_rechecking_unchanged_proven_state": true,
+    "no_preparation_instead_of_actual_processing": true,
+    "separate_indexed_processed_accepted_published": true,
+    "net_new_unique_donor_count_from_canonical_published_state": true,
+    "zero_growth_must_be_explained_not_hidden": true,
+    "explicit_owner_donor_approval_required": true,
+    "progress_states_and_stagnation_detection": true,
+    "stop_no_progress_repeat_loops": true,
+    "preserve_rights_security_approval_gates": true,
+    "enforce_996147_byte_max_donor_data_file": true,
+    "preserve_history_and_searchability_when_splitting": true,
+    "publish_only_after_full_file_closure_and_proofs": true,
+    "final_message_contains_essential_verifiable_results": true,
+    "do_not_claim_ui_message_persistence_control": true,
+    "no_unverified_finalization_or_ci_shortcut": true,
+    "self_attribution_for_in_scope_execution_failures": true,
+    "no_scope_expansion_or_unauthorized_work": true,
+    "long_term_validation_not_established_by_document": true
+  },
+  "admission_boundary": {
+    "owner_approval_is_merge_proof": false,
+    "ci_alone_is_finalization": false,
+    "static_policy_proves_runtime_enforcement": false,
+    "platform_ui_history_control_guaranteed": false,
+    "donor_growth_always_positive": false,
+    "unapproved_scope_or_safety_bypass": false
+  }
+}

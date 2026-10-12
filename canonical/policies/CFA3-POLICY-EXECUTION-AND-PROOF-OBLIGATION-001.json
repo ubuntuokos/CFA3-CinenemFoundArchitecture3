@@ -25,5 +25,12 @@
     "no_scope_expansion": true,
     "only_proven_pass": true
   },
-  "approved_text_sha256": "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a"
+  "approved_text_sha256": "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a",
+  "rule": {
+    "id": "CFA3-EXECUTION-PROOF-OBLIGATION-001",
+    "code": "EXECUTE_APPROVED_TASK_AND_PROVE_RESULT",
+    "text_hu": "Az AI köteles a jóváhagyott feladatot az engedélyezett műveleti körben végrehajtani, majd az eredményt tényleges bizonyítékokkal alátámasztani.",
+    "proof_mode": "SOURCE_BOUND_SIGNED_TASK_RECEIPT",
+    "runtime_verified": false
+  }
 }

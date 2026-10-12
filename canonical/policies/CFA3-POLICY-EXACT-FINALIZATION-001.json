@@ -1,0 +1,39 @@
+{
+  "schema": "cfa3.policy-exact-finalization.v1",
+  "id": "CFA3-POLICY-EXACT-FINALIZATION-001",
+  "title_hu": "Szabályok szó szerinti azonosságának, életciklus-státuszának és bizonyított véglegesítésének kötelező ellenőrzése",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "version": "1.0",
+  "approved_text_path": "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.md",
+  "approved_text_sha256": "58bd436e6d78ea06a3c9a04f0e4066068f7a19237dbced6677df06df936019b4",
+  "approved_section_count": 13,
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "MERGE",
+    "STATUS",
+    "REGISTRY",
+    "CI",
+    "MAIN"
+  ],
+  "lifecycle_evidence_source": "LIVE_GITHUB_MAIN_AND_PR_STATE",
+  "requirements": {
+    "complete_verbatim_owner_approved_text": true,
+    "approved_text_is_not_summarized_or_paraphrased": true,
+    "required_exact_content_hash_and_section_count": true,
+    "verify_policy_id_version_and_all_registry_fields": true,
+    "verify_live_main_sha_and_pr_merge_and_status": true,
+    "ci_or_merge_alone_not_finalization": true,
+    "post_merge_main_readback_required": true,
+    "missing_gate_prohibits_finalization_claim": true,
+    "failed_checks_require_evidence_and_cause_attribution": true,
+    "no_unapproved_extra_pr_or_scope_expansion": true,
+    "historical_approvals_and_evidence_preserved": true
+  },
+  "admission_boundary": {
+    "structural_ci_is_full_finalization": false,
+    "merge_without_main_readback_is_finalization": false,
+    "independent_runtime_gate_verified": false
+  }
+}

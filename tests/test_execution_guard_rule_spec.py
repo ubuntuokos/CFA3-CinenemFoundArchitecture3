@@ -1,4 +1,4 @@
-"""82 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
+"""83 current owner-admitted rules: original 24 + 56 additions, all 78 accounted."""
 import copy
 import json
 import tempfile
@@ -17,17 +17,17 @@ class OwnerRuleSpecTests(unittest.TestCase):
         return validate(self.spec if spec is None else spec,self.gov,
                         self.coverage if coverage is None else coverage,
                         self.export if export is None else export)
-    def test_exact_82_current_rules_and_all_78_admitted(self):
+    def test_exact_83_current_rules_and_all_78_admitted(self):
         self.assertEqual([],self.check())
-        self.assertEqual(82,len(active_expected_codes(self.gov,self.spec)))
-        self.assertEqual(82,len(self.spec["active_rules"]))
+        self.assertEqual(83,len(active_expected_codes(self.gov,self.spec)))
+        self.assertEqual(83,len(self.spec["active_rules"]))
         self.assertEqual(78,len(self.spec["historical_candidates"]))
         self.assertEqual(0,self.spec["historical_reconciliation"]["excluded_for_conflict"])
         self.assertEqual(22,self.spec["historical_reconciliation"]["mapped_existing"])
         self.assertEqual(56,self.spec["historical_reconciliation"]["admitted_new"])
         self.assertTrue(all(not r["runtime_verified"] for r in self.spec["active_rules"]))
     def test_each_missing_owner_rule_denied(self):
-        for index in range(82):
+        for index in range(83):
             bad=copy.deepcopy(self.spec);bad["active_rules"].pop(index)
             with self.subTest(index=index):
                 self.assertTrue(self.check(bad))
@@ -219,9 +219,9 @@ class OwnerRuleSpecTests(unittest.TestCase):
             bad=copy.deepcopy(self.coverage)
             flags=bad["runtime_preflight_separation"]
             if change=="remove":
-                del flags["current_82_global_status_not_sufficient_for_task_authority"]
+                del flags["current_83_global_status_not_sufficient_for_task_authority"]
             elif change=="false":
-                flags["current_82_global_status_not_sufficient_for_task_authority"]=False
+                flags["current_83_global_status_not_sufficient_for_task_authority"]=False
             else:
                 flags["current_81_global_status_not_sufficient_for_task_authority"]=True
             with self.subTest(change=change):
@@ -229,8 +229,8 @@ class OwnerRuleSpecTests(unittest.TestCase):
 
     def test_export_summary_covers_both_current_admissions(self):
         for bad_text in ("81 aktív szabály",
-                         "82 aktív szabály RULE-ADMISSION-001",
-                         "82 aktív szabály CFA3-SEQUENTIAL-COMMAND-001"):
+                         "83 aktív szabály RULE-ADMISSION-001",
+                         "83 aktív szabály CFA3-SEQUENTIAL-COMMAND-001"):
             bad=copy.deepcopy(self.export)
             bad["important"]=bad_text
             with self.subTest(summary=bad_text):

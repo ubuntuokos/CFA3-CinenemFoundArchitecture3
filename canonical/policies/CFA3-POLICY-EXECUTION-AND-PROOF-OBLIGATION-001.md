@@ -3,7 +3,7 @@
 **Megnevezés:** A jóváhagyott feladatok kötelező végrehajtása, a bizonyítási kötelezettség teljesítése és az indokolatlan leállás tilalma
 
 **Verzió:** 1.0  
-**Státusz:** JÓVÁHAGYÁSRA VÁR  
+**Státusz:** JÓVÁHAGYVA  
 **Hatály:** Minden CFA3-fejlesztés, szabályalkotás, GitHub-művelet, dokumentumkezelés, PR-létrehozás, CI-ellenőrzés, összevonás és véglegesítés.
 
 ## 1. § – Alapelv

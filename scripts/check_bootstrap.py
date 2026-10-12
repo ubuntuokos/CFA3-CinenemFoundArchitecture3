@@ -1098,7 +1098,7 @@ def validate_conversation_evidence_blocker_prevention(policy, root=ROOT):
     except (OSError, UnicodeError):
         return errors + ["conversation evidence policy: owner text unavailable"]
     need(hashlib.sha256(raw).hexdigest() == digest, "owner text SHA-256")
-    chapters = [int(n) for n in re.findall(r"^## (\\d+)\\. ", owner_text, re.MULTILINE)]
+    chapters = [int(n) for n in re.findall(r"^## ([0-9]+)[.] ", owner_text, re.MULTILINE)]
     need(chapters == list(range(1, 18)), "17 ordered chapters")
     for phrase in ("A jelenlegi beszélgetés elsődlegessége",
                    "A hozzáférhetetlenség bizonyításának kötelezettsége",

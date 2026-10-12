@@ -14,8 +14,8 @@ POLICY = ROOT / "canonical" / "policies" / (IDENT + ".json")
 DOCUMENT = ROOT / "canonical" / "policies" / (IDENT + ".md")
 APPROVED_DIGEST = "3e590e20f3d50e04297776b43e22d91cbd9b0a417c4687810e75992913c10ba8"
 PUBLISHED_DIGEST = "c1c177c260b46f0139cb9d435b96bf301d65f94e003903be815a41667c070157"
-PREAPPROVAL_HEADER = b"**Státusz:** J\xc3\x93V\xc3\x81HAGY\xc3\x81SRA V\xc3\x81R  "
-APPROVED_HEADER = b"**Státusz:** J\xc3\x93V\xc3\x81HAGYVA  "
+PREAPPROVAL_HEADER = "**Státusz:** JÓVÁHAGYÁSRA VÁR  ".encode("utf-8")
+APPROVED_HEADER = "**Státusz:** JÓVÁHAGYVA  ".encode("utf-8")
 
 
 class MandatoryRuleCreationIntegrityTests(unittest.TestCase):

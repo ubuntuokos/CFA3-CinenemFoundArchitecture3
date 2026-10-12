@@ -44,7 +44,7 @@ def expected_rules(governance):
         owner=json.loads((root/SPEC).read_text("utf-8"))
         return active_expected_codes(governance,owner)
     except (OSError,ValueError,TypeError,KeyError) as exc:
-        raise RuleEvidenceBlocked("owner-authorized 82 rule identities missing") from exc
+        raise RuleEvidenceBlocked("owner-authorized 83 rule identities missing") from exc
 
 def original_expected_rules(governance):
     if not isinstance(governance, dict):
@@ -107,7 +107,7 @@ def verify_evidence_bytes(receipt, evidence_resolver):
 
 def verify_rule_receipts(task, receipts, governance, attestation_secret, now=None,
                          evidence_resolver=None):
-    """All 82 signed, scoped, fresh receipts required. No untrusted model PASS."""
+    """All 83 signed, scoped, fresh receipts required. No untrusted model PASS."""
     if (not isinstance(attestation_secret, bytes) or len(attestation_secret) < 32):
         raise RuleEvidenceBlocked("trusted independent attestation key missing")
     if not callable(evidence_resolver):
@@ -116,7 +116,7 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
         raise RuleEvidenceBlocked("signed rule evidence must be a list")
     expected = expected_rules(governance)
     if len(receipts) != len(expected):
-        raise RuleEvidenceBlocked("82 independent rule verdicts required")
+        raise RuleEvidenceBlocked("83 independent rule verdicts required")
     if not isinstance(task, dict) or not isinstance(task.get("source_hashes"), dict):
         raise RuleEvidenceBlocked("missing task source bindings")
     src = task["source_hashes"].get(GOV)
@@ -167,7 +167,7 @@ def verify_rule_receipts(task, receipts, governance, attestation_secret, now=Non
     return True
 
 def bootstrap_rule_report(governance, catalog):
-    """Validate 82 owner-admitted IDs/codes/status integrity, not unpredictable incidents.
+    """Validate 83 owner-admitted IDs/codes/status integrity, not unpredictable incidents.
 
     Bootstrap must neither cause an incident nor demand that a spontaneous
     violation has occurred. Runtime enforcers remain separately fail-closed.

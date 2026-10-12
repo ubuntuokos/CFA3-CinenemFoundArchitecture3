@@ -1,0 +1,82 @@
+{
+  "schema": "cfa3.policy-finalization-evidence-snapshot.v1",
+  "receipt_id": "CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012",
+  "subject": {
+    "policy_id": "CFA3-POLICY-EXACT-FINALIZATION-001",
+    "version": "1.0",
+    "owner_approval_date": "2026-10-12"
+  },
+  "observation": {
+    "observed_at_local": "2026-10-12T19:46:55+02:00",
+    "time_basis": "Europe/Budapest verified time at investigation start",
+    "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+    "main_sha_at_observation": "9d912a22db6de09a8a9ac01fdfa42530feecf1ac",
+    "scope": "HISTORICAL_EXACT_STATE_SNAPSHOT_NOT_FUTURE_MAIN_HEAD"
+  },
+  "approved_source_evidence": {
+    "source_kind": "ORIGINAL_USER_APPROVED_CONVERSATION_DRAFT",
+    "source_description": "A beszélgetésben közölt és a felhasználó 'Jóváhagyom' válaszával elfogadott teljes, 13 fejezetes WritingBlock, az eredeti JAVASLAT fejlécet is beleértve.",
+    "origin_independent_of_github_blob": true,
+    "source_sha256_calculated_before_first_github_publication": "58bd436e6d78ea06a3c9a04f0e4066068f7a19237dbced6677df06df936019b4",
+    "method": "Original approved conversation draft was transcribed before the first GitHub write; its SHA-256 was calculated before creation of PR #33, and the published Markdown was verified against that digest. Owner approval is a conversation decision, not a cryptographic signature.",
+    "original_owner_signed_external_source_available": false,
+    "markdown_path": "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.md",
+    "markdown_git_blob_sha1": "5706e37a8febab1b1835f0abbf806585252d2728",
+    "verified_approved_section_count": 13,
+    "exact_verbatim_approved_content_preserved": true
+  },
+  "github_state": {
+    "original_pull_request_number": 33,
+    "original_pull_request_url": "https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/pull/33",
+    "original_pull_request_merge_sha": "f32b6e0e97d40a791ef2480f8e5a0f197299ae58",
+    "original_pull_request_merged": true,
+    "verified_main_sha": "9d912a22db6de09a8a9ac01fdfa42530feecf1ac",
+    "metadata_policy_json_path": "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",
+    "metadata_git_blob_sha1": "d0d24bf007519e80529aab30b219a102c82d295c",
+    "metadata_status": "OWNER_APPROVED",
+    "markdown_historical_header": "JAVASLAT – JÓVÁHAGYÁSRA VÁR",
+    "status_interpretation": "The Markdown header is an immutable historical snapshot of the text originally approved; JSON OWNER_APPROVED records approval, GitHub PR #33 records merge, and this receipt records independently checked completion at the observed main SHA.",
+    "required_checks": {
+      "bootstrap": "SUCCESS",
+      "qt68-linux": "SUCCESS"
+    },
+    "checks_attached_to_commit": "9d912a22db6de09a8a9ac01fdfa42530feecf1ac"
+  },
+  "gates": {
+    "TEXT": {
+      "result": "PASS",
+      "basis": "Approved conversation draft digest computed before PR #33 file publication matches unchanged GitHub Markdown"
+    },
+    "STRUCTURE": {
+      "result": "PASS",
+      "basis": "All 13 approved numbered sections preserved"
+    },
+    "MERGE": {
+      "result": "PASS",
+      "basis": "GitHub PR #33 merged; merge commit verified"
+    },
+    "STATUS": {
+      "result": "PASS",
+      "basis": "Historical draft header and current owner approval and GitHub merge are correctly distinguished"
+    },
+    "REGISTRY": {
+      "result": "PASS",
+      "basis": "Canonical policy-surface entry names matching policy ID and Git blob SHA; coverage and Bootstrap verified on target main"
+    },
+    "CI": {
+      "result": "PASS",
+      "basis": "GitHub main commit bootstrap and qt68-linux both SUCCESS"
+    },
+    "MAIN": {
+      "result": "PASS",
+      "basis": "GitHub target main ref read back at 9d912a22db6de09a8a9ac01fdfa42530feecf1ac"
+    }
+  },
+  "recorded_verdict": "VERIFIED_AT_OBSERVED_MAIN_SHA",
+  "limits": [
+    "This receipt is a historical snapshot and cannot anticipate the merge SHA of the PR that publishes it.",
+    "Re-verify the resulting actual main SHA, text, receipt and required CI checks after this receipt is merged.",
+    "The original chat approval provenance is inspectable in the conversation, but is not externally digitally signed.",
+    "This receipt does not claim long-term live runtime verification."
+  ]
+}

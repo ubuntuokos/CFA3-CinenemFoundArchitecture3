@@ -1056,6 +1056,62 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
     return errors
 
 
+
+def validate_conversation_evidence_blocker_prevention(policy, root=ROOT):
+    """Check owner-approved text and mandatory policy gates; not runtime enforcement."""
+    import hashlib
+    errors = []
+    def need(ok, msg):
+        if not ok:
+            errors.append("conversation evidence policy: " + msg)
+    ident = "CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001"
+    path = "canonical/policies/" + ident + ".md"
+    need(policy.get("id") == ident, "identifier")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "approval status")
+    need(policy.get("approved_text_path") == path, "owner text path")
+    need(policy.get("approved_section_count") == 17, "section count")
+    need(policy.get("finalization_gates") ==
+         ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"],
+         "finalization gates")
+    digest = policy.get("approved_text_sha256")
+    need(isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest) is not None,
+         "sha256 format")
+    required = ("current_conversation_first", "original_document_full_text_comparison",
+                "search_failure_is_not_evidence_of_unavailability",
+                "reuse_proven_evidence", "source_specific_cryptographic_integrity",
+                "no_false_blockers", "mandatory_error_retraction_and_self_correction",
+                "no_repetitive_search_loops", "preserve_owner_approvals",
+                "never_replace_github_exact_state_with_chat",
+                "distinguish_ai_assertions_from_proofs", "no_unnecessary_user_burden",
+                "mandatory_pre_blocker_checklist", "prevent_scope_expansion",
+                "maintain_safety_and_ci_gates")
+    req = policy.get("requirements", {})
+    need(isinstance(req, dict) and set(req) == set(required)
+         and all(req.get(k) is True for k in required), "mandatory clauses")
+    boundary = policy.get("admission_boundary", {})
+    need(isinstance(boundary, dict) and len(boundary) == 5
+         and all(v is False for v in boundary.values()), "admission boundary")
+    try:
+        raw = (pathlib.Path(root) / path).read_bytes()
+        owner_text = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return errors + ["conversation evidence policy: owner text unavailable"]
+    need(hashlib.sha256(raw).hexdigest() == digest, "owner text SHA-256")
+    chapters = [int(n) for n in re.findall(r"^## (\\d+)\\. ", owner_text, re.MULTILINE)]
+    need(chapters == list(range(1, 18)), "17 ordered chapters")
+    for phrase in ("A jelenlegi beszélgetés elsődlegessége",
+                   "A hozzáférhetetlenség bizonyításának kötelezettsége",
+                   "Kriptográfiai bizonyítékok helyes használata",
+                   "Téves blokkolások tilalma",
+                   "Kötelező önkorrekció",
+                   "Jóváhagyások megőrzése",
+                   "GitHub-véglegesítés és ellenőrzés",
+                   "Kötelező záró rendelkezés"):
+        need(phrase in owner_text, "required chapter: " + phrase)
+    return errors
+
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -1081,6 +1137,7 @@ def check(root=ROOT):
     errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
     errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
     errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
+    errors.extend(validate_conversation_evidence_blocker_prevention(load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

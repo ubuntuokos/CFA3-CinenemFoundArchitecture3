@@ -1,0 +1,55 @@
+{
+  "schema": "cfa3.donor-file-size-policy.v1",
+  "id": "CFA3-DONOR-FILE-SIZE-POLICY-001",
+  "status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+  "owner_decision_date": "2026-10-12",
+  "rule": {
+    "id": "DONOR-FILE-SIZE-001",
+    "code": "DONOR_DATABASE_FILE_MAX_095_MIB",
+    "text_hu": "Minden új vagy módosított donoradatbázis-fájl mérete legfeljebb 0,95 MiB lehet. A méretkorlát a donorrekordokra, keresőindexekre, életciklus-nyilvántartásokra és kapcsolódó adatfájlokra is vonatkozik. A határ elérése előtt új fájlt kell nyitni, és a rekordokat több fájl között kell elosztani. A korábbi túlméretes fájlok adatai megmaradnak; módosításuk csak a korlát szerinti átszervezéssel engedélyezett. GitHub-feltöltés előtt minden érintett fájl tényleges méretét ellenőrizni kell. A szétosztás nem veszélyeztetheti a duplikációmentességet, a központi keresést vagy a történeti adatok megőrzését.",
+    "runtime_verified": false
+  },
+  "maximum_file_size": {
+    "unit": "MiB",
+    "maximum_mib": 0.95,
+    "maximum_bytes": 996147,
+    "interpretation": "INCLUSIVE_LIMIT_OF_UNCOMPRESSED_FILE_BYTES",
+    "comparison": "FILE_BYTES_LESS_THAN_OR_EQUAL_TO_MAXIMUM"
+  },
+  "applies_to": [
+    "DONOR_RECORDS",
+    "DONOR_SOURCE_FILES",
+    "SEARCH_AND_ROUTING_INDEXES",
+    "SOURCE_LIFECYCLE_REGISTRIES",
+    "DONOR_IDENTITY_AND_ALIAS_REGISTRIES",
+    "DONOR_HISTORY_AND_PROVENANCE",
+    "RELATED_DONOR_DATA_FILES"
+  ],
+  "requirements": {
+    "new_and_modified_files_checked": true,
+    "all_affected_files_checked_before_github_upload": true,
+    "split_before_exceeding_limit": true,
+    "open_new_files_without_data_loss": true,
+    "preexisting_oversize_files_preserved_unchanged": true,
+    "preexisting_oversize_file_modification_requires_split": true,
+    "preserve_global_deduplication": true,
+    "preserve_central_search": true,
+    "preserve_stable_donor_identities": true,
+    "preserve_historical_records_and_provenance": true,
+    "preserve_cross_file_index_consistency": true,
+    "prohibit_truncation_or_silent_data_removal": true,
+    "oversize_changed_file_fails_closed": true
+  },
+  "legacy_handling": {
+    "unmodified_preexisting_oversize_data": "RETAIN_UNCHANGED",
+    "modified_preexisting_oversize_data": "SPLIT_WITH_FULL_HISTORY_AND_LINKS",
+    "history_loss_allowed": false,
+    "retroactive_deletion_allowed": false
+  },
+  "verification": {
+    "size_check": "ACTUAL_UNCOMPRESSED_FILE_BYTES_BEFORE_GITHUB_UPLOAD",
+    "fail_state": "STOP_BLOCKER",
+    "structural_ci_verification_is_runtime_admission": false,
+    "donor_publication_or_runtime_admission_by_this_rule": false
+  }
+}

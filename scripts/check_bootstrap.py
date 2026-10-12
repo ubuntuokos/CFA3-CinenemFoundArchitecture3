@@ -237,6 +237,214 @@ def validate_donor_classification_plan(policy, decision):
     require(decision.get("effects",{}).get("runtime_admission") is False,"runtime cannot be admitted")
     return errors
 
+
+APPROVED_RULE_ADMISSION_TEXT_HU = (
+    "Szabály felvételekor az AI kizárólag a kijelölt főfeladattal foglalkozhat; minden új szabályt fel kell venni a CFA3-CURRENT-POLICY-SURFACE-001.json "
+    "nyilvántartásba; ellenőrizni kell a Bootstrap követelményeit; az új szabályhoz igazítani kell a fixen beírt tesztértékeket; a PR-t valamennyi közvetlenül "
+    "szükséges, egymással konzisztens fájllal kell előkészíteni; sikertelen ellenőrzésnél bizonyíték alapján egyértelműen meg kell jelölni, hogy a hiányosságért "
+    "az AI asszisztens vagy az AI fejlesztő felelős. Külön tulajdonosi feladat vagy önállóan jóváhagyott új szabály csak a saját feladatához kötött ágon és "
+    "PR-ben vezethető be; másik, már megnyitott feladat PR-jébe automatikusan nem helyezhető át. A közös nyilvántartás szükséges konzisztens módosítása nem "
+    "teszi közössé a két feladat hatáskörét."
+)
+
+def validate_rule_admission(policy):
+    """Check the owner's new rule-admission contract without claiming runtime PASS."""
+    errors = []
+    if not isinstance(policy, dict):
+        return ["rule admission: owner-approved policy must be an object"]
+    def require(condition, message):
+        if not condition:
+            errors.append("rule admission: " + message)
+    require(set(policy) == {"schema", "id", "status", "owner_decision_date",
+                            "rule", "requirements", "responsibility", "admission_boundary"},
+            "unapproved or missing policy root field")
+    require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    require(policy.get("owner_decision_date") == "2026-10-11",
+            "owner-approved decision date changed")
+    rule = policy.get("rule")
+    require(isinstance(rule, dict) and set(rule) ==
+            {"id", "code", "text_hu", "scope", "runtime_verified"},
+            "unapproved or missing rule field")
+    if not isinstance(rule, dict):
+        rule = {}
+    require(rule.get("id") == "RULE-ADMISSION-001" and
+            rule.get("code") == "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
+            "rule identity/code missing")
+    require(rule.get("text_hu") == APPROVED_RULE_ADMISSION_TEXT_HU,
+            "owner-approved rule text changed")
+    require(rule.get("scope") == "ONLY_THE_OWNER_DESIGNATED_MAIN_TASK", "rule scope widened")
+    require(rule.get("runtime_verified") is False, "unverified runtime PASS is forbidden")
+    required = (
+        "rule_admission_may_not_expand_the_main_task",
+        "new_rule_must_be_registered_in_canonical_policy_surface",
+        "bootstrap_requirements_checked_before_pr",
+        "fixed_test_expectations_updated_when_new_rule_is_added",
+        "pr_must_include_all_directly_affected_consistent_files",
+        "independent_owner_task_must_have_dedicated_branch_and_pr",
+        "positive_and_negative_bootstrap_checks_required",
+        "failed_check_requires_responsible_ai_role",
+        "failed_check_must_report_root_cause_and_evidence",
+        "no_unjustified_attribution_or_fabricated_pass",
+        "failed_gate_requires_stop_and_report",
+    )
+    requirements = policy.get("requirements")
+    require(isinstance(requirements, dict) and set(requirements) == set(required),
+            "unapproved or missing rule-admission requirement")
+    for name in required:
+        require(isinstance(requirements, dict) and requirements.get(name) is True,
+                "mandatory requirement absent: " + name)
+    responsibility = policy.get("responsibility")
+    require(isinstance(responsibility, dict) and set(responsibility) ==
+            {"ai_assistant", "ai_developer", "unverifiable_cause",
+             "if_both_roles_are_same_actor", "attribution_basis"},
+            "unapproved or missing responsibility field")
+    if not isinstance(responsibility, dict):
+        responsibility = {}
+    require(responsibility.get("ai_assistant") == "Feladatvezérlési, hatásköri, ellenőrzés-előkészítési és jelentési hiányosság.", "ai_assistant exact accountability drift")
+    require(responsibility.get("ai_developer") == "Implementációs, teszt-, konfigurációs, adat- és PR-fájlkonzisztencia miatti hiányosság.", "ai_developer exact accountability drift")
+    require(responsibility.get("unverifiable_cause") ==
+            "STOP_AND_REPORT_UNVERIFIED_CAUSE_NO_FALSE_ATTRIBUTION",
+            "uncertain cause must not be invented")
+    require(responsibility.get("if_both_roles_are_same_actor") ==
+            "REPORT_BOTH_ROLES_WITH_SPECIFIC_CAUSE",
+            "same actor must report both roles and concrete cause")
+    require(responsibility.get("attribution_basis") ==
+            "DETERMINISTIC_CHECK_LOGS_AND_EXACT_CHANGED_FILES",
+            "responsibility requires deterministic evidence and exact changed files")
+    admission_boundary = policy.get("admission_boundary")
+    require(isinstance(admission_boundary, dict) and set(admission_boundary) ==
+            {"bootstrap_structural_pass_is_runtime_proof", "independent_execution_gate_pass"},
+            "unapproved or missing admission boundary field")
+    if not isinstance(admission_boundary, dict):
+        admission_boundary = {}
+    require(admission_boundary.get("bootstrap_structural_pass_is_runtime_proof") is False,
+            "bootstrap may not fake runtime gate proof")
+    require(admission_boundary.get("independent_execution_gate_pass") is False,
+            "independent gate PASS may not be fabricated")
+    return errors
+
+def validate_sequential_command_policy(policy):
+    """Validate one-command/one-response owner requirements; not runtime proof."""
+    errors = []
+    def require(condition, message):
+        if not condition:
+            errors.append("sequential command: " + message)
+    require(policy.get("schema") == "cfa3.sequential-command-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-SEQUENTIAL-COMMAND-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    rule = policy.get("rule", {})
+    require(rule.get("id") == "CFA3-SEQUENTIAL-COMMAND-001" and
+            rule.get("code") == "ONE_COMMAND_ONE_RESPONSE", "rule identity/code mismatch")
+    require(isinstance(rule.get("text_hu"), str) and len(rule["text_hu"]) > 100,
+            "mandatory owner text missing")
+    require(rule.get("scope") == "USER_EXECUTED_MULTI_STEP_COMMANDS_AND_TESTS",
+            "rule scope drift")
+    require(rule.get("runtime_verified") is False, "unverified runtime PASS")
+    for key in ("one_executable_command_or_test_per_ai_response",
+                "explicitly_state_expected_result",
+                "user_executes_and_returns_complete_result",
+                "ai_analyzes_actual_result_before_next_command",
+                "next_command_only_after_response_analysis",
+                "failed_result_requires_minimal_diagnostic_or_repair_next_step",
+                "prohibit_preissued_command_batches",
+                "prohibit_skipping_user_response",
+                "prohibit_assumed_execution_or_fabricated_pass",
+                "require_stepwise_error_isolation"):
+        require(policy.get("requirements", {}).get(key) is True,
+                "mandatory step requirement missing: " + key)
+    require(policy.get("sequence") == [
+        "AI_ISSUES_ONE_COMMAND_AND_EXPECTED_RESULT",
+        "USER_EXECUTES_AND_RETURNS_COMPLETE_RESULT",
+        "AI_ANALYZES_ACTUAL_RESULT",
+        "AI_ISSUES_ONLY_NEXT_NECESSARY_COMMAND_OR_REPORTS_BLOCKER"
+    ], "sequential handshake drift")
+    for field in ("structural_bootstrap_pass_is_runtime_proof",
+                  "independent_execution_gate_pass"):
+        require(policy.get("admission_boundary", {}).get(field) is False,
+                "unverified runtime admission: " + field)
+    return errors
+
+def validate_donor_file_size_policy(policy):
+    """Validate owner-approved donor file-size contract; no runtime PASS implied."""
+    if not isinstance(policy, dict):
+        return ["donor file size: policy must be an object"]
+    issues = []
+    def require(condition, description):
+        if not condition:
+            issues.append("donor file size: " + description)
+    require(policy.get("schema") == "cfa3.donor-file-size-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-DONOR-FILE-SIZE-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+            "authority/admission status mismatch")
+    rule = policy.get("rule")
+    require(isinstance(rule, dict), "rule object missing")
+    rule = rule if isinstance(rule, dict) else {}
+    require(rule.get("id") == "DONOR-FILE-SIZE-001" and
+            rule.get("code") == "DONOR_DATABASE_FILE_MAX_095_MIB",
+            "owner rule identifier/code mismatch")
+    require(isinstance(rule.get("text_hu"), str) and
+            "0,95 MiB" in rule.get("text_hu", ""), "owner rule text missing")
+    require(rule.get("runtime_verified") is False, "unverified runtime evidence")
+    maximum = policy.get("maximum_file_size")
+    maximum = maximum if isinstance(maximum, dict) else {}
+    for key, value in {
+        "unit": "MiB",
+        "maximum_mib": 0.95,
+        "maximum_bytes": 996147,
+        "interpretation": "INCLUSIVE_LIMIT_OF_UNCOMPRESSED_FILE_BYTES",
+        "comparison": "FILE_BYTES_LESS_THAN_OR_EQUAL_TO_MAXIMUM",
+    }.items():
+        require(maximum.get(key) == value, "incorrect threshold: " + key)
+    scope = policy.get("applies_to")
+    expected_scope = {
+        "DONOR_RECORDS", "DONOR_SOURCE_FILES", "SEARCH_AND_ROUTING_INDEXES",
+        "SOURCE_LIFECYCLE_REGISTRIES", "DONOR_IDENTITY_AND_ALIAS_REGISTRIES",
+        "DONOR_HISTORY_AND_PROVENANCE", "RELATED_DONOR_DATA_FILES",
+    }
+    require(isinstance(scope, list) and len(scope) == len(expected_scope)
+            and set(scope) == expected_scope, "incomplete donor data scope")
+    requirements = policy.get("requirements")
+    requirements = requirements if isinstance(requirements, dict) else {}
+    required_true = (
+        "new_and_modified_files_checked",
+        "all_affected_files_checked_before_github_upload",
+        "split_before_exceeding_limit",
+        "open_new_files_without_data_loss",
+        "preexisting_oversize_files_preserved_unchanged",
+        "preexisting_oversize_file_modification_requires_split",
+        "preserve_global_deduplication",
+        "preserve_central_search",
+        "preserve_stable_donor_identities",
+        "preserve_historical_records_and_provenance",
+        "preserve_cross_file_index_consistency",
+        "prohibit_truncation_or_silent_data_removal",
+        "oversize_changed_file_fails_closed",
+    )
+    for key in required_true:
+        require(requirements.get(key) is True, "required invariant missing: " + key)
+    legacy = policy.get("legacy_handling")
+    legacy = legacy if isinstance(legacy, dict) else {}
+    require(legacy.get("unmodified_preexisting_oversize_data") == "RETAIN_UNCHANGED",
+            "legacy data preservation missing")
+    require(legacy.get("modified_preexisting_oversize_data") ==
+            "SPLIT_WITH_FULL_HISTORY_AND_LINKS", "legacy split preservation missing")
+    require(legacy.get("history_loss_allowed") is False and
+            legacy.get("retroactive_deletion_allowed") is False,
+            "legacy history loss forbidden")
+    proof = policy.get("verification")
+    proof = proof if isinstance(proof, dict) else {}
+    require(proof.get("size_check") ==
+            "ACTUAL_UNCOMPRESSED_FILE_BYTES_BEFORE_GITHUB_UPLOAD",
+            "pre-upload size check missing")
+    require(proof.get("fail_state") == "STOP_BLOCKER", "fail-closed missing")
+    require(proof.get("structural_ci_verification_is_runtime_admission") is False,
+            "CI must not imply runtime admission")
+    require(proof.get("donor_publication_or_runtime_admission_by_this_rule") is False,
+            "rule cannot self-admit donors or runtime")
+    return issues
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -249,6 +457,13 @@ def check(root=ROOT):
     donor_policy=load("canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",root)
     donor_decision=load("canonical/decisions/CFA3-DEC-DONOR-MIGRATION-AND-CLASSIFICATION-V2-20261009.json",root)
     errors.extend(validate_donor_classification_plan(donor_policy,donor_decision))
+    rule_admission=load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",root)
+    errors.extend(validate_rule_admission(rule_admission))
+    sequential=load("canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",root)
+    errors.extend(validate_sequential_command_policy(sequential))
+    errors.extend(validate_donor_file_size_policy(load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json", root)))
+    from check_guard_policy_surface import SURFACE, validate_snapshot
+    errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):
         if not (root/name).is_file():
             errors.append(f"missing bootstrap file: {name}")

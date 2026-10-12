@@ -14,6 +14,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reject oversized new or modified donor data files
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            python3 scripts/check_donor_file_size.py --base "origin/$GITHUB_BASE_REF"
+          else
+            python3 scripts/check_donor_file_size.py --base HEAD^
+          fi
       - name: Validate new-CFA3 bootstrap candidate policies
         run: python3 scripts/check_bootstrap.py
       - name: Verify full current canonical policy JSON surface
@@ -24,7 +33,7 @@ jobs:
         run: python3 scripts/check_execution_guard_ruleset.py --ci-visible
       - name: Verify owner-supplied normative text with all owner-admitted historical provisions
         run: python3 scripts/check_execution_guard_rule_spec.py
-      - name: Validate 80 owner-admitted rule identities without forcing conditional runtime incidents
+      - name: Validate 82 owner-admitted rule identities without forcing conditional runtime incidents
         run: python3 scripts/check_execution_rule_evidence.py --bootstrap-report
       - name: Run positive and negative structural tests
         run: python3 -m unittest discover -s tests -v

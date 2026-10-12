@@ -233,11 +233,110 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["truncated"] = True
         self.assertTrue(validate_complete_inventory(frozen, bad))
 
+    def test_rule_admission_bootstrap_requirements(self):
+        from check_bootstrap import validate_rule_admission
+        policy = load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json")
+        self.assertEqual([], validate_rule_admission(policy))
+        broken = copy.deepcopy(policy)
+        broken["requirements"]["independent_owner_task_may_share_existing_pr"] = True
+        self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["owner_decision_date"] = "2026-10-12"
+        self.assertTrue(validate_rule_admission(broken))
+        for section, extra in (
+            (None, "owner_approval_may_be_skipped"),
+            ("rule", "skip_source_authorization"),
+            ("responsibility", "blame_user_without_proof"),
+            ("admission_boundary", "owner_approval_may_be_skipped"),
+        ):
+            broken = copy.deepcopy(policy)
+            target = broken if section is None else broken[section]
+            target[extra] = True
+            with self.subTest(extra_semantic_field=section or "root"):
+                self.assertTrue(validate_rule_admission(broken))
+
+        for key in policy["requirements"]:
+            broken = copy.deepcopy(policy)
+            broken["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["responsibility"]["ai_developer"] = ""
+        self.assertTrue(validate_rule_admission(broken))
+        for field in ("if_both_roles_are_same_actor", "attribution_basis"):
+            broken = copy.deepcopy(policy)
+            broken["responsibility"][field] = "UNVERIFIED_GUESS"
+            with self.subTest(responsibility=field):
+                self.assertTrue(validate_rule_admission(broken))
+        for field in ("ai_assistant", "ai_developer"):
+            broken = copy.deepcopy(policy)
+            broken["responsibility"][field] = "UNVERIFIED_ROLE_SWAP"
+            with self.subTest(exact_role=field):
+                self.assertTrue(validate_rule_admission(broken))
+        for replacement in (
+            "Nem jóváhagyott szabályszöveg; " * 12,
+            policy["rule"]["text_hu"] + " Tiltott, tulajdonos által nem engedélyezett szövegbővítés.",
+        ):
+            broken = copy.deepcopy(policy)
+            broken["rule"]["text_hu"] = replacement
+            with self.subTest(owner_text_tampering=replacement[:30]):
+                self.assertTrue(validate_rule_admission(broken))
+        broken = copy.deepcopy(policy)
+        broken["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_rule_admission(broken))
+
+    def test_one_command_one_response_policy_positive_and_negative(self):
+        from check_bootstrap import validate_sequential_command_policy
+        policy = load("canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json")
+        self.assertEqual([], validate_sequential_command_policy(policy))
+        for key in policy["requirements"]:
+            bad = copy.deepcopy(policy)
+            bad["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_sequential_command_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["sequence"].pop(1)
+        self.assertTrue(validate_sequential_command_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_sequential_command_policy(bad))
+
+    def test_donor_file_size_policy_positive_and_negative(self):
+        from check_bootstrap import validate_donor_file_size_policy
+        policy = load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json")
+        self.assertEqual([], validate_donor_file_size_policy(policy))
+        for key in policy["requirements"]:
+            broken = copy.deepcopy(policy)
+            broken["requirements"][key] = False
+            with self.subTest(invariant=key):
+                self.assertTrue(validate_donor_file_size_policy(broken))
+        for value in (996148, 0, 1000000):
+            broken = copy.deepcopy(policy)
+            broken["maximum_file_size"]["maximum_bytes"] = value
+            self.assertTrue(validate_donor_file_size_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["applies_to"].pop()
+        self.assertTrue(validate_donor_file_size_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["legacy_handling"]["retroactive_deletion_allowed"] = True
+        self.assertTrue(validate_donor_file_size_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_donor_file_size_policy(broken))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(6, surface["source_policy_count"])
+        self.assertEqual(9, surface["source_policy_count"])
+        from check_guard_policy_surface import validate_catalog_policy_leaf_total
+        coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
+        self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))
+        bad_catalog = copy.deepcopy(coverage)
+        bad_catalog["canonical_policy_leaf_fields_enumerated"] += 1
+        self.assertTrue(validate_catalog_policy_leaf_total(surface, bad_catalog))
+        bad_catalog["canonical_policy_leaf_fields_enumerated"] -= 2
+        self.assertTrue(validate_catalog_policy_leaf_total(surface, bad_catalog))
         self.assertFalse(surface["semantic_rule_admission"])
         self.assertEqual(sum(len(s["leaves"]) for s in surface["sources"]),
                          sum(s["leaf_count"] for s in surface["sources"]))

@@ -11,6 +11,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SURFACE = "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json"
+COVERAGE = "canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json"
 
 def git_blob_sha(data):
     return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\x00" + data).hexdigest()
@@ -37,6 +38,23 @@ def leaves(node, pointer=""):
            "number" if type(node) is float else
            "string" if type(node) is str else "unknown")
     return [[pointer, typ]]
+
+def validate_catalog_policy_leaf_total(snapshot, catalog):
+    """Fail closed when the coverage catalog and canonical field inventory diverge."""
+    if not isinstance(snapshot, dict) or not isinstance(catalog, dict):
+        return ["canonical policy surface/catalog not objects"]
+    rows = snapshot.get("sources")
+    if (not isinstance(rows, list) or
+            any(not isinstance(row, dict) or
+                type(row.get("leaf_count")) is not int or row["leaf_count"] < 0
+                for row in rows)):
+        return ["canonical policy leaf counts invalid"]
+    total = sum(row["leaf_count"] for row in rows)
+    if (catalog.get("canonical_policy_surface") != SURFACE or
+            type(catalog.get("canonical_policy_leaf_fields_enumerated")) is not int or
+            catalog["canonical_policy_leaf_fields_enumerated"] != total):
+        return ["coverage catalog policy leaf total disagrees with canonical policy surface"]
+    return []
 
 def validate_snapshot(snapshot, root=ROOT):
     issues = []
@@ -81,6 +99,12 @@ def validate_snapshot(snapshot, root=ROOT):
         complete = leaves(obj)
         if rec.get("leaf_count") != len(complete) or rec.get("leaves") != complete:
             issues.append("canonical policy JSON field omitted or altered: " + path)
+    try:
+        catalog = json.loads((root / COVERAGE).read_text("utf-8"))
+    except (OSError, ValueError, TypeError, UnicodeError):
+        issues.append("canonical coverage catalog unavailable or unreadable")
+    else:
+        issues.extend(validate_catalog_policy_leaf_total(snapshot, catalog))
     return issues
 
 def main():

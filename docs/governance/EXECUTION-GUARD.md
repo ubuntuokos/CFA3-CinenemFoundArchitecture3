@@ -2,7 +2,7 @@
 
 ## Kötelező szabályjegyzék (2026-10-11)
 
-Az eredeti **24 DEV/AI-szabály változatlan azonosítóval és kóddal** megmaradt. A tulajdonos ellenőrzés után újra beküldött **78** korábbi szabályának mindegyike az aktív Execution Guard hatáskörébe tartozik. A 22 történeti DEV/AI-szabály az eredeti 24 megfelelő azonosítójába van beolvasztva; ezeknek nincs új, versengő sorszáma. A **29 minőségi** (`Q-...`) és **27 feladatvezérlési** szabály saját történeti azonosítóval, egyenként szerepel az aktív készletben. **Összesen 80 külön azonosító és 78/78 feldolgozott beküldött rendelkezés.** Jelenleg nem azonosítottunk a 24 eredeti szabállyal összeegyeztethetetlen új rendelkezést; a konfliktus miatt kizártak száma 0.
+Az eredeti **24 DEV/AI-szabály változatlan azonosítóval és kóddal** megmaradt. A tulajdonos ellenőrzés után újra beküldött **78** korábbi szabályának mindegyike az aktív Execution Guard hatáskörébe tartozik. A 22 történeti DEV/AI-szabály az eredeti 24 megfelelő azonosítójába van beolvasztva; ezeknek nincs új, versengő sorszáma. A **29 minőségi** (`Q-...`) és **27 feladatvezérlési** szabály saját történeti azonosítóval, egyenként szerepel az aktív készletben. A történeti 80 aktív azonosítóhoz a külön #18 PR-ben a `RULE-ADMISSION-001`, a mostani önálló szabályfelvételi PR-ben a `CFA3-SEQUENTIAL-COMMAND-001` tartozik. **Összesen 82 külön aktív azonosító, az eredeti 78/78 történeti beküldés változatlan elszámolásával.** Jelenleg nem azonosítottunk a 24 eredeti szabállyal összeegyeztethetetlen új rendelkezést; a konfliktus miatt kizártak száma 0.
 
 Kanonikus aktuális szövegek: `canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json`. Forrás- és egyeztetési hivatkozások: `docs/governance/exports/CFA3-EXECUTION-GUARD-RULES-AND-CANDIDATES-20261011.json` és `canonical/registries/CFA3-LEGACY-RULE-RECONCILIATION-001.json`. A teljes 3159 történeti fájl külön felülvizsgálata nem előfeltétele a tulajdonos által már kifejezetten jóváhagyott 78 szabály érvényének.
 
@@ -12,10 +12,19 @@ Az aktuális 24 szabály elsőbbséget élvez valódi szemantikai ellentmondás 
 
 ## Ellenőrzések és valódi események
 
-A bootstrap nem igényli váratlan AI-ügynöki hibák, eltérő main, ütköző PR vagy jogosultságsértés éles környezetben történő előidézését. A tesztek kontrollált pozitív és negatív helyzetekkel vizsgálják a szabályazonosítókat, forrásokat, ütközésfelismerést és elutasítási mechanizmusokat. A 80 aktív szabályhoz tartozó strukturális ellenőrzés és a feltételes, feladatonkénti biztonsági kapu különválik.
+A bootstrap nem igényli váratlan AI-ügynöki hibák, eltérő main, ütköző PR vagy jogosultságsértés éles környezetben történő előidézését. A tesztek kontrollált pozitív és negatív helyzetekkel vizsgálják a szabályazonosítókat, forrásokat, ütközésfelismerést és elutasítási mechanizmusokat. A 82 aktív szabályhoz tartozó strukturális ellenőrzés és a feltételes, feladatonkénti biztonsági kapu különválik.
 
-A referenciaimplementáció önmagában nem avatkozik be minden natív ChatGPT-eszközhívásba. A műveletek éles végrehajtásához továbbra is hiteles tulajdonosi engedély, pontos friss állapot, védett bizonyítékszolgáltató, elkülönített kulcsok és tartós naplózás szükséges. A **80 szabály aktiválása nem hamis futásidejű PASS**; amíg a külön megbízható végrehajtási szolgáltatások nincsenek igazolva, a tényleges kapu fail-closed marad.
+A referenciaimplementáció önmagában nem avatkozik be minden natív ChatGPT-eszközhívásba. A műveletek éles végrehajtásához továbbra is hiteles tulajdonosi engedély, pontos friss állapot, védett bizonyítékszolgáltató, elkülönített kulcsok és tartós naplózás szükséges. A **82 szabály aktiválása nem hamis futásidejű PASS**; amíg a külön megbízható végrehajtási szolgáltatások nincsenek igazolva, a tényleges kapu fail-closed marad.
 
 ## Elhatárolás
 
-A feladat kizárólag a korábbi 78 szabály jóváhagyott reintegrálása a meglévő Execution Guardba, a 24 jelenlegi DEV/AI-szabály megőrzésével. A donor-PR, SDK-PR, más alkalmazás, történeti 3159-fájlos feldolgozás és fizikai Current Host nem része a feladatnak. A `main` védelme és a kötelező `bootstrap` / `qt68-linux` check változatlan.
+**Történeti feladathatár:** az eredeti szabály-visszaállítási feladat kizárólag a korábbi 78 szabály jóváhagyott reintegrálása volt, a 24 eredeti DEV/AI-szabály megőrzésével. A `RULE-ADMISSION-001` a #18 PR-hez, a `CFA3-SEQUENTIAL-COMMAND-001` ettől független, önálló jóváhagyott feladatként a jelen PR-hez tartozik. Külön jóváhagyott másik szabály másik feladat, külön ág és PR; az Execution Guard közös nyilvántartása nem jogosít fel PR-ek vagy főfeladatok összevonására. A donor-PR, SDK-PR, más alkalmazás, történeti 3159-fájlos feldolgozás és fizikai Current Host nem része a feladatnak. A `main` védelme és a kötelező `bootstrap` / `qt68-linux` check változatlan.
+
+## Új szabály felvétele és Bootstrap-elszámoltathatóság
+
+A `RULE-ADMISSION-001` szabály kifejezetten a szabályfelvételre is érvényesíti az egyetlen kijelölt főfeladat korlátját. Az új policy-forrást a `CFA3-CURRENT-POLICY-SURFACE-001.json` jegyzi, és a Bootstrap, a fix tesztszámok, az Execution Guard-szabálylista, a PR fájlkészlete és a hibafelelősség egymással konzisztensen változik. Sikertelen ellenőrzés után az AI asszisztens feladatvezérlési vagy az AI fejlesztő implementációs felelősségét tényszerű, ellenőrzött okkal kell azonosítani; bizonyíték nélkül felelős megjelölése tilos. E rendelkezés nem jelent új futásidejű PASS-t vagy engedélyt másik feladat elindítására. Kifejezetten tilos az önállóan jóváhagyott új szabályt egy másik, már létező főfeladat PR-jéhez csatolni; a saját feladatszálhoz saját ág és PR szükséges.
+
+
+## Egy parancs – egy válasz (önálló szabályfelvételi PR)
+
+A `CFA3-SEQUENTIAL-COMMAND-001` minden olyan feladatnál kötelező, ahol a felhasználónak több parancsot vagy tesztet kell saját maga futtatnia. Az AI egyszerre kizárólag egy futtatható parancsot vagy tesztet ad, előre közli a várt eredményt, megvárja a felhasználó teljes visszaküldött kimenetét, kiértékeli, és csak ezután adhatja a következő szükséges lépést. Sikertelen eredmény esetén egyetlen közvetlen diagnosztikai vagy javítási lépés adható ki. Nem fogadható el előre kiadott parancscsomag, feltételezett végrehajtás, elmulasztott ellenőrzés vagy kitalált PASS. A szabály strukturális nyilvántartása nem önmagában runtime bizonyíték.

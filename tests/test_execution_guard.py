@@ -1,6 +1,8 @@
 """Negative-path guard tests; NOT full CFA3 admission or physical-host proof."""
 import hashlib
 import copy
+import json
+import shutil
 import tempfile
 from unittest.mock import patch
 import hmac
@@ -34,11 +36,11 @@ class GuardTests(unittest.TestCase):
                     for r in gov[section]}
         self.assertEqual(24, len(expected))
         self.assertTrue(expected.issubset(set(catalog["rules"])))
-        self.assertEqual(80,len(catalog["rules"]))
+        self.assertEqual(82,len(catalog["rules"]))
 
     def test_78_owner_rules_active_with_24_original_unmodified(self):
         catalog=load(ROOT,CATALOG)
-        self.assertEqual(80,len(catalog["rules"]))
+        self.assertEqual(82,len(catalog["rules"]))
         restored=catalog["owner_historical_reconciliation"]
         self.assertEqual(78,restored["source_count"])
         self.assertEqual(22,restored["mapped_existing"])
@@ -264,9 +266,42 @@ class GuardTests(unittest.TestCase):
         self.assertTrue(any("active per-rule" in issue for issue in policy_issues(ROOT)))
         self.assertTrue(any("independent gate" in issue for issue in policy_issues(ROOT)))
 
+    def test_custom_root_policy_code_with_matching_surface_sha_is_rejected(self):
+        """Policy source authority must follow the requested staged tree, not module ROOT."""
+        from check_guard_policy_surface import git_blob_sha
+        catalog=load(ROOT,CATALOG)
+        paths=set(catalog["policy_files"]).union((
+            GOV, CATALOG,
+            "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
+            "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
+            "docs/governance/exports/CFA3-EXECUTION-GUARD-RULES-AND-CANDIDATES-20261011.json"))
+        with tempfile.TemporaryDirectory() as tmp:
+            staging=Path(tmp)
+            for relative in paths:
+                destination=staging/relative
+                destination.parent.mkdir(parents=True,exist_ok=True)
+                shutil.copyfile(ROOT/relative,destination)
+            self.assertEqual([],policy_issues(staging,require_prior_runtime_proofs=False))
+            relative="canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json"
+            target=staging/relative
+            source=json.loads(target.read_text("utf-8"))
+            source["rule"]["code"]="TAMPERED_STAGED_RULE_CODE"
+            target.write_text(json.dumps(source,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+            surface_path=staging/"canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json"
+            surface=json.loads(surface_path.read_text("utf-8"))
+            for entry in surface["sources"]:
+                if entry["path"]==relative:
+                    entry["git_blob_sha1"]=git_blob_sha(target.read_bytes())
+                    break
+            else:
+                self.fail("staged policy missing from source surface")
+            surface_path.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+            findings=policy_issues(staging,require_prior_runtime_proofs=False)
+            self.assertTrue(any("new owner rule does not match its canonical policy" in x for x in findings),findings)
+
     def test_unverified_independent_services_block_before_rule_evaluation(self):
         catalog = load(ROOT, CATALOG)
-        self.assertEqual(80, len(catalog["rules"]))
+        self.assertEqual(82, len(catalog["rules"]))
         missing = trusted_runtime_issues(catalog)
         for part in ("rule attester", "rule evaluator", "evidence resolver",
                      "content store", "mutation audit", "owner signing service"):
@@ -283,7 +318,7 @@ class GuardTests(unittest.TestCase):
     def test_current_rule_code_drift_and_pending_proof_still_block(self):
         gov = load(ROOT, GOV)
         cat = load(ROOT, CATALOG)
-        self.assertEqual(80, len(cat["rules"]))
+        self.assertEqual(82, len(cat["rules"]))
         self.assertEqual([], validate_current_rule_map(gov, cat))
         self.assertTrue(any("active per-rule" in x for x in policy_issues(ROOT)))
         self.assertTrue(any("independent gate" in x for x in policy_issues(ROOT)))

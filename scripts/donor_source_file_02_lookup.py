@@ -25,6 +25,11 @@ def verified_catalog():
     required = {
         "schema": "cfa3.donor-source-file-publication.v1",
         "id": "CFA3-DONOR-SOURCE-FILE-002",
+        "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+        "source_file": SOURCE.name,
+        "archived_file": SOURCE.relative_to(ROOT).as_posix(),
+        "publication_scope": "SECOND_SOURCE_FILE_ONLY_NOT_GLOBAL_L1_PASS",
+        "first_file_reference": "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json",
         "source_file_sequence": 2,
         "source_git_blob_sha": PIN,
         "publication_state": "CANONICAL_REFERENCE_SEARCHABLE_PARTIAL_L1",

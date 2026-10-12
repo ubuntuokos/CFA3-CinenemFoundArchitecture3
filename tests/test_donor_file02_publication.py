@@ -63,6 +63,26 @@ class DonorSource02Tests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     index02.lookup_source_file_02(original_url="https://example.invalid/none")
 
+    def test_publication_provenance_tampering_is_rejected(self):
+        source = index02.verified_catalog()
+        edits = {
+            "source_file": "incorrect-source.json",
+            "archived_file": "archive/incorrect-source.json",
+            "repository": "wrong/other-repository",
+            "publication_scope": "GLOBAL_L1_PASS",
+            "first_file_reference": "canonical/registries/wrong.json",
+        }
+        for field, corrupted_value in edits.items():
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as tmp:
+                altered = dict(source)
+                altered[field] = corrupted_value
+                fixture = Path(tmp) / "altered.json"
+                fixture.write_text(json.dumps(altered), encoding="utf-8")
+                with patch.object(index02, "PUBLISHED", fixture):
+                    with self.assertRaises(ValueError):
+                        index02.verified_catalog()
+
+
     def test_manifest_file_sequence_preserves_global_l1_boundary(self):
         doc = json.loads(CANON.read_text(encoding="utf-8"))
         manifest = json.loads((ROOT / "canonical/registries/CFA3-DONOR-L1-SOURCE-ARCHIVE-MANIFEST-001.json").read_text(encoding="utf-8"))
@@ -83,7 +103,17 @@ class DonorSource02Tests(unittest.TestCase):
             url = row["canonical_locator_in_registry"]
             self.assertIn(url, pub["lookup_by_locator"])
             self.assertEqual(pub["records"][pub["lookup_by_locator"][url]]["donor_id"], row["donor_id"])
-            self.assertEqual(index02.lookup_source_file_02(original_url=url)["donor_id"], row["donor_id"])
+        corrected_urls = (
+            "https://github.com/MengTo/Skills",
+            "https://github.com/YILS-LIN/short-video-factory",
+            "https://github.com/orgs/Comfy-Org/repositories",
+            "https://github.com/microsoft/DirectXTK",
+            "https://github.com/doitsujin/dxvk",
+        )
+        for url in corrected_urls:
+            with self.subTest(url=url):
+                self.assertEqual(index02.lookup_source_file_02(original_url=url)["donor_id"],
+                                 pub["records"][pub["lookup_by_locator"][url]]["donor_id"])
 
 
 if __name__ == "__main__":

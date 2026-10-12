@@ -141,9 +141,9 @@ class AuditProofTests(unittest.TestCase):
         emitted = receipts(sample_task, load(ROOT, GOV))
         evidence_store = {x["rule_id"]: evidence_bytes(x) for x in emitted}
         admission = {
-            "current_80_rule_inventory_verified": True,
-            "current_80_rule_gates_verified": True,
-            "current_80_conflicts_resolved": True,
+            "current_82_rule_inventory_verified": True,
+            "current_82_rule_gates_verified": True,
+            "current_82_conflicts_resolved": True,
             "independent_proof_verified": True,
         }
         live_state = {

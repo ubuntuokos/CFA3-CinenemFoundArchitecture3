@@ -22,7 +22,7 @@ class DonorSource02Tests(unittest.TestCase):
         pub = index02.verified_catalog()
         self.assertEqual(pub["records"], source["source_coverage"])
         self.assertEqual(len(pub["records"]), 445)
-        self.assertEqual(len(pub["lookup_by_locator"]), 494)
+        self.assertEqual(len(pub["lookup_by_locator"]), 499)
         self.assertEqual(len(pub["lookup_by_id"]), 444)
         self.assertEqual(pub["status_counts"], {"ACCEPTED_REFERENCE": 444, "SUPERSEDED": 1})
         self.assertFalse(pub["global_l1_completed"])
@@ -63,15 +63,27 @@ class DonorSource02Tests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     index02.lookup_source_file_02(original_url="https://example.invalid/none")
 
-    def test_canonical_file_sequence_preserves_global_l1_boundary(self):
+    def test_manifest_file_sequence_preserves_global_l1_boundary(self):
         doc = json.loads(CANON.read_text(encoding="utf-8"))
+        manifest = json.loads((ROOT / "canonical/registries/CFA3-DONOR-L1-SOURCE-ARCHIVE-MANIFEST-001.json").read_text(encoding="utf-8"))
         seq = doc["sequential_file_publications"]
-        self.assertEqual([x["source_sequence"] for x in seq], [1, 2])
-        self.assertEqual(seq[1]["source_records"], 445)
-        self.assertEqual(seq[1]["unique_donor_ids"], 444)
-        self.assertFalse(seq[1]["full_L1_level_pass"])
+        self.assertEqual([x["source_sequence"] for x in seq], [1])
+        receipts = manifest["per_file_completion_receipts"]
+        self.assertEqual([x["published_catalog"] for x in receipts[:2]], [
+            "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json",
+            "canonical/registries/CFA3-DONOR-SOURCE-FILE-002.json"])
+        self.assertEqual(receipts[1]["source_coverage_rows"], 445)
+        self.assertTrue(receipts[1]["canonical_l1_published"])
         self.assertFalse(doc["global_l1_completed"])
         self.assertEqual(doc["donor_count"], 81)
+
+    def test_all_canonical_registry_locator_aliases_are_indexed(self):
+        pub = index02.verified_catalog()
+        for row in pub["records"]:
+            url = row["canonical_locator_in_registry"]
+            self.assertIn(url, pub["lookup_by_locator"])
+            self.assertEqual(pub["records"][pub["lookup_by_locator"][url]]["donor_id"], row["donor_id"])
+            self.assertEqual(index02.lookup_source_file_02(original_url=url)["donor_id"], row["donor_id"])
 
 
 if __name__ == "__main__":

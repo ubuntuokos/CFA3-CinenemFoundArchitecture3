@@ -8981,6 +8981,12 @@
     "https://github.com/GPUOpen-Tools/radeon_raytracing_analyzer": 441,
     "https://github.com/GPUOpen-Drivers/gpurt": 442,
     "https://github.com/GPUOpen-LibrariesAndSDKs": 443,
-    "https://github.com/Untrivial-ai/agent-orchestrator": 444
-  }
+    "https://github.com/Untrivial-ai/agent-orchestrator": 444,
+    "https://github.com/MengTo/Skills": 54,
+    "https://github.com/YILS-LIN/short-video-factory": 157,
+    "https://github.com/orgs/Comfy-Org/repositories": 383,
+    "https://github.com/microsoft/DirectXTK": 418,
+    "https://github.com/doitsujin/dxvk": 420
+  },
+  "indexed_locator_routes": 499
 }

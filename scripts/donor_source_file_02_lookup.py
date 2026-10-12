@@ -34,6 +34,7 @@ def verified_catalog():
         "status_counts": {"ACCEPTED_REFERENCE": 444, "SUPERSEDED": 1},
         "source_set_counts": {"A": 133, "B": 312},
         "original_locator_routes": 494,
+        "indexed_locator_routes": 499,
         "global_l1_completed": False,
         "original_l1_B": None,
         "no_new_approval": True,
@@ -58,14 +59,15 @@ def verified_catalog():
             raise ValueError("Invalid owner source set")
         count[row["source_sets"][0]] += 1
         statuses[row["status"]] = statuses.get(row["status"], 0) + 1
-        for url in [row["canonical_locator"], *row["original_locators"]]:
+        for url in dict.fromkeys([row["canonical_locator"], *row["original_locators"], row["canonical_locator_in_registry"]]):
             if url in routes and routes[url] != pos:
                 raise ValueError("Conflicting original URL route")
             routes[url] = pos
     if (count != required["source_set_counts"]
             or statuses != required["status_counts"]
             or by_id != doc.get("lookup_by_id")
-            or routes != doc.get("lookup_by_locator")):
+            or routes != doc.get("lookup_by_locator")
+            or len(routes) != doc.get("indexed_locator_routes")):
         raise ValueError("Second file search index does not match source")
     return doc
 

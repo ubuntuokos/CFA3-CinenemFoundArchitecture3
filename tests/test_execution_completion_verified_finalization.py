@@ -34,6 +34,30 @@ class ExecutionCompletionPolicyTests(unittest.TestCase):
         self.assertTrue(any("approved original digest" in x for x in
                             validate_execution_completion_and_verified_finalization(altered)))
 
+    def test_classification_change_fails(self):
+        altered = copy.deepcopy(self.policy)
+        altered["classification"] = "OTHER_CLASSIFICATION"
+        self.assertTrue(any("exact approved classification" in x for x in
+                            validate_execution_completion_and_verified_finalization(altered)))
+
+    def test_scope_change_fails(self):
+        altered = copy.deepcopy(self.policy)
+        altered["scope"] = ["unapproved domain"]
+        self.assertTrue(any("exact approved scope" in x for x in
+                            validate_execution_completion_and_verified_finalization(altered)))
+
+    def test_extra_root_field_fails(self):
+        altered = copy.deepcopy(self.policy)
+        altered["unapproved_field"] = "unapproved"
+        self.assertTrue(any("exact approved root keys" in x for x in
+                            validate_execution_completion_and_verified_finalization(altered)))
+
+    def test_missing_root_field_fails(self):
+        altered = copy.deepcopy(self.policy)
+        del altered["scope"]
+        self.assertTrue(any("exact approved root keys" in x for x in
+                            validate_execution_completion_and_verified_finalization(altered)))
+
     def test_modified_canonical_text_fails(self):
         with tempfile.TemporaryDirectory() as directory:
             changed = pathlib.Path(directory) / RELATIVE

@@ -909,7 +909,7 @@
       "excluded_by_request": false,
       "source_path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
       "source_json_pointer": "/rule",
-      "source_git_blob_sha1": "bba400939ba78100565aa038027092f894defe5b"
+      "source_git_blob_sha1": "24c2805c5c3dfe9fd547020fb23a70e18944a8d7"
     },
     {
       "type": "OWNER_CURRENT_RULE",

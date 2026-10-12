@@ -4751,10 +4751,10 @@
     },
     {
       "path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
-      "git_blob_sha1": "7851d72ce9e082c434d95fd3d0fc38e12986e2be",
+      "git_blob_sha1": "24c2805c5c3dfe9fd547020fb23a70e18944a8d7",
       "canonical_id": "CFA3-RULE-ADMISSION-POLICY-001",
       "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
-      "leaf_count": 32,
+      "leaf_count": 36,
       "leaves": [
         [
           "/admission_boundary/bootstrap_structural_pass_is_runtime_proof",
@@ -4878,6 +4878,22 @@
         ],
         [
           "/schema",
+          "string"
+        ],
+        [
+          "/shared_registry_integration/owner_instruction_date",
+          "string"
+        ],
+        [
+          "/shared_registry_integration/runtime_verified",
+          "boolean"
+        ],
+        [
+          "/shared_registry_integration/scope",
+          "string"
+        ],
+        [
+          "/shared_registry_integration/text_hu",
           "string"
         ],
         [

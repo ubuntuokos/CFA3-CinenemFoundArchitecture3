@@ -245,15 +245,18 @@ APPROVED_RULE_ADMISSION_TEXT_HU = (
     "az AI asszisztens vagy az AI fejlesztő felelős. Külön tulajdonosi feladat vagy önállóan jóváhagyott új szabály csak a saját feladatához kötött ágon és "
     "PR-ben vezethető be; másik, már megnyitott feladat PR-jébe automatikusan nem helyezhető át. A közös nyilvántartás szükséges konzisztens módosítása nem "
     "teszi közössé a két feladat hatáskörét."
-    " Közös szabálynyilvántartást érintő párhuzamos PR-ek integrációját sorosítani kell: minden PR csak a saját jóváh"
-    "agyott szabályának bejegyzéseit változtathatja, a többi rekordot és történeti adatot meg kell őriznie. A nyilván"
-    "tartást az aktuális main és az adott PR HEAD ellenőrzött állapotából kell összehangolni; elavult pillanatkép nem"
-    " írhat felül újabb rekordot. A szabálydarabszámot, mezőleltárt és Git-blob azonosítókat determinisztikusan újra "
-    "kell ellenőrizni, az aktuális commiton kötelező CI- és review-kapukkal együtt. Azonos fájl párhuzamos módosítása"
-    " vagy eltérő main/head esetén összevonás nem engedélyezett a célzott, adatvesztésmentes összehangolás és az új e"
-    "llenőrzések előtt; valós, nem egyértelmű konfliktus STOP. A technikai összehangolás kizárólag kifejezetten enged"
-    "élyezett körben történhet, nem jogosít más szabály tartalmi változtatására, önálló rebase-re, új PR-re vagy önké"
-    "nyes összevonásra."
+)
+
+APPROVED_RULE_ADMISSION_REGISTRY_EXTENSION_HU = (
+    "Közös szabálynyilvántartást érintő párhuzamos PR-ek integrációját sorosítani kell: minden PR csak a saját jó"
+    "váhagyott szabályának bejegyzéseit változtathatja, a többi rekordot és történeti adatot meg kell őriznie. A "
+    "nyilvántartást az aktuális main és az adott PR HEAD ellenőrzött állapotából kell összehangolni; elavult pill"
+    "anatkép nem írhat felül újabb rekordot. A szabálydarabszámot, mezőleltárt és Git-blob azonosítókat determini"
+    "sztikusan újra kell ellenőrizni, az aktuális commiton kötelező CI- és review-kapukkal együtt. Azonos fájl pá"
+    "rhuzamos módosítása vagy eltérő main/head esetén összevonás nem engedélyezett a célzott, adatvesztésmentes ö"
+    "sszehangolás és az új ellenőrzések előtt; valós, nem egyértelmű konfliktus STOP. A technikai összehangolás k"
+    "izárólag kifejezetten engedélyezett körben történhet, nem jogosít más szabály tartalmi változtatására, önáll"
+    "ó rebase-re, új PR-re vagy önkényes összevonásra."
 )
 
 def validate_rule_admission(policy):
@@ -265,7 +268,7 @@ def validate_rule_admission(policy):
         if not condition:
             errors.append("rule admission: " + message)
     require(set(policy) == {"schema", "id", "status", "owner_decision_date",
-                            "rule", "requirements", "responsibility", "admission_boundary"},
+                            "rule", "requirements", "responsibility", "admission_boundary", "shared_registry_integration"},
             "unapproved or missing policy root field")
     require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
@@ -309,6 +312,13 @@ def validate_rule_admission(policy):
     for name in required:
         require(isinstance(requirements, dict) and requirements.get(name) is True,
                 "mandatory requirement absent: " + name)
+    extension = policy.get("shared_registry_integration")
+    require(isinstance(extension, dict) and set(extension) == {"owner_instruction_date", "scope", "text_hu", "runtime_verified"}, "invalid registry coordination amendment fields")
+    if isinstance(extension, dict):
+        require(extension.get("owner_instruction_date") == "2026-10-13", "registry coordination approval date")
+        require(extension.get("scope") == "ONLY_EXISTING_RULE_ADMISSION_AND_SHARED_CANONICAL_REGISTRY", "registry coordination scope")
+        require(extension.get("text_hu") == APPROVED_RULE_ADMISSION_REGISTRY_EXTENSION_HU, "owner-approved registry coordination amendment changed")
+        require(extension.get("runtime_verified") is False, "registry coordination runtime proof cannot be invented")
     responsibility = policy.get("responsibility")
     require(isinstance(responsibility, dict) and set(responsibility) ==
             {"ai_assistant", "ai_developer", "unverifiable_cause",

@@ -237,6 +237,12 @@ class BootstrapPolicyTests(unittest.TestCase):
         from check_bootstrap import validate_rule_admission
         policy = load("canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json")
         self.assertEqual([], validate_rule_admission(policy))
+        bad_extension = copy.deepcopy(policy)
+        bad_extension["shared_registry_integration"]["text_hu"] = "UNAPPROVED_REPLACEMENT"
+        self.assertTrue(validate_rule_admission(bad_extension))
+        bad_extension = copy.deepcopy(policy)
+        bad_extension["shared_registry_integration"]["runtime_verified"] = True
+        self.assertTrue(validate_rule_admission(bad_extension))
         broken = copy.deepcopy(policy)
         broken["requirements"]["independent_owner_task_may_share_existing_pr"] = True
         self.assertTrue(validate_rule_admission(broken))

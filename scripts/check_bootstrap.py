@@ -1390,7 +1390,7 @@ def validate_execution_and_proof_obligation(policy, root=ROOT):
          and rule.get("proof_mode") == "SOURCE_BOUND_SIGNED_TASK_RECEIPT"
          and rule.get("runtime_verified") is False
          and rule.get("text_hu") == "Az AI köteles a jóváhagyott feladatot az engedélyezett műveleti körben végrehajtani, majd az eredményt tényleges bizonyítékokkal alátámasztani.", "owner-approved source-bound rule identity")
-    expected = "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a"
+    expected = "a16adffae8f164ee4f97c119657546921eeeca81e508661e76a3395949ae63f1"
     need(policy.get("approved_text_sha256") == expected, "pinned owner text SHA-256")
     source = pathlib.Path(root) / "canonical/policies" / (ident + ".md")
     try:

@@ -250,15 +250,25 @@ APPROVED_RULE_ADMISSION_TEXT_HU = (
 def validate_rule_admission(policy):
     """Check the owner's new rule-admission contract without claiming runtime PASS."""
     errors = []
+    if not isinstance(policy, dict):
+        return ["rule admission: owner-approved policy must be an object"]
     def require(condition, message):
         if not condition:
             errors.append("rule admission: " + message)
+    require(set(policy) == {"schema", "id", "status", "owner_decision_date",
+                            "rule", "requirements", "responsibility", "admission_boundary"},
+            "unapproved or missing policy root field")
     require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
     require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
     require(policy.get("owner_decision_date") == "2026-10-11",
             "owner-approved decision date changed")
-    rule = policy.get("rule", {})
+    rule = policy.get("rule")
+    require(isinstance(rule, dict) and set(rule) ==
+            {"id", "code", "text_hu", "scope", "runtime_verified"},
+            "unapproved or missing rule field")
+    if not isinstance(rule, dict):
+        rule = {}
     require(rule.get("id") == "RULE-ADMISSION-001" and
             rule.get("code") == "EXACT_SCOPE_POLICY_SURFACE_BOOTSTRAP_TEST_PR_AND_FAILURE_ATTRIBUTION",
             "rule identity/code missing")
@@ -285,7 +295,13 @@ def validate_rule_admission(policy):
     for name in required:
         require(isinstance(requirements, dict) and requirements.get(name) is True,
                 "mandatory requirement absent: " + name)
-    responsibility = policy.get("responsibility", {})
+    responsibility = policy.get("responsibility")
+    require(isinstance(responsibility, dict) and set(responsibility) ==
+            {"ai_assistant", "ai_developer", "unverifiable_cause",
+             "if_both_roles_are_same_actor", "attribution_basis"},
+            "unapproved or missing responsibility field")
+    if not isinstance(responsibility, dict):
+        responsibility = {}
     require(responsibility.get("ai_assistant") == "Feladatvezérlési, hatásköri, ellenőrzés-előkészítési és jelentési hiányosság.", "ai_assistant exact accountability drift")
     require(responsibility.get("ai_developer") == "Implementációs, teszt-, konfigurációs, adat- és PR-fájlkonzisztencia miatti hiányosság.", "ai_developer exact accountability drift")
     require(responsibility.get("unverifiable_cause") ==
@@ -297,9 +313,15 @@ def validate_rule_admission(policy):
     require(responsibility.get("attribution_basis") ==
             "DETERMINISTIC_CHECK_LOGS_AND_EXACT_CHANGED_FILES",
             "responsibility requires deterministic evidence and exact changed files")
-    require(policy.get("admission_boundary", {}).get("bootstrap_structural_pass_is_runtime_proof") is False,
+    admission_boundary = policy.get("admission_boundary")
+    require(isinstance(admission_boundary, dict) and set(admission_boundary) ==
+            {"bootstrap_structural_pass_is_runtime_proof", "independent_execution_gate_pass"},
+            "unapproved or missing admission boundary field")
+    if not isinstance(admission_boundary, dict):
+        admission_boundary = {}
+    require(admission_boundary.get("bootstrap_structural_pass_is_runtime_proof") is False,
             "bootstrap may not fake runtime gate proof")
-    require(policy.get("admission_boundary", {}).get("independent_execution_gate_pass") is False,
+    require(admission_boundary.get("independent_execution_gate_pass") is False,
             "independent gate PASS may not be fabricated")
     return errors
 

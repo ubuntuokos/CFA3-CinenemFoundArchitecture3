@@ -14,6 +14,7 @@
     "canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",
     "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",
     "canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",
+    "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json",
     "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
     "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
     "canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json",
@@ -387,7 +388,7 @@
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
-  "canonical_policy_leaf_fields_enumerated": 1050,
+  "canonical_policy_leaf_fields_enumerated": 1104,
   "canonical_policy_field_enumeration_complete": true,
   "canonical_policy_semantic_rule_enforcement_complete": false,
   "github_main_protection_ruleset": {

@@ -324,11 +324,43 @@ class BootstrapPolicyTests(unittest.TestCase):
         broken["rule"]["runtime_verified"] = True
         self.assertTrue(validate_donor_file_size_policy(broken))
 
+
+    def test_github_resource_404_policy_positive_and_negative(self):
+        from check_bootstrap import validate_github_resource_404_policy
+        policy = load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json")
+        self.assertEqual([], validate_github_resource_404_policy(policy))
+        for field in policy["requirements"]:
+            broken = copy.deepcopy(policy)
+            broken["requirements"][field] = False
+            with self.subTest(requirement=field):
+                self.assertTrue(validate_github_resource_404_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["mandatory_sequence"][2], broken["mandatory_sequence"][3] = (
+            broken["mandatory_sequence"][3], broken["mandatory_sequence"][2])
+        self.assertTrue(validate_github_resource_404_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["http_404_cases"].pop()
+        self.assertTrue(validate_github_resource_404_policy(broken))
+        broken = copy.deepcopy(policy)
+        for case in broken["http_404_cases"]:
+            if case["case"] == "MISSING_PERMISSION_OR_CONCEALED_RESOURCE":
+                case["action"] = "CONTINUE"
+        self.assertTrue(validate_github_resource_404_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["error_handling"]["own_correctable_404_alone_is_blocker"] = True
+        self.assertTrue(validate_github_resource_404_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_github_resource_404_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["admission_boundary"]["merge_without_existing_gate_allowed"] = True
+        self.assertTrue(validate_github_resource_404_policy(broken))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(9, surface["source_policy_count"])
+        self.assertEqual(10, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

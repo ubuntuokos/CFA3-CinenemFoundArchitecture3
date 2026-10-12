@@ -1,0 +1,107 @@
+{
+  "schema": "cfa3.policy-long-term-validation.v1",
+  "id": "CFA3-POLICY-LONG-TERM-VALIDATION-001",
+  "title_hu": "Tartós szabályműködés visszaigazolása",
+  "status": "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
+  "owner_decision_date": "2026-10-12",
+  "classification": "MANDATORY_CFA3_POLICY_OBSERVATION_AND_EVIDENCE",
+  "scope": [
+    "CFA3 fejlesztők és AI-asszisztensek",
+    "CFA3 szabályok alkalmazása és működésmegfigyelése",
+    "CFA3 szabályműködési visszaigazolások"
+  ],
+  "mandatory_clauses": [
+    {
+      "id": "LTV-01",
+      "code": "CONTINUOUS_RULE_OBSERVATION",
+      "text_hu": "A fejlesztő köteles figyelemmel kísérni az általa alkalmazott szabályok tényleges működését a már engedélyezett feladatok során. Ez nem jogosít fel külön feladat, önálló audit vagy új ellenőrzési projekt indítására."
+    },
+    {
+      "id": "LTV-02",
+      "code": "NO_PREMATURE_STABLE_CLAIM",
+      "text_hu": "Két-három sikeres alkalmazás nem elegendő annak állítására, hogy a szabály tartósan megfelelően vagy bizonyítottan működik. Az AI ilyen kevés alkalom után nem adhat tartós sikerigazolást, és nem értesítheti erről a fejlesztőt."
+    },
+    {
+      "id": "LTV-03",
+      "code": "LONG_TERM_INDEPENDENT_EVIDENCE",
+      "text_hu": "A tartós működés igazolásához huzamosabb megfigyelési időszak, több egymástól független, releváns alkalmazási helyzet és ellenőrizhető bizonyíték szükséges. Az elégséges bizonyítékot a szabály kockázata, alkalmazási gyakorisága és működési környezete szerint kell megítélni, nem önkényes esetszám alapján."
+    },
+    {
+      "id": "LTV-04",
+      "code": "MANDATORY_EVIDENCE_BACKED_CONFIRMATION",
+      "text_hu": "Amennyiben a fejlesztő elegendő, ellenőrizhető hosszú távú bizonyíték alapján a szabály tényleges, megfelelő működését tapasztalja, köteles a szabály működését visszaigazolni, a bizonyított alkalmazási kör megjelölésével."
+    },
+    {
+      "id": "LTV-05",
+      "code": "TRACEABLE_CONFIRMATION_RECORD",
+      "text_hu": "A visszaigazolásnak tartalmaznia kell a szabályazonosítót, a megfigyelési időszakot, a független alkalmazási helyzeteket és ellenőrizhető hivatkozásaikat, a sikeres, sikertelen és bizonytalan eredményeket, valamint az igazolás korlátait."
+    },
+    {
+      "id": "LTV-06",
+      "code": "NO_ABSENCE_OF_ERROR_AS_PROOF",
+      "text_hu": "A hiba vagy panasz hiánya nem bizonyítja önmagában a tartós működést. Az előzetes sikeres tapasztalatot, a megfigyelés alatt álló és a bizonyítottan tartósan megfelelő állapotot világosan meg kell különböztetni."
+    },
+    {
+      "id": "LTV-07",
+      "code": "REOPEN_ON_CONTRADICTING_EVIDENCE",
+      "text_hu": "Ha a már igazolt szabály működésével kapcsolatban később érdemi, ellenőrizhető probléma merül fel, a korábbi igazolást felül kell vizsgálni. A történeti bizonyítékot meg kell őrizni, és az új állapotot jelezni kell; ez nem engedély önálló szabálymódosításra."
+    },
+    {
+      "id": "LTV-08",
+      "code": "NO_UNSOLICITED_EARLY_NOTIFICATIONS",
+      "text_hu": "Az AI nem figyelmeztetheti két-három sikeres alkalom után a fejlesztőt arra, hogy a szabály sikeresen, tartósan működik. Az előzetes eredmény csak helyes előzetes minősítéssel közölhető, amikor az aktuális feladathoz szükséges."
+    }
+  ],
+  "verification_states": [
+    {
+      "code": "NOT_OBSERVED",
+      "meaning_hu": "Nincs elegendő megfigyelés."
+    },
+    {
+      "code": "OBSERVING",
+      "meaning_hu": "Megfigyelés folyik."
+    },
+    {
+      "code": "PRELIMINARY_PASS",
+      "meaning_hu": "Előzetes siker, de tartós működés nem bizonyított."
+    },
+    {
+      "code": "VERIFIED_STABLE",
+      "meaning_hu": "Huzamosabb, független és ellenőrizhető megfigyelés igazolja a működést."
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "meaning_hu": "Új ellentmondó bizonyíték miatt az igazolás felülvizsgálandó."
+    }
+  ],
+  "evidence_fields": [
+    "policy_id",
+    "observation_period_start",
+    "observation_period_end",
+    "independent_contexts",
+    "verifiable_case_references",
+    "successful_outcomes",
+    "failed_outcomes",
+    "inconclusive_outcomes",
+    "risks_and_applicability",
+    "reasoned_conclusion"
+  ],
+  "requirements": {
+    "observe_real_world_rule_effects_when_applied": true,
+    "two_or_three_successful_uses_are_not_stable_proof": true,
+    "independent_contexts_and_sustained_period_required": true,
+    "risk_and_frequency_dependent_evidence_sufficiency": true,
+    "confirmation_required_when_evidence_is_sufficient": true,
+    "evidence_and_failures_recorded": true,
+    "absence_of_detected_failures_is_not_proof": true,
+    "evidence_can_reopen_verified_state": true,
+    "no_unrequested_early_stable_success_alert": true,
+    "no_unapproved_auxiliary_work_or_policy_change": true,
+    "no_arbitrary_fixed_pass_count": true
+  },
+  "admission_boundary": {
+    "structural_bootstrap_pass_is_long_term_runtime_proof": false,
+    "independent_runtime_observation_completed": false,
+    "full_governance_admission_asserted": false
+  }
+}

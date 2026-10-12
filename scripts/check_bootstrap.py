@@ -1259,6 +1259,25 @@ def validate_execution_completion_and_verified_finalization(policy, root=ROOT):
     need(policy.get("version") == "1.0", "version")
     need(policy.get("status") == "OWNER_APPROVED", "owner-approved lifecycle state")
     need(policy.get("owner_decision_date") == "2026-10-12", "owner decision date")
+
+    approved_keys = {
+        "schema", "id", "title_hu", "version", "status",
+        "owner_decision_date", "classification", "scope",
+        "approved_text_path", "approved_text_sha256",
+        "approved_section_count", "finalization_gates",
+        "requirements", "admission_boundary"
+    }
+    need(isinstance(policy, dict) and set(policy) == approved_keys,
+         "exact approved root keys")
+    need(policy.get("classification") ==
+         "MANDATORY_CFA3_EXECUTION_COMPLETION_AND_VERIFIED_FINALIZATION",
+         "exact approved classification")
+    need(policy.get("scope") == [
+        "CFA3 fejlesztési munkafolyamatok",
+        "donoradatbázis-feldolgozás",
+        "GitHub és PR",
+        "CI és szabályvéglegesítés"
+    ], "exact approved scope")
     need(policy.get("approved_text_path") == approved_path, "approved text path")
     need(policy.get("approved_text_sha256") == expected_digest, "approved original digest")
     need(policy.get("approved_section_count") == 20, "section count metadata")

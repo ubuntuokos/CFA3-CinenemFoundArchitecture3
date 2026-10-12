@@ -819,6 +819,7 @@ def validate_policy_long_term_validation(policy):
 
 def validate_policy_exact_finalization(policy, root=ROOT):
     """Pin the entire owner-approved 13-section text; CI never proves merge or main."""
+    from pathlib import Path
     import hashlib
     import re
     issues = []

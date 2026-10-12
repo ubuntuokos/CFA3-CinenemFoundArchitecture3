@@ -1,0 +1,38 @@
+{
+  "schema": "cfa3.conversation-recovery-and-execution-policy.v1",
+  "id": "CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001",
+  "title_hu": "Korábbi beszélgetések hiteles visszakeresése, jóváhagyások megőrzése és a végrehajtás indokolatlan akadályozásának tilalma",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "version": "1.0",
+  "approved_text_path": "canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.md",
+  "approved_text_sha256": "8ddc2700116b8b78dd8e197a2668c538fa1019047f135bf24917c7ae1ea245c3",
+  "approved_section_count": 15,
+  "classification": "MANDATORY_CFA3_WORKFLOW_POLICY",
+  "scope": "Minden CFA3-fejlesztés, szabályalkotás, jóváhagyás, véglegesítés és korábbi beszélgetésre épülő művelet.",
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "MERGE",
+    "STATUS",
+    "REGISTRY",
+    "CI",
+    "MAIN"
+  ],
+  "requirements": {
+    "precise_conversation_identification": true,
+    "retrievable_source_use": true,
+    "prior_approval_preservation": true,
+    "verbatim_source_preservation": true,
+    "no_redundant_checks": true,
+    "self_error_correction": true,
+    "consistent_status_reporting": true,
+    "no_artificial_blockers": true,
+    "execute_approved_work": true,
+    "stop_infinite_loops": true,
+    "seven_finalization_gates": true,
+    "minimize_user_burden": true,
+    "verified_closure_only": true,
+    "scope_and_security_alignment": true
+  }
+}

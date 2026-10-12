@@ -18,6 +18,7 @@
     "canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",
     "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",
     "canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",
+    "canonical/policies/CFA3-POLICY-MANDATORY-RULE-CREATION-INTEGRITY-001.json",
     "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json",
     "canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",
     "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
@@ -396,7 +397,7 @@
     "SIGNED_APPEND_ONLY_DURABLE_AUDIT_WRITER_AND_DISTINCT_PRIVATE_KEY_NOT_DEPLOYED"
   ],
   "canonical_policy_surface": "canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json",
-  "canonical_policy_leaf_fields_enumerated": 1257,
+  "canonical_policy_leaf_fields_enumerated": 1302,
   "canonical_policy_field_enumeration_complete": true,
   "canonical_policy_semantic_rule_enforcement_complete": false,
   "github_main_protection_ruleset": {

@@ -1384,6 +1384,12 @@ def validate_execution_and_proof_obligation(policy, root=ROOT):
     flags = policy.get("requirements")
     need(isinstance(flags, dict) and set(flags) == set(required)
          and all(flags.get(key) is True for key in required), "required conditions")
+    rule = policy.get("rule")
+    need(isinstance(rule, dict) and rule.get("id") == "CFA3-EXECUTION-PROOF-OBLIGATION-001"
+         and rule.get("code") == "EXECUTE_APPROVED_TASK_AND_PROVE_RESULT"
+         and rule.get("proof_mode") == "SOURCE_BOUND_SIGNED_TASK_RECEIPT"
+         and rule.get("runtime_verified") is False
+         and rule.get("text_hu") == "Az AI köteles a jóváhagyott feladatot az engedélyezett műveleti körben végrehajtani, majd az eredményt tényleges bizonyítékokkal alátámasztani.", "owner-approved source-bound rule identity")
     expected = "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a"
     need(policy.get("approved_text_sha256") == expected, "pinned owner text SHA-256")
     source = pathlib.Path(root) / "canonical/policies" / (ident + ".md")

@@ -15,6 +15,7 @@ class DonorFileSizeTests(unittest.TestCase):
             "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json",
             "archive/donor/data.jsonl",
             "somewhere/donor-aliases.csv",
+            "docs/governance/exports/CFA3-DONOR-DATA-SNAPSHOT.json",
         ):
             with self.subTest(name=name):
                 self.assertTrue(is_donor_data(name))

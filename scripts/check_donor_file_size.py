@@ -18,7 +18,7 @@ def is_donor_data(path):
     filename = Path(normalized).name
     if Path(filename).suffix not in DATA_SUFFIXES:
         return False
-    if "/policies/" in "/" + normalized or normalized.startswith("docs/"):
+    if "/policies/" in "/" + normalized:
         return False
     if "donor" in filename or "donor" in normalized.split("/"):
         return True

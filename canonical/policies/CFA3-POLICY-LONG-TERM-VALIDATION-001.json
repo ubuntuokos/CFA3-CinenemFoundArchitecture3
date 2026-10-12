@@ -14,68 +14,70 @@
     {
       "id": "LTV-01",
       "code": "CONTINUOUS_RULE_OBSERVATION",
-      "text_hu": "A fejlesztő köteles figyelemmel kísérni az általa alkalmazott szabályok tényleges működését a már engedélyezett feladatok során. Ez nem jogosít fel külön feladat, önálló audit vagy új ellenőrzési projekt indítására."
+      "text_hu": "A fejlesztő köteles figyelemmel kísérni a szabályok tényleges működését azok alkalmazása során."
     },
     {
       "id": "LTV-02",
       "code": "NO_PREMATURE_STABLE_CLAIM",
-      "text_hu": "Két-három sikeres alkalmazás nem elegendő annak állítására, hogy a szabály tartósan megfelelően vagy bizonyítottan működik. Az AI ilyen kevés alkalom után nem adhat tartós sikerigazolást, és nem értesítheti erről a fejlesztőt."
+      "text_hu": "Két-három sikeres alkalmazás nem elegendő annak kijelentésére, hogy a szabály bizonyítottan megfelelően működik."
     },
     {
       "id": "LTV-03",
       "code": "LONG_TERM_INDEPENDENT_EVIDENCE",
-      "text_hu": "A tartós működés igazolásához huzamosabb megfigyelési időszak, több egymástól független, releváns alkalmazási helyzet és ellenőrizhető bizonyíték szükséges. Az elégséges bizonyítékot a szabály kockázata, alkalmazási gyakorisága és működési környezete szerint kell megítélni, nem önkényes esetszám alapján."
+      "text_hu": "A visszaigazolásnak hosszabb időszakban, több egymástól független alkalmazási helyzetben szerzett, ellenőrizhető tapasztalatokon kell alapulnia."
     },
     {
       "id": "LTV-04",
       "code": "MANDATORY_EVIDENCE_BACKED_CONFIRMATION",
-      "text_hu": "Amennyiben a fejlesztő elegendő, ellenőrizhető hosszú távú bizonyíték alapján a szabály tényleges, megfelelő működését tapasztalja, köteles a szabály működését visszaigazolni, a bizonyított alkalmazási kör megjelölésével."
+      "text_hu": "Amennyiben a fejlesztő elegendő bizonyítékot gyűjtött a szabály tartósan megfelelő működésére, köteles ezt egyértelműen visszaigazolni."
     },
     {
       "id": "LTV-05",
       "code": "TRACEABLE_CONFIRMATION_RECORD",
-      "text_hu": "A visszaigazolásnak tartalmaznia kell a szabályazonosítót, a megfigyelési időszakot, a független alkalmazási helyzeteket és ellenőrizhető hivatkozásaikat, a sikeres, sikertelen és bizonytalan eredményeket, valamint az igazolás korlátait."
+      "text_hu": "A visszaigazolásnak tartalmaznia kell a megfigyelési időszakot, az alkalmazási eseteket, a sikeres és sikertelen eredményeket, valamint a következtetés alapját."
     },
     {
       "id": "LTV-06",
       "code": "NO_ABSENCE_OF_ERROR_AS_PROOF",
-      "text_hu": "A hiba vagy panasz hiánya nem bizonyítja önmagában a tartós működést. Az előzetes sikeres tapasztalatot, a megfigyelés alatt álló és a bizonyítottan tartósan megfelelő állapotot világosan meg kell különböztetni."
+      "text_hu": "Az AI nem tekintheti a szabályt bizonyítottan működőnek pusztán azért, mert nem észlelt hibát."
     },
     {
       "id": "LTV-07",
       "code": "REOPEN_ON_CONTRADICTING_EVIDENCE",
-      "text_hu": "Ha a már igazolt szabály működésével kapcsolatban később érdemi, ellenőrizhető probléma merül fel, a korábbi igazolást felül kell vizsgálni. A történeti bizonyítékot meg kell őrizni, és az új állapotot jelezni kell; ez nem engedély önálló szabálymódosításra."
+      "text_hu": "A korábban igazolt szabály működési problémáját később is jelezni kell, és szükség esetén felül kell vizsgálni a visszaigazolását."
     },
     {
       "id": "LTV-08",
       "code": "NO_UNSOLICITED_EARLY_NOTIFICATIONS",
-      "text_hu": "Az AI nem figyelmeztetheti két-három sikeres alkalom után a fejlesztőt arra, hogy a szabály sikeresen, tartósan működik. Az előzetes eredmény csak helyes előzetes minősítéssel közölhető, amikor az aktuális feladathoz szükséges."
+      "text_hu": "Az AI nem küldhet néhány sikeres alkalmazás után olyan értesítést, amely tartósan bizonyított működést állít."
     }
   ],
   "verification_states": [
     {
       "code": "NOT_OBSERVED",
-      "meaning_hu": "Nincs elegendő megfigyelés."
+      "meaning_hu": "Nincs elegendő működési tapasztalat"
     },
     {
       "code": "OBSERVING",
-      "meaning_hu": "Megfigyelés folyik."
+      "meaning_hu": "Megfigyelés alatt"
     },
     {
       "code": "PRELIMINARY_PASS",
-      "meaning_hu": "Előzetes siker, de tartós működés nem bizonyított."
+      "meaning_hu": "Vannak sikeres esetek, de nincs tartós bizonyíték"
     },
     {
       "code": "VERIFIED_STABLE",
-      "meaning_hu": "Huzamosabb, független és ellenőrizhető megfigyelés igazolja a működést."
+      "meaning_hu": "Tartós, ellenőrizhető működés igazolt"
     },
     {
       "code": "REVIEW_REQUIRED",
-      "meaning_hu": "Új ellentmondó bizonyíték miatt az igazolás felülvizsgálandó."
+      "meaning_hu": "Korábbi igazolást érintő probléma merült fel"
     }
   ],
   "evidence_fields": [
     "policy_id",
+    "rule_id",
+    "policy_revision_sha256",
     "observation_period_start",
     "observation_period_end",
     "independent_contexts",
@@ -97,11 +99,23 @@
     "evidence_can_reopen_verified_state": true,
     "no_unrequested_early_stable_success_alert": true,
     "no_unapproved_auxiliary_work_or_policy_change": true,
-    "no_arbitrary_fixed_pass_count": true
+    "no_arbitrary_fixed_pass_count": true,
+    "proof_evidence_must_bind_exact_rule_revision": true
   },
   "admission_boundary": {
     "structural_bootstrap_pass_is_long_term_runtime_proof": false,
     "independent_runtime_observation_completed": false,
     "full_governance_admission_asserted": false
+  },
+  "mandatory_evidence_provisions": [
+    "A sikeres működés igazolása nem alapulhat önkényesen megválasztott darabszámon.",
+    "A bizonyítás időtartamát és mélységét a szabály jellege, alkalmazási gyakorisága és kockázata határozza meg.",
+    "A kötelező visszaigazolás viszont nem maradhat el, ha a tartós működést megfelelő bizonyítékok igazolják."
+  ],
+  "evidence_binding": {
+    "rule_id_source": "CANONICAL_RULE_ID_WITHIN_POLICY",
+    "policy_revision_digest_source": "SHA256_OF_EXACT_CANONICAL_POLICY_FILE_BYTES",
+    "verified_stable_requires_matching_rule_id_and_policy_revision_sha256": true,
+    "unverified_or_stale_digest_must_not_claim_verified_stable": true
   }
 }

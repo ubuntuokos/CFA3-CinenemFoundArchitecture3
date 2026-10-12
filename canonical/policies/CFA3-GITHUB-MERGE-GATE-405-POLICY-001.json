@@ -1,0 +1,144 @@
+{
+  "schema": "cfa3.github-merge-gate-405-policy.v1",
+  "id": "CFA3-GITHUB-MERGE-GATE-405-POLICY-001",
+  "status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+  "owner_decision_date": "2026-10-12",
+  "version": "1.0",
+  "rule": {
+    "code": "MANDATORY_LIVE_MERGE_GATE_AND_SELF_CAUSED_405_REPAIR",
+    "text_hu": "Minden CFA3 PR-összevonás előtt ellenőrizni kell a GitHub összes aktuális merge gate követelményét. A CI PASS nem azonos a Merge Gate PASS eredménnyel. A saját kötelező mulasztásból okozott HTTP 405-ös repository-védelmi hibát az AI köteles önállóan javítani, külön jóváhagyás nélkül, az eredeti feladaton belül. Az ilyen 405 önmagában nem blocker. Csak más, bizonyított, a szabályos javítást akadályozó hiba esetén kötelező STOP és jelentés. A GitHub-védelem nem kerülhető meg, a feladathatár nem bővíthető.",
+    "runtime_verified": false
+  },
+  "sections": [
+    {
+      "number": 1,
+      "title": "A szabály célja",
+      "text_hu": "A 405-ös repository-védelmi hiba megelőzése, diagnosztikája és biztonságos javítása; a saját javítható mulasztás miatti indokolatlan STOP tilos."
+    },
+    {
+      "number": 2,
+      "title": "Alapvető fogalmak",
+      "text_hu": "CI PASS a commit adott ellenőrzési eredménye; Merge Gate PASS valamennyi aktuális összevonási feltétel együttes teljesülése. Valódi blocker külön bizonyított javítási akadály."
+    },
+    {
+      "number": 3,
+      "title": "Kötelező megelőző ellenőrzések",
+      "text_hu": "Sorrendben ellenőrizni kell: célági SHA, PR-head SHA, ágeltérések, fájlátfedések és konfliktusok, fájlintegritás és méretkorlát, rulesetek, checkek, strict_required_status_checks_policy, ágfrissítés, review-k, mergeable_state = clean; majd újra ellenőrzés közvetlenül merge előtt."
+    },
+    {
+      "number": 4,
+      "title": "Szigorú státuszellenőrzési szabály",
+      "text_hu": "A strict_required_status_checks_policy = true aktuális célági naprakészséget igényel. Régi CI PASS nem elegendő; az élő rulesetből kell a kötelező checkeket és integrációkat lekérdezni."
+    },
+    {
+      "number": 5,
+      "title": "Párhuzamos ágak kezelése",
+      "text_hu": "A puszta főági előrehaladás nem blocker. Veszteségmentes, engedélyezett szinkronizáció végezhető; tényleges tartalmi, jogosultsági vagy hatásköri ütközés STOP."
+    },
+    {
+      "number": 6,
+      "title": "Saját mulasztásból eredő 405-ös hiba kötelező önálló javítása",
+      "text_hu": "Az AI a saját kötelező ellenőrzési vagy végrehajtási mulasztásából származó 405-öt saját hibaként kezeli; diagnosztizálja, pótolja a vizsgálatokat, biztonságosan javítja, ellenőrzi, majd folytatja a jóváhagyott feladatot, új engedély nélkül."
+    },
+    {
+      "number": 7,
+      "title": "Az önálló hibajavítás engedélyezett műveletei",
+      "text_hu": "Megengedett az exact-state lekérdezés, konfliktusmentes veszteségmentes ágfrissítés, szükséges Git-merge, az eredeti feladat CI- és review-javítása, újraellenőrzés és a korábban jóváhagyott merge folytatása. Önálló rebase és force push tilos."
+    },
+    {
+      "number": 8,
+      "title": "A STOP/BLOCKER kivétel pontos alkalmazása",
+      "text_hu": "A saját javítható 405-ös hiba önmagában nem STOP. Új CI vagy szabályos ágfrissítés szükségessége nem válhat indokolatlan blockerré."
+    },
+    {
+      "number": 9,
+      "title": "Valódi blokkolási feltételek",
+      "text_hu": "Csak további bizonyított ütközés, jogosultsághiány, adatvesztési veszély, független sikertelen kapu, nem igazolható állapot vagy scope-on kívüli akadály esetén STOP; az okot és a bizonyítékot jelenteni kell."
+    },
+    {
+      "number": 10,
+      "title": "A HTTP 405 hibák kötelező diagnosztikája",
+      "text_hu": "A tényleges API-művelet, teljes hibaválasz, aktuális ruleset, ágak, checkek, jogosultságok és review-k ellenőrzendők. Nem minden 405 elavult ágat jelent."
+    },
+    {
+      "number": 11,
+      "title": "Donoradatbázisok speciális követelményei",
+      "text_hu": "A donoradatbázis minden új vagy módosított állománya legfeljebb 996147 bájt lehet; a régi túlméretes fájl változatlanul megőrizhető, átszervezés csak adatvesztés nélkül, stabil azonosítókkal és provenienciával."
+    },
+    {
+      "number": 12,
+      "title": "Felülvizsgálati követelmények",
+      "text_hu": "Minden kötelező review-feltétel teljesítendő, érdemi szál csak bizonyított javítás után zárható le; szükséges új CI kötelező. Hamis PASS vagy Bootstrap-megkerülés tilos."
+    },
+    {
+      "number": 13,
+      "title": "Végső összevonási ellenőrzés",
+      "text_hu": "Aktuális SHA-k, ágfrissítés, valamennyi kötelező CI PASS, review-rendezés, fájlkorlátok, élő ruleset, mergeable_state = clean és tulajdonosi scope együttes PASS kell."
+    },
+    {
+      "number": 14,
+      "title": "Összevonás utáni visszaellenőrzés",
+      "text_hu": "A merge eredménye, az aktuális főági SHA és a módosítások tényleges jelenléte visszaolvasandó; szükséges integritási ellenőrzés és dokumentálás kötelező."
+    },
+    {
+      "number": 15,
+      "title": "Az AI felelőssége és hibajelentése",
+      "text_hu": "Az asszisztensi ellenőrzési és végrehajtási, illetve fejlesztői implementációs és teszthiba bizonyíték alapján különítendő el; a mulasztás, javítás és új eredmények dokumentálandók."
+    },
+    {
+      "number": 16,
+      "title": "Tiltott műveletek",
+      "text_hu": "Tilos védelmi szabály kikapcsolása, CI kihagyása, jogosulatlan PR/merge/rebase/force push, más feladat módosítása, adatvesztés, hamis PASS, blocker elhallgatása vagy önkényes feladatbővítés."
+    },
+    {
+      "number": 17,
+      "title": "Elsőbbség és kapcsolódás a CFA3 szabályaihoz",
+      "text_hu": "A saját javítható 405-re kifejezett kivétel érvényes az automatikus STOP alól, az eredeti scope és a biztonsági, jogosultsági, adatvédelmi korlátok megtartásával."
+    },
+    {
+      "number": 18,
+      "title": "Kanonikus bevezetési követelmények",
+      "text_hu": "Önálló szabályfájl, CURRENT-POLICY-SURFACE felvétel, coverage, Bootstrap és fix tesztértékek igazítása, pozitív és negatív tesztek, jóváhagyott PR és főági read-back szükséges."
+    },
+    {
+      "number": 19,
+      "title": "A szabály teljesülési feltétele",
+      "text_hu": "Megfelelő megelőzés, bizonyított saját hiba önjavítása, védelem megőrzése, eredeti feladat folytatása, valódi blocker jelentése, Merge Gate PASS és főági visszaellenőrzés szükséges."
+    },
+    {
+      "number": 20,
+      "title": "Végleges kötelező rendelkezés",
+      "text_hu": "A CI PASS nem elegendő. Az AI saját mulasztásból okozott 405-öt önállóan javítja, mert az önmagában nem blocker; kizárólag más bizonyított akadály esetén áll meg és jelent, a GitHub védelme és az eredeti scope megtartásával."
+    }
+  ],
+  "requirements": {
+    "pre_merge_exact_main_and_head": true,
+    "pre_merge_overlap_conflicts": true,
+    "pre_merge_file_integrity": true,
+    "live_ruleset_and_strict_policy": true,
+    "live_required_status_checks": true,
+    "required_checks_current_commit": true,
+    "required_review_resolution": true,
+    "require_mergeable_state_clean": true,
+    "final_exact_state_check": true,
+    "ci_pass_not_merge_gate_pass": true,
+    "own_caused_405_self_repair_mandatory": true,
+    "own_405_alone_is_blocker": false,
+    "new_approval_for_own_correction": false,
+    "independent_blocker_requires_stop": true,
+    "stop_requires_deterministic_evidence": true,
+    "allow_lossless_conflict_free_branch_sync": true,
+    "unauthorized_rebase_or_force_push": false,
+    "disable_github_protection": false,
+    "unapproved_pr_or_scope_expansion": false,
+    "resume_original_main_task": true,
+    "post_merge_main_readback": true,
+    "donor_max_modified_bytes": 996147,
+    "historical_oversize_untouched_allowed": true,
+    "unknown_405_requires_specific_diagnosis": true
+  },
+  "admission_boundary": {
+    "bootstrap_structural_pass_is_runtime_proof": false,
+    "independent_execution_gate_pass": false
+  }
+}

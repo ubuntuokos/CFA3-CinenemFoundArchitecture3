@@ -623,84 +623,192 @@ def validate_rule_consistency_loop_prevention(policy):
            and len(policy["loop_indicators"]) == 5, "loop indicators")
     return issues
 
+def validate_github_merge_gate_405_policy(policy):
+    """Validate owner-approved merge-gate and self-repair invariants, not runtime PASS."""
+    if not isinstance(policy, dict):
+        return ["github 405: policy must be an object"]
+    errors = []
+    def require(condition, detail):
+        if not condition:
+            errors.append("github 405: " + detail)
+    require(set(policy) == {"schema", "id", "status", "owner_decision_date",
+                            "version", "rule", "sections", "requirements",
+                            "admission_boundary"}, "root fields differ")
+    require(policy.get("schema") == "cfa3.github-merge-gate-405-policy.v1", "schema")
+    require(policy.get("id") == "CFA3-GITHUB-MERGE-GATE-405-POLICY-001", "identity")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "status")
+    require(policy.get("owner_decision_date") == "2026-10-12", "decision date")
+    require(policy.get("version") == "1.0", "version")
+    rule = policy.get("rule")
+    rule = rule if isinstance(rule, dict) else {}
+    require(rule.get("code") == "MANDATORY_LIVE_MERGE_GATE_AND_SELF_CAUSED_405_REPAIR",
+            "approved rule code")
+    require(rule.get("runtime_verified") is False, "runtime proof not established")
+    text = rule.get("text_hu", "")
+    require(isinstance(text, str) and all(term in text for term in (
+            "CI PASS", "Merge Gate PASS", "önállóan", "nem blocker", "STOP")),
+            "owner-approved binding provisions missing")
+    sections = policy.get("sections")
+    require(isinstance(sections, list) and len(sections) == 20, "twenty sections required")
+    if isinstance(sections, list):
+        require([s.get("number") if isinstance(s, dict) else None for s in sections] ==
+                list(range(1, 21)), "section order drift")
+        require(all(isinstance(s, dict) and set(s) == {"number", "title", "text_hu"}
+                    and isinstance(s["title"], str) and len(s["title"]) > 5
+                    and isinstance(s["text_hu"], str) and len(s["text_hu"]) > 70
+                    for s in sections), "approved section content incomplete")
+    req = policy.get("requirements")
+    yes = (
+        "pre_merge_exact_main_and_head", "pre_merge_overlap_conflicts",
+        "pre_merge_file_integrity", "live_ruleset_and_strict_policy",
+        "live_required_status_checks", "required_checks_current_commit",
+        "required_review_resolution", "require_mergeable_state_clean",
+        "final_exact_state_check", "ci_pass_not_merge_gate_pass",
+        "own_caused_405_self_repair_mandatory", "independent_blocker_requires_stop",
+        "stop_requires_deterministic_evidence", "allow_lossless_conflict_free_branch_sync",
+        "resume_original_main_task", "post_merge_main_readback",
+        "historical_oversize_untouched_allowed", "unknown_405_requires_specific_diagnosis")
+    no = (
+        "own_405_alone_is_blocker", "new_approval_for_own_correction",
+        "unauthorized_rebase_or_force_push", "disable_github_protection",
+        "unapproved_pr_or_scope_expansion")
+    require(isinstance(req, dict) and set(req) == set(yes) | set(no) |
+            {"donor_max_modified_bytes"}, "mandatory requirement set mismatch")
+    for name in yes:
+        require(isinstance(req, dict) and req.get(name) is True,
+                "mandatory positive invariant: " + name)
+    for name in no:
+        require(isinstance(req, dict) and req.get(name) is False,
+                "mandatory forbidden behavior: " + name)
+    require(isinstance(req, dict) and type(req.get("donor_max_modified_bytes")) is int
+            and req.get("donor_max_modified_bytes") == 996147,
+            "donor file-size contract mismatch")
+    boundary = policy.get("admission_boundary")
+    require(isinstance(boundary, dict) and
+            boundary.get("bootstrap_structural_pass_is_runtime_proof") is False and
+            boundary.get("independent_execution_gate_pass") is False,
+            "unverified runtime PASS")
+    return errors
+
 def validate_policy_long_term_validation(policy):
-    """Validate the approved rule contract; never assert prolonged runtime proof."""
-    issues = []
+    """Enforce exact owner-approved text; structural checks do not prove runtime stability."""
+    problems = []
     if not isinstance(policy, dict):
         return ["long-term validation: policy must be an object"]
     def require(ok, reason):
         if not ok:
-            issues.append("long-term validation: " + reason)
-    require(set(policy) == {
+            problems.append("long-term validation: " + reason)
+    root_keys = [
         "schema", "id", "title_hu", "status", "owner_decision_date",
-        "classification", "scope", "mandatory_clauses", "verification_states",
-        "evidence_fields", "requirements", "admission_boundary"
-    }, "required root fields")
+        "classification", "scope", "mandatory_clauses", "mandatory_evidence_provisions",
+        "verification_states", "evidence_fields", "evidence_binding",
+        "requirements", "admission_boundary"
+    ]
+    require(set(policy) == set(root_keys), "required root fields")
     require(policy.get("schema") == "cfa3.policy-long-term-validation.v1", "schema")
     require(policy.get("id") == "CFA3-POLICY-LONG-TERM-VALIDATION-001", "identity")
-    require(policy.get("status") == "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF", "status")
-    require(policy.get("owner_decision_date") == "2026-10-12", "approval date")
-    codes = [
-        "CONTINUOUS_RULE_OBSERVATION", "NO_PREMATURE_STABLE_CLAIM",
-        "LONG_TERM_INDEPENDENT_EVIDENCE", "MANDATORY_EVIDENCE_BACKED_CONFIRMATION",
-        "TRACEABLE_CONFIRMATION_RECORD", "NO_ABSENCE_OF_ERROR_AS_PROOF",
-        "REOPEN_ON_CONTRADICTING_EVIDENCE", "NO_UNSOLICITED_EARLY_NOTIFICATIONS"
-    ]
+    require(policy.get("title_hu") == "Tartós szabályműködés visszaigazolása", "title")
+    require(policy.get("owner_decision_date") == "2026-10-12", "decision date")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
+            "runtime not proven")
+    require(policy.get("classification") == "MANDATORY_CFA3_POLICY_OBSERVATION_AND_EVIDENCE",
+            "classification")
+    approved_codes = ["CONTINUOUS_RULE_OBSERVATION","NO_PREMATURE_STABLE_CLAIM","LONG_TERM_INDEPENDENT_EVIDENCE","MANDATORY_EVIDENCE_BACKED_CONFIRMATION","TRACEABLE_CONFIRMATION_RECORD","NO_ABSENCE_OF_ERROR_AS_PROOF","REOPEN_ON_CONTRADICTING_EVIDENCE","NO_UNSOLICITED_EARLY_NOTIFICATIONS"]
+    approved_texts = [
+    "A fejlesztő köteles figyelemmel kísérni a szabályok tényleges működését azok alkalmazása során.",
+    "Két-három sikeres alkalmazás nem elegendő annak kijelentésére, hogy a szabály bizonyítottan megfelelően működik.",
+    "A visszaigazolásnak hosszabb időszakban, több egymástól független alkalmazási helyzetben szerzett, ellenőrizhető tapasztalatokon kell alapulnia.",
+    "Amennyiben a fejlesztő elegendő bizonyítékot gyűjtött a szabály tartósan megfelelő működésére, köteles ezt egyértelműen visszaigazolni.",
+    "A visszaigazolásnak tartalmaznia kell a megfigyelési időszakot, az alkalmazási eseteket, a sikeres és sikertelen eredményeket, valamint a következtetés alapját.",
+    "Az AI nem tekintheti a szabályt bizonyítottan működőnek pusztán azért, mert nem észlelt hibát.",
+    "A korábban igazolt szabály működési problémáját később is jelezni kell, és szükség esetén felül kell vizsgálni a visszaigazolását.",
+    "Az AI nem küldhet néhány sikeres alkalmazás után olyan értesítést, amely tartósan bizonyított működést állít."
+]
+    approved_provisions = [
+    "A sikeres működés igazolása nem alapulhat önkényesen megválasztott darabszámon.",
+    "A bizonyítás időtartamát és mélységét a szabály jellege, alkalmazási gyakorisága és kockázata határozza meg.",
+    "A kötelező visszaigazolás viszont nem maradhat el, ha a tartós működést megfelelő bizonyítékok igazolják."
+]
     clauses = policy.get("mandatory_clauses")
-    require(isinstance(clauses, list) and len(clauses) == len(codes), "clause count")
+    require(isinstance(clauses, list) and len(clauses) == 8, "clause count")
     if isinstance(clauses, list):
-        require(all(isinstance(x, dict) and set(x) == {"id", "code", "text_hu"}
-                    for x in clauses), "clause fields")
-        require([(x.get("id"), x.get("code")) for x in clauses if isinstance(x, dict)]
-                == [(f"LTV-{i:02d}", code) for i, code in enumerate(codes, 1)],
-                "clause identity and order")
-        require(all(isinstance(x.get("text_hu"), str) and
-                    len(x["text_hu"].strip()) >= 80 for x in clauses
-                    if isinstance(x, dict)), "mandatory clause wording")
-    states = policy.get("verification_states")
-    expected_states = ["NOT_OBSERVED", "OBSERVING", "PRELIMINARY_PASS",
-                       "VERIFIED_STABLE", "REVIEW_REQUIRED"]
-    require(isinstance(states, list) and len(states) == len(expected_states),
-            "verification state count")
-    if isinstance(states, list):
-        require(all(isinstance(x, dict) and set(x) == {"code", "meaning_hu"}
-                    for x in states), "verification state fields")
-        require([x.get("code") for x in states if isinstance(x, dict)]
-                == expected_states, "verification states")
-        require(all(isinstance(x.get("meaning_hu"), str) and bool(x["meaning_hu"].strip())
-                    for x in states if isinstance(x, dict)), "verification meanings")
-    evidence = [
-        "policy_id", "observation_period_start", "observation_period_end",
-        "independent_contexts", "verifiable_case_references", "successful_outcomes",
-        "failed_outcomes", "inconclusive_outcomes", "risks_and_applicability",
-        "reasoned_conclusion"
-    ]
-    require(policy.get("evidence_fields") == evidence, "traceable evidence fields")
-    flags = [
-        "observe_real_world_rule_effects_when_applied",
-        "two_or_three_successful_uses_are_not_stable_proof",
-        "independent_contexts_and_sustained_period_required",
-        "risk_and_frequency_dependent_evidence_sufficiency",
-        "confirmation_required_when_evidence_is_sufficient",
-        "evidence_and_failures_recorded",
-        "absence_of_detected_failures_is_not_proof",
-        "evidence_can_reopen_verified_state",
-        "no_unrequested_early_stable_success_alert",
-        "no_unapproved_auxiliary_work_or_policy_change",
-        "no_arbitrary_fixed_pass_count"
-    ]
-    req = policy.get("requirements")
-    require(isinstance(req, dict) and set(req) == set(flags), "required flags")
-    require(isinstance(req, dict) and all(req.get(k) is True for k in flags),
-            "mandatory flag disabled")
-    boundary = policy.get("admission_boundary")
-    expected_boundary = {
+        require(all(isinstance(c, dict) and set(c) == {"id", "code", "text_hu"}
+                    for c in clauses), "mandatory clause fields")
+        require([(c.get("id"), c.get("code"), c.get("text_hu"))
+                 for c in clauses if isinstance(c, dict)] ==
+                [(f"LTV-{i + 1:02d}", approved_codes[i], approved_texts[i])
+                 for i in range(8)], "approved clause wording changed")
+    require(policy.get("mandatory_evidence_provisions") == approved_provisions,
+            "approved proof limitations changed")
+    expected_states = [
+    {
+        "code": "NOT_OBSERVED",
+        "meaning_hu": "Nincs elegendő működési tapasztalat"
+    },
+    {
+        "code": "OBSERVING",
+        "meaning_hu": "Megfigyelés alatt"
+    },
+    {
+        "code": "PRELIMINARY_PASS",
+        "meaning_hu": "Vannak sikeres esetek, de nincs tartós bizonyíték"
+    },
+    {
+        "code": "VERIFIED_STABLE",
+        "meaning_hu": "Tartós, ellenőrizhető működés igazolt"
+    },
+    {
+        "code": "REVIEW_REQUIRED",
+        "meaning_hu": "Korábbi igazolást érintő probléma merült fel"
+    }
+]
+    require(policy.get("verification_states") == expected_states, "verification state drift")
+    evidence_fields = [
+    "policy_id",
+    "rule_id",
+    "policy_revision_sha256",
+    "observation_period_start",
+    "observation_period_end",
+    "independent_contexts",
+    "verifiable_case_references",
+    "successful_outcomes",
+    "failed_outcomes",
+    "inconclusive_outcomes",
+    "risks_and_applicability",
+    "reasoned_conclusion"
+]
+    require(policy.get("evidence_fields") == evidence_fields, "rule revision evidence fields")
+    expected_binding = {
+        "rule_id_source": "CANONICAL_RULE_ID_WITHIN_POLICY",
+        "policy_revision_digest_source": "SHA256_OF_EXACT_CANONICAL_POLICY_FILE_BYTES",
+        "verified_stable_requires_matching_rule_id_and_policy_revision_sha256": True,
+        "unverified_or_stale_digest_must_not_claim_verified_stable": True
+    }
+    require(policy.get("evidence_binding") == expected_binding, "version-bound proof")
+    required_flags = [
+    "absence_of_detected_failures_is_not_proof",
+    "confirmation_required_when_evidence_is_sufficient",
+    "evidence_and_failures_recorded",
+    "evidence_can_reopen_verified_state",
+    "independent_contexts_and_sustained_period_required",
+    "no_arbitrary_fixed_pass_count",
+    "no_unapproved_auxiliary_work_or_policy_change",
+    "no_unrequested_early_stable_success_alert",
+    "observe_real_world_rule_effects_when_applied",
+    "proof_evidence_must_bind_exact_rule_revision",
+    "risk_and_frequency_dependent_evidence_sufficiency",
+    "two_or_three_successful_uses_are_not_stable_proof"
+]
+    flags = policy.get("requirements")
+    require(isinstance(flags, dict) and set(flags) == set(required_flags), "requirement set")
+    require(isinstance(flags, dict) and all(flags.get(k) is True for k in required_flags),
+            "mandatory requirement disabled")
+    require(policy.get("admission_boundary") == {
         "structural_bootstrap_pass_is_long_term_runtime_proof": False,
         "independent_runtime_observation_completed": False,
         "full_governance_admission_asserted": False
-    }
-    require(boundary == expected_boundary, "false runtime-proof claim")
-    return issues
+    }, "runtime proof must remain pending")
+    return problems
 
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
@@ -722,7 +830,8 @@ def check(root=ROOT):
     errors.extend(validate_github_resource_404_policy(load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",root)))
     errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
     errors.extend(validate_rule_consistency_loop_prevention(load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json", root)))
-    errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json", root)))
+    errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
+    errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

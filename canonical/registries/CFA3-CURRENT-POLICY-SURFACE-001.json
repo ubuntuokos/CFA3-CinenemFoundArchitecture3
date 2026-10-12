@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 13,
+  "source_policy_count": 14,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -1344,6 +1344,391 @@
       ]
     },
     {
+      "path": "canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",
+      "git_blob_sha1": "e3ef1af2844e59679d480214a43df0c50cc6178c",
+      "canonical_id": "CFA3-GITHUB-MERGE-GATE-405-POLICY-001",
+      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "leaf_count": 94,
+      "leaves": [
+        [
+          "/admission_boundary/bootstrap_structural_pass_is_runtime_proof",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/independent_execution_gate_pass",
+          "boolean"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/allow_lossless_conflict_free_branch_sync",
+          "boolean"
+        ],
+        [
+          "/requirements/ci_pass_not_merge_gate_pass",
+          "boolean"
+        ],
+        [
+          "/requirements/disable_github_protection",
+          "boolean"
+        ],
+        [
+          "/requirements/donor_max_modified_bytes",
+          "integer"
+        ],
+        [
+          "/requirements/final_exact_state_check",
+          "boolean"
+        ],
+        [
+          "/requirements/historical_oversize_untouched_allowed",
+          "boolean"
+        ],
+        [
+          "/requirements/independent_blocker_requires_stop",
+          "boolean"
+        ],
+        [
+          "/requirements/live_required_status_checks",
+          "boolean"
+        ],
+        [
+          "/requirements/live_ruleset_and_strict_policy",
+          "boolean"
+        ],
+        [
+          "/requirements/new_approval_for_own_correction",
+          "boolean"
+        ],
+        [
+          "/requirements/own_405_alone_is_blocker",
+          "boolean"
+        ],
+        [
+          "/requirements/own_caused_405_self_repair_mandatory",
+          "boolean"
+        ],
+        [
+          "/requirements/post_merge_main_readback",
+          "boolean"
+        ],
+        [
+          "/requirements/pre_merge_exact_main_and_head",
+          "boolean"
+        ],
+        [
+          "/requirements/pre_merge_file_integrity",
+          "boolean"
+        ],
+        [
+          "/requirements/pre_merge_overlap_conflicts",
+          "boolean"
+        ],
+        [
+          "/requirements/require_mergeable_state_clean",
+          "boolean"
+        ],
+        [
+          "/requirements/required_checks_current_commit",
+          "boolean"
+        ],
+        [
+          "/requirements/required_review_resolution",
+          "boolean"
+        ],
+        [
+          "/requirements/resume_original_main_task",
+          "boolean"
+        ],
+        [
+          "/requirements/stop_requires_deterministic_evidence",
+          "boolean"
+        ],
+        [
+          "/requirements/unapproved_pr_or_scope_expansion",
+          "boolean"
+        ],
+        [
+          "/requirements/unauthorized_rebase_or_force_push",
+          "boolean"
+        ],
+        [
+          "/requirements/unknown_405_requires_specific_diagnosis",
+          "boolean"
+        ],
+        [
+          "/rule/code",
+          "string"
+        ],
+        [
+          "/rule/runtime_verified",
+          "boolean"
+        ],
+        [
+          "/rule/text_hu",
+          "string"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/sections/0/number",
+          "integer"
+        ],
+        [
+          "/sections/0/text_hu",
+          "string"
+        ],
+        [
+          "/sections/0/title",
+          "string"
+        ],
+        [
+          "/sections/1/number",
+          "integer"
+        ],
+        [
+          "/sections/1/text_hu",
+          "string"
+        ],
+        [
+          "/sections/1/title",
+          "string"
+        ],
+        [
+          "/sections/2/number",
+          "integer"
+        ],
+        [
+          "/sections/2/text_hu",
+          "string"
+        ],
+        [
+          "/sections/2/title",
+          "string"
+        ],
+        [
+          "/sections/3/number",
+          "integer"
+        ],
+        [
+          "/sections/3/text_hu",
+          "string"
+        ],
+        [
+          "/sections/3/title",
+          "string"
+        ],
+        [
+          "/sections/4/number",
+          "integer"
+        ],
+        [
+          "/sections/4/text_hu",
+          "string"
+        ],
+        [
+          "/sections/4/title",
+          "string"
+        ],
+        [
+          "/sections/5/number",
+          "integer"
+        ],
+        [
+          "/sections/5/text_hu",
+          "string"
+        ],
+        [
+          "/sections/5/title",
+          "string"
+        ],
+        [
+          "/sections/6/number",
+          "integer"
+        ],
+        [
+          "/sections/6/text_hu",
+          "string"
+        ],
+        [
+          "/sections/6/title",
+          "string"
+        ],
+        [
+          "/sections/7/number",
+          "integer"
+        ],
+        [
+          "/sections/7/text_hu",
+          "string"
+        ],
+        [
+          "/sections/7/title",
+          "string"
+        ],
+        [
+          "/sections/8/number",
+          "integer"
+        ],
+        [
+          "/sections/8/text_hu",
+          "string"
+        ],
+        [
+          "/sections/8/title",
+          "string"
+        ],
+        [
+          "/sections/9/number",
+          "integer"
+        ],
+        [
+          "/sections/9/text_hu",
+          "string"
+        ],
+        [
+          "/sections/9/title",
+          "string"
+        ],
+        [
+          "/sections/10/number",
+          "integer"
+        ],
+        [
+          "/sections/10/text_hu",
+          "string"
+        ],
+        [
+          "/sections/10/title",
+          "string"
+        ],
+        [
+          "/sections/11/number",
+          "integer"
+        ],
+        [
+          "/sections/11/text_hu",
+          "string"
+        ],
+        [
+          "/sections/11/title",
+          "string"
+        ],
+        [
+          "/sections/12/number",
+          "integer"
+        ],
+        [
+          "/sections/12/text_hu",
+          "string"
+        ],
+        [
+          "/sections/12/title",
+          "string"
+        ],
+        [
+          "/sections/13/number",
+          "integer"
+        ],
+        [
+          "/sections/13/text_hu",
+          "string"
+        ],
+        [
+          "/sections/13/title",
+          "string"
+        ],
+        [
+          "/sections/14/number",
+          "integer"
+        ],
+        [
+          "/sections/14/text_hu",
+          "string"
+        ],
+        [
+          "/sections/14/title",
+          "string"
+        ],
+        [
+          "/sections/15/number",
+          "integer"
+        ],
+        [
+          "/sections/15/text_hu",
+          "string"
+        ],
+        [
+          "/sections/15/title",
+          "string"
+        ],
+        [
+          "/sections/16/number",
+          "integer"
+        ],
+        [
+          "/sections/16/text_hu",
+          "string"
+        ],
+        [
+          "/sections/16/title",
+          "string"
+        ],
+        [
+          "/sections/17/number",
+          "integer"
+        ],
+        [
+          "/sections/17/text_hu",
+          "string"
+        ],
+        [
+          "/sections/17/title",
+          "string"
+        ],
+        [
+          "/sections/18/number",
+          "integer"
+        ],
+        [
+          "/sections/18/text_hu",
+          "string"
+        ],
+        [
+          "/sections/18/title",
+          "string"
+        ],
+        [
+          "/sections/19/number",
+          "integer"
+        ],
+        [
+          "/sections/19/text_hu",
+          "string"
+        ],
+        [
+          "/sections/19/title",
+          "string"
+        ],
+        [
+          "/status",
+          "string"
+        ],
+        [
+          "/version",
+          "string"
+        ]
+      ]
+    },
+    {
       "path": "canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",
       "git_blob_sha1": "7301955dc5336183f5aeaa813b1b6aac136fc562",
       "canonical_id": "CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001",
@@ -2200,10 +2585,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",
-      "git_blob_sha1": "1168ba2c2530f80004c76f72922d6cb98c47adef",
+      "git_blob_sha1": "39ae8a81414fe5895a07927eb7d3c2a1fd7bb5d0",
       "canonical_id": "CFA3-POLICY-LONG-TERM-VALIDATION-001",
       "source_status": "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
-      "leaf_count": 67,
+      "leaf_count": 77,
       "leaves": [
         [
           "/admission_boundary/full_governance_admission_asserted",
@@ -2220,6 +2605,22 @@
         [
           "/classification",
           "string"
+        ],
+        [
+          "/evidence_binding/policy_revision_digest_source",
+          "string"
+        ],
+        [
+          "/evidence_binding/rule_id_source",
+          "string"
+        ],
+        [
+          "/evidence_binding/unverified_or_stale_digest_must_not_claim_verified_stable",
+          "boolean"
+        ],
+        [
+          "/evidence_binding/verified_stable_requires_matching_rule_id_and_policy_revision_sha256",
+          "boolean"
         ],
         [
           "/evidence_fields/0",
@@ -2259,6 +2660,14 @@
         ],
         [
           "/evidence_fields/9",
+          "string"
+        ],
+        [
+          "/evidence_fields/10",
+          "string"
+        ],
+        [
+          "/evidence_fields/11",
           "string"
         ],
         [
@@ -2362,6 +2771,18 @@
           "string"
         ],
         [
+          "/mandatory_evidence_provisions/0",
+          "string"
+        ],
+        [
+          "/mandatory_evidence_provisions/1",
+          "string"
+        ],
+        [
+          "/mandatory_evidence_provisions/2",
+          "string"
+        ],
+        [
           "/owner_decision_date",
           "string"
         ],
@@ -2399,6 +2820,10 @@
         ],
         [
           "/requirements/observe_real_world_rule_effects_when_applied",
+          "boolean"
+        ],
+        [
+          "/requirements/proof_evidence_must_bind_exact_rule_revision",
           "boolean"
         ],
         [

@@ -2,7 +2,7 @@
 
 **Megnevezés:** Kötelező szekvenciális feladatvégrehajtás, tényleges eredményközlés és ellenőrzési ciklusok megelőzése
 
-**Verzió:** 1.1  
+**Verzió:** 1.2  
 **Státusz:** TULAJDONOS ÁLTAL ELRENDELT P1/P2 HIBAJAVÍTÁS – KANONIKUS FELVÉTEL ALATT  
 **Hatály:** CFA3 teljes fejlesztési rendszere, kiemelten a donoradatbázis feldolgozása
 
@@ -219,7 +219,7 @@ A szabály minden olyan CFA3-munkafolyamatban alkalmazandó, amely több egymás
 
 A donoradatbázisra különösen kötelező:
 
-**Egy forrásfájl → teljes feldolgozás → célzott ellenőrzés → lezárás → publikáció → bizonyított eredmény → következő forrásfájl.**
+**Egy forrásfájl → teljes feldolgozás → célzott ellenőrzés → publikációra kész állapot igazolása → publikáció → publikált állapot igazolása → végleges lezárás → következő forrásfájl.**
 
 Más CFA3-munkafolyamatokra azonos elv szerint alkalmazandó, azok saját lezárási és publikációs feltételeivel.
 

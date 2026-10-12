@@ -1103,12 +1103,12 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
     need(policy.get("id") == "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001", "identity")
     need(policy.get("title_hu") == "Kötelező szekvenciális feladatvégrehajtás, tényleges eredményközlés és ellenőrzési ciklusok megelőzése", "exact approved JSON title")
     need(policy.get("status") == "OWNER_APPROVED", "approval does not mean merge")
-    need(policy.get("version") == "1.1" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
+    need(policy.get("version") == "1.2" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
     need(policy.get("classification") == "MANDATORY_CFA3_SEQUENTIAL_EXECUTION_AND_RESULT_INTEGRITY", "classification")
     need(policy.get("scope") == ["CFA3 fejlesztési munkafolyamatok", "donoradatbázis-feldolgozás",
                                "GitHub publikáció", "tájékoztatás"], "scope")
     path = "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.md"
-    digest = "5e7d47874695f877033e85acb84ab537ea7e4b17676e308ae1a832b4d9eb4b91"
+    digest = "d0b0e07a9b36b0773643938d2f196ab6cf2af740689fde5691025c1aeb483a6a"
     need(policy.get("approved_text_path") == path and
          policy.get("approved_text_sha256") == digest, "approved source integrity")
     need(policy.get("approved_section_count") == 14, "14 sections")
@@ -1136,7 +1136,16 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
         "previous_markdown_sha256": "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b",
         "prior_merge_commit": "7cc091e8acef0d821932a8845e26f9d5d2c66846",
         "correction_scope": "P1_PREPUBLICATION_READINESS_AND_P2_EXACT_JSON_TITLE",
-        "authorization": "USER_CONTINUE_AFTER_EXPLICIT_P1_P2_DISCLOSURE_2026-10-12"
+        "authorization": "USER_CONTINUE_AFTER_EXPLICIT_P1_P2_DISCLOSURE_2026-10-12",
+        "followup_correction": {
+            "previous_version": "1.1",
+            "previous_markdown_sha256": "5e7d47874695f877033e85acb84ab537ea7e4b17676e308ae1a832b4d9eb4b91",
+            "previous_merge_commit": "95a7f9a6ff6eab26fc7858cde8753ce22f095a7f",
+            "reason": "P1_REVIEW_41_SECTION13_SEQUENCE_CONTRADICTED_SECTION9",
+            "change_scope": "SECTION13_MANDATORY_SEQUENCE_ONLY",
+            "authorization": "USER_CONTINUE_2026-10-12",
+            "latest_revision_verbatim_owner_approval_independently_proven": False
+        }
     }, "immutable prior revision provenance")
     flags = policy.get("requirements")
     need(isinstance(flags, dict) and set(flags) == required_flags and
@@ -1162,6 +1171,7 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
                    "8. A tényleges publikált állapotot igazolni, és csak ezt követően a fájlt véglegesen lezárni.",
                    "READY_FOR_PUBLICATION",
                    "A végleges fájllezárás kizárólag mind a nyolc feltétel teljesülése után igazolható.",
+                   "Egy forrásfájl → teljes feldolgozás → célzott ellenőrzés → publikációra kész állapot igazolása → publikáció → publikált állapot igazolása → végleges lezárás → következő forrásfájl.",
                    "Egy feldolgozási egység – teljes lezárás",
                    "Ismétlődő ellenőrzések tilalma",
                    "A donorszám növekedésének ellenőrizhetősége",
@@ -1170,6 +1180,8 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
                    "Eredményközlés és válaszok megőrzése",
                    "A szabályszöveg jóváhagyása nem azonos a GitHubon végrehajtott véglegesítéssel."):
         need(phrase in approved, "mandatory approved clause: " + phrase)
+    need("célzott ellenőrzés → lezárás → publikáció" not in approved,
+         "obsolete circular order must be removed")
     return errors
 
 

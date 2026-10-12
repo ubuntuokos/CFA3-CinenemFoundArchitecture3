@@ -25,7 +25,7 @@
     "no_scope_expansion": true,
     "only_proven_pass": true
   },
-  "approved_text_sha256": "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a",
+  "approved_text_sha256": "a16adffae8f164ee4f97c119657546921eeeca81e508661e76a3395949ae63f1",
   "rule": {
     "id": "CFA3-EXECUTION-PROOF-OBLIGATION-001",
     "code": "EXECUTE_APPROVED_TASK_AND_PROVE_RESULT",

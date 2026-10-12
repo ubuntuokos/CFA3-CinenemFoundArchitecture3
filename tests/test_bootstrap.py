@@ -633,7 +633,7 @@ class BootstrapPolicyTests(unittest.TestCase):
         for field, invalid in (
                 ("status", "OWNER_APPROVED_MERGED_TO_MAIN"),
                 ("title_hu", "Jogosulatlanul módosított cím"),
-                ("version", "1.0"),
+                ("version", "1.1"),
                 ("revision_evidence", {"previous_version": "incorrect"}),
                 ("approved_text_sha256", "0" * 64),
                 ("approved_section_count", 13),
@@ -645,8 +645,13 @@ class BootstrapPolicyTests(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
         self.assertIn("READY_FOR_PUBLICATION", p["processing_state_machine"])
+        self.assertEqual("1.2", p["version"])
+        self.assertFalse(p["revision_evidence"]["followup_correction"]["latest_revision_verbatim_owner_approval_independently_proven"])
         self.assertTrue(p["requirements"]["publish_only_after_publication_readiness_proof"])
         self.assertNotIn("publish_only_after_full_file_closure_and_proofs", p["requirements"])
+        damaged = copy.deepcopy(p)
+        damaged["revision_evidence"]["followup_correction"]["latest_revision_verbatim_owner_approval_independently_proven"] = True
+        self.assertTrue(validate_sequential_execution_result_integrity(damaged, ROOT))
         for key in p["requirements"]:
             damaged = copy.deepcopy(p)
             damaged["requirements"][key] = False
@@ -664,6 +669,10 @@ class BootstrapPolicyTests(unittest.TestCase):
             target.write_bytes(original.replace(
                 "A donorszám növekedésének ellenőrizhetősége".encode("utf-8"),
                 "A donorszám növekedésének megkerülése".encode("utf-8"), 1))
+            self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
+            target.write_bytes(original.replace(
+                "célzott ellenőrzés → publikációra kész állapot igazolása → publikáció".encode("utf-8"),
+                "célzott ellenőrzés → lezárás → publikáció".encode("utf-8"), 1))
             self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
             target.write_bytes(original[:len(original)//2])
             self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))

@@ -1439,7 +1439,7 @@ def validate_conversation_recovery_policy(policy, root=ROOT):
     from pathlib import Path
     issues = []
     expected_path = "canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.md"
-    expected_digest = "8ddc2700116b8b78dd8e197a2668c538fa1019047f135bf24917c7ae1ea245c3"
+    expected_digest = "848c334c87e643f39e8761b86fd8ef23ad2686016023ef6681d27ccfaeea7e8c"
     expected_keys = {
         "precise_conversation_identification", "retrievable_source_use",
         "prior_approval_preservation", "verbatim_source_preservation",
@@ -1480,6 +1480,8 @@ def validate_conversation_recovery_policy(policy, root=ROOT):
     except (OSError, UnicodeError):
         return issues + ["conversation recovery policy: approved text unavailable"]
     need(hashlib.sha256(raw).hexdigest() == expected_digest, "verbatim owner text altered")
+    need(owner_text.count("**Státusz:** JÓVÁHAGYVA") == 1 and "JÓVÁHAGYÁSRA VÁR" not in owner_text,
+         "approved heading status")
     headings = re.findall(r"^## ([0-9]+)[.] ", owner_text, flags=re.MULTILINE)
     need([int(x) for x in headings] == list(range(1, 16)), "15 section headings")
     for phrase in (

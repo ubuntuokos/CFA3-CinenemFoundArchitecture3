@@ -6,7 +6,7 @@
   "owner_decision_date": "2026-10-12",
   "version": "1.0",
   "approved_text_path": "canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.md",
-  "approved_text_sha256": "8ddc2700116b8b78dd8e197a2668c538fa1019047f135bf24917c7ae1ea245c3",
+  "approved_text_sha256": "848c334c87e643f39e8761b86fd8ef23ad2686016023ef6681d27ccfaeea7e8c",
   "approved_section_count": 15,
   "classification": "MANDATORY_CFA3_WORKFLOW_POLICY",
   "scope": "Minden CFA3-fejlesztés, szabályalkotás, jóváhagyás, véglegesítés és korábbi beszélgetésre épülő művelet.",

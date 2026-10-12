@@ -3,7 +3,7 @@
 **Megnevezés:** Korábbi beszélgetések hiteles visszakeresése, jóváhagyások megőrzése és a végrehajtás indokolatlan akadályozásának tilalma
 
 **Verzió:** 1.0\
-**Státusz:** JÓVÁHAGYÁSRA VÁR\
+**Státusz:** JÓVÁHAGYVA\
 **Hatály:** Minden CFA3-fejlesztés, szabályalkotás, jóváhagyás, véglegesítés és korábbi beszélgetésre épülő művelet.
 
 ## 1. Alapelv

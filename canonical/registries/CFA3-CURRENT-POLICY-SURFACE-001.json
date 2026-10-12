@@ -3381,10 +3381,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json",
-      "git_blob_sha1": "0e0314607dfb81715d7a87087693bed1809c42a4",
+      "git_blob_sha1": "3d004d2e4ec6252e82cfc210a668f4520f99ae81",
       "canonical_id": "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001",
       "source_status": "OWNER_APPROVED",
-      "leaf_count": 60,
+      "leaf_count": 67,
       "leaves": [
         [
           "/admission_boundary/ci_alone_is_finalization",
@@ -3580,6 +3580,34 @@
         ],
         [
           "/revision_evidence/correction_scope",
+          "string"
+        ],
+        [
+          "/revision_evidence/followup_correction/authorization",
+          "string"
+        ],
+        [
+          "/revision_evidence/followup_correction/change_scope",
+          "string"
+        ],
+        [
+          "/revision_evidence/followup_correction/latest_revision_verbatim_owner_approval_independently_proven",
+          "boolean"
+        ],
+        [
+          "/revision_evidence/followup_correction/previous_markdown_sha256",
+          "string"
+        ],
+        [
+          "/revision_evidence/followup_correction/previous_merge_commit",
+          "string"
+        ],
+        [
+          "/revision_evidence/followup_correction/previous_version",
+          "string"
+        ],
+        [
+          "/revision_evidence/followup_correction/reason",
           "string"
         ],
         [

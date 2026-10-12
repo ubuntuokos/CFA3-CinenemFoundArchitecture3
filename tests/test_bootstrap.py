@@ -22,6 +22,18 @@ class BootstrapPolicyTests(unittest.TestCase):
         from check_bootstrap import validate_conversation_recovery_policy
         policy = load("canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.json")
         self.assertEqual([], validate_conversation_recovery_policy(policy))
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / policy["approved_text_path"]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            owner_text = (ROOT / policy["approved_text_path"]).read_text("utf-8")
+            self.assertEqual(1, owner_text.count("**Státusz:** JÓVÁHAGYVA"))
+            self.assertNotIn("JÓVÁHAGYÁSRA VÁR", owner_text)
+            target.write_text(owner_text.replace(
+                "**Státusz:** JÓVÁHAGYVA", "**Státusz:** JÓVÁHAGYÁSRA VÁR", 1), "utf-8")
+            self.assertTrue(any("approved heading status" in issue for issue in
+                                validate_conversation_recovery_policy(policy, tmp)))
         altered = copy.deepcopy(policy)
         altered["requirements"]["verified_closure_only"] = False
         self.assertTrue(validate_conversation_recovery_policy(altered))

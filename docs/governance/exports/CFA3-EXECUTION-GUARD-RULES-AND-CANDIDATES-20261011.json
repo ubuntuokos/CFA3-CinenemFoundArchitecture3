@@ -18,7 +18,7 @@
     "added_active": 56,
     "excluded_on_conflict": 0
   },
-  "important": "A tulajdonos korábban jóváhagyott 78 történeti szabálya megőrzött (22 meglévő DEV/AI azonosító, 56 új szabály; kizárás 0). A külön, korábbi RULE-ADMISSION-001 szabályra önálló #18 PR vonatkozik. Jelen külön tulajdonosi feladat a CFA3-SEQUENTIAL-COMMAND-001 szabály felvétele, amely a 81 aktív szabály számát 82 aktív szabályra növeli. Az új szabályt kizárólag önálló ágon, saját PR-ben vezeti be; a #18 PR tartalmát nem bővíti. Runtime bizonyíték PENDING, a történeti 78/78 forrás változatlan. A külön jóváhagyott végrehajtás- és bizonyítási szabály a #46 PR-en 83. aktív szabályként került felvételre; runtime bizonyíték külön szükséges.",
+  "important": "A tulajdonos korábban jóváhagyott 78 történeti szabálya megőrzött (22 meglévő DEV/AI azonosító, 56 új szabály; kizárás 0). A külön, korábbi RULE-ADMISSION-001 szabályra önálló #18 PR vonatkozik. Jelen külön tulajdonosi feladat a CFA3-SEQUENTIAL-COMMAND-001 szabály felvétele, amely a 81 aktív szabály számát 82 aktív szabályra növeli. Az új szabályt kizárólag önálló ágon, saját PR-ben vezeti be; a #18 PR tartalmát nem bővíti. Runtime bizonyíték PENDING, a történeti 78/78 forrás változatlan. A külön jóváhagyott végrehajtás- és bizonyítási szabály a #46 PR-en 83 aktív szabályként került felvételre; runtime bizonyíték külön szükséges.",
   "current_rules": [
     {
       "type": "CURRENT_CANONICAL_RULE",

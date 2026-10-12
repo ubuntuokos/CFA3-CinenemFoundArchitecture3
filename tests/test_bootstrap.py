@@ -525,6 +525,35 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad_historical["recorded_verdict"] = "FULLY_FINALIZED"
         self.assertTrue(validate_exact_finalization_evidence_correction(
             correction, bad_historical))
+        # Alter a field that was previously not individually inspected:
+        # the real historical file and the supplied object must both be pinned.
+        other_historical = copy.deepcopy(historical)
+        other_historical["subject"]["policy_id"] = "TAMPERED"
+        self.assertTrue(validate_exact_finalization_evidence_correction(
+            correction, other_historical))
+        from pathlib import Path
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / correction["supersedes_status_claim_only"]
+            target.parent.mkdir(parents=True)
+            raw = (ROOT / correction["supersedes_status_claim_only"]).read_bytes()
+            target.write_bytes(raw)
+            self.assertEqual([], validate_exact_finalization_evidence_correction(
+                correction, historical, tmp))
+            # Byte-only change: JSON still parses to the exact same dict.
+            # The SHA check must nevertheless reject the altered Git blob.
+            target.write_bytes(raw + b" ")
+            self.assertTrue(validate_exact_finalization_evidence_correction(
+                correction, historical, tmp))
+            # Changes to previously unchecked fields must not pass either.
+            tampered = copy.deepcopy(historical)
+            tampered["observation"]["main_sha_at_observation"] = "0" * 40
+            target.write_text(json.dumps(tampered, ensure_ascii=False) + "\n", encoding="utf-8")
+            self.assertTrue(validate_exact_finalization_evidence_correction(
+                correction, tampered, tmp))
+            target.unlink()
+            self.assertTrue(validate_exact_finalization_evidence_correction(
+                correction, historical, tmp))
 
     def test_policy_exact_finalization_owner_text_positive_and_negative(self):
         from check_bootstrap import validate_policy_exact_finalization

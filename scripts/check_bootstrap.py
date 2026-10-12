@@ -898,7 +898,11 @@ def validate_policy_exact_finalization(policy, root=ROOT):
 
 
 
-def validate_exact_finalization_evidence_correction(correction, historical):
+def validate_exact_finalization_evidence_correction(correction, historical, root=ROOT):
+    """Fail closed unless the historical receipt's actual Git blob is unchanged."""
+    from pathlib import Path
+    import hashlib
+    import json
     """Fail closed on the unproven TEXT gate; preserve the historic erroneous receipt."""
     issues = []
     def expect(condition, message):
@@ -934,6 +938,25 @@ def validate_exact_finalization_evidence_correction(correction, historical):
     for field, value in fixed.items():
         expect(type(correction.get(field)) is type(value) and
                correction.get(field) == value, "mismatched " + field)
+    # The correction's stored SHA alone is not evidence that the historical
+    # receipt is still identical. Hash the actual raw bytes with Git's blob
+    # header (not the JSON serialization or the claimed value).
+    historical_path = Path(root) / fixed["supersedes_status_claim_only"]
+    try:
+        raw = historical_path.read_bytes()
+        on_disk = json.loads(raw.decode("utf-8"))
+        blob_sha = hashlib.sha1(
+            b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw
+        ).hexdigest()
+    except (OSError, UnicodeError, ValueError, TypeError):
+        expect(False, "historical receipt missing, unreadable or not valid JSON")
+    else:
+        expect(blob_sha == fixed["historical_receipt_git_blob_sha1"],
+               "historical receipt actual Git blob differs from pinned evidence")
+        expect(isinstance(on_disk, dict) and historical == on_disk,
+               "historical receipt argument does not match pinned file content")
+        expect(correction.get("historical_receipt_git_blob_sha1") == blob_sha,
+               "correction SHA does not match actual historical Git blob")
     source = correction.get("source_provenance")
     required_source = {
         "user_approval_known": True,

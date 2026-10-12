@@ -3032,10 +3032,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",
-      "git_blob_sha1": "2047895a927db0176f0cc292474182904db305d1",
+      "git_blob_sha1": "17ef12c59af9d9824f753cf2a45cc650f1393b85",
       "canonical_id": "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001",
       "source_status": "OWNER_APPROVED",
-      "leaf_count": 22,
+      "leaf_count": 23,
       "leaves": [
         [
           "/approved_section_count",
@@ -3043,6 +3043,10 @@
         ],
         [
           "/approved_text_path",
+          "string"
+        ],
+        [
+          "/approved_text_sha256",
           "string"
         ],
         [

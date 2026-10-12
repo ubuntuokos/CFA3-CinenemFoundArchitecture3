@@ -60,9 +60,11 @@ def verified_catalog():
         count[row["source_sets"][0]] += 1
         statuses[row["status"]] = statuses.get(row["status"], 0) + 1
         for url in dict.fromkeys([row["canonical_locator"], *row["original_locators"], row["canonical_locator_in_registry"]]):
-            if url in routes and routes[url] != pos:
-                raise ValueError("Conflicting original URL route")
-            routes[url] = pos
+            if url in routes:
+                if doc["records"][routes[url]]["donor_id"] != source_id:
+                    raise ValueError("Conflicting donor identity for URL route")
+            else:
+                routes[url] = pos
     if (count != required["source_set_counts"]
             or statuses != required["status_counts"]
             or by_id != doc.get("lookup_by_id")

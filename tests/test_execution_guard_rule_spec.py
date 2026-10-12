@@ -85,7 +85,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
             surface_target=custom_root/SURFACE
             surface_target.parent.mkdir(parents=True,exist_ok=True)
             surface_target.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-            altered_export["current_rules"][-2]["source_git_blob_sha1"]=forged_sha
+            altered_export["current_rules"][-3]["source_git_blob_sha1"]=forged_sha
             issues=validate(altered_spec,self.gov,self.coverage,altered_export,root=custom_root)
             self.assertTrue(any("owner-approved rule text changed" in x for x in issues),issues)
 
@@ -142,7 +142,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
 
     def test_rule_admission_proof_mode_requires_approved_value(self):
         tampered=copy.deepcopy(self.spec)
-        tampered["active_rules"][-2]["proof_mode"]="NO_PROOF_REQUIRED"
+        tampered["active_rules"][-3]["proof_mode"]="NO_PROOF_REQUIRED"
         self.assertIn("rule admission proof mode changed",self.check(spec=tampered))
 
     def test_export_post_historical_admission_count_cannot_drift(self):
@@ -207,7 +207,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
             "source_json_pointer":"/wrong",
             "source_git_blob_sha1":"0"*40,
         }
-        for index in (-2,-1):
+        for index in (-3,-2,-1):
             for field,value in tamper.items():
                 with self.subTest(index=index,field=field):
                     bad=copy.deepcopy(self.export)

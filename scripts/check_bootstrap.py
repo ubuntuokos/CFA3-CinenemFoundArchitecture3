@@ -446,6 +446,59 @@ def validate_donor_file_size_policy(policy):
     return issues
 
 
+def validate_github_resource_404_policy(policy):
+    """Owner-approved 404 resource-order contract; structural check, not runtime proof."""
+    issues = []
+    def require(condition, message):
+        if not condition:
+            issues.append("github 404 resource policy: " + message)
+    if not isinstance(policy, dict):
+        return ["github 404 resource policy: not an object"]
+    require(policy.get("schema") == "cfa3.github-resource-existence-404-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified admission status")
+    require(policy.get("owner_decision_date") == "2026-10-12", "owner decision date drift")
+    rule = policy.get("rule", {})
+    rule = rule if isinstance(rule, dict) else {}
+    require(rule.get("id") == "CFA3-GITHUB-RESOURCE-EXISTENCE-404-001" and
+            rule.get("code") == "VERIFY_EXISTENCE_CREATE_READBACK_BEFORE_DEPENDENT_OPERATION",
+            "rule identity mismatch")
+    require(isinstance(rule.get("text_hu"), str) and len(rule["text_hu"]) > 200,
+            "mandatory Hungarian normative text missing")
+    require(rule.get("runtime_verified") is False, "unproven runtime verification")
+    expected_sequence = ["VERIFY_REPOSITORY_ID_AND_PERMISSION","VERIFY_ACTUAL_MAIN_SHA","VERIFY_OR_AUTHORIZE_AND_CREATE_TARGET_BRANCH_FROM_MAIN","READ_BACK_TARGET_BRANCH_AND_SHA","PREPARE_ONLY_SCOPED_FILES","VERIFY_HEAD_AND_ATTACH_COMMIT","CREATE_PR_FROM_EXISTING_VERIFIED_HEAD_TO_VERIFIED_BASE","VERIFY_LIVE_CI_RULESET_AND_MERGE_GATE","MERGE_ONLY_IF_APPROVED_AND_ALL_GATES_PASS"]
+    require(policy.get("mandatory_sequence") == expected_sequence, "resource dependency order drift")
+    required_flags = ["verify_resource_before_dependent_operation","verify_repository_owner_name_and_permissions","verify_actual_default_branch_and_main_sha","existing_branch_must_not_be_recreated","missing_branch_creation_requires_explicit_task_authority","branch_creation_uses_verified_main_sha","created_branch_requires_github_readback_and_sha","verify_file_path_and_create_vs_update","fresh_head_sha_before_commit","verify_commit_linked_to_target_branch","pr_requires_existing_verified_source_and_base","never_confuse_pr_head_and_base","inspect_current_rulesets_ci_approvals_threads_mergeability","fresh_main_and_head_before_write_or_merge","retain_exact_state_and_operation_proof","expected_not_found_probe_is_not_automatic_execution_failure","http_404_does_not_prove_nonexistence_when_access_is_uncertain","self_caused_technical_404_requires_narrow_self_correction","correction_must_preserve_scope_policy_and_authority","unresolved_permission_or_state_requires_stop_and_report","report_each_mutation_with_sha_and_next_action","no_main_direct_write","no_unapproved_branch_pr_rebase_workflow_or_bypass"]
+    flags = policy.get("requirements", {})
+    require(isinstance(flags, dict) and set(flags) == set(required_flags), "requirements set changed")
+    for key in required_flags:
+        require(isinstance(flags, dict) and flags.get(key) is True, "mandatory requirement absent: " + key)
+    expected_cases = ["TARGET_BRANCH_NOT_YET_CREATED","TARGET_BRANCH_ALREADY_EXISTS","WRONG_REPOSITORY_OR_PATH","READ_OF_NONEXISTENT_FILE","MISSING_PERMISSION_OR_CONCEALED_RESOURCE","PREVIOUSLY_VERIFIED_RESOURCE_NOW_404","UNKNOWN_404_CAUSE"]
+    cases = policy.get("http_404_cases")
+    require(isinstance(cases, list) and [c.get("case") for c in cases if isinstance(c, dict)] == expected_cases and
+            len(cases) == len(expected_cases), "404 case matrix drift")
+    if isinstance(cases, list):
+        require(all(isinstance(c, dict) and isinstance(c.get("action"), str) and c["action"]
+                    for c in cases), "404 response action missing")
+        permission = next((c for c in cases if isinstance(c, dict) and
+                           c.get("case") == "MISSING_PERMISSION_OR_CONCEALED_RESOURCE"), {})
+        require(permission.get("action") == "STOP_AND_REPORT", "permission denial must STOP")
+    handler = policy.get("error_handling", {})
+    handler = handler if isinstance(handler, dict) else {}
+    require(handler.get("own_correctable_404_alone_is_blocker") is False,
+            "correctable own 404 must not be blocker")
+    require(handler.get("other_blocker_prevents_repair") == "STOP_AND_REPORT",
+            "real blocker must STOP")
+    require(handler.get("ambiguous_or_changed_external_state") == "STOP_AND_REPORT",
+            "uncertain state must STOP")
+    require(handler.get("not_every_404_proves_absence") is True,
+            "404 may conceal permission denial")
+    for field in ("bootstrap_structural_pass_is_runtime_proof",
+                  "independent_execution_gate_pass", "merge_without_existing_gate_allowed"):
+        require(policy.get("admission_boundary", {}).get(field) is False,
+                "unproven runtime or merge admission: " + field)
+    return issues
+
 def validate_ai_rule_acceptance_policy(policy):
     """Enforce the approved human-first rule without claiming runtime proof."""
     errors = []
@@ -548,6 +601,7 @@ def check(root=ROOT):
     sequential=load("canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",root)
     errors.extend(validate_sequential_command_policy(sequential))
     errors.extend(validate_donor_file_size_policy(load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json", root)))
+    errors.extend(validate_github_resource_404_policy(load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",root)))
     errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))

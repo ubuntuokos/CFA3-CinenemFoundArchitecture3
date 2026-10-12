@@ -1,0 +1,148 @@
+{
+  "schema": "cfa3.github-resource-existence-404-policy.v1",
+  "id": "CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001",
+  "status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+  "owner_decision_date": "2026-10-12",
+  "rule": {
+    "id": "CFA3-GITHUB-RESOURCE-EXISTENCE-404-001",
+    "code": "VERIFY_EXISTENCE_CREATE_READBACK_BEFORE_DEPENDENT_OPERATION",
+    "text_hu": "Tilos GitHub-erőforrás létezését, elérhetőségét, azonosítóját vagy aktuális állapotát ellenőrzés nélkül feltételezni. Előbb azonosítani és ellenőrizni kell az előfeltételeket, a hiányzó erőforrást csak kifejezetten engedélyezett feladatban szabad létrehozni, a létrehozást GitHubból visszaolvasva igazolni kell, és csak ezután végezhető függő művelet. A kizárólag az AI saját, determinisztikusan javítható technikai hibájából eredő 404-et azonos hatáskörben önállóan javítani kell, hacsak további valódi blocker ezt nem akadályozza; ekkor STOP és jelentés kötelező.",
+    "runtime_verified": false
+  },
+  "applicability": [
+    "ALL_CFA3_GITHUB_ACTIONS",
+    "AI_ASSISTANTS",
+    "AI_DEVELOPERS",
+    "AUTOMATIONS",
+    "AGENTS"
+  ],
+  "mandatory_sequence": [
+    "VERIFY_REPOSITORY_ID_AND_PERMISSION",
+    "VERIFY_ACTUAL_MAIN_SHA",
+    "VERIFY_OR_AUTHORIZE_AND_CREATE_TARGET_BRANCH_FROM_MAIN",
+    "READ_BACK_TARGET_BRANCH_AND_SHA",
+    "PREPARE_ONLY_SCOPED_FILES",
+    "VERIFY_HEAD_AND_ATTACH_COMMIT",
+    "CREATE_PR_FROM_EXISTING_VERIFIED_HEAD_TO_VERIFIED_BASE",
+    "VERIFY_LIVE_CI_RULESET_AND_MERGE_GATE",
+    "MERGE_ONLY_IF_APPROVED_AND_ALL_GATES_PASS"
+  ],
+  "requirements": {
+    "verify_resource_before_dependent_operation": true,
+    "verify_repository_owner_name_and_permissions": true,
+    "verify_actual_default_branch_and_main_sha": true,
+    "existing_branch_must_not_be_recreated": true,
+    "missing_branch_creation_requires_explicit_task_authority": true,
+    "branch_creation_uses_verified_main_sha": true,
+    "created_branch_requires_github_readback_and_sha": true,
+    "verify_file_path_and_create_vs_update": true,
+    "fresh_head_sha_before_commit": true,
+    "verify_commit_linked_to_target_branch": true,
+    "pr_requires_existing_verified_source_and_base": true,
+    "never_confuse_pr_head_and_base": true,
+    "inspect_current_rulesets_ci_approvals_threads_mergeability": true,
+    "fresh_main_and_head_before_write_or_merge": true,
+    "retain_exact_state_and_operation_proof": true,
+    "expected_not_found_probe_is_not_automatic_execution_failure": true,
+    "http_404_does_not_prove_nonexistence_when_access_is_uncertain": true,
+    "self_caused_technical_404_requires_narrow_self_correction": true,
+    "correction_must_preserve_scope_policy_and_authority": true,
+    "unresolved_permission_or_state_requires_stop_and_report": true,
+    "report_each_mutation_with_sha_and_next_action": true,
+    "no_main_direct_write": true,
+    "no_unapproved_branch_pr_rebase_workflow_or_bypass": true
+  },
+  "branch_preconditions": {
+    "if_exists": "READ_AND_VERIFY_HEAD_SHA_NO_RECREATE",
+    "if_missing": "VERIFY_SCOPE_AND_PERMISSION_CREATE_FROM_VERIFIED_MAIN_THEN_READ_BACK",
+    "changed_head": "STOP_AND_REPORT_NO_SILENT_OVERWRITE"
+  },
+  "file_and_commit_preconditions": [
+    "VERIFY_ACTUAL_PATH_AND_EXISTENCE",
+    "DISTINGUISH_NEW_AND_EXISTING_FILES",
+    "PREPARE_ONLY_APPROVED_CHANGES",
+    "VERIFY_ACTUAL_TARGET_HEAD_IMMEDIATELY_BEFORE_WRITE",
+    "READ_BACK_COMMIT_AND_TARGET_REF",
+    "STOP_ON_UNEXPECTED_HEAD_CHANGE"
+  ],
+  "pr_merge_preconditions": [
+    "VERIFY_REPOSITORY_AND_MAIN_AND_TARGET_HEAD",
+    "VERIFY_COMMIT_REACHABILITY_AND_PR_AUTHORIZATION",
+    "CHECK_OPEN_OVERLAPPING_WORK",
+    "VERIFY_CURRENT_RULESET_REQUIRED_CHECKS_AND_APPROVALS",
+    "VERIFY_UNRESOLVED_REVIEW_THREADS",
+    "MERGE_ONLY_THROUGH_EXISTING_CFA3_MERGE_GATE"
+  ],
+  "http_404_cases": [
+    {
+      "case": "TARGET_BRANCH_NOT_YET_CREATED",
+      "action": "IF_AUTHORIZED_CREATE_FROM_VERIFIED_MAIN_AND_READ_BACK"
+    },
+    {
+      "case": "TARGET_BRANCH_ALREADY_EXISTS",
+      "action": "DO_NOT_RECREATE_VERIFY_HEAD_SHA"
+    },
+    {
+      "case": "WRONG_REPOSITORY_OR_PATH",
+      "action": "VERIFY_CORRECT_IDENTIFIER_AND_REPAIR_OWN_TECHNICAL_ERROR"
+    },
+    {
+      "case": "READ_OF_NONEXISTENT_FILE",
+      "action": "VERIFY_PATH_AND_INTENDED_CREATE_OR_READ"
+    },
+    {
+      "case": "MISSING_PERMISSION_OR_CONCEALED_RESOURCE",
+      "action": "STOP_AND_REPORT"
+    },
+    {
+      "case": "PREVIOUSLY_VERIFIED_RESOURCE_NOW_404",
+      "action": "REFRESH_EXACT_STATE_STOP_IF_UNVERIFIED"
+    },
+    {
+      "case": "UNKNOWN_404_CAUSE",
+      "action": "DIAGNOSE_MINIMALLY_STOP_IF_UNRESOLVED"
+    }
+  ],
+  "error_handling": {
+    "expected_probe_404": "ACCEPT_AS_EXPECTED_ONLY_IF_PROBE_PURPOSE_AND_ACCESS_PROVEN",
+    "not_every_404_is_system_failure": true,
+    "not_every_404_proves_absence": true,
+    "own_mechanical_error": "CORRECT_WITHIN_UNCHANGED_SCOPE_AND_REPORT",
+    "own_correctable_404_alone_is_blocker": false,
+    "other_blocker_prevents_repair": "STOP_AND_REPORT",
+    "ambiguous_or_changed_external_state": "STOP_AND_REPORT"
+  },
+  "evidence_required": [
+    "REPOSITORY_IDENTIFIER",
+    "VERIFIED_MAIN_SHA",
+    "BRANCH_AND_VERIFIED_HEAD_SHA",
+    "CREATE_OR_READBACK_RESULT",
+    "COMMIT_SHA",
+    "PR_NUMBER_IF_APPLICABLE",
+    "CI_AND_MERGE_GATE_STATE",
+    "HTTP_404_ROOT_CAUSE_AND_CORRECTION_IF_APPLICABLE"
+  ],
+  "prohibited": [
+    "ASSUMING_GITHUB_RESOURCE_EXISTS",
+    "COMMIT_ON_UNVERIFIED_SHA",
+    "PR_FROM_UNVERIFIED_HEAD",
+    "AUTOMATICALLY_CALLING_404_GITHUB_SYSTEM_FAILURE",
+    "MASKING_PERMISSION_DENIAL_AS_NONEXISTENCE",
+    "CLAIMING_SUCCESS_WITHOUT_READBACK",
+    "UNAUTHORIZED_ALTERNATE_REPOSITORY_BRANCH_OR_PR",
+    "AUTONOMOUS_SCOPE_EXPANSION"
+  ],
+  "completion": [
+    "ALL_NEEDED_RESOURCES_VERIFIED",
+    "DEPENDENCY_ORDER_SATISFIED",
+    "NECESSARY_ACTIONS_DETERMINISTICALLY_PROVEN",
+    "NO_REMAINING_TASK_BLOCKER",
+    "ONLY_OWNER_REQUESTED_RESULT_DELIVERED",
+    "STOP_WITHOUT_NEW_TASK"
+  ],
+  "admission_boundary": {
+    "bootstrap_structural_pass_is_runtime_proof": false,
+    "independent_execution_gate_pass": false,
+    "merge_without_existing_gate_allowed": false
+  }
+}

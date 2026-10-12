@@ -366,6 +366,85 @@ def validate_sequential_command_policy(policy):
                 "unverified runtime admission: " + field)
     return errors
 
+def validate_donor_file_size_policy(policy):
+    """Validate owner-approved donor file-size contract; no runtime PASS implied."""
+    if not isinstance(policy, dict):
+        return ["donor file size: policy must be an object"]
+    issues = []
+    def require(condition, description):
+        if not condition:
+            issues.append("donor file size: " + description)
+    require(policy.get("schema") == "cfa3.donor-file-size-policy.v1", "schema mismatch")
+    require(policy.get("id") == "CFA3-DONOR-FILE-SIZE-POLICY-001", "identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+            "authority/admission status mismatch")
+    rule = policy.get("rule")
+    require(isinstance(rule, dict), "rule object missing")
+    rule = rule if isinstance(rule, dict) else {}
+    require(rule.get("id") == "DONOR-FILE-SIZE-001" and
+            rule.get("code") == "DONOR_DATABASE_FILE_MAX_095_MIB",
+            "owner rule identifier/code mismatch")
+    require(isinstance(rule.get("text_hu"), str) and
+            "0,95 MiB" in rule.get("text_hu", ""), "owner rule text missing")
+    require(rule.get("runtime_verified") is False, "unverified runtime evidence")
+    maximum = policy.get("maximum_file_size")
+    maximum = maximum if isinstance(maximum, dict) else {}
+    for key, value in {
+        "unit": "MiB",
+        "maximum_mib": 0.95,
+        "maximum_bytes": 996147,
+        "interpretation": "INCLUSIVE_LIMIT_OF_UNCOMPRESSED_FILE_BYTES",
+        "comparison": "FILE_BYTES_LESS_THAN_OR_EQUAL_TO_MAXIMUM",
+    }.items():
+        require(maximum.get(key) == value, "incorrect threshold: " + key)
+    scope = policy.get("applies_to")
+    expected_scope = {
+        "DONOR_RECORDS", "DONOR_SOURCE_FILES", "SEARCH_AND_ROUTING_INDEXES",
+        "SOURCE_LIFECYCLE_REGISTRIES", "DONOR_IDENTITY_AND_ALIAS_REGISTRIES",
+        "DONOR_HISTORY_AND_PROVENANCE", "RELATED_DONOR_DATA_FILES",
+    }
+    require(isinstance(scope, list) and len(scope) == len(expected_scope)
+            and set(scope) == expected_scope, "incomplete donor data scope")
+    requirements = policy.get("requirements")
+    requirements = requirements if isinstance(requirements, dict) else {}
+    required_true = (
+        "new_and_modified_files_checked",
+        "all_affected_files_checked_before_github_upload",
+        "split_before_exceeding_limit",
+        "open_new_files_without_data_loss",
+        "preexisting_oversize_files_preserved_unchanged",
+        "preexisting_oversize_file_modification_requires_split",
+        "preserve_global_deduplication",
+        "preserve_central_search",
+        "preserve_stable_donor_identities",
+        "preserve_historical_records_and_provenance",
+        "preserve_cross_file_index_consistency",
+        "prohibit_truncation_or_silent_data_removal",
+        "oversize_changed_file_fails_closed",
+    )
+    for key in required_true:
+        require(requirements.get(key) is True, "required invariant missing: " + key)
+    legacy = policy.get("legacy_handling")
+    legacy = legacy if isinstance(legacy, dict) else {}
+    require(legacy.get("unmodified_preexisting_oversize_data") == "RETAIN_UNCHANGED",
+            "legacy data preservation missing")
+    require(legacy.get("modified_preexisting_oversize_data") ==
+            "SPLIT_WITH_FULL_HISTORY_AND_LINKS", "legacy split preservation missing")
+    require(legacy.get("history_loss_allowed") is False and
+            legacy.get("retroactive_deletion_allowed") is False,
+            "legacy history loss forbidden")
+    proof = policy.get("verification")
+    proof = proof if isinstance(proof, dict) else {}
+    require(proof.get("size_check") ==
+            "ACTUAL_UNCOMPRESSED_FILE_BYTES_BEFORE_GITHUB_UPLOAD",
+            "pre-upload size check missing")
+    require(proof.get("fail_state") == "STOP_BLOCKER", "fail-closed missing")
+    require(proof.get("structural_ci_verification_is_runtime_admission") is False,
+            "CI must not imply runtime admission")
+    require(proof.get("donor_publication_or_runtime_admission_by_this_rule") is False,
+            "rule cannot self-admit donors or runtime")
+    return issues
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -382,6 +461,7 @@ def check(root=ROOT):
     errors.extend(validate_rule_admission(rule_admission))
     sequential=load("canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",root)
     errors.extend(validate_sequential_command_policy(sequential))
+    errors.extend(validate_donor_file_size_policy(load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json", root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

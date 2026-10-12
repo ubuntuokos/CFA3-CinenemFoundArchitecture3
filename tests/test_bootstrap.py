@@ -301,11 +301,34 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["rule"]["runtime_verified"] = True
         self.assertTrue(validate_sequential_command_policy(bad))
 
+    def test_donor_file_size_policy_positive_and_negative(self):
+        from check_bootstrap import validate_donor_file_size_policy
+        policy = load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json")
+        self.assertEqual([], validate_donor_file_size_policy(policy))
+        for key in policy["requirements"]:
+            broken = copy.deepcopy(policy)
+            broken["requirements"][key] = False
+            with self.subTest(invariant=key):
+                self.assertTrue(validate_donor_file_size_policy(broken))
+        for value in (996148, 0, 1000000):
+            broken = copy.deepcopy(policy)
+            broken["maximum_file_size"]["maximum_bytes"] = value
+            self.assertTrue(validate_donor_file_size_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["applies_to"].pop()
+        self.assertTrue(validate_donor_file_size_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["legacy_handling"]["retroactive_deletion_allowed"] = True
+        self.assertTrue(validate_donor_file_size_policy(broken))
+        broken = copy.deepcopy(policy)
+        broken["rule"]["runtime_verified"] = True
+        self.assertTrue(validate_donor_file_size_policy(broken))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(8, surface["source_policy_count"])
+        self.assertEqual(9, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

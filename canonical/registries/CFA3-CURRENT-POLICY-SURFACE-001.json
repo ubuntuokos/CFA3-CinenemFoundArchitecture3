@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 18,
+  "source_policy_count": 19,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -3014,6 +3014,155 @@
         ],
         [
           "/schema",
+          "string"
+        ],
+        [
+          "/status",
+          "string"
+        ],
+        [
+          "/title_hu",
+          "string"
+        ],
+        [
+          "/version",
+          "string"
+        ]
+      ]
+    },
+    {
+      "path": "canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",
+      "git_blob_sha1": "d110259cd78c3a786701709e0978268b7046d78c",
+      "canonical_id": "CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001",
+      "source_status": "OWNER_APPROVED",
+      "leaf_count": 35,
+      "leaves": [
+        [
+          "/admission_boundary/approval_alone_is_finalization",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/automatic_scope_expansion_allowed",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/ci_alone_is_finalization",
+          "boolean"
+        ],
+        [
+          "/approved_section_count",
+          "integer"
+        ],
+        [
+          "/approved_text_path",
+          "string"
+        ],
+        [
+          "/approved_text_sha256",
+          "string"
+        ],
+        [
+          "/classification",
+          "string"
+        ],
+        [
+          "/finalization_gates/0",
+          "string"
+        ],
+        [
+          "/finalization_gates/1",
+          "string"
+        ],
+        [
+          "/finalization_gates/2",
+          "string"
+        ],
+        [
+          "/finalization_gates/3",
+          "string"
+        ],
+        [
+          "/finalization_gates/4",
+          "string"
+        ],
+        [
+          "/finalization_gates/5",
+          "string"
+        ],
+        [
+          "/finalization_gates/6",
+          "string"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/complete_authorized_task",
+          "boolean"
+        ],
+        [
+          "/requirements/distinguish_publication_readiness_from_final_closure",
+          "boolean"
+        ],
+        [
+          "/requirements/exact_metadata_validation",
+          "boolean"
+        ],
+        [
+          "/requirements/in_scope_self_correction",
+          "boolean"
+        ],
+        [
+          "/requirements/independent_original_text_comparison",
+          "boolean"
+        ],
+        [
+          "/requirements/no_repeated_unchanged_checks",
+          "boolean"
+        ],
+        [
+          "/requirements/post_merge_review_remediation",
+          "boolean"
+        ],
+        [
+          "/requirements/pre_merge_review_thread_inspection",
+          "boolean"
+        ],
+        [
+          "/requirements/scope_guard_and_security_gates",
+          "boolean"
+        ],
+        [
+          "/requirements/sequential_donor_publication",
+          "boolean"
+        ],
+        [
+          "/requirements/seven_gate_finalization_proof",
+          "boolean"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/scope/0",
+          "string"
+        ],
+        [
+          "/scope/1",
+          "string"
+        ],
+        [
+          "/scope/2",
+          "string"
+        ],
+        [
+          "/scope/3",
           "string"
         ],
         [

@@ -1,0 +1,45 @@
+{
+  "schema": "cfa3.policy-execution-completion-and-verified-finalization.v1",
+  "id": "CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001",
+  "title_hu": "Kötelező feladatbefejezés, önálló végrehajtási felelősség, hibajavítás és bizonyított véglegesítés",
+  "version": "1.0",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "classification": "MANDATORY_CFA3_EXECUTION_COMPLETION_AND_VERIFIED_FINALIZATION",
+  "scope": [
+    "CFA3 fejlesztési munkafolyamatok",
+    "donoradatbázis-feldolgozás",
+    "GitHub és PR",
+    "CI és szabályvéglegesítés"
+  ],
+  "approved_text_path": "canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.md",
+  "approved_text_sha256": "c009d287a39fbf10ccb48dc99d2478a9fdfe67ccd71c8daece10372e11c25e65",
+  "approved_section_count": 20,
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "MERGE",
+    "STATUS",
+    "REGISTRY",
+    "CI",
+    "MAIN"
+  ],
+  "requirements": {
+    "complete_authorized_task": true,
+    "sequential_donor_publication": true,
+    "distinguish_publication_readiness_from_final_closure": true,
+    "no_repeated_unchanged_checks": true,
+    "in_scope_self_correction": true,
+    "pre_merge_review_thread_inspection": true,
+    "post_merge_review_remediation": true,
+    "independent_original_text_comparison": true,
+    "exact_metadata_validation": true,
+    "seven_gate_finalization_proof": true,
+    "scope_guard_and_security_gates": true
+  },
+  "admission_boundary": {
+    "approval_alone_is_finalization": false,
+    "ci_alone_is_finalization": false,
+    "automatic_scope_expansion_allowed": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "cfa3.policy-execution-and-proof-obligation.v1",
+  "id": "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001",
+  "version": "1.0",
+  "status": "OWNER_APPROVED",
+  "owner_decision_date": "2026-10-12",
+  "approved_text_path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.md",
+  "approved_section_count": 16,
+  "finalization_gates": [
+    "TEXT",
+    "STRUCTURE",
+    "MERGE",
+    "STATUS",
+    "REGISTRY",
+    "CI",
+    "MAIN"
+  ],
+  "requirements": {
+    "approved_work_must_be_executed": true,
+    "missing_proof_not_impossibility": true,
+    "verbatim_text_preservation": true,
+    "sha256_verification": true,
+    "do_not_repeat_approval_request": true,
+    "no_unjustified_stop": true,
+    "no_scope_expansion": true,
+    "only_proven_pass": true
+  },
+  "approved_text_sha256": "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a",
+  "rule": {
+    "id": "CFA3-EXECUTION-PROOF-OBLIGATION-001",
+    "code": "EXECUTE_APPROVED_TASK_AND_PROVE_RESULT",
+    "text_hu": "Az AI köteles a jóváhagyott feladatot az engedélyezett műveleti körben végrehajtani, majd az eredményt tényleges bizonyítékokkal alátámasztani.",
+    "proof_mode": "SOURCE_BOUND_SIGNED_TASK_RECEIPT",
+    "runtime_verified": false
+  }
+}

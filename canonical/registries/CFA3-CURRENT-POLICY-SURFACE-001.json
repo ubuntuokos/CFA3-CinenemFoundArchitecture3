@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 20,
+  "source_policy_count": 21,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -3022,6 +3022,127 @@
         ],
         [
           "/title_hu",
+          "string"
+        ],
+        [
+          "/version",
+          "string"
+        ]
+      ]
+    },
+    {
+      "path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",
+      "git_blob_sha1": "59c2de4a8389911069172b1c453871629cc7d2e6",
+      "canonical_id": "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001",
+      "source_status": "OWNER_APPROVED",
+      "leaf_count": 28,
+      "leaves": [
+        [
+          "/approved_section_count",
+          "integer"
+        ],
+        [
+          "/approved_text_path",
+          "string"
+        ],
+        [
+          "/approved_text_sha256",
+          "string"
+        ],
+        [
+          "/finalization_gates/0",
+          "string"
+        ],
+        [
+          "/finalization_gates/1",
+          "string"
+        ],
+        [
+          "/finalization_gates/2",
+          "string"
+        ],
+        [
+          "/finalization_gates/3",
+          "string"
+        ],
+        [
+          "/finalization_gates/4",
+          "string"
+        ],
+        [
+          "/finalization_gates/5",
+          "string"
+        ],
+        [
+          "/finalization_gates/6",
+          "string"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/approved_work_must_be_executed",
+          "boolean"
+        ],
+        [
+          "/requirements/do_not_repeat_approval_request",
+          "boolean"
+        ],
+        [
+          "/requirements/missing_proof_not_impossibility",
+          "boolean"
+        ],
+        [
+          "/requirements/no_scope_expansion",
+          "boolean"
+        ],
+        [
+          "/requirements/no_unjustified_stop",
+          "boolean"
+        ],
+        [
+          "/requirements/only_proven_pass",
+          "boolean"
+        ],
+        [
+          "/requirements/sha256_verification",
+          "boolean"
+        ],
+        [
+          "/requirements/verbatim_text_preservation",
+          "boolean"
+        ],
+        [
+          "/rule/code",
+          "string"
+        ],
+        [
+          "/rule/id",
+          "string"
+        ],
+        [
+          "/rule/proof_mode",
+          "string"
+        ],
+        [
+          "/rule/runtime_verified",
+          "boolean"
+        ],
+        [
+          "/rule/text_hu",
+          "string"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/status",
           "string"
         ],
         [

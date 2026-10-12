@@ -386,11 +386,37 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["admission_boundary"]["independent_execution_gate_pass"] = True
         self.assertTrue(validate_ai_rule_acceptance_policy(bad))
 
+    def test_rule_consistency_loop_prevention_positive_and_negative(self):
+        from check_bootstrap import validate_rule_consistency_loop_prevention
+        rule = load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json")
+        self.assertEqual([], validate_rule_consistency_loop_prevention(rule))
+        for key in rule["requirements"]:
+            invalid = copy.deepcopy(rule)
+            invalid["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_rule_consistency_loop_prevention(invalid))
+        for key in rule["safety_boundary"]:
+            invalid = copy.deepcopy(rule)
+            invalid["safety_boundary"][key] = False
+            with self.subTest(boundary=key):
+                self.assertTrue(validate_rule_consistency_loop_prevention(invalid))
+        for field, value in [
+            ("status", "RUNTIME_PROVEN"),
+            ("id", "UNRELATED_POLICY"),
+            ("mandatory_clauses", []),
+            ("resolution_sequence", []),
+            ("loop_indicators", []),
+        ]:
+            invalid = copy.deepcopy(rule)
+            invalid[field] = value
+            with self.subTest(field=field):
+                self.assertTrue(validate_rule_consistency_loop_prevention(invalid))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(11, surface["source_policy_count"])
+        self.assertEqual(12, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

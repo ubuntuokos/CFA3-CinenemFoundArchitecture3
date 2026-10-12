@@ -1,0 +1,83 @@
+{
+  "schema": "cfa3.rule-consistency-loop-prevention.v1",
+  "id": "CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001",
+  "title_hu": "Szabályellentmondások és végtelen végrehajtási ciklusok megelőzése",
+  "status": "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
+  "owner_decision_date": "2026-10-12",
+  "classification": "MANDATORY_CFA3_POLICY_AND_EXECUTION_GUARD",
+  "scope": [
+    "CFA3 szabályalkotás és szabálymódosítás",
+    "CFA3 AI-asszisztensek és AI-fejlesztők",
+    "CFA3 feladat- és workflow-végrehajtás"
+  ],
+  "mandatory_clauses": [
+    {
+      "id": "RC-01",
+      "code": "NO_CONTRADICTORY_RULE_CREATION",
+      "text_hu": "A fejlesztő nem hozhat létre egymásnak ellentmondó, egyidejűleg érvényes CFA3-szabályokat. Új vagy módosított szabály bevezetése előtt ellenőrizni kell a korábbi kötelező rendelkezésekkel való összhangot, és meg kell nevezni az esetleges ütközéseket."
+    },
+    {
+      "id": "RC-02",
+      "code": "NO_NONTERMINATING_DECISION",
+      "text_hu": "A fejlesztő nem hozhat olyan döntést, szabályt vagy kötelező végrehajtási sorrendet, amely az AI-t bizonyíthatóan végtelen vagy haladás nélküli önismétlő ciklusba terelné. Az ismétlődő folyamatnak megfigyelhető előrehaladási feltétellel és leállítási lehetőséggel kell rendelkeznie."
+    },
+    {
+      "id": "RC-03",
+      "code": "LOOP_DETECTION_AND_IMMEDIATE_REPORT",
+      "text_hu": "Ha az AI ismétlődő állapotokat, egymást újraindító követelményeket, előrehaladás nélküli ismétlést vagy feloldhatatlan függőségi ciklust észlel, köteles azonnal jelezni a végtelen ciklus gyanúját, konkrét bizonyítékait és a jelenlegi végrehajtási állapotot. A gyanú nem minősíthető bizonyított végtelen ciklusnak ellenőrizhető tények nélkül."
+    },
+    {
+      "id": "RC-04",
+      "code": "HALT_UNPRODUCTIVE_LOOP",
+      "text_hu": "Megalapozott ciklusveszélynél az AI köteles megszakítani az érintett ismétlést, megőrizni az ellenőrizhető állapotot és STOP/BLOCKER jelentést adni. Nem indíthat önkényesen új munkát, végtelen újrapróbálkozást, rebase-t, pótló PR-t vagy szabálymegkerülést."
+    },
+    {
+      "id": "RC-05",
+      "code": "OWNER_RESOLVES_RULE_CONFLICT",
+      "text_hu": "Ellentmondás esetén az AI köteles megnevezni a pontosan érintett szabályokat és minimális feloldási javaslatot adni; önkényesen nem írhatja át vagy hatálytalaníthatja őket. A tulajdonos kifejezett módosító döntése alapján egy korábbi szabály felváltható vagy pontosítható, de két egymásnak ellentmondó szabály egyszerre nem maradhat hatályban."
+    },
+    {
+      "id": "RC-06",
+      "code": "BOUNDED_RULE_ADMISSION_CHECK",
+      "text_hu": "Szabályfelvétel előtt ellenőrizni kell a konzisztenciát, a ciklikus függőségeket, a befejezési feltételt és a hibakezelést. Az ellenőrzés nem lehet önmagát feltétel nélkül újraindító kapu. A biztonsági, jogi, Scope Guard, emberi jóváhagyási, exact-state és kötelező Bootstrap-ellenőrzési feltételek nem kerülhetők meg."
+    }
+  ],
+  "loop_indicators": [
+    "SAME_OPERATION_AND_SAME_STATE_REPEAT_WITHOUT_PROGRESS",
+    "MUTUALLY_RESTARTING_RULES_OR_DEPENDENCIES",
+    "CONTRADICTORY_REQUIREMENTS_CAUSING_PING_PONG",
+    "SAME_FAILED_REPAIR_WITHOUT_NEW_EVIDENCE",
+    "NO_REACHABLE_EXIT_UNDER_ACTIVE_CONSTRAINTS"
+  ],
+  "requirements": {
+    "detect_conflicting_rules_before_admission": true,
+    "prohibit_simultaneously_effective_contradictory_rules": true,
+    "prohibit_nonterminating_developer_decisions": true,
+    "require_progress_and_exit_criteria": true,
+    "signal_suspected_infinite_loop_immediately": true,
+    "distinguish_suspected_from_proven_loop": true,
+    "stop_repeating_actions_without_progress": true,
+    "report_specific_cycle_edges_and_evidence": true,
+    "prohibit_unapproved_rule_override_or_scope_expansion": true,
+    "owner_authority_required_for_resolution": true,
+    "preserve_exact_state_and_failure_provenance": true,
+    "maintain_bootstrap_and_policy_surface_consistency": true
+  },
+  "resolution_sequence": [
+    "DETECT_AND_FREEZE_AFFECTED_REPEAT",
+    "IDENTIFY_RULE_IDS_ACTIONS_AND_OBSERVED_REPEAT",
+    "REPORT_EVIDENCE_AND_CONSERVATIVE_DIAGNOSIS",
+    "PROPOSE_MINIMAL_NONCONTRADICTORY_RESOLUTION",
+    "AWAIT_OWNER_DECISION_IF_POLICY_CHANGE_REQUIRED",
+    "RESUME_ONLY_AFTER_AUTHORIZED_RESOLUTION_AND_EXACT_STATE_VERIFICATION"
+  ],
+  "safety_boundary": {
+    "owner_may_explicitly_supersede_previous_policy": true,
+    "owner_supersession_requires_consistent_effective_state": true,
+    "safety_legal_security_and_stop_blocker_remain_mandatory": true,
+    "narrow_deterministic_self_correction_remains_permitted": true,
+    "suspected_cycle_is_not_automatic_permanent_failure": true,
+    "no_independent_runtime_gate_pass_claim": true,
+    "no_full_governance_admission_claim": true
+  }
+}

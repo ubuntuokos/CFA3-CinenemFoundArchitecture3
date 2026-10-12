@@ -662,6 +662,26 @@ class BootstrapPolicyTests(unittest.TestCase):
             target.write_bytes(original[:len(original)//2])
             self.assertTrue(validate_sequential_execution_result_integrity(p, tmp))
 
+    def test_conversation_evidence_blocker_prevention_integrity(self):
+        from check_bootstrap import validate_conversation_evidence_blocker_prevention
+        import tempfile
+        from pathlib import Path
+        policy = load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json")
+        self.assertEqual([], validate_conversation_evidence_blocker_prevention(policy, ROOT))
+        for key in ("status", "approved_text_sha256", "approved_section_count"):
+            damaged = copy.deepcopy(policy)
+            damaged[key] = "INVALID"
+            with self.subTest(key=key):
+                self.assertTrue(validate_conversation_evidence_blocker_prevention(damaged, ROOT))
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / policy["approved_text_path"]
+            target.parent.mkdir(parents=True)
+            original = (ROOT / policy["approved_text_path"]).read_bytes()
+            target.write_bytes(original.replace(
+                "Téves blokkolások tilalma".encode("utf-8"),
+                "Téves blokkolások mellőzése".encode("utf-8"), 1))
+            self.assertTrue(validate_conversation_evidence_blocker_prevention(policy, tmp))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")

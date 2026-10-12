@@ -21,7 +21,12 @@
     "failed_check_must_report_root_cause_and_evidence": true,
     "no_unjustified_attribution_or_fabricated_pass": true,
     "failed_gate_requires_stop_and_report": true,
-    "independent_owner_task_must_have_dedicated_branch_and_pr": true
+    "independent_owner_task_must_have_dedicated_branch_and_pr": true,
+    "shared_registry_pr_integration_must_be_serialized": true,
+    "unrelated_policy_registry_records_must_be_preserved": true,
+    "registry_update_must_use_verified_current_main_and_pr_head": true,
+    "canonical_registry_counts_leaf_inventory_and_blob_hashes_must_be_rechecked": true,
+    "unresolved_ambiguity_or_stale_head_blocks_merge": true
   },
   "responsibility": {
     "ai_assistant": "Feladatvezérlési, hatásköri, ellenőrzés-előkészítési és jelentési hiányosság.",
@@ -33,5 +38,11 @@
   "admission_boundary": {
     "bootstrap_structural_pass_is_runtime_proof": false,
     "independent_execution_gate_pass": false
+  },
+  "shared_registry_integration": {
+    "owner_instruction_date": "2026-10-13",
+    "scope": "ONLY_EXISTING_RULE_ADMISSION_AND_SHARED_CANONICAL_REGISTRY",
+    "text_hu": "Közös szabálynyilvántartást érintő párhuzamos PR-ek integrációját sorosítani kell: minden PR csak a saját jóváhagyott szabályának bejegyzéseit változtathatja, a többi rekordot és történeti adatot meg kell őriznie. A nyilvántartást az aktuális main és az adott PR HEAD ellenőrzött állapotából kell összehangolni; elavult pillanatkép nem írhat felül újabb rekordot. A szabálydarabszámot, mezőleltárt és Git-blob azonosítókat determinisztikusan újra kell ellenőrizni, az aktuális commiton kötelező CI- és review-kapukkal együtt. Azonos fájl párhuzamos módosítása vagy eltérő main/head esetén összevonás nem engedélyezett a célzott, adatvesztésmentes összehangolás és az új ellenőrzések előtt; valós, nem egyértelmű konfliktus STOP. A technikai összehangolás kizárólag kifejezetten engedélyezett körben történhet, nem jogosít más szabály tartalmi változtatására, önálló rebase-re, új PR-re vagy önkényes összevonásra.",
+    "runtime_verified": false
   }
 }

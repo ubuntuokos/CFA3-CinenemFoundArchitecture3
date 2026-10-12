@@ -977,6 +977,85 @@ def validate_csa_infrastructure_isolation_policy(policy, root=ROOT):
     return issues
 
 
+
+def validate_sequential_execution_result_integrity(policy, root=ROOT):
+    """Validate complete owner-approved sequential work and result integrity policy."""
+    import hashlib
+    import re
+    from pathlib import Path
+    errors = []
+    def need(test, label):
+        if not test:
+            errors.append("sequential execution integrity: " + label)
+    if not isinstance(policy, dict):
+        return ["sequential execution integrity: policy is not an object"]
+    required_fields = {"schema", "id", "title_hu", "version", "status",
+                       "owner_decision_date", "classification", "scope",
+                       "approved_text_path", "approved_text_sha256",
+                       "approved_section_count", "finalization_gates",
+                       "lifecycle_evidence_source", "processing_state_machine",
+                       "donor_data_file_max_bytes", "requirements", "admission_boundary"}
+    need(set(policy) == required_fields, "metadata fields")
+    need(policy.get("schema") == "cfa3.policy-sequential-execution-result-integrity.v1", "schema")
+    need(policy.get("id") == "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001", "identity")
+    need(policy.get("status") == "OWNER_APPROVED", "approval does not mean merge")
+    need(policy.get("version") == "1.0" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
+    need(policy.get("classification") == "MANDATORY_CFA3_SEQUENTIAL_EXECUTION_AND_RESULT_INTEGRITY", "classification")
+    need(policy.get("scope") == ["CFA3 fejlesztési munkafolyamatok", "donoradatbázis-feldolgozás",
+                               "GitHub publikáció", "tájékoztatás"], "scope")
+    path = "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.md"
+    digest = "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b"
+    need(policy.get("approved_text_path") == path and
+         policy.get("approved_text_sha256") == digest, "approved source integrity")
+    need(policy.get("approved_section_count") == 14, "14 sections")
+    need(policy.get("finalization_gates") ==
+         ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "seven gates")
+    need(policy.get("lifecycle_evidence_source") == "LIVE_GITHUB_MAIN_AND_PR_STATE", "live evidence")
+    need(policy.get("processing_state_machine") ==
+         ["PENDING", "IN_PROGRESS", "VALIDATING", "PUBLISHING", "PUBLISHED", "BLOCKED"], "states")
+    need(type(policy.get("donor_data_file_max_bytes")) is int and
+         policy.get("donor_data_file_max_bytes") == 996147, "max donor data size")
+    required_flags = {
+        "one_file_complete_process_before_next", "avoid_rechecking_unchanged_proven_state",
+        "no_preparation_instead_of_actual_processing", "separate_indexed_processed_accepted_published",
+        "net_new_unique_donor_count_from_canonical_published_state", "zero_growth_must_be_explained_not_hidden",
+        "explicit_owner_donor_approval_required", "progress_states_and_stagnation_detection",
+        "stop_no_progress_repeat_loops", "preserve_rights_security_approval_gates",
+        "enforce_996147_byte_max_donor_data_file", "preserve_history_and_searchability_when_splitting",
+        "publish_only_after_full_file_closure_and_proofs", "final_message_contains_essential_verifiable_results",
+        "do_not_claim_ui_message_persistence_control", "no_unverified_finalization_or_ci_shortcut",
+        "self_attribution_for_in_scope_execution_failures", "no_scope_expansion_or_unauthorized_work",
+        "long_term_validation_not_established_by_document"
+    }
+    flags = policy.get("requirements")
+    need(isinstance(flags, dict) and set(flags) == required_flags and
+         all(flags[k] is True for k in required_flags), "19 normative safeguards")
+    boundary_keys = {"owner_approval_is_merge_proof", "ci_alone_is_finalization",
+                     "static_policy_proves_runtime_enforcement",
+                     "platform_ui_history_control_guaranteed",
+                     "donor_growth_always_positive", "unapproved_scope_or_safety_bypass"}
+    bounds = policy.get("admission_boundary")
+    need(isinstance(bounds, dict) and set(bounds) == boundary_keys and
+         all(v is False for v in bounds.values()), "unverified enforcement claims")
+    try:
+        raw = (Path(root) / path).read_bytes()
+        approved = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return errors + ["sequential execution integrity: owner text unavailable"]
+    need(hashlib.sha256(raw).hexdigest() == digest, "owner text edited or truncated")
+    heads = re.findall(r"^## ([0-9]+)[.] § ", approved, flags=re.MULTILINE)
+    need([int(x) for x in heads] == list(range(1, 15)), "14 approved chapters")
+    for phrase in ("Egy feldolgozási egység – teljes lezárás",
+                   "Ismétlődő ellenőrzések tilalma",
+                   "A donorszám növekedésének ellenőrizhetősége",
+                   "Végtelen és eredménytelen ciklusok megszakítása",
+                   "0,95 MiB = legfeljebb 996 147 bájt",
+                   "Eredményközlés és válaszok megőrzése",
+                   "A szabályszöveg jóváhagyása nem azonos a GitHubon végrehajtott véglegesítéssel."):
+        need(phrase in approved, "mandatory approved clause: " + phrase)
+    return errors
+
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -1001,6 +1080,7 @@ def check(root=ROOT):
     errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
     errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
     errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
+    errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

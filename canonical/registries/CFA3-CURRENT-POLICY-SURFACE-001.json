@@ -9,9 +9,9 @@
   "sources": [
     {
       "path": "canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json",
-      "git_blob_sha1": "26b183fc25d4d6ca0ea7973db48f17c51fa7908b",
+      "git_blob_sha1": "864894d273e0af07176b9aa7633fd699b38602f7",
       "canonical_id": "CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001",
-      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_MERGED_TO_MAIN",
       "leaf_count": 57,
       "leaves": [
         [

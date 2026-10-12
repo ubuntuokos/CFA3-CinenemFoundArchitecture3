@@ -380,6 +380,9 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["status"] = "MERGED_WITHOUT_EVIDENCE"
         self.assertTrue(validate_ai_rule_acceptance_policy(bad))
         bad = copy.deepcopy(policy)
+        bad["status"] = "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE"
+        self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+        bad = copy.deepcopy(policy)
         bad["admission_boundary"]["independent_execution_gate_pass"] = True
         self.assertTrue(validate_ai_rule_acceptance_policy(bad))
 

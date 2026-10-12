@@ -515,8 +515,8 @@ def validate_ai_rule_acceptance_policy(policy):
             "schema mismatch")
     require(policy.get("id") == "CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001",
             "policy identity mismatch")
-    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
-            "unverified canonical merge claimed")
+    require(policy.get("status") == "OWNER_APPROVED_MERGED_TO_MAIN",
+            "rule must retain verified PR #28 main-merge status")
     require(policy.get("owner_decision_date") == "2026-10-12", "owner date mismatch")
     require(policy.get("classification") == "MANDATORY_CFA3_AI_BEHAVIOR_POLICY",
             "policy must remain mandatory")

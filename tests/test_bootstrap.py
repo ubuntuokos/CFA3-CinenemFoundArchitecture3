@@ -412,11 +412,42 @@ class BootstrapPolicyTests(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertTrue(validate_rule_consistency_loop_prevention(invalid))
 
+    def test_policy_long_term_validation_positive_and_negative(self):
+        from check_bootstrap import validate_policy_long_term_validation
+        rule = load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json")
+        self.assertEqual([], validate_policy_long_term_validation(rule))
+        for key in rule["requirements"]:
+            invalid = copy.deepcopy(rule)
+            invalid["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_policy_long_term_validation(invalid))
+        for key in rule["admission_boundary"]:
+            invalid = copy.deepcopy(rule)
+            invalid["admission_boundary"][key] = True
+            with self.subTest(boundary=key):
+                self.assertTrue(validate_policy_long_term_validation(invalid))
+        for key, bad_value in [
+            ("id", "UNRELATED"), ("status", "VERIFIED_STABLE"),
+            ("mandatory_clauses", []), ("verification_states", []),
+            ("evidence_fields", []),
+        ]:
+            invalid = copy.deepcopy(rule)
+            invalid[key] = bad_value
+            with self.subTest(field=key):
+                self.assertTrue(validate_policy_long_term_validation(invalid))
+        for changed_key in ("code", "text_hu"):
+            invalid = copy.deepcopy(rule)
+            invalid["mandatory_clauses"][1][changed_key] = ""
+            self.assertTrue(validate_policy_long_term_validation(invalid))
+        invalid = copy.deepcopy(rule)
+        invalid["verification_states"][3]["code"] = "PRELIMINARY_PASS"
+        self.assertTrue(validate_policy_long_term_validation(invalid))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(12, surface["source_policy_count"])
+        self.assertEqual(13, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

@@ -1354,7 +1354,7 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
     digest = hashlib.sha256(raw).hexdigest()
     need(policy.get("approved_text_sha256") == digest, "approved source SHA256")
     text = raw.decode("utf-8")
-    need(len(re.findall(r"^## [0-9]+\\. §", text, re.M)) == 16, "all 16 sections")
+    need(len(re.findall(r"^## [0-9]+\. §", text, re.M)) == 16, "all 16 sections")
     for phrase in ("HTTP 409 Conflict önmagában nem tekinthető végleges blokkolásnak",
                    "Ugyanazt a műveletet változatlan előfeltételekkel ismételni tilos",
                    "Valódi blokkolás esetén a végrehajtásnak meg kell állnia",

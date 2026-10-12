@@ -526,11 +526,44 @@ class BootstrapPolicyTests(unittest.TestCase):
             target.write_bytes(original[:len(original)//2])
             self.assertTrue(validate_policy_exact_finalization(p, tmp))
 
+    def test_csa_infrastructure_isolation_owner_text_positive_and_negative(self):
+        from check_bootstrap import validate_csa_infrastructure_isolation_policy
+        import tempfile
+        from pathlib import Path
+        p = load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json")
+        self.assertEqual([], validate_csa_infrastructure_isolation_policy(p, ROOT))
+        for field, bad_value in (
+                ("status", "OWNER_APPROVED_MERGED_TO_MAIN"),
+                ("approved_section_count", 5),
+                ("approved_text_sha256", "0" * 64),
+                ("version", "1.1")):
+            bad = copy.deepcopy(p)
+            bad[field] = bad_value
+            self.assertTrue(validate_csa_infrastructure_isolation_policy(bad, ROOT))
+        for key in p["requirements"]:
+            bad = copy.deepcopy(p)
+            bad["requirements"][key] = False
+            self.assertTrue(validate_csa_infrastructure_isolation_policy(bad, ROOT))
+        for key in p["admission_boundary"]:
+            bad = copy.deepcopy(p)
+            bad["admission_boundary"][key] = True
+            self.assertTrue(validate_csa_infrastructure_isolation_policy(bad, ROOT))
+        with tempfile.TemporaryDirectory() as tempdir:
+            target = Path(tempdir) / p["approved_text_path"]
+            target.parent.mkdir(parents=True)
+            original = (ROOT / p["approved_text_path"]).read_bytes()
+            target.write_bytes(original.replace(
+                "nem biztonsági határ".encode("utf-8"),
+                "biztonsági határ".encode("utf-8"), 1))
+            self.assertTrue(validate_csa_infrastructure_isolation_policy(p, tempdir))
+            target.write_bytes(original[:len(original) // 2])
+            self.assertTrue(validate_csa_infrastructure_isolation_policy(p, tempdir))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(15, surface["source_policy_count"])
+        self.assertEqual(len(list((ROOT / "canonical/policies").glob("*.json"))), surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

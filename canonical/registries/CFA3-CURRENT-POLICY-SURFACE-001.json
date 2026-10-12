@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 15,
+  "source_policy_count": 16,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -2579,6 +2579,143 @@
         ],
         [
           "/status",
+          "string"
+        ]
+      ]
+    },
+    {
+      "path": "canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",
+      "git_blob_sha1": "da5714f761268ac3b8552248c7fb21509b2846e8",
+      "canonical_id": "CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001",
+      "source_status": "OWNER_APPROVED",
+      "leaf_count": 32,
+      "leaves": [
+        [
+          "/admission_boundary/approval_is_merge_proof",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/independent_release_exclusion_verified",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/separate_branch_is_access_control",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/static_policy_admission_is_runtime_release_exclusion_proof",
+          "boolean"
+        ],
+        [
+          "/approved_section_count",
+          "integer"
+        ],
+        [
+          "/approved_text_path",
+          "string"
+        ],
+        [
+          "/approved_text_sha256",
+          "string"
+        ],
+        [
+          "/architecture_boundary/chatgpt_access",
+          "string"
+        ],
+        [
+          "/architecture_boundary/csa_capabilities",
+          "string"
+        ],
+        [
+          "/architecture_boundary/csa_rules",
+          "string"
+        ],
+        [
+          "/architecture_boundary/product_release",
+          "string"
+        ],
+        [
+          "/architecture_boundary/storage",
+          "string"
+        ],
+        [
+          "/architecture_boundary/suggestions_database",
+          "string"
+        ],
+        [
+          "/classification",
+          "string"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/chatgpt_authorized_development_access_preserved",
+          "boolean"
+        ],
+        [
+          "/requirements/csa_capabilities_development_infrastructure_only",
+          "boolean"
+        ],
+        [
+          "/requirements/csa_rules_in_cfa3_central_policy_system",
+          "boolean"
+        ],
+        [
+          "/requirements/exclude_database_from_installers_releases_user_artifacts",
+          "boolean"
+        ],
+        [
+          "/requirements/independent_lifecycle_storage_access_and_release",
+          "boolean"
+        ],
+        [
+          "/requirements/independent_private_access_control_mandatory",
+          "boolean"
+        ],
+        [
+          "/requirements/no_unapproved_scope_expansion",
+          "boolean"
+        ],
+        [
+          "/requirements/release_exclusion_must_be_verified",
+          "boolean"
+        ],
+        [
+          "/requirements/separate_branch_not_sufficient_privacy",
+          "boolean"
+        ],
+        [
+          "/requirements/suggestions_database_internal_not_product",
+          "boolean"
+        ],
+        [
+          "/requirements/suggestions_database_private_repo_internal_branch",
+          "boolean"
+        ],
+        [
+          "/requirements/suggestions_not_automatic_approval",
+          "boolean"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/status",
+          "string"
+        ],
+        [
+          "/title_hu",
+          "string"
+        ],
+        [
+          "/version",
           "string"
         ]
       ]

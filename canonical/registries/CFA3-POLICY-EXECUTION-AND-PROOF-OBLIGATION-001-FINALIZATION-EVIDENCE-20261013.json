@@ -1,0 +1,54 @@
+{
+  "schema": "cfa3.policy-finalization-evidence-snapshot.v1",
+  "receipt_id": "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001-FINALIZATION-EVIDENCE-20261013",
+  "subject": {
+    "policy_id": "CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001",
+    "version": "1.0",
+    "owner_approval_date": "2026-10-12"
+  },
+  "observation": {
+    "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+    "verified_main_sha": "b5a32890c0563982b3f25d310cb016a7dfa6784d",
+    "original_pr": 46,
+    "merged": true,
+    "scope": "HISTORICAL_EXACT_MAIN_STATE_EVIDENCE"
+  },
+  "source": {
+    "approved_markdown_path": "canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.md",
+    "published_sha256": "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a",
+    "published_md_blob_sha1": "29b87b5a36d79e672fc4850d6628707ba9f6955f",
+    "approved_section_count": 16,
+    "original_user_approval_known": true,
+    "independent_byte_exact_original_comparison_verified": false,
+    "explanation": "Owner approval of the 16-section draft is identifiable in prior conversation, but the exact original source byte stream independent from the published Markdown was not recovered for hash comparison. Published-file hash alone does not prove approval-text identity."
+  },
+  "lifecycle": {
+    "markdown_status": "JÓVÁHAGYÁSRA VÁR",
+    "markdown_status_semantics": "IMMUTABLE_APPROVED_DRAFT_HISTORICAL_HEADER",
+    "json_status": "OWNER_APPROVED",
+    "pr_lifecycle": "MERGED",
+    "metadata_status_consistent": true,
+    "markdown_must_not_be_rewritten_to_FINALIZED": true,
+    "runtime_verified": false
+  },
+  "checks_on_original_merge_main": {
+    "bootstrap": "SUCCESS",
+    "qt68-linux": "SUCCESS"
+  },
+  "gates": {
+    "TEXT": "NOT_VERIFIED_INDEPENDENT_APPROVED_SOURCE",
+    "STRUCTURE": "PASS",
+    "MERGE": "PASS",
+    "STATUS": "PASS_HISTORICAL_SOURCE_VS_LIVE_LIFECYCLE_DISTINGUISHED",
+    "REGISTRY": "PASS",
+    "CI": "PASS",
+    "MAIN": "PASS"
+  },
+  "full_seven_of_seven_proven": false,
+  "recorded_verdict": "PARTIALLY_VERIFIED_NO_FULL_FINALIZATION_CLAIM",
+  "limitations": [
+    "No independent byte-exact approved original comparison was evidenced.",
+    "GitHub main SHA in this record is a historical observation and should not be asserted as later repository HEAD.",
+    "Receipt is not a runtime gate proof."
+  ]
+}

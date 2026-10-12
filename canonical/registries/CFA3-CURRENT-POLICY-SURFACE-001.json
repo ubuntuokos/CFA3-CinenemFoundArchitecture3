@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 22,
+  "source_policy_count": 23,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -2744,6 +2744,143 @@
         ],
         [
           "/scope/4",
+          "string"
+        ],
+        [
+          "/status",
+          "string"
+        ],
+        [
+          "/title_hu",
+          "string"
+        ],
+        [
+          "/version",
+          "string"
+        ]
+      ]
+    },
+    {
+      "path": "canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.json",
+      "git_blob_sha1": "3e7f42c577775d99ed7cdc6d06fc939d1679829a",
+      "canonical_id": "CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001",
+      "source_status": "OWNER_APPROVED",
+      "leaf_count": 32,
+      "leaves": [
+        [
+          "/approved_section_count",
+          "integer"
+        ],
+        [
+          "/approved_text_path",
+          "string"
+        ],
+        [
+          "/approved_text_sha256",
+          "string"
+        ],
+        [
+          "/classification",
+          "string"
+        ],
+        [
+          "/finalization_gates/0",
+          "string"
+        ],
+        [
+          "/finalization_gates/1",
+          "string"
+        ],
+        [
+          "/finalization_gates/2",
+          "string"
+        ],
+        [
+          "/finalization_gates/3",
+          "string"
+        ],
+        [
+          "/finalization_gates/4",
+          "string"
+        ],
+        [
+          "/finalization_gates/5",
+          "string"
+        ],
+        [
+          "/finalization_gates/6",
+          "string"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/consistent_status_reporting",
+          "boolean"
+        ],
+        [
+          "/requirements/execute_approved_work",
+          "boolean"
+        ],
+        [
+          "/requirements/minimize_user_burden",
+          "boolean"
+        ],
+        [
+          "/requirements/no_artificial_blockers",
+          "boolean"
+        ],
+        [
+          "/requirements/no_redundant_checks",
+          "boolean"
+        ],
+        [
+          "/requirements/precise_conversation_identification",
+          "boolean"
+        ],
+        [
+          "/requirements/prior_approval_preservation",
+          "boolean"
+        ],
+        [
+          "/requirements/retrievable_source_use",
+          "boolean"
+        ],
+        [
+          "/requirements/scope_and_security_alignment",
+          "boolean"
+        ],
+        [
+          "/requirements/self_error_correction",
+          "boolean"
+        ],
+        [
+          "/requirements/seven_finalization_gates",
+          "boolean"
+        ],
+        [
+          "/requirements/stop_infinite_loops",
+          "boolean"
+        ],
+        [
+          "/requirements/verbatim_source_preservation",
+          "boolean"
+        ],
+        [
+          "/requirements/verified_closure_only",
+          "boolean"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/scope",
           "string"
         ],
         [

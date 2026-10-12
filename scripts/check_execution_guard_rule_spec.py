@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Current 82 owner-authorized rules, preserving 24 original identities and 78 sources."""
+"""Current 83 owner-authorized rules, preserving 24 original identities and 78 sources."""
 import json
 from pathlib import Path
 import sys
@@ -60,7 +60,7 @@ def canonical_provenance_matches(row,rule,policy_path,surface):
         "type":"OWNER_CURRENT_RULE",
         "id":rule["id"],
         "code":rule["code"],
-        "authority":"OWNER_2026_10_11",
+        "authority":"OWNER_2026_10_12" if rule["id"]=="CFA3-EXECUTION-PROOF-OBLIGATION-001" else "OWNER_2026_10_11",
         "active_rule_receipt_scope":True,
         "excluded_by_request":False,
         "source_path":policy_path,

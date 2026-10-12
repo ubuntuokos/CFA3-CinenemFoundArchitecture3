@@ -623,6 +623,85 @@ def validate_rule_consistency_loop_prevention(policy):
            and len(policy["loop_indicators"]) == 5, "loop indicators")
     return issues
 
+def validate_policy_long_term_validation(policy):
+    """Validate the approved rule contract; never assert prolonged runtime proof."""
+    issues = []
+    if not isinstance(policy, dict):
+        return ["long-term validation: policy must be an object"]
+    def require(ok, reason):
+        if not ok:
+            issues.append("long-term validation: " + reason)
+    require(set(policy) == {
+        "schema", "id", "title_hu", "status", "owner_decision_date",
+        "classification", "scope", "mandatory_clauses", "verification_states",
+        "evidence_fields", "requirements", "admission_boundary"
+    }, "required root fields")
+    require(policy.get("schema") == "cfa3.policy-long-term-validation.v1", "schema")
+    require(policy.get("id") == "CFA3-POLICY-LONG-TERM-VALIDATION-001", "identity")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF", "status")
+    require(policy.get("owner_decision_date") == "2026-10-12", "approval date")
+    codes = [
+        "CONTINUOUS_RULE_OBSERVATION", "NO_PREMATURE_STABLE_CLAIM",
+        "LONG_TERM_INDEPENDENT_EVIDENCE", "MANDATORY_EVIDENCE_BACKED_CONFIRMATION",
+        "TRACEABLE_CONFIRMATION_RECORD", "NO_ABSENCE_OF_ERROR_AS_PROOF",
+        "REOPEN_ON_CONTRADICTING_EVIDENCE", "NO_UNSOLICITED_EARLY_NOTIFICATIONS"
+    ]
+    clauses = policy.get("mandatory_clauses")
+    require(isinstance(clauses, list) and len(clauses) == len(codes), "clause count")
+    if isinstance(clauses, list):
+        require(all(isinstance(x, dict) and set(x) == {"id", "code", "text_hu"}
+                    for x in clauses), "clause fields")
+        require([(x.get("id"), x.get("code")) for x in clauses if isinstance(x, dict)]
+                == [(f"LTV-{i:02d}", code) for i, code in enumerate(codes, 1)],
+                "clause identity and order")
+        require(all(isinstance(x.get("text_hu"), str) and
+                    len(x["text_hu"].strip()) >= 80 for x in clauses
+                    if isinstance(x, dict)), "mandatory clause wording")
+    states = policy.get("verification_states")
+    expected_states = ["NOT_OBSERVED", "OBSERVING", "PRELIMINARY_PASS",
+                       "VERIFIED_STABLE", "REVIEW_REQUIRED"]
+    require(isinstance(states, list) and len(states) == len(expected_states),
+            "verification state count")
+    if isinstance(states, list):
+        require(all(isinstance(x, dict) and set(x) == {"code", "meaning_hu"}
+                    for x in states), "verification state fields")
+        require([x.get("code") for x in states if isinstance(x, dict)]
+                == expected_states, "verification states")
+        require(all(isinstance(x.get("meaning_hu"), str) and bool(x["meaning_hu"].strip())
+                    for x in states if isinstance(x, dict)), "verification meanings")
+    evidence = [
+        "policy_id", "observation_period_start", "observation_period_end",
+        "independent_contexts", "verifiable_case_references", "successful_outcomes",
+        "failed_outcomes", "inconclusive_outcomes", "risks_and_applicability",
+        "reasoned_conclusion"
+    ]
+    require(policy.get("evidence_fields") == evidence, "traceable evidence fields")
+    flags = [
+        "observe_real_world_rule_effects_when_applied",
+        "two_or_three_successful_uses_are_not_stable_proof",
+        "independent_contexts_and_sustained_period_required",
+        "risk_and_frequency_dependent_evidence_sufficiency",
+        "confirmation_required_when_evidence_is_sufficient",
+        "evidence_and_failures_recorded",
+        "absence_of_detected_failures_is_not_proof",
+        "evidence_can_reopen_verified_state",
+        "no_unrequested_early_stable_success_alert",
+        "no_unapproved_auxiliary_work_or_policy_change",
+        "no_arbitrary_fixed_pass_count"
+    ]
+    req = policy.get("requirements")
+    require(isinstance(req, dict) and set(req) == set(flags), "required flags")
+    require(isinstance(req, dict) and all(req.get(k) is True for k in flags),
+            "mandatory flag disabled")
+    boundary = policy.get("admission_boundary")
+    expected_boundary = {
+        "structural_bootstrap_pass_is_long_term_runtime_proof": False,
+        "independent_runtime_observation_completed": False,
+        "full_governance_admission_asserted": False
+    }
+    require(boundary == expected_boundary, "false runtime-proof claim")
+    return issues
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -643,6 +722,7 @@ def check(root=ROOT):
     errors.extend(validate_github_resource_404_policy(load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",root)))
     errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
     errors.extend(validate_rule_consistency_loop_prevention(load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json", root)))
+    errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json", root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

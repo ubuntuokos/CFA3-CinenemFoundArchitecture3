@@ -391,9 +391,9 @@
     },
     {
       "path": "canonical/policies/CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json",
-      "git_blob_sha1": "8351b23b49136e883e75c07c173c21b8c9e35b94",
+      "git_blob_sha1": "ffd739b7259ae962985547ce9f38da0522ec7149",
       "canonical_id": "CFA3-DONOR-BOUNDED-CLASSIFICATION-001",
-      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 193,
       "leaves": [
         [
@@ -1172,9 +1172,9 @@
     },
     {
       "path": "canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json",
-      "git_blob_sha1": "e0d4e370ab8f719c32a454ac79a4199e186c9496",
+      "git_blob_sha1": "25f8d9c2a8fc40494ff0814f757f1e10f8dad6dd",
       "canonical_id": "CFA3-DONOR-FILE-SIZE-POLICY-001",
-      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 41,
       "leaves": [
         [
@@ -1345,9 +1345,9 @@
     },
     {
       "path": "canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",
-      "git_blob_sha1": "7301955dc5336183f5aeaa813b1b6aac136fc562",
+      "git_blob_sha1": "fa5836f29035aa850f10d9d26465817184e71a29",
       "canonical_id": "CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001",
-      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 106,
       "leaves": [
         [
@@ -1778,9 +1778,9 @@
     },
     {
       "path": "canonical/policies/CFA3-GUI-IMAGE-GENERATION-POLICY-001.json",
-      "git_blob_sha1": "c94bb436a97ee0a8432803f0cba66e917f81e2d3",
+      "git_blob_sha1": "248155952fa9161122a1e960325b9475902a2d34",
       "canonical_id": "CFA3-GUI-IMAGE-GENERATION-POLICY-001",
-      "source_status": "OWNER_DIRECTIVE_APPROVED_PENDING_REPOSITORY_ADMISSION",
+      "source_status": "OWNER_DIRECTIVE_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 64,
       "leaves": [
         [
@@ -2685,9 +2685,9 @@
     },
     {
       "path": "canonical/policies/CFA3-RULE-ADMISSION-POLICY-001.json",
-      "git_blob_sha1": "bba400939ba78100565aa038027092f894defe5b",
+      "git_blob_sha1": "ff179cf6bc7006720d8d0578ce03ae8b818f80e9",
       "canonical_id": "CFA3-RULE-ADMISSION-POLICY-001",
-      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 27,
       "leaves": [
         [
@@ -3039,9 +3039,9 @@
     },
     {
       "path": "canonical/policies/CFA3-SEQUENTIAL-COMMAND-POLICY-001.json",
-      "git_blob_sha1": "c97398821e1b9d5c7d69723204e695dbf53f6026",
+      "git_blob_sha1": "8b1db5ba61e675c4306f47cba7b989788533a8d0",
       "canonical_id": "CFA3-SEQUENTIAL-COMMAND-POLICY-001",
-      "source_status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 25,
       "leaves": [
         [
@@ -3148,9 +3148,9 @@
     },
     {
       "path": "canonical/policies/CFA3-SOURCE-LIFECYCLE-POLICY-001.json",
-      "git_blob_sha1": "06faedc8c9e15513243931fd9b301e5a6414f775",
+      "git_blob_sha1": "f4a90395ed9e2e0640eebe5d5c7abb388945eca8",
       "canonical_id": "CFA3-SOURCE-LIFECYCLE-POLICY-001",
-      "source_status": "OWNER_APPROVED_PENDING_REVIEW_AND_MERGE",
+      "source_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
       "leaf_count": 48,
       "leaves": [
         [

@@ -98,7 +98,7 @@ def validate_source_lifecycle(policy, index):
         errors.append("source lifecycle incomplete index must block unknown links")
     if policy.get("id")!="CFA3-SOURCE-LIFECYCLE-POLICY-001":
         errors.append("source lifecycle policy identity mismatch")
-    if policy.get("authority_status")!="OWNER_APPROVED_PENDING_REVIEW_AND_MERGE":
+    if policy.get("authority_status")!="OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED":
         errors.append("source lifecycle policy admission misrepresented")
     if index.get("schema") not in ("cfa3.source-lifecycle-index.v1", "cfa3.source-lifecycle-index.v2"):
         errors.append("source lifecycle index schema mismatch")
@@ -119,7 +119,7 @@ def validate_donor_classification_plan(policy, decision):
             errors.append("donor classification plan: "+message)
     require(policy.get("schema")=="cfa3.donor-bounded-classification-policy.v1", "schema mismatch")
     require(policy.get("id")=="CFA3-DONOR-BOUNDED-CLASSIFICATION-001", "policy identifier missing")
-    require(policy.get("repository_status")=="OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "repo admission status overstated")
+    require(policy.get("repository_status")=="OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED", "repo admission status overstated")
     legacy=policy.get("legacy_scope",{})
     require(legacy.get("repair_legacy_repo_required") is False,"legacy repair must not be prerequisite")
     require(legacy.get("preserve_raw_records_and_original_links") is True,"lossless preservation required")
@@ -260,7 +260,7 @@ def validate_rule_admission(policy):
             "unapproved or missing policy root field")
     require(policy.get("schema") == "cfa3.rule-admission-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-RULE-ADMISSION-POLICY-001", "identity mismatch")
-    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    require(policy.get("status") == "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED", "unverified merge status")
     require(policy.get("owner_decision_date") == "2026-10-11",
             "owner-approved decision date changed")
     rule = policy.get("rule")
@@ -333,7 +333,7 @@ def validate_sequential_command_policy(policy):
             errors.append("sequential command: " + message)
     require(policy.get("schema") == "cfa3.sequential-command-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-SEQUENTIAL-COMMAND-POLICY-001", "identity mismatch")
-    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified merge status")
+    require(policy.get("status") == "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED", "unverified merge status")
     rule = policy.get("rule", {})
     require(rule.get("id") == "CFA3-SEQUENTIAL-COMMAND-001" and
             rule.get("code") == "ONE_COMMAND_ONE_RESPONSE", "rule identity/code mismatch")
@@ -376,7 +376,7 @@ def validate_donor_file_size_policy(policy):
             issues.append("donor file size: " + description)
     require(policy.get("schema") == "cfa3.donor-file-size-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-DONOR-FILE-SIZE-POLICY-001", "identity mismatch")
-    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+    require(policy.get("status") == "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
             "authority/admission status mismatch")
     rule = policy.get("rule")
     require(isinstance(rule, dict), "rule object missing")
@@ -456,7 +456,7 @@ def validate_github_resource_404_policy(policy):
         return ["github 404 resource policy: not an object"]
     require(policy.get("schema") == "cfa3.github-resource-existence-404-policy.v1", "schema mismatch")
     require(policy.get("id") == "CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001", "identity mismatch")
-    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE", "unverified admission status")
+    require(policy.get("status") == "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED", "unverified admission status")
     require(policy.get("owner_decision_date") == "2026-10-12", "owner decision date drift")
     rule = policy.get("rule", {})
     rule = rule if isinstance(rule, dict) else {}

@@ -1,7 +1,7 @@
 {
   "schema": "cfa3.donor-file-size-policy.v1",
   "id": "CFA3-DONOR-FILE-SIZE-POLICY-001",
-  "status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+  "status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
   "owner_decision_date": "2026-10-12",
   "rule": {
     "id": "DONOR-FILE-SIZE-001",

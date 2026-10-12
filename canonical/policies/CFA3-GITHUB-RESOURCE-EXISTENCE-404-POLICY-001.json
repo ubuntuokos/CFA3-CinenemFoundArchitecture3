@@ -1,7 +1,7 @@
 {
   "schema": "cfa3.github-resource-existence-404-policy.v1",
   "id": "CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001",
-  "status": "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+  "status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
   "owner_decision_date": "2026-10-12",
   "rule": {
     "id": "CFA3-GITHUB-RESOURCE-EXISTENCE-404-001",

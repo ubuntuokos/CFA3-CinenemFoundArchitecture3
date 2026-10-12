@@ -2,7 +2,7 @@
   "schema": "cfa3.gui-image-generation-policy.v1",
   "id": "CFA3-GUI-IMAGE-GENERATION-POLICY-001",
   "title_hu": "GUI-terveket bemutató képek készítésének kötelező szabálya",
-  "status": "OWNER_DIRECTIVE_APPROVED_PENDING_REPOSITORY_ADMISSION",
+  "status": "OWNER_DIRECTIVE_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
   "effective_owner_decision_date": "2026-10-11",
   "authority": "EXPLICIT_CURRENT_OWNER_DIRECTIVE",
   "target_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",

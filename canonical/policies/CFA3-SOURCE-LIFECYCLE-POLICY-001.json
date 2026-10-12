@@ -1,7 +1,7 @@
 {
   "schema": "cfa3.source-lifecycle-policy.v1",
   "id": "CFA3-SOURCE-LIFECYCLE-POLICY-001",
-  "authority_status": "OWNER_APPROVED_PENDING_REVIEW_AND_MERGE",
+  "authority_status": "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED",
   "scope": "ALL_ANALYZED_EXTERNAL_LINKS_AND_TECHNOLOGY_SOURCES",
   "invariants": {
     "lookup_before_analysis": true,

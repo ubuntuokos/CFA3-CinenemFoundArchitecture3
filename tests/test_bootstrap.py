@@ -412,6 +412,22 @@ class BootstrapPolicyTests(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertTrue(validate_rule_consistency_loop_prevention(invalid))
 
+    def test_main_rule_status_is_evidence_aligned(self):
+        entries = (
+            ("CFA3-DONOR-BOUNDED-CLASSIFICATION-001.json", "repository_status", "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+            ("CFA3-DONOR-FILE-SIZE-POLICY-001.json", "status", "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+            ("CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json", "status", "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+            ("CFA3-GUI-IMAGE-GENERATION-POLICY-001.json", "status", "OWNER_DIRECTIVE_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+            ("CFA3-RULE-ADMISSION-POLICY-001.json", "status", "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+            ("CFA3-SEQUENTIAL-COMMAND-POLICY-001.json", "status", "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+            ("CFA3-SOURCE-LIFECYCLE-POLICY-001.json", "authority_status", "OWNER_APPROVED_PRESENT_ON_MAIN_GATE_UNVERIFIED"),
+        )
+        for filename, field, expected in entries:
+            with self.subTest(rule=filename):
+                self.assertEqual(expected, load("canonical/policies/" + filename)[field])
+        catalog = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
+        self.assertFalse(catalog["independent_evidence_verified"])
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")

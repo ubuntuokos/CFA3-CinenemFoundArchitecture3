@@ -491,6 +491,41 @@ class BootstrapPolicyTests(unittest.TestCase):
         self.assertTrue(validate_policy_long_term_validation(bad))
 
 
+
+    def test_exact_finalization_evidence_correction_fail_closed(self):
+        from check_bootstrap import validate_exact_finalization_evidence_correction
+        correction = load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012.json")
+        historical = load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json")
+        self.assertEqual([], validate_exact_finalization_evidence_correction(
+            correction, historical))
+        for path, invalid in (
+            (("status",), "FINALIZED"),
+            (("full_finalization_allowed",), True),
+            (("previous_seven_of_seven_claim_withdrawn",), False),
+            (("unverified_timestamp_may_be_used_as_proof",), True),
+            (("source_provenance", "original_verbatim_chat_message_available"), True),
+            (("source_provenance", "published_sha256_proves_original_approval_match"), True),
+            (("source_provenance", "independent_approved_text_comparison_completed"), True),
+            (("corrected_gates", "TEXT"), "PASS"),
+            (("corrected_gates", "STATUS"), "PASS"),
+        ):
+            bad = copy.deepcopy(correction)
+            obj = bad
+            for part in path[:-1]:
+                obj = obj[part]
+            obj[path[-1]] = invalid
+            with self.subTest(path=path):
+                self.assertTrue(validate_exact_finalization_evidence_correction(
+                    bad, historical))
+        bad_historical = copy.deepcopy(historical)
+        bad_historical["gates"]["TEXT"]["result"] = "UNVERIFIED"
+        self.assertTrue(validate_exact_finalization_evidence_correction(
+            correction, bad_historical))
+        bad_historical = copy.deepcopy(historical)
+        bad_historical["recorded_verdict"] = "FULLY_FINALIZED"
+        self.assertTrue(validate_exact_finalization_evidence_correction(
+            correction, bad_historical))
+
     def test_policy_exact_finalization_owner_text_positive_and_negative(self):
         from check_bootstrap import validate_policy_exact_finalization
         import tempfile

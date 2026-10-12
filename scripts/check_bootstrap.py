@@ -897,6 +897,85 @@ def validate_policy_exact_finalization(policy, root=ROOT):
     return issues
 
 
+
+def validate_exact_finalization_evidence_correction(correction, historical):
+    """Fail closed on the unproven TEXT gate; preserve the historic erroneous receipt."""
+    issues = []
+    def expect(condition, message):
+        if not condition:
+            issues.append("exact finalization evidence: " + message)
+    if not isinstance(correction, dict) or not isinstance(historical, dict):
+        return ["exact finalization evidence: missing correction or historical receipt"]
+    expect(set(correction) == {
+        "schema", "id", "subject_policy_id", "status",
+        "supersedes_status_claim_only", "historical_receipt_git_blob_sha1",
+        "correction_comment", "github_correction_comment_created_at",
+        "source_provenance", "corrected_gates", "full_finalization_allowed",
+        "previous_seven_of_seven_claim_withdrawn",
+        "unverified_original_timestamp", "unverified_timestamp_may_be_used_as_proof",
+        "historical_source_not_modified", "evidence_policy"
+    }, "unexpected or missing correction fields")
+    fixed = {
+        "schema": "cfa3.exact-finalization-evidence-correction.v1",
+        "id": "CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012",
+        "subject_policy_id": "CFA3-POLICY-EXACT-FINALIZATION-001",
+        "status": "MERGED_FINALIZATION_PROOF_INCOMPLETE",
+        "supersedes_status_claim_only": "canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json",
+        "historical_receipt_git_blob_sha1": "ec8f092d1fab53997b7659a54d7f2603c64fcae3",
+        "correction_comment": "https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/pull/36#issuecomment-6129912643",
+        "github_correction_comment_created_at": "2026-10-12T18:10:19Z",
+        "full_finalization_allowed": False,
+        "previous_seven_of_seven_claim_withdrawn": True,
+        "unverified_original_timestamp": "2026-10-12T19:46:55+02:00",
+        "unverified_timestamp_may_be_used_as_proof": False,
+        "historical_source_not_modified": True,
+        "evidence_policy": "FAIL_CLOSED_UNTIL_VERBATIM_OWNER_APPROVED_SOURCE_AND_RECHECK_ARE_AVAILABLE",
+    }
+    for field, value in fixed.items():
+        expect(type(correction.get(field)) is type(value) and
+               correction.get(field) == value, "mismatched " + field)
+    source = correction.get("source_provenance")
+    required_source = {
+        "user_approval_known": True,
+        "original_verbatim_chat_message_available": False,
+        "independent_approved_text_comparison_completed": False,
+        "published_markdown_sha256": "58bd436e6d78ea06a3c9a04f0e4066068f7a19237dbced6677df06df936019b4",
+        "published_sha256_proves_original_approval_match": False,
+        "original_conversation_body_required_before_text_pass": True,
+    }
+    expect(isinstance(source, dict) and set(source) == set(required_source),
+           "source provenance fields incomplete")
+    for field, value in required_source.items():
+        expect(isinstance(source, dict) and
+               type(source.get(field)) is type(value) and
+               source.get(field) == value, "unproven owner source: " + field)
+    expected_gates = {
+        "TEXT": "UNVERIFIED",
+        "STRUCTURE": "PASS_PUBLISHED_STRUCTURE_ONLY",
+        "MERGE": "PASS_VERIFIED_GITHUB",
+        "STATUS": "PARTIAL_HISTORICAL_APPROVAL_AND_MERGE",
+        "REGISTRY": "PASS_VERIFIED_GITHUB",
+        "CI": "PASS_VERIFIED_AT_REFERENCED_COMMITS",
+        "MAIN": "PASS_VERIFIED_AT_REFERENCED_COMMITS",
+    }
+    gates = correction.get("corrected_gates")
+    expect(isinstance(gates, dict) and gates == expected_gates,
+           "seven gates must not claim verified TEXT or full completion")
+    expect(historical.get("schema") == "cfa3.policy-finalization-evidence-snapshot.v1",
+           "historical schema mismatch")
+    expect(historical.get("receipt_id") ==
+           "CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012",
+           "historical receipt identity mismatch")
+    expect(historical.get("recorded_verdict") == "VERIFIED_AT_OBSERVED_MAIN_SHA",
+           "original erroneous verdict must remain documented")
+    expect(historical.get("gates", {}).get("TEXT", {}).get("result") == "PASS",
+           "original unverified TEXT PASS claim must remain auditable")
+    expect(historical.get("approved_source_evidence", {}).get(
+        "source_sha256_calculated_before_first_github_publication") ==
+        required_source["published_markdown_sha256"],
+        "historical digest must match corrected provenance")
+    return issues
+
 def validate_csa_infrastructure_isolation_policy(policy, root=ROOT):
     """Verify the entire six-section owner-approved CSA policy exactly."""
     import hashlib
@@ -1079,6 +1158,7 @@ def check(root=ROOT):
     errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
     errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
     errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
+    errors.extend(validate_exact_finalization_evidence_correction(load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012.json",root),load("canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json",root)))
     errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
     errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
     from check_guard_policy_surface import SURFACE, validate_snapshot

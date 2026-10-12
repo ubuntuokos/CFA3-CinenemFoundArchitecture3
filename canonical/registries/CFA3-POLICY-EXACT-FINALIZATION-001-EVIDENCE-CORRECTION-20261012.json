@@ -1,0 +1,33 @@
+{
+  "schema": "cfa3.exact-finalization-evidence-correction.v1",
+  "id": "CFA3-POLICY-EXACT-FINALIZATION-001-EVIDENCE-CORRECTION-20261012",
+  "subject_policy_id": "CFA3-POLICY-EXACT-FINALIZATION-001",
+  "status": "MERGED_FINALIZATION_PROOF_INCOMPLETE",
+  "supersedes_status_claim_only": "canonical/registries/CFA3-POLICY-EXACT-FINALIZATION-001-CLOSURE-20261012.json",
+  "historical_receipt_git_blob_sha1": "ec8f092d1fab53997b7659a54d7f2603c64fcae3",
+  "correction_comment": "https://github.com/ubuntuokos/CFA3-CinenemFoundArchitecture3/pull/36#issuecomment-6129912643",
+  "github_correction_comment_created_at": "2026-10-12T18:10:19Z",
+  "source_provenance": {
+    "user_approval_known": true,
+    "original_verbatim_chat_message_available": false,
+    "independent_approved_text_comparison_completed": false,
+    "published_markdown_sha256": "58bd436e6d78ea06a3c9a04f0e4066068f7a19237dbced6677df06df936019b4",
+    "published_sha256_proves_original_approval_match": false,
+    "original_conversation_body_required_before_text_pass": true
+  },
+  "corrected_gates": {
+    "TEXT": "UNVERIFIED",
+    "STRUCTURE": "PASS_PUBLISHED_STRUCTURE_ONLY",
+    "MERGE": "PASS_VERIFIED_GITHUB",
+    "STATUS": "PARTIAL_HISTORICAL_APPROVAL_AND_MERGE",
+    "REGISTRY": "PASS_VERIFIED_GITHUB",
+    "CI": "PASS_VERIFIED_AT_REFERENCED_COMMITS",
+    "MAIN": "PASS_VERIFIED_AT_REFERENCED_COMMITS"
+  },
+  "full_finalization_allowed": false,
+  "previous_seven_of_seven_claim_withdrawn": true,
+  "unverified_original_timestamp": "2026-10-12T19:46:55+02:00",
+  "unverified_timestamp_may_be_used_as_proof": false,
+  "historical_source_not_modified": true,
+  "evidence_policy": "FAIL_CLOSED_UNTIL_VERBATIM_OWNER_APPROVED_SOURCE_AND_RECHECK_ARE_AVAILABLE"
+}

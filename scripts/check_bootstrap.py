@@ -1096,17 +1096,19 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
                        "approved_text_path", "approved_text_sha256",
                        "approved_section_count", "finalization_gates",
                        "lifecycle_evidence_source", "processing_state_machine",
-                       "donor_data_file_max_bytes", "requirements", "admission_boundary"}
+                       "donor_data_file_max_bytes", "requirements", "admission_boundary",
+                       "revision_evidence"}
     need(set(policy) == required_fields, "metadata fields")
     need(policy.get("schema") == "cfa3.policy-sequential-execution-result-integrity.v1", "schema")
     need(policy.get("id") == "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001", "identity")
+    need(policy.get("title_hu") == "Kötelező szekvenciális feladatvégrehajtás, tényleges eredményközlés és ellenőrzési ciklusok megelőzése", "exact approved JSON title")
     need(policy.get("status") == "OWNER_APPROVED", "approval does not mean merge")
-    need(policy.get("version") == "1.0" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
+    need(policy.get("version") == "1.1" and policy.get("owner_decision_date") == "2026-10-12", "version/date")
     need(policy.get("classification") == "MANDATORY_CFA3_SEQUENTIAL_EXECUTION_AND_RESULT_INTEGRITY", "classification")
     need(policy.get("scope") == ["CFA3 fejlesztési munkafolyamatok", "donoradatbázis-feldolgozás",
                                "GitHub publikáció", "tájékoztatás"], "scope")
     path = "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.md"
-    digest = "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b"
+    digest = "5e7d47874695f877033e85acb84ab537ea7e4b17676e308ae1a832b4d9eb4b91"
     need(policy.get("approved_text_path") == path and
          policy.get("approved_text_sha256") == digest, "approved source integrity")
     need(policy.get("approved_section_count") == 14, "14 sections")
@@ -1114,7 +1116,7 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
          ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "seven gates")
     need(policy.get("lifecycle_evidence_source") == "LIVE_GITHUB_MAIN_AND_PR_STATE", "live evidence")
     need(policy.get("processing_state_machine") ==
-         ["PENDING", "IN_PROGRESS", "VALIDATING", "PUBLISHING", "PUBLISHED", "BLOCKED"], "states")
+         ["PENDING", "IN_PROGRESS", "VALIDATING", "READY_FOR_PUBLICATION", "PUBLISHING", "PUBLISHED", "BLOCKED"], "states")
     need(type(policy.get("donor_data_file_max_bytes")) is int and
          policy.get("donor_data_file_max_bytes") == 996147, "max donor data size")
     required_flags = {
@@ -1124,11 +1126,18 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
         "explicit_owner_donor_approval_required", "progress_states_and_stagnation_detection",
         "stop_no_progress_repeat_loops", "preserve_rights_security_approval_gates",
         "enforce_996147_byte_max_donor_data_file", "preserve_history_and_searchability_when_splitting",
-        "publish_only_after_full_file_closure_and_proofs", "final_message_contains_essential_verifiable_results",
+        "publish_only_after_publication_readiness_proof", "final_message_contains_essential_verifiable_results",
         "do_not_claim_ui_message_persistence_control", "no_unverified_finalization_or_ci_shortcut",
         "self_attribution_for_in_scope_execution_failures", "no_scope_expansion_or_unauthorized_work",
         "long_term_validation_not_established_by_document"
     }
+    need(policy.get("revision_evidence") == {
+        "previous_version": "1.0",
+        "previous_markdown_sha256": "3c36ce998e392017a8e6e377b458755b635a2e1c0c3e246ab3b328040a14138b",
+        "prior_merge_commit": "7cc091e8acef0d821932a8845e26f9d5d2c66846",
+        "correction_scope": "P1_PREPUBLICATION_READINESS_AND_P2_EXACT_JSON_TITLE",
+        "authorization": "USER_CONTINUE_AFTER_EXPLICIT_P1_P2_DISCLOSURE_2026-10-12"
+    }, "immutable prior revision provenance")
     flags = policy.get("requirements")
     need(isinstance(flags, dict) and set(flags) == required_flags and
          all(flags[k] is True for k in required_flags), "19 normative safeguards")
@@ -1147,7 +1156,13 @@ def validate_sequential_execution_result_integrity(policy, root=ROOT):
     need(hashlib.sha256(raw).hexdigest() == digest, "owner text edited or truncated")
     heads = re.findall(r"^## ([0-9]+)[.] § ", approved, flags=re.MULTILINE)
     need([int(x) for x in heads] == list(range(1, 15)), "14 approved chapters")
-    for phrase in ("Egy feldolgozási egység – teljes lezárás",
+    for phrase in (
+                   "5. A fájlhoz tartozó feldolgozási eredményt publikációra előkészíteni, végleges lezárás kijelentése nélkül.",
+                   "6. A szükséges ellenőrzéseket elvégezni és a publikációra kész állapotot igazolni.",
+                   "8. A tényleges publikált állapotot igazolni, és csak ezt követően a fájlt véglegesen lezárni.",
+                   "READY_FOR_PUBLICATION",
+                   "A végleges fájllezárás kizárólag mind a nyolc feltétel teljesülése után igazolható.",
+                   "Egy feldolgozási egység – teljes lezárás",
                    "Ismétlődő ellenőrzések tilalma",
                    "A donorszám növekedésének ellenőrizhetősége",
                    "Végtelen és eredménytelen ciklusok megszakítása",

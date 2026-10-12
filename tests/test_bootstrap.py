@@ -324,11 +324,38 @@ class BootstrapPolicyTests(unittest.TestCase):
         broken["rule"]["runtime_verified"] = True
         self.assertTrue(validate_donor_file_size_policy(broken))
 
+    def test_ai_rule_acceptance_wellbeing_efficiency(self):
+        from check_bootstrap import validate_ai_rule_acceptance_policy
+        policy = load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json")
+        self.assertEqual([], validate_ai_rule_acceptance_policy(policy))
+        for key in policy["requirements"]:
+            bad = copy.deepcopy(policy)
+            bad["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+        for key in policy["safety_boundary"]:
+            bad = copy.deepcopy(policy)
+            bad["safety_boundary"][key] = False
+            with self.subTest(safety=key):
+                self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["mandatory_clauses"].pop()
+        self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["mandatory_clauses"][1]["text_hu"] = "Eltávolított mentálhigiénés védelem"
+        self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["status"] = "MERGED_WITHOUT_EVIDENCE"
+        self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+        bad = copy.deepcopy(policy)
+        bad["admission_boundary"]["independent_execution_gate_pass"] = True
+        self.assertTrue(validate_ai_rule_acceptance_policy(bad))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(9, surface["source_policy_count"])
+        self.assertEqual(10, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

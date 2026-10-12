@@ -1241,6 +1241,64 @@ def validate_conversation_evidence_blocker_prevention(policy, root=ROOT):
     return errors
 
 
+
+def validate_execution_completion_and_verified_finalization(policy, root=ROOT):
+    """Verify this owner's admitted exact policy text and metadata; not runtime PASS."""
+    import hashlib
+    errors = []
+    def need(ok, name):
+        if not ok:
+            errors.append("execution-completion rule: " + name)
+    ident = "CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001"
+    title = "Kötelező feladatbefejezés, önálló végrehajtási felelősség, hibajavítás és bizonyított véglegesítés"
+    expected_digest = "c009d287a39fbf10ccb48dc99d2478a9fdfe67ccd71c8daece10372e11c25e65"
+    approved_path = "canonical/policies/" + ident + ".md"
+    need(policy.get("schema") == "cfa3.policy-execution-completion-and-verified-finalization.v1", "schema")
+    need(policy.get("id") == ident, "id")
+    need(policy.get("title_hu") == title, "exact approved title")
+    need(policy.get("version") == "1.0", "version")
+    need(policy.get("status") == "OWNER_APPROVED", "owner-approved lifecycle state")
+    need(policy.get("owner_decision_date") == "2026-10-12", "owner decision date")
+    need(policy.get("approved_text_path") == approved_path, "approved text path")
+    need(policy.get("approved_text_sha256") == expected_digest, "approved original digest")
+    need(policy.get("approved_section_count") == 20, "section count metadata")
+    need(policy.get("finalization_gates") ==
+         ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "seven required gates")
+    required = (
+        "complete_authorized_task", "sequential_donor_publication",
+        "distinguish_publication_readiness_from_final_closure",
+        "no_repeated_unchanged_checks", "in_scope_self_correction",
+        "pre_merge_review_thread_inspection", "post_merge_review_remediation",
+        "independent_original_text_comparison", "exact_metadata_validation",
+        "seven_gate_finalization_proof", "scope_guard_and_security_gates"
+    )
+    req = policy.get("requirements", {})
+    need(isinstance(req, dict) and set(req) == set(required) and
+         all(req.get(k) is True for k in required), "mandatory requirements")
+    boundary = policy.get("admission_boundary", {})
+    need(isinstance(boundary, dict) and set(boundary) ==
+         {"approval_alone_is_finalization", "ci_alone_is_finalization",
+          "automatic_scope_expansion_allowed"} and
+         all(v is False for v in boundary.values()), "admission boundaries")
+    try:
+        raw = (pathlib.Path(root) / approved_path).read_bytes()
+        approved_text = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return errors + ["execution-completion rule: approved text unreadable"]
+    need(hashlib.sha256(raw).hexdigest() == expected_digest, "owner-approved full text integrity")
+    sections = [int(n) for n in re.findall(r"^## ([0-9]+)[.] §", approved_text, re.MULTILINE)]
+    need(sections == list(range(1, 21)), "20 ordered clauses")
+    for phrase in (
+        "A *publikációs készenlét* nem azonos a *végleges lezárással*.",
+        "A feltöltött fájlból számított SHA-256 lenyomat önmagában nem igazolja",
+        "A 7/7 PASS kizárólag a hét kapu tényleges teljesülése esetén jelenthető ki.",
+        "Valós jogosultsági, biztonsági, jóváhagyási vagy ütközési akadály esetén",
+        "A jóváhagyás, a GitHub-publikáció és a bizonyított véglegesítés három különböző"
+    ):
+        need(phrase in approved_text, "required exact clause: " + phrase)
+    return errors
+
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -1268,6 +1326,7 @@ def check(root=ROOT):
     errors.extend(validate_csa_infrastructure_isolation_policy(load("canonical/policies/CFA3-POLICY-CSA-INFRASTRUCTURE-ISOLATION-001.json",root),root))
     errors.extend(validate_sequential_execution_result_integrity(load("canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json", root), root))
     errors.extend(validate_conversation_evidence_blocker_prevention(load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",root),root))
+    errors.extend(validate_execution_completion_and_verified_finalization(load("canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

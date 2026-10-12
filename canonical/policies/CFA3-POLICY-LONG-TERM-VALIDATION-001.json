@@ -1,0 +1,131 @@
+{
+  "schema": "cfa3.policy-long-term-validation.v1",
+  "id": "CFA3-POLICY-LONG-TERM-VALIDATION-001",
+  "title_hu": "Tartós szabályműködés visszaigazolása",
+  "status": "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
+  "owner_decision_date": "2026-10-12",
+  "classification": "MANDATORY_CFA3_POLICY_OBSERVATION_AND_EVIDENCE",
+  "scope": [
+    "CFA3 fejlesztők és AI-asszisztensek",
+    "CFA3 szabályok alkalmazása és működésmegfigyelése",
+    "CFA3 szabályműködési visszaigazolások"
+  ],
+  "mandatory_clauses": [
+    {
+      "id": "LTV-01",
+      "code": "CONTINUOUS_RULE_OBSERVATION",
+      "text_hu": "A fejlesztő köteles figyelemmel kísérni a szabályok tényleges működését azok alkalmazása során."
+    },
+    {
+      "id": "LTV-02",
+      "code": "NO_PREMATURE_STABLE_CLAIM",
+      "text_hu": "Két-három sikeres alkalmazás nem elegendő annak kijelentésére, hogy a szabály bizonyítottan megfelelően működik."
+    },
+    {
+      "id": "LTV-03",
+      "code": "LONG_TERM_INDEPENDENT_EVIDENCE",
+      "text_hu": "A visszaigazolásnak hosszabb időszakban, több egymástól független alkalmazási helyzetben szerzett, ellenőrizhető tapasztalatokon kell alapulnia."
+    },
+    {
+      "id": "LTV-04",
+      "code": "MANDATORY_EVIDENCE_BACKED_CONFIRMATION",
+      "text_hu": "Amennyiben a fejlesztő elegendő bizonyítékot gyűjtött a szabály tartósan megfelelő működésére, köteles ezt egyértelműen visszaigazolni."
+    },
+    {
+      "id": "LTV-05",
+      "code": "TRACEABLE_CONFIRMATION_RECORD",
+      "text_hu": "A visszaigazolásnak tartalmaznia kell a megfigyelési időszakot, az alkalmazási eseteket, a sikeres és sikertelen eredményeket, valamint a következtetés alapját."
+    },
+    {
+      "id": "LTV-06",
+      "code": "NO_ABSENCE_OF_ERROR_AS_PROOF",
+      "text_hu": "Az AI nem tekintheti a szabályt bizonyítottan működőnek pusztán azért, mert nem észlelt hibát."
+    },
+    {
+      "id": "LTV-07",
+      "code": "REOPEN_ON_CONTRADICTING_EVIDENCE",
+      "text_hu": "A korábban igazolt szabály működési problémáját később is jelezni kell, és szükség esetén felül kell vizsgálni a visszaigazolását."
+    },
+    {
+      "id": "LTV-08",
+      "code": "NO_UNSOLICITED_EARLY_NOTIFICATIONS",
+      "text_hu": "Az AI nem küldhet néhány sikeres alkalmazás után olyan értesítést, amely tartósan bizonyított működést állít."
+    }
+  ],
+  "verification_states": [
+    {
+      "code": "NOT_OBSERVED",
+      "meaning_hu": "Nincs elegendő működési tapasztalat"
+    },
+    {
+      "code": "OBSERVING",
+      "meaning_hu": "Megfigyelés alatt"
+    },
+    {
+      "code": "PRELIMINARY_PASS",
+      "meaning_hu": "Vannak sikeres esetek, de nincs tartós bizonyíték"
+    },
+    {
+      "code": "VERIFIED_STABLE",
+      "meaning_hu": "Tartós, ellenőrizhető működés igazolt"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "meaning_hu": "Korábbi igazolást érintő probléma merült fel"
+    }
+  ],
+  "evidence_fields": [
+    "policy_id",
+    "rule_id",
+    "policy_revision_sha256",
+    "verification_state",
+    "observation_period_start",
+    "observation_period_end",
+    "independent_contexts",
+    "verifiable_case_references",
+    "successful_outcomes",
+    "failed_outcomes",
+    "inconclusive_outcomes",
+    "risks_and_applicability",
+    "reasoned_conclusion"
+  ],
+  "requirements": {
+    "observe_real_world_rule_effects_when_applied": true,
+    "two_or_three_successful_uses_are_not_stable_proof": true,
+    "independent_contexts_and_sustained_period_required": true,
+    "risk_and_frequency_dependent_evidence_sufficiency": true,
+    "confirmation_required_when_evidence_is_sufficient": true,
+    "evidence_and_failures_recorded": true,
+    "absence_of_detected_failures_is_not_proof": true,
+    "evidence_can_reopen_verified_state": true,
+    "no_unrequested_early_stable_success_alert": true,
+    "no_unapproved_auxiliary_work_or_policy_change": true,
+    "no_arbitrary_fixed_pass_count": true,
+    "proof_evidence_must_bind_exact_rule_revision": true,
+    "evidence_record_requires_verification_state": true
+  },
+  "admission_boundary": {
+    "structural_bootstrap_pass_is_long_term_runtime_proof": false,
+    "independent_runtime_observation_completed": false,
+    "full_governance_admission_asserted": false
+  },
+  "mandatory_evidence_provisions": [
+    "A sikeres működés igazolása nem alapulhat önkényesen megválasztott darabszámon.",
+    "A bizonyítás időtartamát és mélységét a szabály jellege, alkalmazási gyakorisága és kockázata határozza meg.",
+    "A kötelező visszaigazolás viszont nem maradhat el, ha a tartós működést megfelelő bizonyítékok igazolják."
+  ],
+  "evidence_binding": {
+    "rule_id_source": "CANONICAL_RULE_ID_WITHIN_POLICY",
+    "policy_revision_digest_source": "SHA256_OF_EXACT_CANONICAL_POLICY_FILE_BYTES",
+    "verified_stable_requires_matching_rule_id_and_policy_revision_sha256": true,
+    "unverified_or_stale_digest_must_not_claim_verified_stable": true,
+    "verification_state_field": "verification_state",
+    "verification_state_allowed_codes": [
+      "NOT_OBSERVED",
+      "OBSERVING",
+      "PRELIMINARY_PASS",
+      "VERIFIED_STABLE",
+      "REVIEW_REQUIRED"
+    ]
+  }
+}

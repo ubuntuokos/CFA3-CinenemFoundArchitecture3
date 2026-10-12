@@ -690,6 +690,132 @@ def validate_github_merge_gate_405_policy(policy):
             "unverified runtime PASS")
     return errors
 
+def validate_policy_long_term_validation(policy):
+    """Enforce exact owner-approved text; structural checks do not prove runtime stability."""
+    problems = []
+    if not isinstance(policy, dict):
+        return ["long-term validation: policy must be an object"]
+    def require(ok, reason):
+        if not ok:
+            problems.append("long-term validation: " + reason)
+    root_keys = [
+        "schema", "id", "title_hu", "status", "owner_decision_date",
+        "classification", "scope", "mandatory_clauses", "mandatory_evidence_provisions",
+        "verification_states", "evidence_fields", "evidence_binding",
+        "requirements", "admission_boundary"
+    ]
+    require(set(policy) == set(root_keys), "required root fields")
+    require(policy.get("schema") == "cfa3.policy-long-term-validation.v1", "schema")
+    require(policy.get("id") == "CFA3-POLICY-LONG-TERM-VALIDATION-001", "identity")
+    require(policy.get("title_hu") == "Tartós szabályműködés visszaigazolása", "title")
+    require(policy.get("owner_decision_date") == "2026-10-12", "decision date")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
+            "runtime not proven")
+    require(policy.get("classification") == "MANDATORY_CFA3_POLICY_OBSERVATION_AND_EVIDENCE",
+            "classification")
+    require(policy.get("scope") == ["CFA3 fejlesztők és AI-asszisztensek","CFA3 szabályok alkalmazása és működésmegfigyelése","CFA3 szabályműködési visszaigazolások"],
+            "approved scope changed")
+    approved_codes = ["CONTINUOUS_RULE_OBSERVATION","NO_PREMATURE_STABLE_CLAIM","LONG_TERM_INDEPENDENT_EVIDENCE","MANDATORY_EVIDENCE_BACKED_CONFIRMATION","TRACEABLE_CONFIRMATION_RECORD","NO_ABSENCE_OF_ERROR_AS_PROOF","REOPEN_ON_CONTRADICTING_EVIDENCE","NO_UNSOLICITED_EARLY_NOTIFICATIONS"]
+    approved_texts = [
+    "A fejlesztő köteles figyelemmel kísérni a szabályok tényleges működését azok alkalmazása során.",
+    "Két-három sikeres alkalmazás nem elegendő annak kijelentésére, hogy a szabály bizonyítottan megfelelően működik.",
+    "A visszaigazolásnak hosszabb időszakban, több egymástól független alkalmazási helyzetben szerzett, ellenőrizhető tapasztalatokon kell alapulnia.",
+    "Amennyiben a fejlesztő elegendő bizonyítékot gyűjtött a szabály tartósan megfelelő működésére, köteles ezt egyértelműen visszaigazolni.",
+    "A visszaigazolásnak tartalmaznia kell a megfigyelési időszakot, az alkalmazási eseteket, a sikeres és sikertelen eredményeket, valamint a következtetés alapját.",
+    "Az AI nem tekintheti a szabályt bizonyítottan működőnek pusztán azért, mert nem észlelt hibát.",
+    "A korábban igazolt szabály működési problémáját később is jelezni kell, és szükség esetén felül kell vizsgálni a visszaigazolását.",
+    "Az AI nem küldhet néhány sikeres alkalmazás után olyan értesítést, amely tartósan bizonyított működést állít."
+]
+    approved_provisions = [
+    "A sikeres működés igazolása nem alapulhat önkényesen megválasztott darabszámon.",
+    "A bizonyítás időtartamát és mélységét a szabály jellege, alkalmazási gyakorisága és kockázata határozza meg.",
+    "A kötelező visszaigazolás viszont nem maradhat el, ha a tartós működést megfelelő bizonyítékok igazolják."
+]
+    clauses = policy.get("mandatory_clauses")
+    require(isinstance(clauses, list) and len(clauses) == 8, "clause count")
+    if isinstance(clauses, list):
+        require(all(isinstance(c, dict) and set(c) == {"id", "code", "text_hu"}
+                    for c in clauses), "mandatory clause fields")
+        require([(c.get("id"), c.get("code"), c.get("text_hu"))
+                 for c in clauses if isinstance(c, dict)] ==
+                [(f"LTV-{i + 1:02d}", approved_codes[i], approved_texts[i])
+                 for i in range(8)], "approved clause wording changed")
+    require(policy.get("mandatory_evidence_provisions") == approved_provisions,
+            "approved proof limitations changed")
+    expected_states = [
+    {
+        "code": "NOT_OBSERVED",
+        "meaning_hu": "Nincs elegendő működési tapasztalat"
+    },
+    {
+        "code": "OBSERVING",
+        "meaning_hu": "Megfigyelés alatt"
+    },
+    {
+        "code": "PRELIMINARY_PASS",
+        "meaning_hu": "Vannak sikeres esetek, de nincs tartós bizonyíték"
+    },
+    {
+        "code": "VERIFIED_STABLE",
+        "meaning_hu": "Tartós, ellenőrizhető működés igazolt"
+    },
+    {
+        "code": "REVIEW_REQUIRED",
+        "meaning_hu": "Korábbi igazolást érintő probléma merült fel"
+    }
+]
+    require(policy.get("verification_states") == expected_states, "verification state drift")
+    evidence_fields = [
+    "policy_id",
+    "rule_id",
+    "policy_revision_sha256",
+    "verification_state",
+    "observation_period_start",
+    "observation_period_end",
+    "independent_contexts",
+    "verifiable_case_references",
+    "successful_outcomes",
+    "failed_outcomes",
+    "inconclusive_outcomes",
+    "risks_and_applicability",
+    "reasoned_conclusion"
+]
+    require(policy.get("evidence_fields") == evidence_fields, "rule revision evidence fields")
+    expected_binding = {
+        "rule_id_source": "CANONICAL_RULE_ID_WITHIN_POLICY",
+        "policy_revision_digest_source": "SHA256_OF_EXACT_CANONICAL_POLICY_FILE_BYTES",
+        "verification_state_field": "verification_state",
+        "verification_state_allowed_codes": ["NOT_OBSERVED","OBSERVING","PRELIMINARY_PASS","VERIFIED_STABLE","REVIEW_REQUIRED"],
+        "verified_stable_requires_matching_rule_id_and_policy_revision_sha256": True,
+        "unverified_or_stale_digest_must_not_claim_verified_stable": True
+    }
+    require(policy.get("evidence_binding") == expected_binding, "version-bound proof")
+    required_flags = [
+    "absence_of_detected_failures_is_not_proof",
+    "confirmation_required_when_evidence_is_sufficient",
+    "evidence_and_failures_recorded",
+    "evidence_can_reopen_verified_state",
+    "evidence_record_requires_verification_state",
+    "independent_contexts_and_sustained_period_required",
+    "no_arbitrary_fixed_pass_count",
+    "no_unapproved_auxiliary_work_or_policy_change",
+    "no_unrequested_early_stable_success_alert",
+    "observe_real_world_rule_effects_when_applied",
+    "proof_evidence_must_bind_exact_rule_revision",
+    "risk_and_frequency_dependent_evidence_sufficiency",
+    "two_or_three_successful_uses_are_not_stable_proof"
+]
+    flags = policy.get("requirements")
+    require(isinstance(flags, dict) and set(flags) == set(required_flags), "requirement set")
+    require(isinstance(flags, dict) and all(flags.get(k) is True for k in required_flags),
+            "mandatory requirement disabled")
+    require(policy.get("admission_boundary") == {
+        "structural_bootstrap_pass_is_long_term_runtime_proof": False,
+        "independent_runtime_observation_completed": False,
+        "full_governance_admission_asserted": False
+    }, "runtime proof must remain pending")
+    return problems
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -711,6 +837,7 @@ def check(root=ROOT):
     errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
     errors.extend(validate_rule_consistency_loop_prevention(load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json", root)))
     errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
+    errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

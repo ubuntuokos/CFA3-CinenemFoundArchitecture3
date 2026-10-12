@@ -437,11 +437,64 @@ class BootstrapPolicyTests(unittest.TestCase):
         invalid["sections"].pop()
         self.assertTrue(validate_github_merge_gate_405_policy(invalid))
 
+    def test_policy_long_term_validation_positive_and_negative(self):
+        from check_bootstrap import validate_policy_long_term_validation
+        policy = load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json")
+        self.assertEqual([], validate_policy_long_term_validation(policy))
+        for key in policy["requirements"]:
+            bad = copy.deepcopy(policy)
+            bad["requirements"][key] = False
+            with self.subTest(requirement=key):
+                self.assertTrue(validate_policy_long_term_validation(bad))
+        for key in policy["admission_boundary"]:
+            bad = copy.deepcopy(policy)
+            bad["admission_boundary"][key] = True
+            with self.subTest(boundary=key):
+                self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        old = bad["mandatory_clauses"][1]["text_hu"]
+        bad["mandatory_clauses"][1]["text_hu"] = "X" * len(old)
+        self.assertEqual(len(old), len(bad["mandatory_clauses"][1]["text_hu"]))
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["mandatory_evidence_provisions"][0] = "Módosított előírás"
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_fields"].remove("rule_id")
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_fields"].remove("policy_revision_sha256")
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_binding"]["verified_stable_requires_matching_rule_id_and_policy_revision_sha256"] = False
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["verification_states"][3]["code"] = "PRELIMINARY_PASS"
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["status"] = "VERIFIED_STABLE"
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["scope"] = []
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["scope"][0] = "Más feladat"
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_fields"].remove("verification_state")
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_binding"]["verification_state_allowed_codes"] = ["VERIFIED_STABLE"]
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_binding"]["verification_state_field"] = "ignored_state"
+        self.assertTrue(validate_policy_long_term_validation(bad))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(13, surface["source_policy_count"])
+        self.assertEqual(14, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

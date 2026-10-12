@@ -713,6 +713,8 @@ def validate_policy_long_term_validation(policy):
             "runtime not proven")
     require(policy.get("classification") == "MANDATORY_CFA3_POLICY_OBSERVATION_AND_EVIDENCE",
             "classification")
+    require(policy.get("scope") == ["CFA3 fejlesztők és AI-asszisztensek","CFA3 szabályok alkalmazása és működésmegfigyelése","CFA3 szabályműködési visszaigazolások"],
+            "approved scope changed")
     approved_codes = ["CONTINUOUS_RULE_OBSERVATION","NO_PREMATURE_STABLE_CLAIM","LONG_TERM_INDEPENDENT_EVIDENCE","MANDATORY_EVIDENCE_BACKED_CONFIRMATION","TRACEABLE_CONFIRMATION_RECORD","NO_ABSENCE_OF_ERROR_AS_PROOF","REOPEN_ON_CONTRADICTING_EVIDENCE","NO_UNSOLICITED_EARLY_NOTIFICATIONS"]
     approved_texts = [
     "A fejlesztő köteles figyelemmel kísérni a szabályok tényleges működését azok alkalmazása során.",
@@ -767,6 +769,7 @@ def validate_policy_long_term_validation(policy):
     "policy_id",
     "rule_id",
     "policy_revision_sha256",
+    "verification_state",
     "observation_period_start",
     "observation_period_end",
     "independent_contexts",
@@ -781,6 +784,8 @@ def validate_policy_long_term_validation(policy):
     expected_binding = {
         "rule_id_source": "CANONICAL_RULE_ID_WITHIN_POLICY",
         "policy_revision_digest_source": "SHA256_OF_EXACT_CANONICAL_POLICY_FILE_BYTES",
+        "verification_state_field": "verification_state",
+        "verification_state_allowed_codes": ["NOT_OBSERVED","OBSERVING","PRELIMINARY_PASS","VERIFIED_STABLE","REVIEW_REQUIRED"],
         "verified_stable_requires_matching_rule_id_and_policy_revision_sha256": True,
         "unverified_or_stale_digest_must_not_claim_verified_stable": True
     }
@@ -790,6 +795,7 @@ def validate_policy_long_term_validation(policy):
     "confirmation_required_when_evidence_is_sufficient",
     "evidence_and_failures_recorded",
     "evidence_can_reopen_verified_state",
+    "evidence_record_requires_verification_state",
     "independent_contexts_and_sustained_period_required",
     "no_arbitrary_fixed_pass_count",
     "no_unapproved_auxiliary_work_or_policy_change",

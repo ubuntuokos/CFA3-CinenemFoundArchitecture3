@@ -474,6 +474,21 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad = copy.deepcopy(policy)
         bad["status"] = "VERIFIED_STABLE"
         self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["scope"] = []
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["scope"][0] = "Más feladat"
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_fields"].remove("verification_state")
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_binding"]["verification_state_allowed_codes"] = ["VERIFIED_STABLE"]
+        self.assertTrue(validate_policy_long_term_validation(bad))
+        bad = copy.deepcopy(policy)
+        bad["evidence_binding"]["verification_state_field"] = "ignored_state"
+        self.assertTrue(validate_policy_long_term_validation(bad))
 
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot

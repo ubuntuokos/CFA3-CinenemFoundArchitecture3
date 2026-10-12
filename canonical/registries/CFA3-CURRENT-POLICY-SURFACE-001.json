@@ -2585,10 +2585,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",
-      "git_blob_sha1": "39ae8a81414fe5895a07927eb7d3c2a1fd7bb5d0",
+      "git_blob_sha1": "ab2d28ccde4db5958d9715d1094b18a20aa04291",
       "canonical_id": "CFA3-POLICY-LONG-TERM-VALIDATION-001",
       "source_status": "OWNER_APPROVED_PENDING_RUNTIME_GATE_AND_PROOF",
-      "leaf_count": 77,
+      "leaf_count": 85,
       "leaves": [
         [
           "/admission_boundary/full_governance_admission_asserted",
@@ -2617,6 +2617,30 @@
         [
           "/evidence_binding/unverified_or_stale_digest_must_not_claim_verified_stable",
           "boolean"
+        ],
+        [
+          "/evidence_binding/verification_state_allowed_codes/0",
+          "string"
+        ],
+        [
+          "/evidence_binding/verification_state_allowed_codes/1",
+          "string"
+        ],
+        [
+          "/evidence_binding/verification_state_allowed_codes/2",
+          "string"
+        ],
+        [
+          "/evidence_binding/verification_state_allowed_codes/3",
+          "string"
+        ],
+        [
+          "/evidence_binding/verification_state_allowed_codes/4",
+          "string"
+        ],
+        [
+          "/evidence_binding/verification_state_field",
+          "string"
         ],
         [
           "/evidence_binding/verified_stable_requires_matching_rule_id_and_policy_revision_sha256",
@@ -2668,6 +2692,10 @@
         ],
         [
           "/evidence_fields/11",
+          "string"
+        ],
+        [
+          "/evidence_fields/12",
           "string"
         ],
         [
@@ -2800,6 +2828,10 @@
         ],
         [
           "/requirements/evidence_can_reopen_verified_state",
+          "boolean"
+        ],
+        [
+          "/requirements/evidence_record_requires_verification_state",
           "boolean"
         ],
         [

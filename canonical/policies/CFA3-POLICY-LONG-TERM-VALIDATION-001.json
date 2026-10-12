@@ -78,6 +78,7 @@
     "policy_id",
     "rule_id",
     "policy_revision_sha256",
+    "verification_state",
     "observation_period_start",
     "observation_period_end",
     "independent_contexts",
@@ -100,7 +101,8 @@
     "no_unrequested_early_stable_success_alert": true,
     "no_unapproved_auxiliary_work_or_policy_change": true,
     "no_arbitrary_fixed_pass_count": true,
-    "proof_evidence_must_bind_exact_rule_revision": true
+    "proof_evidence_must_bind_exact_rule_revision": true,
+    "evidence_record_requires_verification_state": true
   },
   "admission_boundary": {
     "structural_bootstrap_pass_is_long_term_runtime_proof": false,
@@ -116,6 +118,14 @@
     "rule_id_source": "CANONICAL_RULE_ID_WITHIN_POLICY",
     "policy_revision_digest_source": "SHA256_OF_EXACT_CANONICAL_POLICY_FILE_BYTES",
     "verified_stable_requires_matching_rule_id_and_policy_revision_sha256": true,
-    "unverified_or_stale_digest_must_not_claim_verified_stable": true
+    "unverified_or_stale_digest_must_not_claim_verified_stable": true,
+    "verification_state_field": "verification_state",
+    "verification_state_allowed_codes": [
+      "NOT_OBSERVED",
+      "OBSERVING",
+      "PRELIMINARY_PASS",
+      "VERIFIED_STABLE",
+      "REVIEW_REQUIRED"
+    ]
   }
 }

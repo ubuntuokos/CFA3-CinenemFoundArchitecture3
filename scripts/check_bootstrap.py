@@ -816,6 +816,85 @@ def validate_policy_long_term_validation(policy):
     }, "runtime proof must remain pending")
     return problems
 
+
+def validate_policy_exact_finalization(policy, root=ROOT):
+    """Pin the entire owner-approved 13-section text; CI never proves merge or main."""
+    import hashlib
+    import re
+    issues = []
+    if not isinstance(policy, dict):
+        return ["exact finalization: policy is not an object"]
+    def require(test, reason):
+        if not test:
+            issues.append("exact finalization: " + reason)
+    required_root = {"schema", "id", "title_hu", "status",
+                     "owner_decision_date", "version", "approved_text_path",
+                     "approved_text_sha256", "approved_section_count",
+                     "finalization_gates", "lifecycle_evidence_source",
+                     "requirements", "admission_boundary"}
+    require(set(policy) == required_root, "metadata fields missing or unexpected")
+    require(policy.get("schema") == "cfa3.policy-exact-finalization.v1", "schema")
+    require(policy.get("id") == "CFA3-POLICY-EXACT-FINALIZATION-001", "identity")
+    # OWNER_APPROVED is an approval status only, not a premature merged claim.
+    require(policy.get("status") == "OWNER_APPROVED", "unproven lifecycle status")
+    require(policy.get("owner_decision_date") == "2026-10-12", "owner approval date")
+    require(policy.get("version") == "1.0", "approved version")
+    require(policy.get("lifecycle_evidence_source") == "LIVE_GITHUB_MAIN_AND_PR_STATE",
+            "merge and main state must be checked live")
+    text_path = "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.md"
+    expected_sha256 = "58bd436e6d78ea06a3c9a04f0e4066068f7a19237dbced6677df06df936019b4"
+    require(policy.get("approved_text_path") == text_path, "owner text path drift")
+    require(policy.get("approved_text_sha256") == expected_sha256, "approved digest drift")
+    require(policy.get("approved_section_count") == 13, "approved section count")
+    require(policy.get("finalization_gates") ==
+            ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"],
+            "seven independent finalization conditions required")
+    required_flags = {
+        "complete_verbatim_owner_approved_text",
+        "approved_text_is_not_summarized_or_paraphrased",
+        "required_exact_content_hash_and_section_count",
+        "verify_policy_id_version_and_all_registry_fields",
+        "verify_live_main_sha_and_pr_merge_and_status",
+        "ci_or_merge_alone_not_finalization",
+        "post_merge_main_readback_required",
+        "missing_gate_prohibits_finalization_claim",
+        "failed_checks_require_evidence_and_cause_attribution",
+        "no_unapproved_extra_pr_or_scope_expansion",
+        "historical_approvals_and_evidence_preserved",
+    }
+    flags = policy.get("requirements")
+    require(isinstance(flags, dict) and set(flags) == required_flags and
+            all(flags.get(k) is True for k in required_flags),
+            "mandatory owner requirements")
+    bounds = policy.get("admission_boundary")
+    require(isinstance(bounds, dict) and
+            set(bounds) == {"structural_ci_is_full_finalization",
+                            "merge_without_main_readback_is_finalization",
+                            "independent_runtime_gate_verified"} and
+            all(v is False for v in bounds.values()), "unproven claims forbidden")
+    try:
+        raw = (Path(root) / text_path).read_bytes()
+        owner_text = raw.decode("utf-8")
+    except (OSError, UnicodeError):
+        return issues + ["exact finalization: approved owner text unavailable"]
+    require(hashlib.sha256(raw).hexdigest() == expected_sha256,
+            "complete approved owner text altered or shortened")
+    heads = re.findall(r"^## (\d+)\. (.+)$", owner_text, flags=re.MULTILINE)
+    require([int(n) for n, _ in heads] == list(range(1, 14)),
+            "thirteen sections missing, repeated or reordered")
+    for phrase in (
+        "A jóváhagyott szabályszöveg sérthetetlensége",
+        "Kötelező tartalmi azonossági ellenőrzés",
+        "Státusz és tényleges életciklus egyezősége",
+        "Kötelező összevonás utáni ellenőrzés",
+        "Téves véglegesítési kijelentések tilalma",
+        "TEXT PASS:", "STRUCTURE PASS:", "MERGE PASS:", "STATUS PASS:",
+        "REGISTRY PASS:", "CI PASS:", "MAIN PASS:",
+        "Mindhárom összetevő bizonyítása kötelező."
+    ):
+        require(phrase in owner_text, "mandatory full-text clause absent: " + phrase)
+    return issues
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -838,6 +917,7 @@ def check(root=ROOT):
     errors.extend(validate_rule_consistency_loop_prevention(load("canonical/policies/CFA3-RULE-CONSISTENCY-LOOP-PREVENTION-001.json", root)))
     errors.extend(validate_github_merge_gate_405_policy(load("canonical/policies/CFA3-GITHUB-MERGE-GATE-405-POLICY-001.json",root)))
     errors.extend(validate_policy_long_term_validation(load("canonical/policies/CFA3-POLICY-LONG-TERM-VALIDATION-001.json",root)))
+    errors.extend(validate_policy_exact_finalization(load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

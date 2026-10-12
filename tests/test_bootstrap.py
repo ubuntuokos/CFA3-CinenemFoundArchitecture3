@@ -490,11 +490,47 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad["evidence_binding"]["verification_state_field"] = "ignored_state"
         self.assertTrue(validate_policy_long_term_validation(bad))
 
+
+    def test_policy_exact_finalization_owner_text_positive_and_negative(self):
+        from check_bootstrap import validate_policy_exact_finalization
+        import tempfile
+        from pathlib import Path
+        p = load("canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json")
+        self.assertEqual([], validate_policy_exact_finalization(p, ROOT))
+        for field, bad_value in (
+                ("status", "OWNER_APPROVED_MERGED_TO_MAIN"),
+                ("approved_section_count", 12),
+                ("approved_text_sha256", "0" * 64),
+                ("finalization_gates", ["TEXT", "CI"]),
+                ("lifecycle_evidence_source", "PR_ONLY")):
+            bad = copy.deepcopy(p)
+            bad[field] = bad_value
+            with self.subTest(field=field):
+                self.assertTrue(validate_policy_exact_finalization(bad, ROOT))
+        for k in p["requirements"]:
+            bad = copy.deepcopy(p)
+            bad["requirements"][k] = False
+            with self.subTest(requirement=k):
+                self.assertTrue(validate_policy_exact_finalization(bad, ROOT))
+        for k in p["admission_boundary"]:
+            bad = copy.deepcopy(p)
+            bad["admission_boundary"][k] = True
+            with self.subTest(boundary=k):
+                self.assertTrue(validate_policy_exact_finalization(bad, ROOT))
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / p["approved_text_path"]
+            target.parent.mkdir(parents=True)
+            original = (ROOT / p["approved_text_path"]).read_bytes()
+            target.write_bytes(original.replace(b"TEXT PASS:", b"TEXT OK:", 1))
+            self.assertTrue(validate_policy_exact_finalization(p, tmp))
+            target.write_bytes(original[:len(original)//2])
+            self.assertTrue(validate_policy_exact_finalization(p, tmp))
+
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")
         self.assertEqual([], validate_snapshot(surface, ROOT))
-        self.assertEqual(14, surface["source_policy_count"])
+        self.assertEqual(15, surface["source_policy_count"])
         from check_guard_policy_surface import validate_catalog_policy_leaf_total
         coverage = load("canonical/registries/CFA3-EXECUTION-GUARD-COVERAGE-001.json")
         self.assertEqual([],validate_catalog_policy_leaf_total(surface, coverage))

@@ -3,7 +3,7 @@
   "id": "CFA3-CURRENT-POLICY-SURFACE-001",
   "status": "COMPLETE_PATH_ENUMERATION_UNREVIEWED_SEMANTIC_ENFORCEMENT",
   "source_repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
-  "source_policy_count": 14,
+  "source_policy_count": 15,
   "all_fields_disposition": "PENDING_RULE_APPLICABILITY_AND_GATE_PROOF",
   "semantic_rule_admission": false,
   "sources": [
@@ -2579,6 +2579,139 @@
         ],
         [
           "/status",
+          "string"
+        ]
+      ]
+    },
+    {
+      "path": "canonical/policies/CFA3-POLICY-EXACT-FINALIZATION-001.json",
+      "git_blob_sha1": "d0d24bf007519e80529aab30b219a102c82d295c",
+      "canonical_id": "CFA3-POLICY-EXACT-FINALIZATION-001",
+      "source_status": "OWNER_APPROVED",
+      "leaf_count": 31,
+      "leaves": [
+        [
+          "/admission_boundary/independent_runtime_gate_verified",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/merge_without_main_readback_is_finalization",
+          "boolean"
+        ],
+        [
+          "/admission_boundary/structural_ci_is_full_finalization",
+          "boolean"
+        ],
+        [
+          "/approved_section_count",
+          "integer"
+        ],
+        [
+          "/approved_text_path",
+          "string"
+        ],
+        [
+          "/approved_text_sha256",
+          "string"
+        ],
+        [
+          "/finalization_gates/0",
+          "string"
+        ],
+        [
+          "/finalization_gates/1",
+          "string"
+        ],
+        [
+          "/finalization_gates/2",
+          "string"
+        ],
+        [
+          "/finalization_gates/3",
+          "string"
+        ],
+        [
+          "/finalization_gates/4",
+          "string"
+        ],
+        [
+          "/finalization_gates/5",
+          "string"
+        ],
+        [
+          "/finalization_gates/6",
+          "string"
+        ],
+        [
+          "/id",
+          "string"
+        ],
+        [
+          "/lifecycle_evidence_source",
+          "string"
+        ],
+        [
+          "/owner_decision_date",
+          "string"
+        ],
+        [
+          "/requirements/approved_text_is_not_summarized_or_paraphrased",
+          "boolean"
+        ],
+        [
+          "/requirements/ci_or_merge_alone_not_finalization",
+          "boolean"
+        ],
+        [
+          "/requirements/complete_verbatim_owner_approved_text",
+          "boolean"
+        ],
+        [
+          "/requirements/failed_checks_require_evidence_and_cause_attribution",
+          "boolean"
+        ],
+        [
+          "/requirements/historical_approvals_and_evidence_preserved",
+          "boolean"
+        ],
+        [
+          "/requirements/missing_gate_prohibits_finalization_claim",
+          "boolean"
+        ],
+        [
+          "/requirements/no_unapproved_extra_pr_or_scope_expansion",
+          "boolean"
+        ],
+        [
+          "/requirements/post_merge_main_readback_required",
+          "boolean"
+        ],
+        [
+          "/requirements/required_exact_content_hash_and_section_count",
+          "boolean"
+        ],
+        [
+          "/requirements/verify_live_main_sha_and_pr_merge_and_status",
+          "boolean"
+        ],
+        [
+          "/requirements/verify_policy_id_version_and_all_registry_fields",
+          "boolean"
+        ],
+        [
+          "/schema",
+          "string"
+        ],
+        [
+          "/status",
+          "string"
+        ],
+        [
+          "/title_hu",
+          "string"
+        ],
+        [
+          "/version",
           "string"
         ]
       ]

@@ -3381,10 +3381,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001.json",
-      "git_blob_sha1": "e629c0578cb86285d12fbaec9d6f9605f1efae84",
+      "git_blob_sha1": "0e0314607dfb81715d7a87087693bed1809c42a4",
       "canonical_id": "CFA3-POLICY-SEQUENTIAL-EXECUTION-RESULT-INTEGRITY-001",
       "source_status": "OWNER_APPROVED",
-      "leaf_count": 54,
+      "leaf_count": 60,
       "leaves": [
         [
           "/admission_boundary/ci_alone_is_finalization",
@@ -3495,6 +3495,10 @@
           "string"
         ],
         [
+          "/processing_state_machine/6",
+          "string"
+        ],
+        [
           "/requirements/avoid_rechecking_unchanged_proven_state",
           "boolean"
         ],
@@ -3551,7 +3555,7 @@
           "boolean"
         ],
         [
-          "/requirements/publish_only_after_full_file_closure_and_proofs",
+          "/requirements/publish_only_after_publication_readiness_proof",
           "boolean"
         ],
         [
@@ -3569,6 +3573,26 @@
         [
           "/requirements/zero_growth_must_be_explained_not_hidden",
           "boolean"
+        ],
+        [
+          "/revision_evidence/authorization",
+          "string"
+        ],
+        [
+          "/revision_evidence/correction_scope",
+          "string"
+        ],
+        [
+          "/revision_evidence/previous_markdown_sha256",
+          "string"
+        ],
+        [
+          "/revision_evidence/previous_version",
+          "string"
+        ],
+        [
+          "/revision_evidence/prior_merge_commit",
+          "string"
         ],
         [
           "/schema",

@@ -24,5 +24,6 @@
     "no_unjustified_stop": true,
     "no_scope_expansion": true,
     "only_proven_pass": true
-  }
+  },
+  "approved_text_sha256": "646f95fc36063eea61640656e164517971b0e0d188b237497ad05d369fd8465a"
 }

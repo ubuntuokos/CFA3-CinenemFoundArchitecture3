@@ -50,10 +50,10 @@ class OwnerRuleSpecTests(unittest.TestCase):
         self.assertTrue(self.check(coverage=bad))
     def test_new_rule_is_exactly_source_bound(self):
         bad = copy.deepcopy(self.spec)
-        bad["active_rules"][-2]["text_hu"] = "This is an unauthorized change."
+        bad["active_rules"][-3]["text_hu"] = "This is an unauthorized change."
         self.assertTrue(self.check(bad))
         bad = copy.deepcopy(self.spec)
-        bad["active_rules"][-2]["canonical_policy_path"] = "wrong.json"
+        bad["active_rules"][-3]["canonical_policy_path"] = "wrong.json"
         self.assertTrue(self.check(bad))
         broken_export = copy.deepcopy(self.export)
         broken_export["current_rules"].pop()
@@ -66,7 +66,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
         policy=json.loads((ROOT/source).read_text("utf-8"))
         policy["rule"]["text_hu"]="Nem jóváhagyott, módosított szabályszöveg. " * 18
         altered_spec=copy.deepcopy(self.spec)
-        altered_spec["active_rules"][-2]["text_hu"]=policy["rule"]["text_hu"]
+        altered_spec["active_rules"][-3]["text_hu"]=policy["rule"]["text_hu"]
         altered_export=copy.deepcopy(self.export)
         surface=json.loads((ROOT/SURFACE).read_text("utf-8"))
         with tempfile.TemporaryDirectory() as temp:
@@ -130,7 +130,7 @@ class OwnerRuleSpecTests(unittest.TestCase):
                     self.fail("policy missing from canonical surface")
                 altered_coverage["canonical_policy_leaf_fields_enumerated"]=sum(
                     row["leaf_count"] for row in surface["sources"])
-                altered_export["current_rules"][-2]["source_git_blob_sha1"]=sha
+                altered_export["current_rules"][-3]["source_git_blob_sha1"]=sha
                 snapshot=staged/SURFACE
                 snapshot.parent.mkdir(parents=True,exist_ok=True)
                 snapshot.write_text(json.dumps(surface,ensure_ascii=False,indent=2)+"\n",

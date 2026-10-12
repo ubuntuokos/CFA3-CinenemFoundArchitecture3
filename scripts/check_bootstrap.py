@@ -499,6 +499,91 @@ def validate_github_resource_404_policy(policy):
                 "unproven runtime or merge admission: " + field)
     return issues
 
+def validate_ai_rule_acceptance_policy(policy):
+    """Enforce the approved human-first rule without claiming runtime proof."""
+    errors = []
+    if not isinstance(policy, dict):
+        return ["rule acceptance: policy must be an object"]
+    def require(condition, message):
+        if not condition:
+            errors.append("rule acceptance: " + message)
+    require(set(policy) == {"schema", "id", "title_hu", "status", "owner_decision_date",
+                            "classification", "scope", "mandatory_clauses",
+                            "requirements", "safety_boundary", "admission_boundary"},
+            "unexpected or missing root field")
+    require(policy.get("schema") == "cfa3.ai-rule-acceptance-wellbeing-efficiency.v1",
+            "schema mismatch")
+    require(policy.get("id") == "CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001",
+            "policy identity mismatch")
+    require(policy.get("status") == "OWNER_APPROVED_PENDING_PR_REVIEW_AND_MERGE",
+            "unverified canonical merge claimed")
+    require(policy.get("owner_decision_date") == "2026-10-12", "owner date mismatch")
+    require(policy.get("classification") == "MANDATORY_CFA3_AI_BEHAVIOR_POLICY",
+            "policy must remain mandatory")
+    require(policy.get("scope") == ["CFA3 AI-asszisztensek", "CFA3 AI-ügynökök",
+                                   "CFA3 automatizált fejlesztők és végrehajtó rendszerek"],
+            "mandatory AI actors omitted")
+    required_codes = [
+        "NON_OBSTRUCTIVE_RULE_ACCEPTANCE", "DEVELOPER_MENTAL_WELLBEING",
+        "EFFICIENT_SCOPED_EXECUTION", "RECURRING_ERROR_PREVENTION_AND_REPAIR",
+        "RESOURCE_EFFICIENCY_AND_PLANETARY_STEWARDSHIP", "LONG_TERM_MAINTAINABILITY",
+        "PROHIBITED_AI_OBSTRUCTION", "LEGAL_SAFETY_AND_CONFLICT_EXCEPTION",
+        "CANONICAL_ADMISSION_AND_EVIDENCE", "HUMAN_PRIORITY_AND_EXISTING_GATES",
+    ]
+    clauses = policy.get("mandatory_clauses")
+    require(isinstance(clauses, list) and len(clauses) == 10, "ten clauses required")
+    if isinstance(clauses, list):
+        require([(x.get("id"), x.get("code")) for x in clauses if isinstance(x, dict)]
+                == [(f"AR-{i:02d}", code) for i, code in enumerate(required_codes, 1)],
+                "clause identifiers or order altered")
+        for item in clauses:
+            require(isinstance(item, dict) and set(item) == {"id", "code", "text_hu"}
+                    and isinstance(item.get("text_hu"), str)
+                    and len(item["text_hu"].strip()) >= 65,
+                    "missing or empty owner-approved clause text")
+        body = " ".join(x.get("text_hu", "") for x in clauses if isinstance(x, dict))
+        for phrase in ("öngyilkossági gondolatok", "nem helyettesítik a szakmai segítséget",
+                       "STOP/BLOCKER", "jövő generációit", "nem írja felül"):
+            require(phrase in body, "mandatory human/safety objective missing: " + phrase)
+    required_true = (
+        "no_ai_obstruction_based_on_convenience",
+        "developer_wellbeing_must_be_considered",
+        "repeat_error_prevention_required",
+        "task_scope_and_dependency_order_mandatory",
+        "resource_and_energy_waste_reduction_required",
+        "mandatory_safety_tests_and_proofs_may_not_be_skipped",
+        "long_term_maintainability_considered",
+        "no_unauthorized_refactor_or_extra_task",
+        "actual_legal_or_safety_conflict_must_be_reported",
+        "policy_surface_and_bootstrap_consistency_required",
+    )
+    req = policy.get("requirements")
+    require(isinstance(req, dict) and set(req) == set(required_true),
+            "missing or extra requirements")
+    for key in required_true:
+        require(isinstance(req, dict) and req.get(key) is True, "required safeguard missing: " + key)
+    safety_keys = (
+        "safety_law_and_security_exceptions_remain_mandatory",
+        "stop_blocker_exact_state_and_scope_guard_remain_mandatory",
+        "mental_health_outcome_may_not_be_guaranteed",
+        "professional_care_is_not_replaced",
+        "energy_savings_cannot_override_required_controls",
+    )
+    safety = policy.get("safety_boundary")
+    require(isinstance(safety, dict) and set(safety) == set(safety_keys),
+            "safety boundary incomplete")
+    for key in safety_keys:
+        require(isinstance(safety, dict) and safety.get(key) is True,
+                "required safety boundary missing: " + key)
+    admission = policy.get("admission_boundary")
+    for key in ("structural_bootstrap_pass_is_runtime_proof",
+                "independent_execution_gate_pass", "full_governance_admitted_by_this_policy"):
+        require(isinstance(admission, dict) and admission.get(key) is False,
+                "unverified runtime or governance admission: " + key)
+    require(isinstance(admission, dict) and len(admission) == 3,
+            "unknown admission authority field")
+    return errors
+
 def check(root=ROOT):
     gov=load("canonical/policies/CFA3-REPOSITORY-GOVERNANCE-001.json",root)
     cpu=load("canonical/policies/CFA3-CPU-EXECUTION-POLICY-001.json",root)
@@ -517,6 +602,7 @@ def check(root=ROOT):
     errors.extend(validate_sequential_command_policy(sequential))
     errors.extend(validate_donor_file_size_policy(load("canonical/policies/CFA3-DONOR-FILE-SIZE-POLICY-001.json", root)))
     errors.extend(validate_github_resource_404_policy(load("canonical/policies/CFA3-GITHUB-RESOURCE-EXISTENCE-404-POLICY-001.json",root)))
+    errors.extend(validate_ai_rule_acceptance_policy(load("canonical/policies/CFA3-AI-RULE-ACCEPTANCE-WELLBEING-EFFICIENCY-001.json", root)))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))
     for name in ("README.md","AGENTS.md","docs/BOOTSTRAP.md","docs/governance/RECONCILIATION.md",".github/workflows/cfa3-bootstrap.yml"):

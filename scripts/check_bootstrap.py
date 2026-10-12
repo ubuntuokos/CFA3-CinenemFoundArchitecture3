@@ -605,7 +605,7 @@ def validate_rule_consistency_loop_prevention(policy):
         for clause in clauses:
             expect(isinstance(clause, dict) and isinstance(clause.get("text_hu"), str)
                    and len(clause["text_hu"].strip()) >= 80, "clause text")
-    required = ["detect_conflicting_rules_before_admission","prohibit_simultaneously_effective_contradictory_rules","prohibit_nonterminating_owner_decisions","require_progress_and_exit_criteria","signal_suspected_infinite_loop_immediately","distinguish_suspected_from_proven_loop","stop_repeating_actions_without_progress","report_specific_cycle_edges_and_evidence","prohibit_unapproved_rule_override_or_scope_expansion","owner_authority_required_for_resolution","preserve_exact_state_and_failure_provenance","maintain_bootstrap_and_policy_surface_consistency"]
+    required = ["detect_conflicting_rules_before_admission","prohibit_simultaneously_effective_contradictory_rules","prohibit_nonterminating_developer_decisions","require_progress_and_exit_criteria","signal_suspected_infinite_loop_immediately","distinguish_suspected_from_proven_loop","stop_repeating_actions_without_progress","report_specific_cycle_edges_and_evidence","prohibit_unapproved_rule_override_or_scope_expansion","owner_authority_required_for_resolution","preserve_exact_state_and_failure_provenance","maintain_bootstrap_and_policy_surface_consistency"]
     flags = policy.get("requirements")
     expect(isinstance(flags, dict) and set(flags) == set(required), "required flags")
     for key in required:

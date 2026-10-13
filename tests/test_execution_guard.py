@@ -210,7 +210,7 @@ class GuardTests(unittest.TestCase):
                 t["operation"] = "REPOSITORY_WRITE"
                 t["branch"], t["head_sha"] = "guard/dev01", "b" * 40
                 if failure == "task_expired":
-                    t["expires_at"] = RULE_NOW + 3
+                    t["expires_at"] = RULE_NOW + 12
                 t["signature"] = hmac.new(
                     signing_key, canonical_bytes(t), hashlib.sha256).hexdigest()
                 proofs = receipts(t, load(ROOT, GOV))
@@ -265,7 +265,7 @@ class GuardTests(unittest.TestCase):
                         result = verify_audit_receipt(*args, **kwargs)
                         # Expire only after the RESERVED receipt was accepted.
                         if failure == "task_expired" and args[3] == "RESERVED":
-                            clock["now"] = RULE_NOW + 4
+                            clock["now"] = RULE_NOW + 13
                         return result
 
                     with (patch("check_execution_guard_audit.verify_audit_receipt",

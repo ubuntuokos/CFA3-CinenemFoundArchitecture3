@@ -413,8 +413,12 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
             hmac.compare_digest(rule_attestation_secret, audit_attestation_secret)):
         raise Blocked("independently held audit signing key required")
     from check_execution_rule_evidence import verify_rule_receipts, RuleEvidenceBlocked
+    # Retain the exact attestation bundle for an independent freshness check
+    # after the final (potentially slow) live GitHub authorization read.
+    rule_receipts = rule_attester(task)
+    governance = load(root, GOV)
     try:
-        verify_rule_receipts(task, rule_attester(task), load(root, GOV),
+        verify_rule_receipts(task, rule_receipts, governance,
                              rule_attestation_secret,
                              evidence_resolver=rule_evidence_resolver)
     except RuleEvidenceBlocked as exc:
@@ -445,6 +449,14 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         # before the mutation. Any drift records FAILED, never runs executor.
         check_task(root, task)
         _require_live_state(task, live_state)
+        try:
+            verify_rule_receipts(task, rule_receipts, load(root, GOV),
+                                 rule_attestation_secret,
+                                 evidence_resolver=rule_evidence_resolver)
+        except RuleEvidenceBlocked as exc:
+            raise Blocked("RULE_GATE: late rule proof invalid: " + str(exc)) from exc
+        # Checking all 83 proofs may itself consume validity time.
+        check_task(root, task)
         outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
             raise Blocked("RESULT_GATE: wrong output count")

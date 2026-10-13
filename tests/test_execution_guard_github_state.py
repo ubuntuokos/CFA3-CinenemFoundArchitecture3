@@ -161,7 +161,7 @@ class LiveGithubStateTests(unittest.TestCase):
                 reader.snapshot(task(), 13)
 
     def test_trusted_reader_rejects_drift_during_snapshot(self):
-        for drift in (None, "main", "branch", "target", "open_prs"):
+        for drift in (None, "main", "branch", "target", "open_prs", "opened_pr", "closed_pr"):
             with self.subTest(drift=drift):
                 reader = TrustedGithubReader("synthetic-read-only")
                 calls = {"main": 0, "branch": 0, "target": 0, "open_prs": 0}
@@ -193,8 +193,14 @@ class LiveGithubStateTests(unittest.TestCase):
                         calls["open_prs"] += 1
                         other = "d" * 40 if (drift == "open_prs"
                             and calls["open_prs"] > 1) else "c" * 40
-                        return [{"number": 13, "head": {"sha": "b" * 40}},
+                        rows = [{"number": 13, "head": {"sha": "b" * 40}},
                                 {"number": 11, "head": {"sha": other}}]
+                        if calls["open_prs"] > 1:
+                            if drift == "opened_pr":
+                                rows.append({"number": 12, "head": {"sha": "e" * 40}})
+                            if drift == "closed_pr":
+                                rows.pop()
+                        return rows
                     if path == "/pulls/13/files":
                         return [{"filename": "scripts/execution_guard.py", "status": "modified"}]
                     if path == "/pulls/11/files":

@@ -75,6 +75,12 @@ class Http409GuardTests(unittest.TestCase):
         self.assertEqual(result.decision,Decision.STOP)
         self.assertFalse(calls)
 
+    def test_signed_source_binding_requires_http409_gate(self):
+        from execution_guard import GUARD_SOURCE_BINDINGS
+        self.assertIn("scripts/http409_recovery_guard.py", GUARD_SOURCE_BINDINGS)
+        self.assertIn("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.md",
+                      GUARD_SOURCE_BINDINGS)
+
     def test_execution_guard_dispatch_success(self):
         from execution_guard import _http409_guarded_executor
         task = {"task_id":"approved-1","target":"a","operation":"REPOSITORY_WRITE",

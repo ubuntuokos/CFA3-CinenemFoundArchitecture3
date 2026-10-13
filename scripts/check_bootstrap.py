@@ -1383,12 +1383,13 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
     need((root / "scripts/http409_recovery_guard.py").is_file(), "execution gate missing")
     need((root / "tests/test_http409_recovery_guard.py").is_file(), "decision gate tests missing")
     need("**Verzió:** 1.1" in text, "normative version")
-    need("v1.0 minden rendelkezése hatályát veszti" in text, "replacement text")
+    need("a v1.0 teljes egészében hatályát veszti" in text, "replacement text")
     need(len(re.findall(r"^## [0-9]+\. §", text, re.M)) == 16, "all 16 sections")
-    for phrase in ("HTTP 409 Conflict önmagában nem tekinthető végleges blokkolásnak",
-                   "Ugyanazt a műveletet változatlan előfeltételekkel ismételni tilos",
-                   "Valódi blokkolás esetén a végrehajtásnak meg kell állnia",
-                   "A konfliktus feloldása nem jelenti automatikusan"):
+    for phrase in ("a v1.0 teljes egészében hatályát veszti",
+                   "A HTTP 409 Conflict szabály végrehajtását",
+                   "Valamennyi döntési kapunál",
+                   "Az Execution Guard feladata",
+                   "a felhasználó döntési jogköre"):
         need(phrase in text, "mandatory text: " + phrase)
     return errors
 

@@ -223,13 +223,17 @@ class TrustedGithubReader:
         summaries = []
         for item in opened:
             n = item["number"]
-            expected = item.get("changed_files")
+            # The list-PR response has no changed_files count. Read the full
+            # PR record for every open PR before treating its file list as complete.
+            detail = target if n == pr_number else self.request("/pulls/" + str(n))
+            if (detail.get("number") != n or detail.get("state") != "open"
+                    or detail.get("head", {}).get("sha") != item["head"]["sha"]):
+                raise LiveStateBlocked("open PR detail changed during snapshot")
+            expected = detail.get("changed_files")
             if type(expected) is not int or not 0 < expected < 3000:
                 raise LiveStateBlocked("PR changed-file count unavailable or at GitHub API cap")
-            if n == pr_number and target.get("changed_files") != expected:
-                raise LiveStateBlocked("target PR file count changed during snapshot")
             file_rows = self.pages("/pulls/" + str(n) + "/files")
-            summaries.append({"number": n, "head_sha": item["head"]["sha"],
+            summaries.append({"number": n, "head_sha": detail["head"]["sha"],
                               "changed_files": _verified_changed_paths(file_rows, expected)})
         check_runs = self.pages("/commits/" + target["head"]["sha"] + "/check-runs", key="check_runs")
         return {"main": main, "target_pr": {

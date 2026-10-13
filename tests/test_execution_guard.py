@@ -445,6 +445,86 @@ class GuardTests(unittest.TestCase):
         self.assertEqual(["RESERVED", "FAILED"], phases)
         self.assertEqual([], executed)
 
+    def test_dev01_callback_cannot_reauthorize_mutated_task(self):
+        """Third live read cannot silently change an owner-signed operation."""
+        from check_execution_guard_audit import verify_audit_receipt
+        from test_execution_guard_audit import issued, KEY as AUDIT_KEY
+        from test_execution_rule_evidence import (
+            receipts, evidence_bytes, KEY as RULE_KEY, NOW as RULE_NOW,
+        )
+        task_key = b"synthetic-dev01-owner-task-signature-key".ljust(32, b"_")
+        t = sample()
+        t["branch"], t["head_sha"] = "guard/dev01", "b" * 40
+        t["signature"] = hmac.new(
+            task_key, canonical_bytes(t), hashlib.sha256).hexdigest()
+        bundle = receipts(t, load(ROOT, GOV))
+        store = {r["rule_id"]: evidence_bytes(r) for r in bundle}
+        observed, executed, phases, copies = [], [], [], []
+
+        def live(snapshot):
+            observed.append(True)
+            copies.append(snapshot is not t)
+            if len(observed) == 3:
+                # Even an adapter modifying its argument must not change the
+                # authoritative task. A concurrent closure mutation must
+                # still be stopped by the last signed-contract check.
+                snapshot["operation"] = "REPOSITORY_WRITE"
+                t["operation"] = "REPOSITORY_WRITE"
+            return {
+                "main_current": True, "head_current": True, "no_overlap": True,
+                "checks_passed": True, "review_threads_clear": True,
+                "owner_scope_approved": True,
+                "owner_grant_signature_verified": True,
+                "main_ruleset_verified": True,
+                "privileged_bypass_actors_verified": True,
+                "actual_main_sha": t["main_sha"],
+                "actual_head_sha": t["head_sha"],
+            }
+
+        admission = {
+            "current_83_rule_inventory_verified": True,
+            "current_83_rule_gates_verified": True,
+            "current_83_conflicts_resolved": True,
+            "independent_proof_verified": True,
+        }
+        preflight = {
+            "source_verified": True, "scope_verified": True,
+            "resource_verified": True, "output_contract_verified": True,
+        }
+        with (tempfile.TemporaryDirectory() as location,
+              patch("execution_guard.policy_issues", return_value=[]),
+              patch("execution_guard.trusted_runtime_issues", return_value=[]),
+              patch("test_execution_guard_audit.NOW", RULE_NOW),
+              patch("check_execution_rule_evidence.time.time",
+                    return_value=RULE_NOW)):
+            reserved = issued(t, "RESERVED")
+            first = verify_audit_receipt(
+                t, reserved, AUDIT_KEY, "RESERVED", now=RULE_NOW)
+            failed = issued(t, "FAILED", first)
+
+            def audit(_, phase):
+                phases.append(phase)
+                if phase == "FAILED":
+                    t["operation"] = "ARTIFACT_EXPORT"
+                return {"RESERVED": reserved, "FAILED": failed}[phase]
+
+            with self.assertRaisesRegex(Blocked, "authorization tampered"):
+                guarded_execute(
+                    t, root=ROOT, secret=task_key,
+                    admission=lambda _: admission, live_state=live,
+                    preflight=lambda _: preflight,
+                    executor=lambda _: executed.append(True),
+                    verify_result=lambda *_: True, audit=audit,
+                    state_dir=location, rule_attester=lambda _: bundle,
+                    rule_attestation_secret=RULE_KEY,
+                    rule_evidence_resolver=lambda rid, _: store.get(rid),
+                    audit_attestation_secret=AUDIT_KEY,
+                )
+        self.assertEqual(3, len(observed))
+        self.assertEqual([True, True, True], copies)
+        self.assertEqual(["RESERVED", "FAILED"], phases)
+        self.assertEqual([], executed)
+
     def test_incomplete_governance_never_invokes_executor(self):
         calls = []
         with self.assertRaises(Blocked):

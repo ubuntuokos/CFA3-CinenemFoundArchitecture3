@@ -1,5 +1,8 @@
 """Decision tests for the HTTP 409 v1.1 rule, including fail-closed cases."""
 import unittest
+import pathlib
+import sys
+sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
 from http409_recovery_guard import authorize_recovery, verify_recovery, Decision
 
 class Http409GuardTests(unittest.TestCase):

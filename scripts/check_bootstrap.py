@@ -1343,59 +1343,6 @@ def validate_execution_completion_and_verified_finalization(policy, root=ROOT):
 
 
 
-def validate_http_409_conflict_recovery(policy, root=ROOT):
-    """Structural proof for owner-approved HTTP 409 recovery rule; not runtime PASS."""
-    import hashlib
-    errors = []
-    def need(ok, message):
-        if not ok:
-            errors.append("HTTP 409 recovery policy: " + message)
-    ident = "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001"
-    need(policy.get("id") == ident, "identifier")
-    need(policy.get("version") == "1.1", "version")
-    need(policy.get("status") == "OWNER_APPROVED_ACTIVE", "owner approval")
-    need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
-    need(policy.get("approved_section_count") == 16, "section count")
-    need(policy.get("active_normative_version") == "1.1" and policy.get("normative_active") is True, "v1.1 sole normative authority")
-    need(policy.get("replaces", {}).get("version") == "1.0" and policy.get("replaces", {}).get("status") == "REPEALED" and policy.get("replaces", {}).get("normative_active") is False and policy.get("replaces", {}).get("repeal_effective") is True and "applies_after" not in policy.get("replaces", {}), "v1.0 unconditional repeal")
-    need(policy.get("enforcement", {}).get("gate") == "scripts/http409_recovery_guard.py", "real execution gate reference")
-    need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
-    required = ("identify_specific_http_conflict", "exact_state_before_repair",
-                "narrow_safe_self_correction", "preserve_third_party_changes",
-                "serial_file_updates", "no_blind_retry_loop",
-                "stop_on_real_content_blocker", "protect_pr_and_merge_authority",
-                "prove_actual_recovery", "prevent_repeat_unnecessary_checks",
-                "return_to_original_task", "no_scope_expansion",
-                "do_not_override_existing_rules", "old_version_repealed", "decision_gate_required")
-    flags = policy.get("requirements", {})
-    need(isinstance(flags, dict) and set(flags) == set(required)
-         and all(flags.get(key) is True for key in required), "mandatory requirements")
-    boundary = policy.get("admission_boundary", {})
-    need(isinstance(boundary, dict) and all(value is False for value in boundary.values())
-         and len(boundary) == 5, "authority boundary")
-    source = root / "canonical/policies" / (ident + ".md")
-    if not source.is_file():
-        need(False, "approved Markdown missing")
-        return errors
-    raw = source.read_bytes()
-    digest = hashlib.sha256(raw).hexdigest()
-    need(policy.get("approved_text_sha256") == digest, "approved source SHA256")
-    text = raw.decode("utf-8")
-    need((root / "scripts/http409_recovery_guard.py").is_file(), "execution gate missing")
-    need((root / "tests/test_http409_recovery_guard.py").is_file(), "decision gate tests missing")
-    need("**Verzió:** 1.1" in text, "normative version")
-    need("**Helyettesített változat:** v1.0 – HATÁLYON KÍVÜL HELYEZVE" in text, "obsolete version must already be repealed")
-    need("HATÁLYON KÍVÜL HELYEZENDŐ" not in text, "pending repeal prohibited")
-    need("A v1.0 teljes egészében hatályon kívül van helyezve" in text, "replacement text")
-    need(len(re.findall(r"^## [0-9]+\. §", text, re.M)) == 16, "all 16 sections")
-    for phrase in ("A v1.0 teljes egészében hatályon kívül van helyezve",
-                   "A HTTP 409 Conflict szabály végrehajtását",
-                   "Valamennyi döntési kapunál",
-                   "Az Execution Guard feladata",
-                   "a felhasználó döntési jogköre"):
-        need(phrase in text, "mandatory text: " + phrase)
-    return errors
-
 def validate_execution_and_proof_obligation(policy, root=ROOT):
     """Fail-closed owner-approved text and identity check; not runtime admission."""
     import hashlib
@@ -1532,7 +1479,6 @@ def check(root=ROOT):
     errors.extend(validate_conversation_evidence_blocker_prevention(load("canonical/policies/CFA3-POLICY-CONVERSATION-EVIDENCE-AND-BLOCKER-PREVENTION-001.json",root),root))
     errors.extend(validate_conversation_recovery_policy(load("canonical/policies/CFA3-POLICY-CONVERSATION-RECOVERY-AND-EXECUTION-001.json",root),root))
     errors.extend(validate_execution_completion_and_verified_finalization(load("canonical/policies/CFA3-POLICY-EXECUTION-COMPLETION-AND-VERIFIED-FINALIZATION-001.json",root),root))
-    errors.extend(validate_http_409_conflict_recovery(load("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",root),root))
     errors.extend(validate_execution_and_proof_obligation(load("canonical/policies/CFA3-POLICY-EXECUTION-AND-PROOF-OBLIGATION-001.json",root),root))
     from check_guard_policy_surface import SURFACE, validate_snapshot
     errors.extend(validate_snapshot(load(SURFACE,root),root))

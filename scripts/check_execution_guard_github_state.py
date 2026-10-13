@@ -234,19 +234,85 @@ class TrustedGithubReader:
                 raise LiveStateBlocked("PR changed-file count unavailable or at GitHub API cap")
             file_rows = self.pages("/pulls/" + str(n) + "/files")
             summaries.append({"number": n, "head_sha": detail["head"]["sha"],
+                              "base_ref": detail["base"]["ref"],
+                              "base_sha": detail["base"]["sha"],
                               "changed_files": _verified_changed_paths(file_rows, expected)})
         check_runs = self.pages("/commits/" + target["head"]["sha"] + "/check-runs", key="check_runs")
+        threads = self.review_threads(pr_number)
+        ruleset = self.request("/rulesets/" + str(RULESET))
+
+        # An API snapshot spans several requests. Reject any observed drift
+        # before treating the collected evidence as a single task-bound view.
+        latest = self.request("/pulls/" + str(pr_number))
+        if (not isinstance(latest, dict) or latest.get("number") != pr_number
+                or latest.get("state") != target["state"]
+                or latest.get("changed_files") != target["changed_files"]
+                or not isinstance(latest.get("head"), dict)
+                or not isinstance(latest.get("base"), dict)
+                or latest["head"].get("sha") != target["head"]["sha"]
+                or latest["head"].get("ref") != branch
+                or latest["base"].get("ref") != target["base"]["ref"]
+                or latest["base"].get("sha") != target["base"]["sha"]):
+            raise LiveStateBlocked("target PR changed during live snapshot")
+        if self.request("/git/ref/heads/" + branch)["object"]["sha"] != ref:
+            raise LiveStateBlocked("target branch changed during live snapshot")
+        final_opened = self.pages("/pulls?state=open")
+        try:
+            initial_heads = [(row["number"], row["head"]["sha"]) for row in opened]
+            final_heads = [(row["number"], row["head"]["sha"]) for row in final_opened]
+        except (KeyError, TypeError) as exc:
+            raise LiveStateBlocked("open PR inventory cannot be reverified") from exc
+        if (len(set(initial_heads)) != len(initial_heads)
+                or len(set(final_heads)) != len(final_heads)
+                or set(initial_heads) != set(final_heads)):
+            raise LiveStateBlocked("open PR inventory changed during live snapshot")
+        # Head identity alone cannot establish that a concurrent PR's diff
+        # stayed constant: its base can move while the head stays the same.
+        final_summaries = []
+        for item in final_opened:
+            n = item["number"]
+            detail = self.request("/pulls/" + str(n))
+            if (not isinstance(detail, dict) or detail.get("number") != n
+                    or detail.get("state") != "open"
+                    or not isinstance(detail.get("head"), dict)
+                    or not isinstance(detail.get("base"), dict)
+                    or detail["head"].get("sha") != item["head"]["sha"]):
+                raise LiveStateBlocked("concurrent PR changed during live snapshot")
+            expected = detail.get("changed_files")
+            if type(expected) is not int or not 0 < expected < 3000:
+                raise LiveStateBlocked("concurrent PR file count not independently verified")
+            rows = self.pages("/pulls/" + str(n) + "/files")
+            final_summaries.append({"number": n, "head_sha": detail["head"]["sha"],
+                                    "base_ref": detail["base"]["ref"],
+                                    "base_sha": detail["base"]["sha"],
+                                    "changed_files": _verified_changed_paths(rows, expected)})
+        if sorted(summaries, key=lambda x: x["number"]) != sorted(
+                final_summaries, key=lambda x: x["number"]):
+            raise LiveStateBlocked("concurrent PR changed during live snapshot")
+        # Review resolution, check conclusions and ruleset protection are also
+        # mutable; a stable SHA alone is not an authorization verdict.
+        if self.review_threads(pr_number) != threads:
+            raise LiveStateBlocked("review threads changed during live snapshot")
+        if self.pages("/commits/" + target["head"]["sha"] + "/check-runs",
+                      key="check_runs") != check_runs:
+            raise LiveStateBlocked("required checks changed during live snapshot")
+        if self.request("/rulesets/" + str(RULESET)) != ruleset:
+            raise LiveStateBlocked("ruleset changed during live snapshot")
+        if self.request("/git/ref/heads/" + branch)["object"]["sha"] != ref:
+            raise LiveStateBlocked("target branch changed during live snapshot")
+        if self.request("/git/ref/heads/main")["object"]["sha"] != main:
+            raise LiveStateBlocked("main changed during live snapshot")
         return {"main": main, "target_pr": {
                 "number": pr_number, "head_sha": target["head"]["sha"],
                 "head_ref": branch, "base_ref": target["base"]["ref"],
                 "base_sha": target["base"]["sha"], "state": target["state"]},
                 "target_branch_commit": ref,
                 "open_prs": summaries,
-                "review_threads": self.review_threads(pr_number),
+                "review_threads": threads,
                 "head_checks": [{"name": x.get("name"), "head_sha": x.get("head_sha"),
                                  "status": x.get("status"), "conclusion": x.get("conclusion"),
                                  "app_id": (x.get("app") or {}).get("id")} for x in check_runs],
-                "ruleset": self.request("/rulesets/" + str(RULESET))}
+                "ruleset": ruleset}
 
 def live_state_callback(token, pr_number, owner_grant_loader, owner_grant_key):
     """Independently verify the exact owner signature; a bare True cannot authorize.

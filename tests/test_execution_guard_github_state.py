@@ -120,6 +120,7 @@ class LiveGithubStateTests(unittest.TestCase):
                         "state": "open", "changed_files": count[0]}
             if path == "/pulls/11":
                 return {"number": 11, "head": {"sha": other_sha[0]},
+                        "base": {"ref": "main", "sha": "a" * 40},
                         "state": "open", "changed_files": other_count[0]}
             if path == "/git/ref/heads/guard/feature":
                 return {"object": {"sha": "b" * 40}}
@@ -159,6 +160,90 @@ class LiveGithubStateTests(unittest.TestCase):
             other_sha[0] = "d" * 40
             with self.assertRaisesRegex(LiveStateBlocked, "detail changed"):
                 reader.snapshot(task(), 13)
+
+    def test_trusted_reader_rejects_drift_during_snapshot(self):
+        for drift in (None, "main", "branch", "target", "open_prs", "opened_pr",
+                      "closed_pr", "concurrent_base", "concurrent_files",
+                      "review", "checks", "ruleset"):
+            with self.subTest(drift=drift):
+                reader = TrustedGithubReader("synthetic-read-only")
+                calls = {"main": 0, "branch": 0, "target": 0, "open_prs": 0,
+                         "concurrent_detail": 0, "concurrent_files": 0,
+                         "review": 0, "checks": 0, "ruleset": 0}
+
+                def request(path, graphql=None):
+                    if path == "/git/ref/heads/main":
+                        calls["main"] += 1
+                        sha = "d" * 40 if drift == "main" and calls["main"] > 1 else "a" * 40
+                        return {"object": {"sha": sha}}
+                    if path == "/git/ref/heads/guard/feature":
+                        calls["branch"] += 1
+                        sha = "d" * 40 if drift == "branch" and calls["branch"] > 1 else "b" * 40
+                        return {"object": {"sha": sha}}
+                    if path == "/pulls/13":
+                        calls["target"] += 1
+                        count = 2 if drift == "target" and calls["target"] > 1 else 1
+                        return {"number": 13, "state": "open", "changed_files": count,
+                                "head": {"sha": "b" * 40, "ref": "guard/feature"},
+                                "base": {"sha": "a" * 40, "ref": "main"}}
+                    if path == "/pulls/11":
+                        calls["concurrent_detail"] += 1
+                        changed = drift == "concurrent_base" and calls["concurrent_detail"] > 1
+                        return {"number": 11, "state": "open", "changed_files": 1,
+                                "head": {"sha": "c" * 40},
+                                "base": {"ref": "feature" if changed else "main",
+                                         "sha": ("d" if changed else "a") * 40}}
+                    if path == "/rulesets/24804719":
+                        calls["ruleset"] += 1
+                        evidence = snapshot()["ruleset"]
+                        if drift == "ruleset" and calls["ruleset"] > 1:
+                            evidence["enforcement"] = "disabled"
+                        return evidence
+                    raise AssertionError(path)
+
+                def pages(path, key=None):
+                    if path == "/pulls?state=open":
+                        calls["open_prs"] += 1
+                        other = "d" * 40 if (drift == "open_prs"
+                            and calls["open_prs"] > 1) else "c" * 40
+                        rows = [{"number": 13, "head": {"sha": "b" * 40}},
+                                {"number": 11, "head": {"sha": other}}]
+                        if calls["open_prs"] > 1:
+                            if drift == "opened_pr":
+                                rows.append({"number": 12, "head": {"sha": "e" * 40}})
+                            if drift == "closed_pr":
+                                rows.pop()
+                        return rows
+                    if path == "/pulls/13/files":
+                        return [{"filename": "scripts/execution_guard.py", "status": "modified"}]
+                    if path == "/pulls/11/files":
+                        calls["concurrent_files"] += 1
+                        changed = drift == "concurrent_files" and calls["concurrent_files"] > 1
+                        return [{"filename": "scripts/execution_guard.py"
+                                 if changed else "docs/other.txt", "status": "modified"}]
+                    if path == "/commits/" + "b" * 40 + "/check-runs":
+                        calls["checks"] += 1
+                        if drift == "checks" and calls["checks"] > 1:
+                            return [{"name": "bootstrap", "status": "in_progress"}]
+                        return []
+                    raise AssertionError(path)
+
+                def review_threads(number):
+                    calls["review"] += 1
+                    if drift == "review" and calls["review"] > 1:
+                        return [False]
+                    return []
+
+                with (patch.object(reader, "request", side_effect=request),
+                      patch.object(reader, "pages", side_effect=pages),
+                      patch.object(reader, "review_threads", side_effect=review_threads)):
+                    if drift is None:
+                        result = reader.snapshot(task(), 13)
+                        self.assertEqual("a" * 40, result["main"])
+                        self.assertEqual(2, len(result["open_prs"]))
+                    else:
+                        with self.assertRaisesRegex(LiveStateBlocked, "changed during live snapshot"):
+                            reader.snapshot(task(), 13)
 
     def test_missing_pr_page_and_duplicate_pr_block(self):
         for change in ("missing","duplicate"):

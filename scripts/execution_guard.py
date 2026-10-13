@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """CFA3 fail-closed active DEV/AI Execution Guard, not global CFA3 admission."""
+import copy
 import fcntl
 import hashlib
 import hmac
@@ -366,7 +367,7 @@ def _reserve(folder, task):
 def _require_live_state(task, live_state):
     """Stop on stale or unavailable trusted state; no self-asserted PASS."""
     try:
-        proof = live_state(task)
+        proof = live_state(copy.deepcopy(task))
     except Exception as exc:
         raise Blocked("fresh exact-state authorization unavailable") from exc
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
@@ -380,6 +381,47 @@ def _require_live_state(task, live_state):
     if task["operation"] in ("REPOSITORY_WRITE", "WORKFLOW_START"):
         if proof.get("actual_head_sha") != task["head_sha"]:
             raise Blocked("head SHA drift")
+
+
+def _require_rule_receipts_still_fresh(task, receipts, key):
+    """Fast signed freshness recheck with no remote evidence fetches.
+
+    The full trusted resolver validated every receipt before the final live
+    snapshot. Only bounded in-process signature/deadline checks run now.
+    This is not an atomic remote lease or a deployed runtime authorization.
+    """
+    from check_execution_rule_evidence import MAX_AGE_SECONDS, bytes_canonical
+    if not isinstance(receipts, list) or len(receipts) != 83:
+        raise Blocked("RULE_GATE: fresh 83-rule bundle unavailable")
+    earliest_deadline = None
+    latest_checked_at = None
+    for receipt in receipts:
+        if not isinstance(receipt, dict):
+            raise Blocked("RULE_GATE: malformed final rule receipt")
+        at, expiry = receipt.get("checked_at"), receipt.get("expires_at")
+        if (type(at) not in (int, float) or not math.isfinite(at)
+                or type(expiry) not in (int, float) or not math.isfinite(expiry)):
+            raise Blocked("RULE_GATE: invalid final rule expiry")
+        signature = receipt.get("signature")
+        if not isinstance(signature, str):
+            raise Blocked("RULE_GATE: final rule signature missing")
+        try:
+            signed = {k: v for k, v in receipt.items() if k != "signature"}
+            expected_sig = hmac.new(key, bytes_canonical(signed),
+                                    hashlib.sha256).hexdigest()
+        except (ValueError, TypeError, OverflowError) as exc:
+            raise Blocked("RULE_GATE: final rule proof malformed") from exc
+        if not hmac.compare_digest(signature, expected_sig):
+            raise Blocked("RULE_GATE: final rule proof changed")
+        deadline = min(expiry, at + MAX_AGE_SECONDS)
+        earliest_deadline = (deadline if earliest_deadline is None
+                             else min(earliest_deadline, deadline))
+        latest_checked_at = (at if latest_checked_at is None
+                             else max(latest_checked_at, at))
+    now = time.time()
+    if (not math.isfinite(now) or now >= earliest_deadline
+            or now < latest_checked_at):
+        raise Blocked("RULE_GATE: rule evidence expired before execution")
 
 
 def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
@@ -455,8 +497,16 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
                                  evidence_resolver=rule_evidence_resolver)
         except RuleEvidenceBlocked as exc:
             raise Blocked("RULE_GATE: late rule proof invalid: " + str(exc)) from exc
-        # Checking all 83 proofs may itself consume validity time.
+        # Protected evidence resolution may run for many network requests
+        # and allow a previously clean GitHub state to become invalid.
+        # DEV-01 requires a fresh live authorization after those reads, too.
+        _require_live_state(task, live_state)
         check_task(root, task)
+        _require_rule_receipts_still_fresh(
+            task, rule_receipts, rule_attestation_secret)
+        # Live adapters are isolated from the original task, and the
+        # exact signed task is reauthenticated after all callback activity.
+        verify_signature(task, secret)
         outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
             raise Blocked("RESULT_GATE: wrong output count")

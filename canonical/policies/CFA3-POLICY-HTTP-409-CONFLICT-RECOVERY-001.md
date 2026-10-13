@@ -1,218 +1,200 @@
 # CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001
 
-**Megnevezés:** HTTP 409 Conflict hibák kötelező felismerése, célzott javítása, biztonságos újravégrehajtása és az indokolatlan blokkolások megelőzése
+**Megnevezés:** HTTP 409 Conflict hibák kötelező felismerése, biztonságos javítása és tényleges rendszerszintű szabályérvényesítése
 
-**Verzió:** 1.0  
-**Státusz:** JÓVÁHAGYÁSRA VÁR  
-**Hatály:** Minden CFA3-fejlesztés, GitHub API-művelet, repository-módosítás, commit, branch, pull request, fájlkezelés, nyilvántartás-frissítés és minden olyan szolgáltatás, amely HTTP 409 Conflict választ adhat.
+**Verzió:** 1.1  
+**Státusz:** JÓVÁHAGYVA – RENDSZERSZINTŰ BEVEZETÉS ALATT  
+**Szabályviszony:** TELJES HELYETTESÍTÉS  
+**Helyettesített változat:** v1.0 – HATÁLYON KÍVÜL HELYEZENDŐ A v1.1 BIZONYÍTOTT HATÁLYBALÉPÉSÉVEL  
+**Hatály:** CFA3 GitHub-műveletek, repository-kezelés, fájlmódosítások, PR- és merge-folyamatok, API-műveletek és az ezekhez kapcsolódó végrehajtási rendszerek.
 
 ## 1. § – Alapelv
 
-A HTTP 409 Conflict önmagában nem tekinthető végleges blokkolásnak.
+A HTTP 409 Conflict kezelésére vonatkozó előírásoknak ténylegesen kikényszeríthető végrehajtási szabályként kell működniük.
 
-A fejlesztő AI köteles a konfliktus konkrét okát meghatározni, és amennyiben az a jóváhagyott feladat keretein belül biztonságosan javítható, a szükséges javítást önállóan végrehajtani.
+A szabály Markdown-, JSON- vagy adatbázis-bejegyzésként történő tárolása önmagában nem jelenti a szabály bevezetését.
 
-A 409-es hiba nem szolgálhat indokként a feladat indokolatlan megszakítására, új feladat létrehozására vagy a felelősség felhasználóra történő áthárítására.
+A CFA3 kizárólag akkor tekintheti a szabályt végrehajtási szinten érvényesnek, ha az előírások megfelelő végrehajtási kapukhoz kapcsolódnak, és működésük ellenőrizhető.
 
-## 2. § – Kötelező hibaazonosítás
+## 2. § – Teljes helyettesítés és hatályon kívül helyezés
 
-HTTP 409 válasz esetén az AI köteles azonosítani:
+A v1.1 a v1.0 teljes helyettesítője, nem kiegészítése.
 
-1. Az érintett API-végpontot és HTTP-módszert.
-2. A szerver tényleges válaszát és hibakódját.
-3. Az érintett erőforrást, fájlt, branchet vagy PR-t.
-4. Az eredeti művelet célját.
-5. Az ütközést okozó aktuális állapotot.
-6. A biztonságos helyreállításhoz szükséges minimális műveletet.
+A v1.1 bizonyított hatálybalépésével a v1.0 teljes egészében hatályát veszti. A v1.0 egyetlen rendelkezése sem maradhat önállóan vagy párhuzamosan hatályban.
 
-A konfliktus okáról bizonyíték nélkül nem állítható, hogy jogosultsági, hálózati, GitHub-szolgáltatási vagy felhasználói hiba.
+A v1.0 nem használható aktív szabályforrásként, végrehajtási jogosultságként, ellenőrzési kapuk normatív alapjaként vagy automatikus döntési feltételként.
 
-## 3. § – Exact-state ellenőrzés
+A központi szabálynyilvántartásban kizárólag a v1.1 szerepelhet aktuálisan hatályos változatként. A v1.0 korábbi normatív státuszát minden érintett végrehajtási és nyilvántartási felületen meg kell szüntetni.
 
-A javítás előtt kötelező az ütközés szempontjából releváns tényleges állapot lekérése.
+A v1.0 korábbi GitHub-commitjai és bizonyítékai kizárólag változtathatatlan audit-előzményként maradhatnak meg; ezek nem jelentenek történeti szabályhatályt.
 
-GitHub esetében szükség szerint ellenőrizendő:
+A v1.1 hatálybalépése előtt a rendszer nem állíthatja, hogy az új szabály már működik. Az átállás során tilos olyan állapotot létrehozni, amelyben mindkét verzió aktív, illetve amelyben a bizonyítatlan v1.1-et működőként jelentik.
 
-- Repository és célág létezése.
-- Aktuális HEAD commit.
-- Az érintett fájl aktuális SHA-értéke.
-- A PR aktuális állapota és összevonhatósága.
-- Az érintett erőforrás létezése.
-- Az előírt állapotátmenet végrehajthatósága.
+A hatályon kívül helyezés és a v1.1 hatálybalépése csak a szükséges ellenőrzések, CI-kapuk, végrehajtási tesztek és GitHub main állapot sikeres bizonyítása után tekinthető befejezettnek.
 
-Csak a konfliktus feloldásához szükséges adatokat szabad ismételten lekérni.
+## 3. § – Kötelező végrehajtási integráció
 
-Az AI korábbi állítása nem helyettesítheti a tényleges rendszerállapotot.
+A HTTP 409 Conflict szabály végrehajtását a CFA3 meglévő Execution Guard infrastruktúrájához kell kapcsolni.
 
-## 4. § – A javítható konfliktusok kezelése
+A rendszernek támogatnia kell:
 
-Az AI külön engedély nélkül elvégezheti a jóváhagyott művelethez közvetlenül szükséges technikai javítást, ha az nem módosítja a feladat célját, tartalmát vagy engedélyezett hatókörét.
+1. A HTTP 409 esemény felismerését.
+2. A hibához kapcsolódó erőforrás azonosítását.
+3. Az aktuális rendszerállapot ellenőrzését.
+4. A javítás engedélyezhetőségének meghatározását.
+5. A jogosulatlan javítás blokkolását.
+6. A biztonságos újrapróbálkozás szabályozását.
+7. A sikeres helyreállítás bizonyítását.
+8. Az eredeti feladathoz való visszatérést.
 
-Ilyen lehet:
+Az integráció kizárólag a ténylegesen érintett komponensekre terjedhet ki.
 
-1. Elavult fájl-SHA frissítése.
-2. Elavult commit-azonosító korrigálása.
-3. Hibás create/update művelet megfelelő API-műveletre cserélése.
-4. Párhuzamos fájlırások soros végrehajtása.
-5. Már létező erőforrás helyes kezelése.
-6. Hibás műveleti sorrend javítása.
-7. Saját korábbi művelet miatt kialakult, determinisztikusan feloldható állapotütközés megszüntetése.
+## 4. § – Kötelező végrehajtási állapotgép
 
-Ezek csak akkor engedélyezettek, ha mások módosításai nem vesznek el, és a javítás nem sért magasabb prioritású biztonsági vagy jóváhagyási szabályt.
+A HTTP 409 Conflict kezelésének végrehajtási sorrendje:
 
-## 5. § – A módosítások megőrzése
+1. HTTP 409 észlelése.
+2. Exact-state ellenőrzés.
+3. Scope és jogosultsági kapu.
+4. Javítási döntés.
+5. Célzott helyreállítás.
+6. Eredmény bizonyítása.
+7. Visszatérés az eredeti feladathoz.
 
-A konfliktus feloldásakor kötelező megőrizni:
+Az állapotátmenetek csak megfelelő feltételek teljesülése esetén engedélyezhetők.
 
-- A felhasználó által jóváhagyott tartalmat.
-- A GitHubon már elfogadott módosításokat.
-- Más fejlesztők változtatásait.
-- A történeti adatokat és jóváhagyásokat.
-- Az előírt nyilvántartási és életciklus-állapotokat.
+Valamennyi döntési kapunál a nem biztonságos vagy nem engedélyezett művelet STOP/BLOCKED állapotba kerül.
 
-**Tilos** a konfliktust force push, indokolatlan felülírás, adatvesztéssel járó visszaállítás vagy más módosításának eltávolítása útján megszüntetni.
+Tilos a javítási vagy ellenőrzési kapuk megkerülése.
 
-## 6. § – A műveleti sorrend helyreállítása
+## 5. § – Exact-state kikényszerítése
 
-Ha a 409-es hibát hibás műveleti sorrend okozta, az AI köteles a helyes sorrendet helyreállítani.
+Javító művelet nem engedélyezhető, amíg a szükséges aktuális erőforrásállapot nem ismert.
 
-A szükséges célágat vagy erőforrást létre kell hozni, mielőtt az arra épülő módosítás végrehajtására sor kerülne.
+GitHub esetében az ellenőrzésnek ki kell terjednie az érintett branchre, HEAD commitra, fájl-SHA-ra, PR-állapotra és egyéb releváns előfeltételekre.
 
-A már létező és megfelelő állapotú erőforrást tilos feleslegesen újra létrehozni.
+Az elavult vagy bizonytalan állapot alapján végrehajtott írási műveletet meg kell akadályozni.
 
-Az előfeltételek helyreállítása nem terjesztheti ki az eredeti feladatot.
+Az ellenőrzés és a tényleges írás közötti állapotváltozást megfelelő verzió- vagy előfeltétel-ellenőrzéssel kell kezelni.
 
-## 7. § – Kötelező célzott javítás
+## 6. § – Scope és jogosultsági kapu
 
-A 409-es konfliktus diagnosztizálása után az AI köteles a legkisebb szükséges javítást alkalmazni.
+Minden javítási javaslatot a végrehajtás előtt a jóváhagyott feladathoz kell viszonyítani.
 
-Nem indíthat emiatt önálló refaktort, új PR-t, architekturális átalakítást, auditot vagy dokumentációs mellékfeladatot, hacsak az nem elengedhetetlen és külön nem engedélyezett.
+A rendszernek meg kell különböztetnie:
 
-A javítást követően azonnal vissza kell térnie az eredeti feladathoz.
+- Az eredeti feladaton belüli, biztonságos technikai korrekciót.
+- A tartalmi vagy architekturális változtatást.
+- A jogosulatlan mellékfeladatot.
+- Az új jóváhagyást igénylő műveletet.
 
-## 8. § – Újrapróbálkozás és ciklusvédelem
+Új PR, rebase, merge, force push vagy más érzékeny GitHub-művelet nem válik automatikusan engedélyezetté egy HTTP 409 eseménytől.
 
-Ugyanazt a műveletet változatlan előfeltételekkel ismételni tilos, ha az előző végrehajtás 409-es hibával végződött.
+## 7. § – Adatmegőrzés és konfliktusbiztonság
 
-Újrapróbálkozás kizárólag akkor engedélyezett, ha:
+A javítás kizárólag akkor hajtható végre, ha nem okoz jogosulatlan adatvesztést vagy változtatás-felülírást.
 
-1. Az ütközés oka azonosított.
-2. A releváns állapot ellenőrzött.
-3. A szükséges javítás megtörtént.
-4. Az új végrehajtás biztonsági feltételei teljesülnek.
+A rendszernek ellenőriznie kell az elavult verziókat, az ütköző írásokat és az erőforrás aktuális tartalmát.
 
-Ha a konfliktus változatlan okból ismét jelentkezik, újabb vak újrapróbálkozás helyett a javítás eredményét kell értékelni.
+Nem bizonyítható adatmegőrzés esetén a műveletet blokkolni kell.
 
-Ha a szükséges továbblépés nem bizonyíthatóan biztonságos, a végrehajtást meg kell állítani.
+## 8. § – Újrapróbálkozási és ciklusvédelem
 
-## 9. § – Saját végrehajtási hiba
+A rendszer köteles megakadályozni az azonos körülmények közötti ismételt, eredménytelen végrehajtási ciklusokat.
 
-Amennyiben a HTTP 409 Conflict az AI saját hibájából keletkezett, például elavult SHA használatából, hibás állapotfeltevésből vagy nem megfelelő műveleti sorrendből, a fejlesztő köteles ezt végrehajtási hibaként kezelni.
+Újrapróbálkozás csak akkor engedélyezhető, ha a konfliktus kiváltó oka és a javítás hatása ellenőrzött.
 
-A saját, biztonságosan javítható technikai hiba elhárításához nem szükséges külön felhasználói jóváhagyás.
+Az ismétlések számának korlátozottnak kell lennie. Az ismétlődő konfliktust újra kell értékelni, nem lehet változatlanul tovább próbálkozni.
 
-Az AI köteles a javítás tényét és eredményét pontosan közölni.
+A ciklusvédelem nem szakíthat meg olyan műveletet, amelynek végrehajtása jogszerűen és bizonyíthatóan előrehalad.
 
-Nem minősítheti a saját mulasztását igazolt külső blokkolásnak.
+## 9. § – Saját technikai hibák kezelése
 
-## 10. § – Valódi blokkolás
+Az AI saját technikai végrehajtási hibáját a megengedett önkorrekciós körön belül köteles kijavítani.
 
-A 409-es hiba kizárólag akkor minősíthető valódi blokkolásnak, ha a feltárt konfliktus biztonságos megszüntetése az AI rendelkezésére álló jogosultságokkal vagy a jóváhagyott feladathatárokon belül nem lehetséges.
+A korrekció nem változtathatja meg a felhasználói jóváhagyást, a szabályok hatályát vagy az eredeti feladat célját.
 
-Ilyen eset különösen:
+A saját hibából eredő ütközés nem minősíthető automatikusan külső blokkolásnak.
 
-- A felhasználói jóváhagyást érintő tartalmi konfliktus.
-- Más fejlesztő módosításának felülírását igénylő helyzet.
-- Nem feloldható branch- vagy PR-állapotütközés.
-- Kötelező biztonsági vagy CI-kapu megsértésének veszélye.
-- Nem egyértelmű, többféleképpen feloldható adatkonfliktus.
+## 10. § – Valódi blokkolás és fail-closed működés
 
-Az AI köteles megnevezni a konkrét blokkolást, annak bizonyítékát és a továbblépéshez szükséges döntést.
+A végrehajtást meg kell állítani, ha:
 
-**Valódi blokkolás esetén a végrehajtásnak meg kell állnia.**
+1. A konfliktus nem azonosítható megbízhatóan.
+2. Az aktuális rendszerállapot bizonytalan.
+3. A javítás tartalmi döntést igényel.
+4. Az adatmegőrzés nem biztosítható.
+5. A művelethez nincs megfelelő jogosultság.
+6. Kötelező biztonsági vagy CI-előfeltétel sérülne.
 
-## 11. § – PR- és merge-műveletek különös védelme
+A blokkolás konkrét okát és bizonyítékát meg kell őrizni.
 
-A 409-es hiba javítására adott engedély önmagában nem jogosít fel:
+Tilos a blokkolás automatikus feloldása feltételezéssel, végtelen újrapróbálkozással vagy biztonsági kapu megkerülésével.
 
-- Új PR létrehozására.
-- Meglévő PR lezárására.
-- PR összevonására.
-- Rebase végrehajtására.
-- Más branch módosítására.
-- Jóváhagyott tartalom megváltoztatására.
+## 11. § – Bizonyítékalapú eredményellenőrzés
 
-Ezekhez az adott műveletre vonatkozó eredeti jogosultságok és jóváhagyások szükségesek.
+A helyreállítás csak akkor minősíthető sikeresnek, ha annak tényleges eredménye visszaellenőrizhető.
 
-A technikai hibajavítás nem kerülheti meg a CFA3 GitHub merge- és biztonsági szabályait.
+A bizonyíték szükség szerint tartalmazza az eredeti hibát, az ellenőrzött kiindulási állapotot, az engedélyezett korrekciót és az új állapotot.
 
-## 12. § – A javítás bizonyítása
+Az API sikeres válasza önmagában nem helyettesíti az erőforrás ellenőrzését.
 
-A 409-es hiba megszüntetését kizárólag tényleges rendszerbizonyíték alapján szabad sikeresnek minősíteni.
+## 12. § – A 16 eredeti paragrafus kötelező leképezése
 
-A bizonyításnak tartalmaznia kell:
+A v1.1 valamennyi kötelező rendelkezéséhez kötelező hozzárendelni:
 
-1. Az eredeti konfliktust.
-2. Az azonosított okot.
-3. A végrehajtott javítást.
-4. A sikeres újravégrehajtás eredményét.
-5. Az érintett erőforrás végső állapotát.
+- Egyedi, stabil szabályazonosítót.
+- A szabály által érintett végrehajtási pontot.
+- Az előfeltételt.
+- A megengedett és tiltott műveleteket.
+- A megsértéskor alkalmazott döntést.
+- A tesztelhető elfogadási feltételt.
+- A bizonyítás módját.
 
-GitHub-művelet esetén szükség szerint bizonyítandó a fájl tartalma, SHA-értéke, commitazonosítója, PR-státusza vagy a main ágon való tényleges jelenléte.
+Nem maradhat olyan kötelező rendelkezés, amelyhez csak leíró szöveg tartozik, anélkül, hogy a végrehajtási státusza egyértelmű lenne.
 
-Önmagában a HTTP 200 vagy 201 válasz sem bizonyítja egy teljes fejlesztési feladat véglegesítését.
+## 13. § – Kötelező pozitív és negatív tesztek
 
-## 13. § – Ismételt ellenőrzések korlátozása
+A megvalósításnak ki kell terjednie a 409-es konfliktusok jellegzetes eseteire, különösen az elavult SHA-ra, párhuzamos írásra, megváltozott branch-állapotra, jogosulatlan műveletre, ismétlődő konfliktusra és bizonytalan erőforrásállapotra.
 
-A fejlesztő nem fordíthatja a végrehajtás idejének meghatározó részét ugyanazon, már igazolt állapot szükségtelen ismételt lekérdezésére.
+A teszteknek igazolniuk kell, hogy az engedélyezett helyreállítás végrehajtható, a tiltott műveletek pedig ténylegesen blokkolódnak.
 
-Új ellenőrzés csak akkor végezhető, ha azt:
+A kizárólag JSON-mezőket vagy dokumentumszöveget ellenőrző teszt nem elegendő a rendszerszintű PASS-hoz.
 
-- Megváltozott állapot.
-- Újonnan észlelt konfliktus.
-- Sikertelen javítás.
-- Kötelező végrehajtási kapu.
-- Az eredeti feladat lezárásához szükséges bizonyítás
+## 14. § – Bootstrap és Execution Guard szerepe
 
-indokolja.
+A Bootstrap feladata a szabályforrás, a szerkezeti integritás és a kapcsolódó ellenőrzések meglétének igazolása.
 
-A javítás sikeres bizonyítása után az AI köteles folytatni az eredeti feladatot.
+Az Execution Guard feladata a tényleges végrehajtási döntések kikényszerítése az általa ellenőrzött műveleteknél.
 
-## 14. § – Scope Guard és feladatfolytonosság
+A két ellenőrzés eredménye nem helyettesítheti egymást.
 
-A HTTP 409 Conflict kezelése az eredeti feladat alárendelt helyreállítási művelete.
+A szabály teljes körű működése csak akkor jelenthető ki, ha a ténylegesen hatálya alá tartozó műveleti útvonalakon érvényesül. A Guard által nem ellenőrzött közvetlen vagy külső műveleti útvonalakra nem állítható kikényszerítettség.
 
-A fejlesztő köteles megőrizni:
+## 15. § – Véglegesítés
 
-- Az eredeti fő feladatot.
-- A jóváhagyott eredményt.
-- Az engedélyezett műveleti kört.
-- A kötelező korlátozásokat.
-- Az eredeti befejezési feltételt.
+A szabály rendszerszintű véglegesítésének feltétele:
 
-A konfliktus nem indokolhatja a feladat önkényes átértelmezését vagy más feladatra történő áttérést.
+1. A jóváhagyott eredeti szöveg és a teljes helyettesítés rendelkezéseinek megőrzése.
+2. A teljes rendelkezés–végrehajtás megfeleltetés.
+3. Az engedélyezési és tiltási logika megvalósítása.
+4. A szükséges Execution Guard integráció.
+5. A pozitív és negatív tesztek sikeres eredménye.
+6. A kötelező CI-ellenőrzések teljesítése.
+7. A jóváhagyott GitHub-egyesítés.
+8. A main ág tényleges állapotának bizonyítása.
+9. A futásidejű működés bizonyítása az érintett műveleti útvonalakon.
 
-## 15. § – Kapcsolat a meglévő CFA3-szabályokkal
+A tárolt szabályszöveg egyezése, a regisztráció és a CI önmagukban nem elegendők.
 
-Jelen szabály a HTTP 409 Conflict kezelésére vonatkozó speciális végrehajtási előírás.
+## 16. § – Korlátozások és feladatlezárás
 
-Nem írhatja felül a CFA3 kötelező exact-state, jóváhagyási, blokkolási, adatmegőrzési, GitHub merge- és véglegesítési szabályait.
+Jelen szabály végrehajtása kizárólag a HTTP 409 Conflict helyreállításához közvetlenül szükséges munkára adhat alapot.
 
-Különösen alkalmazandó az alábbi elv:
+Nem engedélyez donor-intake-et, más alkalmazás fejlesztését, önálló architekturális átalakítást, vagy más szabály tartalmi megváltoztatását.
 
-**Az AI köteles önállóan kijavítani a saját, biztonságosan helyreállítható technikai hibáját, de nem jogosult önállóan feloldani olyan konfliktust, amely új felhasználói döntést igényel.**
+A feladat akkor tekinthető késznek, amikor a jóváhagyott 409-es szabály teljes, alkalmazandó rendelkezésállománya ténylegesen kikényszeríthető, a megkövetelt bizonyítékok rendelkezésre állnak, és nincs ismert végrehajtást akadályozó blocker.
 
-## 16. § – Befejezési feltétel
+Ekkor a végrehajtásnak meg kell állnia.
 
-A HTTP 409 Conflict helyreállítása kizárólag akkor tekinthető teljesítettnek, ha:
-
-- A konfliktus konkrét oka azonosított.
-- A szükséges javítás megtörtént.
-- Az eredeti művelet sikeresen végrehajthatóvá vált és végrehajtásra került.
-- A tényleges rendszerállapot bizonyítja a javítás eredményét.
-- Nem történt adatvesztés vagy jogosulatlan módosítás.
-- Nem maradt az eredeti műveletet akadályozó ismert konfliktus.
-
-A konfliktus feloldása nem jelenti automatikusan a teljes fejlesztési feladat befejezését.
-
-A fejlesztési feladatot annak saját jóváhagyott befejezési feltétele szerint kell lezárni.
+A tartós, tényleges működés végleges elismerése a felhasználó döntési jogköre; az implementáció fejlesztési lezárása és a tartós működés későbbi elismerése külön döntés.

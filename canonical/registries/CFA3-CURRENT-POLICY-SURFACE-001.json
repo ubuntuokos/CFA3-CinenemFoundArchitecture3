@@ -3439,10 +3439,10 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",
-      "git_blob_sha1": "16865eb1a7046570af9cf081783edfbf36bb361e",
+      "git_blob_sha1": "bf5683ea7dfaf6948c2e2af8c773074fcb045400",
       "canonical_id": "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001",
       "source_status": "OWNER_APPROVED",
-      "leaf_count": 35,
+      "leaf_count": 45,
       "leaves": [
         [
           "/admission_boundary/owner_approval_is_merge_proof",
@@ -3481,6 +3481,22 @@
           "string"
         ],
         [
+          "/enforcement/gate",
+          "string"
+        ],
+        [
+          "/enforcement/runtime_admission_claimed",
+          "boolean"
+        ],
+        [
+          "/enforcement/tests",
+          "string"
+        ],
+        [
+          "/enforcement/user_accepts_long_term_effectiveness",
+          "boolean"
+        ],
+        [
           "/finalization_gates/0",
           "string"
         ],
@@ -3517,6 +3533,26 @@
           "string"
         ],
         [
+          "/replaces/applies_after",
+          "string"
+        ],
+        [
+          "/replaces/normative_active",
+          "boolean"
+        ],
+        [
+          "/replaces/status",
+          "string"
+        ],
+        [
+          "/replaces/version",
+          "string"
+        ],
+        [
+          "/requirements/decision_gate_required",
+          "boolean"
+        ],
+        [
           "/requirements/do_not_override_existing_rules",
           "boolean"
         ],
@@ -3538,6 +3574,10 @@
         ],
         [
           "/requirements/no_scope_expansion",
+          "boolean"
+        ],
+        [
+          "/requirements/old_version_repealed",
           "boolean"
         ],
         [

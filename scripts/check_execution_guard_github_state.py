@@ -97,6 +97,8 @@ def validate_snapshot(task, snapshot):
                 raise LiveStateBlocked("target PR changed during collision verification")
             if task["target"] not in files:
                 raise LiveStateBlocked("target is not a changed file on target PR")
+            if set(files) != target_files:
+                raise LiveStateBlocked("target PR files differ from signed exact scope")
         elif target_files.intersection(files):
             raise LiveStateBlocked("concurrent PR modifies an in-scope file")
     if not seen_self:

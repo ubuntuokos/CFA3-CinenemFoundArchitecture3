@@ -3439,11 +3439,15 @@
     },
     {
       "path": "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json",
-      "git_blob_sha1": "bf5683ea7dfaf6948c2e2af8c773074fcb045400",
+      "git_blob_sha1": "947cc9ef85e5c765f36881fc08226cfa1323f813",
       "canonical_id": "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001",
-      "source_status": "OWNER_APPROVED",
-      "leaf_count": 45,
+      "source_status": "OWNER_APPROVED_ACTIVE",
+      "leaf_count": 47,
       "leaves": [
+        [
+          "/active_normative_version",
+          "string"
+        ],
         [
           "/admission_boundary/owner_approval_is_merge_proof",
           "boolean"
@@ -3529,15 +3533,19 @@
           "string"
         ],
         [
+          "/normative_active",
+          "boolean"
+        ],
+        [
           "/owner_decision_date",
           "string"
         ],
         [
-          "/replaces/applies_after",
-          "string"
+          "/replaces/normative_active",
+          "boolean"
         ],
         [
-          "/replaces/normative_active",
+          "/replaces/repeal_effective",
           "boolean"
         ],
         [

@@ -254,8 +254,6 @@ class GuardTests(unittest.TestCase):
                     def audit(_, phase):
                         phases.append(phase)
                         if phase == "RESERVED":
-                            if failure == "task_expired":
-                                clock["now"] = RULE_NOW + 4
                             return reserved
                         failed = issued(t, "FAILED", first)
                         if failure == "task_expired":
@@ -263,10 +261,19 @@ class GuardTests(unittest.TestCase):
                             signed_again(failed)
                         return failed
 
-                    with self.assertRaisesRegex(
-                            Blocked,
-                            "late rule proof invalid" if failure ==
-                            "rule_receipts_expired" else "expired task authorization"):
+                    def verified_audit(*args, **kwargs):
+                        result = verify_audit_receipt(*args, **kwargs)
+                        # Expire only after the RESERVED receipt was accepted.
+                        if failure == "task_expired" and args[3] == "RESERVED":
+                            clock["now"] = RULE_NOW + 4
+                        return result
+
+                    with (patch("check_execution_guard_audit.verify_audit_receipt",
+                                side_effect=verified_audit),
+                          self.assertRaisesRegex(
+                              Blocked,
+                              "late rule proof invalid" if failure ==
+                              "rule_receipts_expired" else "expired task authorization")):
                         guarded_execute(
                             t, root=ROOT, secret=signing_key,
                             admission=lambda _: admission, live_state=live,

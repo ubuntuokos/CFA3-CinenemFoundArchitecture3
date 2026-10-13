@@ -60,7 +60,7 @@ class TaskIntegrityTests(unittest.TestCase):
 
     def make_policy(self, root, status, header, sections=2, published_hash=None):
         folder = Path(root) / "canonical/policies"
-        folder.mkdir(parents=True)
+        folder.mkdir(parents=True, exist_ok=True)
         stem = "CFA3-SYNTHETIC-POLICY-001"
         text = "# " + stem + "\n\n**Státusz:** " + header + "  \n\n" + (
             "## 1. § Intro\n\n## 2. § Check\n")

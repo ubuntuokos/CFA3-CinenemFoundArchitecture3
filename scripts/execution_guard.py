@@ -363,6 +363,25 @@ def _reserve(folder, task):
             if tmp.exists():
                 tmp.unlink()
 
+def _require_live_state(task, live_state):
+    """Stop on stale or unavailable trusted state; no self-asserted PASS."""
+    try:
+        proof = live_state(task)
+    except Exception as exc:
+        raise Blocked("fresh exact-state authorization unavailable") from exc
+    if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
+            "main_current", "head_current", "no_overlap", "checks_passed",
+            "review_threads_clear", "owner_scope_approved",
+            "owner_grant_signature_verified",
+            "main_ruleset_verified", "privileged_bypass_actors_verified")):
+        raise Blocked("fresh exact-state authorization failed")
+    if proof.get("actual_main_sha") != task["main_sha"]:
+        raise Blocked("main SHA drift")
+    if task["operation"] in ("REPOSITORY_WRITE", "WORKFLOW_START"):
+        if proof.get("actual_head_sha") != task["head_sha"]:
+            raise Blocked("head SHA drift")
+
+
 def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
                     live_state=None, preflight=None, executor=None,
                     verify_result=None, audit=None, state_dir=None,
@@ -405,18 +424,7 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
             "current_83_rule_inventory_verified", "current_83_rule_gates_verified",
             "current_83_conflicts_resolved", "independent_proof_verified")):
         raise Blocked("independent current-83 rule admission not verified")
-    proof = live_state(task)
-    if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
-            "main_current", "head_current", "no_overlap", "checks_passed",
-            "review_threads_clear", "owner_scope_approved",
-            "owner_grant_signature_verified",
-            "main_ruleset_verified", "privileged_bypass_actors_verified")):
-        raise Blocked("fresh exact-state authorization failed")
-    if proof.get("actual_main_sha") != task["main_sha"]:
-        raise Blocked("main SHA drift")
-    if task["operation"] in ("REPOSITORY_WRITE", "WORKFLOW_START"):
-        if proof.get("actual_head_sha") != task["head_sha"]:
-            raise Blocked("head SHA drift")
+    _require_live_state(task, live_state)
     checked = preflight(task)
     if not isinstance(checked, dict) or any(checked.get(x) is not True for x in (
             "source_verified", "scope_verified", "resource_verified",
@@ -432,6 +440,11 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
     except AuditBlocked as exc:
         raise Blocked("AUDIT_GATE: reserved event not independently acknowledged") from exc
     try:
+        # DEV-01: preflight and durable RESERVED acknowledgement take time.
+        # Revalidate local source/expiry and fresh live authorization directly
+        # before the mutation. Any drift records FAILED, never runs executor.
+        check_task(root, task)
+        _require_live_state(task, live_state)
         outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
             raise Blocked("RESULT_GATE: wrong output count")

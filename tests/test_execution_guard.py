@@ -171,7 +171,7 @@ class GuardTests(unittest.TestCase):
                             return_value=RULE_NOW)):
                     reserved = issued(t, "RESERVED")
                     first = verify_audit_receipt(
-                        t, reserved, AUDIT_KEY, now=RULE_NOW)
+                        t, reserved, AUDIT_KEY, "RESERVED", now=RULE_NOW)
                     failed = issued(t, "FAILED", first)
                     def audit(_, phase):
                         audit_phases.append(phase)

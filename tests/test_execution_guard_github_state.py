@@ -108,13 +108,19 @@ class LiveGithubStateTests(unittest.TestCase):
         rows = [{"filename": "scripts/new.py", "previous_filename": "scripts/old.py",
                  "status": "renamed"}]
         count = [1]
+        other_count = [1]
+        other_sha = ["c" * 40]
         def request(path, graphql=None):
             if path == "/git/ref/heads/main":
                 return {"object": {"sha": "a" * 40}}
             if path == "/pulls/13":
-                return {"head": {"ref": "guard/feature", "sha": "b" * 40},
+                return {"number": 13,
+                        "head": {"ref": "guard/feature", "sha": "b" * 40},
                         "base": {"ref": "main", "sha": "a" * 40},
                         "state": "open", "changed_files": count[0]}
+            if path == "/pulls/11":
+                return {"number": 11, "head": {"sha": other_sha[0]},
+                        "state": "open", "changed_files": other_count[0]}
             if path == "/git/ref/heads/guard/feature":
                 return {"object": {"sha": "b" * 40}}
             if path == "/rulesets/24804719":
@@ -122,10 +128,14 @@ class LiveGithubStateTests(unittest.TestCase):
             raise AssertionError(path)
         def pages(path, key=None):
             if path == "/pulls?state=open":
-                return [{"number": 13, "head": {"sha": "b" * 40},
-                         "changed_files": count[0]}]
+                # Actual list endpoint omits changed_files. Every count
+                # must be fetched from the corresponding detailed PR.
+                return [{"number": 13, "head": {"sha": "b" * 40}},
+                        {"number": 11, "head": {"sha": "c" * 40}}]
             if path == "/pulls/13/files":
                 return rows
+            if path == "/pulls/11/files":
+                return [{"filename": "docs/other.txt", "status": "modified"}]
             if path == "/commits/" + "b" * 40 + "/check-runs":
                 return []
             raise AssertionError(path)
@@ -140,6 +150,14 @@ class LiveGithubStateTests(unittest.TestCase):
                 reader.snapshot(task(), 13)
             count[0] = 3000
             with self.assertRaisesRegex(LiveStateBlocked, "API cap"):
+                reader.snapshot(task(), 13)
+            count[0] = 1
+            other_count[0] = 2
+            with self.assertRaisesRegex(LiveStateBlocked, "inventory incomplete"):
+                reader.snapshot(task(), 13)
+            other_count[0] = 1
+            other_sha[0] = "d" * 40
+            with self.assertRaisesRegex(LiveStateBlocked, "detail changed"):
                 reader.snapshot(task(), 13)
 
     def test_missing_pr_page_and_duplicate_pr_block(self):

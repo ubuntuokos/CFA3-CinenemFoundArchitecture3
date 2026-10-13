@@ -97,6 +97,8 @@ def validate_snapshot(task, snapshot):
                 raise LiveStateBlocked("target PR changed during collision verification")
             if task["target"] not in files:
                 raise LiveStateBlocked("target is not a changed file on target PR")
+            if set(files) != target_files:
+                raise LiveStateBlocked("target PR files differ from signed exact scope")
         elif target_files.intersection(files):
             raise LiveStateBlocked("concurrent PR modifies an in-scope file")
     if not seen_self:
@@ -110,6 +112,26 @@ def validate_snapshot(task, snapshot):
         # Authorization cannot come from GitHub state, an AI, or this verifier.
         "owner_scope_approved": False,
     }
+
+def _verified_changed_paths(file_rows, expected_count):
+    """Expand rename paths only after the complete GitHub PR file inventory is proven."""
+    if type(expected_count) is not int or not 0 < expected_count < 3000:
+        raise LiveStateBlocked("PR changed-file count unavailable or at GitHub API cap")
+    if not isinstance(file_rows, list) or len(file_rows) != expected_count:
+        raise LiveStateBlocked("PR file inventory incomplete or changed")
+    paths = []
+    for row in file_rows:
+        if not isinstance(row, dict) or not isinstance(row.get("filename"), str) or not row["filename"]:
+            raise LiveStateBlocked("invalid PR filename")
+        paths.append(row["filename"])
+        previous = row.get("previous_filename")
+        if row.get("status") == "renamed" and previous is None:
+            raise LiveStateBlocked("renamed PR file missing source path")
+        if previous is not None:
+            if not isinstance(previous, str) or not previous:
+                raise LiveStateBlocked("invalid previous PR filename")
+            paths.append(previous)
+    return paths
 
 class TrustedGithubReader:
     """Synchronous read-only API client. The owner must isolate its token."""
@@ -201,9 +223,18 @@ class TrustedGithubReader:
         summaries = []
         for item in opened:
             n = item["number"]
+            # The list-PR response has no changed_files count. Read the full
+            # PR record for every open PR before treating its file list as complete.
+            detail = target if n == pr_number else self.request("/pulls/" + str(n))
+            if (detail.get("number") != n or detail.get("state") != "open"
+                    or detail.get("head", {}).get("sha") != item["head"]["sha"]):
+                raise LiveStateBlocked("open PR detail changed during snapshot")
+            expected = detail.get("changed_files")
+            if type(expected) is not int or not 0 < expected < 3000:
+                raise LiveStateBlocked("PR changed-file count unavailable or at GitHub API cap")
             file_rows = self.pages("/pulls/" + str(n) + "/files")
-            summaries.append({"number": n, "head_sha": item["head"]["sha"],
-                              "changed_files": [r["filename"] for r in file_rows]})
+            summaries.append({"number": n, "head_sha": detail["head"]["sha"],
+                              "changed_files": _verified_changed_paths(file_rows, expected)})
         check_runs = self.pages("/commits/" + target["head"]["sha"] + "/check-runs", key="check_runs")
         return {"main": main, "target_pr": {
                 "number": pr_number, "head_sha": target["head"]["sha"],

@@ -3,9 +3,11 @@ import copy
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"scripts"))
-from check_execution_guard_github_state import validate_snapshot, LiveStateBlocked, live_state_callback
+from check_execution_guard_github_state import (validate_snapshot, LiveStateBlocked,
+    live_state_callback, TrustedGithubReader, _verified_changed_paths)
 
 def task():
     return {"operation":"REPOSITORY_WRITE", "main_sha":"a"*40, "head_sha":"b"*40,
@@ -60,6 +62,103 @@ class LiveGithubStateTests(unittest.TestCase):
         self.assertTrue(self.check(d)["no_overlap"])
         d["open_prs"][1]["changed_files"].append("scripts/execution_guard.py")
         with self.assertRaises(LiveStateBlocked):self.check(d)
+
+    def test_signed_scope_must_match_entire_live_pr_diff(self):
+        data=snapshot()
+        data["open_prs"][0]["changed_files"].append("docs/unauthorized.txt")
+        with self.assertRaisesRegex(LiveStateBlocked, "signed exact scope"):
+            self.check(data)
+        expanded=task()
+        expanded["scope_targets"].append("docs/not-in-pr.txt")
+        with self.assertRaisesRegex(LiveStateBlocked, "signed exact scope"):
+            self.check(contract=expanded)
+
+    def test_renamed_old_and_new_paths_both_required(self):
+        names = _verified_changed_paths(
+            [{"filename": "scripts/new.py", "previous_filename": "scripts/old.py",
+              "status": "renamed"}], 1)
+        self.assertEqual(["scripts/new.py", "scripts/old.py"], names)
+        data = snapshot()
+        data["open_prs"][0]["changed_files"] = names
+        signed = task()
+        signed["target"] = "scripts/new.py"
+        signed["scope_targets"] = names
+        self.assertTrue(self.check(data, signed)["no_overlap"])
+        signed["scope_targets"] = ["scripts/new.py"]
+        with self.assertRaisesRegex(LiveStateBlocked, "signed exact scope"):
+            self.check(data, signed)
+        signed["scope_targets"] = names
+        data["open_prs"][1]["changed_files"] = ["scripts/old.py"]
+        with self.assertRaisesRegex(LiveStateBlocked, "concurrent PR"):
+            self.check(data, signed)
+
+    def test_incomplete_or_capped_file_inventory_denied(self):
+        row = [{"filename": "scripts/new.py", "status": "modified"}]
+        for count in (None, 0, True, 3000, 3001, 2):
+            with self.subTest(count=count), self.assertRaises(LiveStateBlocked):
+                _verified_changed_paths(row, count)
+        with self.assertRaisesRegex(LiveStateBlocked, "source path"):
+            _verified_changed_paths([{"filename": "scripts/new.py", "status": "renamed"}], 1)
+        with self.assertRaisesRegex(LiveStateBlocked, "previous PR filename"):
+            _verified_changed_paths([{"filename": "scripts/new.py",
+                                     "previous_filename": "", "status": "renamed"}], 1)
+
+    def test_trusted_reader_checks_complete_count_and_rename(self):
+        reader = TrustedGithubReader("synthetic-read-only")
+        rows = [{"filename": "scripts/new.py", "previous_filename": "scripts/old.py",
+                 "status": "renamed"}]
+        count = [1]
+        other_count = [1]
+        other_sha = ["c" * 40]
+        def request(path, graphql=None):
+            if path == "/git/ref/heads/main":
+                return {"object": {"sha": "a" * 40}}
+            if path == "/pulls/13":
+                return {"number": 13,
+                        "head": {"ref": "guard/feature", "sha": "b" * 40},
+                        "base": {"ref": "main", "sha": "a" * 40},
+                        "state": "open", "changed_files": count[0]}
+            if path == "/pulls/11":
+                return {"number": 11, "head": {"sha": other_sha[0]},
+                        "state": "open", "changed_files": other_count[0]}
+            if path == "/git/ref/heads/guard/feature":
+                return {"object": {"sha": "b" * 40}}
+            if path == "/rulesets/24804719":
+                return snapshot()["ruleset"]
+            raise AssertionError(path)
+        def pages(path, key=None):
+            if path == "/pulls?state=open":
+                # Actual list endpoint omits changed_files. Every count
+                # must be fetched from the corresponding detailed PR.
+                return [{"number": 13, "head": {"sha": "b" * 40}},
+                        {"number": 11, "head": {"sha": "c" * 40}}]
+            if path == "/pulls/13/files":
+                return rows
+            if path == "/pulls/11/files":
+                return [{"filename": "docs/other.txt", "status": "modified"}]
+            if path == "/commits/" + "b" * 40 + "/check-runs":
+                return []
+            raise AssertionError(path)
+        with (patch.object(reader, "request", side_effect=request),
+              patch.object(reader, "pages", side_effect=pages),
+              patch.object(reader, "review_threads", return_value=[])):
+            proof = reader.snapshot(task(), 13)
+            self.assertEqual(["scripts/new.py", "scripts/old.py"],
+                             proof["open_prs"][0]["changed_files"])
+            count[0] = 2
+            with self.assertRaisesRegex(LiveStateBlocked, "inventory incomplete"):
+                reader.snapshot(task(), 13)
+            count[0] = 3000
+            with self.assertRaisesRegex(LiveStateBlocked, "API cap"):
+                reader.snapshot(task(), 13)
+            count[0] = 1
+            other_count[0] = 2
+            with self.assertRaisesRegex(LiveStateBlocked, "inventory incomplete"):
+                reader.snapshot(task(), 13)
+            other_count[0] = 1
+            other_sha[0] = "d" * 40
+            with self.assertRaisesRegex(LiveStateBlocked, "detail changed"):
+                reader.snapshot(task(), 13)
 
     def test_missing_pr_page_and_duplicate_pr_block(self):
         for change in ("missing","duplicate"):

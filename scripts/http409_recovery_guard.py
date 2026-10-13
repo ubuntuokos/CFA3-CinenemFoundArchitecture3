@@ -87,3 +87,36 @@ def verify_recovery(*, before, after, receipt):
             receipt.get("original_conflict_resolved") is not True):
         return RecoveryResult(Decision.STOP, "RECOVERY_NOT_PROVEN")
     return RecoveryResult(Decision.ALLOW, "RECOVERY_VERIFIED_NOT_LONG_TERM_RUNTIME_PASS")
+
+def execute_recovery(event, *, scope, authority, evidence, inspect, write, readback):
+    """Run a single guarded recovery with independently inspected state.
+
+    inspect(resource) must query the authoritative service. write(event,
+    expected_version) must enforce atomic version preconditions at that service.
+    All exceptions fail closed and never trigger a retry.
+    """
+    if not all(callable(x) for x in (inspect, write, readback)):
+        return RecoveryResult(Decision.STOP, "MISSING_AUTHENTICATED_ADAPTER")
+    try:
+        first = inspect(event.get("resource")) if isinstance(event, dict) else None
+        decision = authorize_recovery(event, observed=first, scope=scope,
+                                      authority=authority, evidence=evidence)
+        if decision.decision != Decision.ALLOW:
+            return decision
+        second = inspect(event["resource"])
+        if (not isinstance(second, dict) or
+                second.get("version") != first["version"] or
+                second.get("fresh") is not True or
+                second.get("verified_independently") is not True):
+            return RecoveryResult(Decision.STOP, "STATE_CHANGED_BEFORE_WRITE")
+        acknowledgement = write(event, expected_version=second["version"])
+        if not isinstance(acknowledgement, dict) or acknowledgement.get("accepted") is not True:
+            return RecoveryResult(Decision.STOP, "WRITE_NOT_ACCEPTED")
+        after = readback(event["resource"])
+        proof = verify_recovery(before=first, after=after,
+                                receipt={"original_task_resumed": acknowledgement.get("original_task_resumed"),
+                                         "unauthorized_changes": acknowledgement.get("unauthorized_changes"),
+                                         "original_conflict_resolved": acknowledgement.get("original_conflict_resolved")})
+        return proof
+    except Exception:
+        return RecoveryResult(Decision.STOP, "ADAPTER_OR_EXECUTION_FAILED")

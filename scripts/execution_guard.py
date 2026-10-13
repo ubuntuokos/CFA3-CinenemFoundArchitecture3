@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """CFA3 fail-closed active DEV/AI Execution Guard, not global CFA3 admission."""
+import copy
 import fcntl
 import hashlib
 import hmac
@@ -366,7 +367,7 @@ def _reserve(folder, task):
 def _require_live_state(task, live_state):
     """Stop on stale or unavailable trusted state; no self-asserted PASS."""
     try:
-        proof = live_state(task)
+        proof = live_state(copy.deepcopy(task))
     except Exception as exc:
         raise Blocked("fresh exact-state authorization unavailable") from exc
     if not isinstance(proof, dict) or any(proof.get(x) is not True for x in (
@@ -503,6 +504,9 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
         check_task(root, task)
         _require_rule_receipts_still_fresh(
             task, rule_receipts, rule_attestation_secret)
+        # Live adapters are isolated from the original task, and the
+        # exact signed task is reauthenticated after all callback activity.
+        verify_signature(task, secret)
         outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
             raise Blocked("RESULT_GATE: wrong output count")

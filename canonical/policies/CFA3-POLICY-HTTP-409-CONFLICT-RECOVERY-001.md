@@ -3,9 +3,9 @@
 **Megnevezés:** HTTP 409 Conflict hibák kötelező felismerése, biztonságos javítása és tényleges rendszerszintű szabályérvényesítése
 
 **Verzió:** 1.1  
-**Státusz:** JÓVÁHAGYVA – RENDSZERSZINTŰ BEVEZETÉS ALATT  
+**Státusz:** JÓVÁHAGYOTT, HATÁLYOS v1.1 – a tartós működés végleges elfogadása külön tulajdonosi döntés  
 **Szabályviszony:** TELJES HELYETTESÍTÉS  
-**Helyettesített változat:** v1.0 – HATÁLYON KÍVÜL HELYEZENDŐ A v1.1 BIZONYÍTOTT HATÁLYBALÉPÉSÉVEL  
+**Helyettesített változat:** v1.0 – HATÁLYON KÍVÜL HELYEZVE; semmilyen normatív rendelkezése nem alkalmazható  
 **Hatály:** CFA3 GitHub-műveletek, repository-kezelés, fájlmódosítások, PR- és merge-folyamatok, API-műveletek és az ezekhez kapcsolódó végrehajtási rendszerek.
 
 ## 1. § – Alapelv
@@ -20,7 +20,7 @@ A CFA3 kizárólag akkor tekintheti a szabályt végrehajtási szinten érvénye
 
 A v1.1 a v1.0 teljes helyettesítője, nem kiegészítése.
 
-A v1.1 bizonyított hatálybalépésével a v1.0 teljes egészében hatályát veszti. A v1.0 egyetlen rendelkezése sem maradhat önállóan vagy párhuzamosan hatályban.
+A v1.0 teljes egészében hatályon kívül van helyezve. A v1.0 egyetlen rendelkezése sem maradhat önállóan vagy párhuzamosan hatályban. A v1.1 az egyetlen hatályos, alkalmazandó szabályváltozat.
 
 A v1.0 nem használható aktív szabályforrásként, végrehajtási jogosultságként, ellenőrzési kapuk normatív alapjaként vagy automatikus döntési feltételként.
 
@@ -28,9 +28,9 @@ A központi szabálynyilvántartásban kizárólag a v1.1 szerepelhet aktuálisa
 
 A v1.0 korábbi GitHub-commitjai és bizonyítékai kizárólag változtathatatlan audit-előzményként maradhatnak meg; ezek nem jelentenek történeti szabályhatályt.
 
-A v1.1 hatálybalépése előtt a rendszer nem állíthatja, hogy az új szabály már működik. Az átállás során tilos olyan állapotot létrehozni, amelyben mindkét verzió aktív, illetve amelyben a bizonyítatlan v1.1-et működőként jelentik.
+A v1.1 normatív hatálya önmagában nem bizonyítja a teljes körű futásidejű kikényszerítést és a tartós működést; ezeket külön kell igazolni, és a végleges működési elismerés a felhasználó hatásköre. A v1.0 nem aktiválható vissza automatikusan.
 
-A hatályon kívül helyezés és a v1.1 hatálybalépése csak a szükséges ellenőrzések, CI-kapuk, végrehajtási tesztek és GitHub main állapot sikeres bizonyítása után tekinthető befejezettnek.
+A teljes felülírást a v1.1 kanonikus GitHub main állapotának és a kapcsolódó nyilvántartásnak az ellenőrzése igazolja. A futásidejű lefedettség és a tartós működés bizonyítása ettől elkülönülő elfogadási feltétel, nem a v1.0 hatályának fenntartási oka.
 
 ## 3. § – Kötelező végrehajtási integráció
 

@@ -2,6 +2,8 @@
 import hashlib
 import copy
 import json
+import os
+import stat
 import shutil
 import tempfile
 from unittest.mock import patch
@@ -167,6 +169,53 @@ class GuardTests(unittest.TestCase):
             ledger.write_text(json.dumps(initial), "utf-8")
             _reserve(location, next_task)
             self.assertEqual(2, json.loads(ledger.read_text("utf-8"))[t["task_id"]]["calls"])
+
+    def test_quota_files_owner_only_and_lock_state_not_symlinks(self):
+        for fault in ("directory", "lock", "ledger", "hardlink_lock",
+                      "hardlink_ledger", "symlink_lock", "symlink_ledger"):
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as location:
+                t = sample()
+                _reserve(location, t)
+                directory = Path(location)
+                lock = directory / "lock"
+                ledger = directory / "receipts.json"
+                self.assertEqual(0o600, stat.S_IMODE(lock.stat().st_mode))
+                self.assertEqual(0o600, stat.S_IMODE(ledger.stat().st_mode))
+                expected = ledger.read_bytes()
+                if fault == "directory":
+                    os.chmod(directory, 0o750)
+                elif fault == "lock":
+                    os.chmod(lock, 0o640)
+                elif fault == "ledger":
+                    os.chmod(ledger, 0o644)
+                elif fault == "hardlink_lock":
+                    os.link(lock, directory / "linked-lock")
+                elif fault == "hardlink_ledger":
+                    os.link(ledger, directory / "linked-ledger")
+                elif fault == "symlink_lock":
+                    lock.unlink()
+                    os.symlink(ledger, lock)
+                else:
+                    saved = directory / "saved-receipts"
+                    ledger.rename(saved)
+                    os.symlink(saved, ledger)
+                with self.assertRaises(Blocked):
+                    _reserve(location, dict(t, nonce="other-private-nonce"))
+                if fault == "directory":
+                    os.chmod(directory, 0o700)
+                if fault == "symlink_ledger":
+                    self.assertEqual(expected, (directory / "saved-receipts").read_bytes())
+                else:
+                    self.assertEqual(expected, ledger.read_bytes())
+
+    def test_private_quota_directory_symlink_rejected(self):
+        with tempfile.TemporaryDirectory() as location:
+            alias = Path(location) / "quota-link"
+            private = Path(location) / "private"
+            private.mkdir(mode=0o700)
+            os.symlink(private, alias)
+            with self.assertRaisesRegex(Blocked, "owner-only"):
+                _reserve(alias, sample())
 
     def test_quota_ledger_tracks_independent_task_nonces(self):
         with tempfile.TemporaryDirectory() as location:

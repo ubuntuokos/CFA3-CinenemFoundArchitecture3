@@ -6,6 +6,7 @@ import hmac
 import json
 import math
 import os
+import stat
 from pathlib import Path, PurePosixPath
 import sys
 import time
@@ -250,8 +251,14 @@ def check_task(root, task, now=None):
 def _reserve(folder, task):
     """Durable task-envelope binding, global nonce replay and quota protection."""
     folder = Path(folder)
-    if not folder.is_dir() or folder.is_symlink() or (folder / "lock").is_symlink():
-        raise Blocked("trusted private quota store unavailable")
+    try:
+        private_dir = folder.lstat()
+    except OSError as exc:
+        raise Blocked("trusted private quota store unavailable") from exc
+    if (not stat.S_ISDIR(private_dir.st_mode)
+            or private_dir.st_uid != os.geteuid()
+            or private_dir.st_mode & 0o077):
+        raise Blocked("trusted private quota directory must be owner-only")
     fields = ("task_id", "operation", "target", "scope_targets", "main_sha",
               "head_sha", "branch", "expires_at", "expected_outputs",
               "max_calls", "max_units", "source_hashes", "design_source",
@@ -259,14 +266,37 @@ def _reserve(folder, task):
     binding = hashlib.sha256(canonical_bytes({k: task.get(k) for k in fields})).hexdigest()
     if task["task_id"] == "_used_nonces":
         raise Blocked("reserved quota ledger identity")
-    with (folder / "lock").open("a+b") as lock:
+    try:
+        lock_fd = os.open(folder / "lock",
+                          os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC,
+                          0o600)
+    except OSError as exc:
+        raise Blocked("trusted private quota lock unavailable") from exc
+    with os.fdopen(lock_fd, "a+b") as lock:
+        lock_info = os.fstat(lock.fileno())
+        if (not stat.S_ISREG(lock_info.st_mode) or lock_info.st_nlink != 1
+                or lock_info.st_uid != os.geteuid()
+                or lock_info.st_mode & 0o077):
+            raise Blocked("trusted private quota lock must be owner-only")
         fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
         ledger = folder / "receipts.json"
-        if ledger.is_symlink():
-            raise Blocked("symlinked quota state forbidden")
         try:
-            exists = ledger.exists()
-            data = json.loads(ledger.read_text("utf-8")) if exists else {}
+            try:
+                ledger_fd = os.open(ledger,
+                    os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+            except FileNotFoundError:
+                exists = False
+                data = {}
+            else:
+                exists = True
+                with os.fdopen(ledger_fd, "r", encoding="utf-8") as state:
+                    file_info = os.fstat(state.fileno())
+                    if (not stat.S_ISREG(file_info.st_mode)
+                            or file_info.st_nlink != 1
+                            or file_info.st_uid != os.geteuid()
+                            or file_info.st_mode & 0o077):
+                        raise ValueError("quota ledger must be owner-only regular file")
+                    data = json.load(state)
             if not isinstance(data, dict) or (exists and "_used_nonces" not in data):
                 raise ValueError("quota ledger missing global nonce inventory")
             used = data.get("_used_nonces", [])
@@ -317,6 +347,7 @@ def _reserve(folder, task):
         tmp = folder / ("receipts.%d.tmp" % os.getpid())
         try:
             with tmp.open("x", encoding="utf-8") as out:
+                os.fchmod(out.fileno(), 0o600)
                 json.dump(data, out, ensure_ascii=False, sort_keys=True)
                 out.flush()
                 os.fsync(out.fileno())

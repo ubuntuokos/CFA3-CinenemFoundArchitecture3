@@ -257,21 +257,49 @@ def _reserve(folder, task):
               "max_calls", "max_units", "source_hashes", "design_source",
               "approved_plan_source", "explicit_workflow_approval")
     binding = hashlib.sha256(canonical_bytes({k: task.get(k) for k in fields})).hexdigest()
+    if task["task_id"] == "_used_nonces":
+        raise Blocked("reserved quota ledger identity")
     with (folder / "lock").open("a+b") as lock:
         fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
         ledger = folder / "receipts.json"
         if ledger.is_symlink():
             raise Blocked("symlinked quota state forbidden")
         try:
-            data = json.loads(ledger.read_text("utf-8")) if ledger.exists() else {}
-            if not isinstance(data, dict):
-                raise ValueError("bad ledger type")
+            exists = ledger.exists()
+            data = json.loads(ledger.read_text("utf-8")) if exists else {}
+            if not isinstance(data, dict) or (exists and "_used_nonces" not in data):
+                raise ValueError("quota ledger missing global nonce inventory")
             used = data.get("_used_nonces", [])
+            if (not isinstance(used, list)
+                    or any(not isinstance(n, str) or not n for n in used)
+                    or len(set(used)) != len(used)):
+                raise ValueError("invalid global nonce inventory")
+            all_nonces = set()
+            for ident, record in data.items():
+                if ident == "_used_nonces":
+                    continue
+                if (not isinstance(ident, str) or not ident
+                        or not isinstance(record, dict)
+                        or set(record) != {"nonces", "units", "calls", "binding"}):
+                    raise ValueError("invalid quota task record")
+                nonces = record["nonces"]
+                units, calls = record["units"], record["calls"]
+                signature = record["binding"]
+                if (not isinstance(nonces, list)
+                        or any(not isinstance(n, str) or not n for n in nonces)
+                        or len(set(nonces)) != len(nonces)
+                        or type(calls) is not int or calls < 1
+                        or type(units) is not int or units < calls
+                        or len(nonces) != calls
+                        or not isinstance(signature, str) or len(signature) != 64
+                        or any(c not in "0123456789abcdef" for c in signature)
+                        or all_nonces.intersection(nonces)):
+                    raise ValueError("quota counters, binding or task nonces inconsistent")
+                all_nonces.update(nonces)
+            if all_nonces != set(used):
+                raise ValueError("global and task nonce inventories disagree")
             row = data.get(task["task_id"],
                            {"nonces": [], "units": 0, "calls": 0, "binding": binding})
-            if not isinstance(used, list) or not isinstance(row, dict) or any(
-                    k not in row for k in ("nonces", "units", "calls", "binding")):
-                raise ValueError("invalid quota data")
         except (OSError, ValueError, TypeError) as exc:
             raise Blocked("quota ledger invalid") from exc
         if row["binding"] != binding:

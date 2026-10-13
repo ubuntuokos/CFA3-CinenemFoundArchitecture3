@@ -128,6 +128,58 @@ class GuardTests(unittest.TestCase):
             with self.assertRaises(Blocked):
                 _reserve(location, dict(t, task_id="different"))
 
+    def test_corrupt_persisted_quota_ledger_denied_before_reservation(self):
+        t = sample()
+        with tempfile.TemporaryDirectory() as location:
+            _reserve(location, t)
+            ledger = Path(location) / "receipts.json"
+            initial = json.loads(ledger.read_text("utf-8"))
+            next_task = dict(t, nonce="next-unique-nonce")
+            mutations = {
+                "missing global inventory": lambda d: d.pop("_used_nonces"),
+                "missing global nonce": lambda d: d.update(_used_nonces=[]),
+                "unowned global nonce": lambda d: d["_used_nonces"].append("orphan"),
+                "duplicate global nonce": lambda d: d["_used_nonces"].append(t["nonce"]),
+                "invalid global nonce": lambda d: d.update(_used_nonces=[42]),
+                "wrong global type": lambda d: d.update(_used_nonces={}),
+                "missing task nonce": lambda d: d[t["task_id"]].update(nonces=[]),
+                "duplicate task nonce": lambda d: d[t["task_id"]]["nonces"].append(t["nonce"]),
+                "negative calls": lambda d: d[t["task_id"]].update(calls=-1),
+                "negative units": lambda d: d[t["task_id"]].update(units=-1),
+                "boolean calls": lambda d: d[t["task_id"]].update(calls=True),
+                "boolean units": lambda d: d[t["task_id"]].update(units=True),
+                "counter mismatch": lambda d: d[t["task_id"]].update(calls=2),
+                "zero units used": lambda d: d[t["task_id"]].update(units=0),
+                "invalid task binding": lambda d: d[t["task_id"]].update(binding="z" * 64),
+                "unexpected task fields": lambda d: d[t["task_id"]].update(extra=True),
+                "duplicate nonce in another task": lambda d: d.update(
+                    another=copy.deepcopy(d[t["task_id"]])),
+                "malformed extra task": lambda d: d.update(another={"nonces": []}),
+            }
+            for label, mutation in mutations.items():
+                with self.subTest(corruption=label):
+                    damaged = copy.deepcopy(initial)
+                    mutation(damaged)
+                    ledger.write_text(json.dumps(damaged), "utf-8")
+                    with self.assertRaisesRegex(Blocked, "quota ledger invalid"):
+                        _reserve(location, next_task)
+                    self.assertEqual(damaged, json.loads(ledger.read_text("utf-8")))
+            ledger.write_text(json.dumps(initial), "utf-8")
+            _reserve(location, next_task)
+            self.assertEqual(2, json.loads(ledger.read_text("utf-8"))[t["task_id"]]["calls"])
+
+    def test_quota_ledger_tracks_independent_task_nonces(self):
+        with tempfile.TemporaryDirectory() as location:
+            t = sample()
+            _reserve(location, t)
+            _reserve(location, dict(t, task_id="other-task", nonce="other-task-nonce"))
+            state = json.loads((Path(location) / "receipts.json").read_text("utf-8"))
+            self.assertEqual({"single", "other-task-nonce"}, set(state["_used_nonces"]))
+            self.assertEqual(1, state[t["task_id"]]["calls"])
+            self.assertEqual(1, state["other-task"]["calls"])
+            with self.assertRaisesRegex(Blocked, "reserved quota ledger identity"):
+                _reserve(location, dict(t, task_id="_used_nonces", nonce="reserved"))
+
     def test_exhaustion_and_replay_forbidden(self):
         with tempfile.TemporaryDirectory() as location:
             t = sample()

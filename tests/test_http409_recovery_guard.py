@@ -75,6 +75,11 @@ class Http409GuardTests(unittest.TestCase):
         self.assertEqual(result.decision,Decision.STOP)
         self.assertFalse(calls)
 
+    def test_execution_guard_rejects_missing_trusted_proof(self):
+        from execution_guard import _http409_guarded_executor, Blocked
+        with self.assertRaises(Blocked):
+            _http409_guarded_executor({}, {}, {})
+
     def test_closed_only_on_independent_proof(self):
         b=dict(resource="a",version="old")
         a=dict(resource="a",version="new",readback_verified=True)

@@ -44,12 +44,14 @@
   "replaces": {
     "version": "1.0",
     "status": "REPEALED",
-    "normative_active": false
+    "normative_active": false,
+    "applies_after": "VERSION_1_1_ADMITTED"
   },
   "enforcement": {
     "gate": "scripts/http409_recovery_guard.py",
     "tests": "tests/test_http409_recovery_guard.py",
     "runtime_admission_claimed": false,
     "user_accepts_long_term_effectiveness": true
-  }
+  },
+  "approved_text_sha256": "1904d7b4aee3b426acb0e8e5f375a508c48868a30929362c478cf7acfd11882e"
 }

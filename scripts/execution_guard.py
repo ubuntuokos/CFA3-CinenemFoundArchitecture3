@@ -32,6 +32,7 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_guard_owner_grant.py",
     "scripts/check_execution_guard_audit.py",
     "scripts/check_execution_guard_rule_spec.py",
+    "scripts/check_task_integrity.py",
     "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "scripts/execution_guard.py",
 })

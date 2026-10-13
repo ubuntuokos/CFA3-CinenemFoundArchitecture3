@@ -455,7 +455,10 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
                                  evidence_resolver=rule_evidence_resolver)
         except RuleEvidenceBlocked as exc:
             raise Blocked("RULE_GATE: late rule proof invalid: " + str(exc)) from exc
-        # Checking all 83 proofs may itself consume validity time.
+        # Protected evidence resolution may run for many network requests
+        # and allow a previously clean GitHub state to become invalid.
+        # DEV-01 requires a fresh live authorization after those reads, too.
+        _require_live_state(task, live_state)
         check_task(root, task)
         outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:

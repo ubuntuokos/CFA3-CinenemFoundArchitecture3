@@ -1352,10 +1352,12 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
             errors.append("HTTP 409 recovery policy: " + message)
     ident = "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001"
     need(policy.get("id") == ident, "identifier")
-    need(policy.get("version") == "1.0", "version")
+    need(policy.get("version") == "1.1", "version")
     need(policy.get("status") == "OWNER_APPROVED", "owner approval")
     need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
     need(policy.get("approved_section_count") == 16, "section count")
+    need(policy.get("replaces", {}).get("version") == "1.0" and policy.get("replaces", {}).get("status") == "REPEALED" and policy.get("replaces", {}).get("normative_active") is False, "v1.0 repeal")
+    need(policy.get("enforcement", {}).get("gate") == "scripts/http409_recovery_guard.py", "real execution gate reference")
     need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
     required = ("identify_specific_http_conflict", "exact_state_before_repair",
                 "narrow_safe_self_correction", "preserve_third_party_changes",
@@ -1363,7 +1365,7 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
                 "stop_on_real_content_blocker", "protect_pr_and_merge_authority",
                 "prove_actual_recovery", "prevent_repeat_unnecessary_checks",
                 "return_to_original_task", "no_scope_expansion",
-                "do_not_override_existing_rules")
+                "do_not_override_existing_rules", "old_version_repealed", "decision_gate_required")
     flags = policy.get("requirements", {})
     need(isinstance(flags, dict) and set(flags) == set(required)
          and all(flags.get(key) is True for key in required), "mandatory requirements")
@@ -1378,6 +1380,10 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
     digest = hashlib.sha256(raw).hexdigest()
     need(policy.get("approved_text_sha256") == digest, "approved source SHA256")
     text = raw.decode("utf-8")
+    need((root / "scripts/http409_recovery_guard.py").is_file(), "execution gate missing")
+    need((root / "tests/test_http409_recovery_guard.py").is_file(), "decision gate tests missing")
+    need("**Verzió:** 1.1" in text, "normative version")
+    need("v1.0 minden rendelkezése hatályát veszti" in text, "replacement text")
     need(len(re.findall(r"^## [0-9]+\. §", text, re.M)) == 16, "all 16 sections")
     for phrase in ("HTTP 409 Conflict önmagában nem tekinthető végleges blokkolásnak",
                    "Ugyanazt a műveletet változatlan előfeltételekkel ismételni tilos",

@@ -3,7 +3,7 @@
   "id": "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001",
   "title_hu": "HTTP 409 Conflict hibák kötelező felismerése, biztonságos javítása és tényleges rendszerszintű szabályérvényesítése",
   "version": "1.1",
-  "status": "OWNER_APPROVED",
+  "status": "OWNER_APPROVED_ACTIVE",
   "owner_decision_date": "2026-10-12",
   "classification": "MANDATORY_CFA3_HTTP_409_CONFLICT_RECOVERY",
   "approved_text_path": "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.md",
@@ -45,7 +45,7 @@
     "version": "1.0",
     "status": "REPEALED",
     "normative_active": false,
-    "applies_after": "VERSION_1_1_ADMITTED"
+    "repeal_effective": true
   },
   "enforcement": {
     "gate": "scripts/http409_recovery_guard.py",
@@ -53,5 +53,7 @@
     "runtime_admission_claimed": false,
     "user_accepts_long_term_effectiveness": true
   },
-  "approved_text_sha256": "98969304a81663604195ff9089e7f239d8ffddbe1088dba58a7514089d3c5a57"
+  "approved_text_sha256": "2d63a8983e907c73bcc838261849b310d325ff70ef4f3b973c45dd78d05c1926",
+  "active_normative_version": "1.1",
+  "normative_active": true
 }

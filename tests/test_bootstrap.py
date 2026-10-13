@@ -758,6 +758,18 @@ class BootstrapPolicyTests(unittest.TestCase):
         bad = copy.deepcopy(policy)
         bad["status"] = "DRAFT"
         self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["replaces"]["normative_active"] = True
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["replaces"]["repeal_effective"] = False
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["replaces"]["applies_after"] = "RUNTIME_PASS"
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
+        bad = copy.deepcopy(policy)
+        bad["normative_active"] = False
+        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
 
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot

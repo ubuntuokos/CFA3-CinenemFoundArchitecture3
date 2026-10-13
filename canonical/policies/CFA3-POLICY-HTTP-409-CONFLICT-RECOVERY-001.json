@@ -1,7 +1,7 @@
 {
   "schema": "cfa3.policy-http-409-conflict-recovery.v1_1",
   "id": "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001",
-  "title_hu": "HTTP 409 Conflict hibák kötelező felismerése, célzott javítása, biztonságos újravégrehajtása és az indokolatlan blokkolások megelőzése",
+  "title_hu": "HTTP 409 Conflict hibák kötelező felismerése, biztonságos javítása és tényleges rendszerszintű szabályérvényesítése",
   "version": "1.1",
   "status": "OWNER_APPROVED",
   "owner_decision_date": "2026-10-12",
@@ -53,5 +53,5 @@
     "runtime_admission_claimed": false,
     "user_accepts_long_term_effectiveness": true
   },
-  "approved_text_sha256": "1904d7b4aee3b426acb0e8e5f375a508c48868a30929362c478cf7acfd11882e"
+  "approved_text_sha256": "98969304a81663604195ff9089e7f239d8ffddbe1088dba58a7514089d3c5a57"
 }

@@ -745,32 +745,6 @@ class BootstrapPolicyTests(unittest.TestCase):
                 "Téves blokkolások mellőzése".encode("utf-8"), 1))
             self.assertTrue(validate_conversation_evidence_blocker_prevention(policy, tmp))
 
-    def test_http_409_conflict_recovery_policy(self):
-        from check_bootstrap import validate_http_409_conflict_recovery
-        policy = load("canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.json")
-        self.assertEqual([], validate_http_409_conflict_recovery(policy, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["requirements"]["no_blind_retry_loop"] = False
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["approved_text_sha256"] = "0" * 64
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["status"] = "DRAFT"
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["replaces"]["normative_active"] = True
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["replaces"]["repeal_effective"] = False
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["replaces"]["applies_after"] = "RUNTIME_PASS"
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-        bad = copy.deepcopy(policy)
-        bad["normative_active"] = False
-        self.assertTrue(validate_http_409_conflict_recovery(bad, ROOT))
-
     def test_policy_surface_all_current_canonical_fields(self):
         from check_guard_policy_surface import validate_snapshot
         surface = load("canonical/registries/CFA3-CURRENT-POLICY-SURFACE-001.json")

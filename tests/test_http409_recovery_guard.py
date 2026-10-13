@@ -3,7 +3,7 @@ import unittest
 import pathlib
 import sys
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
-from http409_recovery_guard import authorize_recovery, verify_recovery, Decision
+from http409_recovery_guard import authorize_recovery, verify_recovery, execute_recovery, Decision
 
 class Http409GuardTests(unittest.TestCase):
     def setUp(self):
@@ -46,6 +46,35 @@ class Http409GuardTests(unittest.TestCase):
         self.evidence["security_gates_pass"]=True
         self.evidence["failure_recorded"]=False
         self.assertEqual(self.decide(),Decision.STOP)
+    def test_real_guarded_write(self):
+        calls = []
+        def inspect(resource):
+            return dict(self.observed)
+        def write(event, *, expected_version):
+            calls.append(expected_version)
+            return dict(accepted=True,original_task_resumed=True,unauthorized_changes=False,original_conflict_resolved=True)
+        def readback(resource):
+            return dict(resource="a",version="sha-new",readback_verified=True)
+        result = execute_recovery(self.event,scope=self.scope,authority=self.authority,
+                                  evidence=self.evidence,inspect=inspect,write=write,readback=readback)
+        self.assertEqual(result.decision,Decision.ALLOW)
+        self.assertEqual(calls,["sha-current"])
+
+    def test_no_write_when_state_changed(self):
+        calls = []
+        revisions = ["sha-current","sha-conflict"]
+        def inspect(resource):
+            state = dict(self.observed)
+            state["version"] = revisions.pop(0)
+            return state
+        def write(*args,**kwargs):
+            calls.append(True)
+        result = execute_recovery(self.event,scope=self.scope,authority=self.authority,
+                                  evidence=self.evidence,inspect=inspect,write=write,
+                                  readback=lambda r: {})
+        self.assertEqual(result.decision,Decision.STOP)
+        self.assertFalse(calls)
+
     def test_closed_only_on_independent_proof(self):
         b=dict(resource="a",version="old")
         a=dict(resource="a",version="new",readback_verified=True)

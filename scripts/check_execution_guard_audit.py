@@ -79,10 +79,21 @@ def verify_audit_receipt(task, receipt, key, phase, *, previous=None, now=None):
             raise AuditBlocked("audit chain/store continuity invalid")
     now = time.time() if now is None else now
     issued, expiry = receipt.get("issued_at"), task.get("expires_at")
+    # DEV-01: after a RESERVED event, a signed FAILED acknowledgement may
+    # report a late expiration. It never authorizes work or VERIFIED success,
+    # and may only be issued and checked within 60s after task expiry.
+    bounded_expired_failure = (
+        phase == "FAILED" and previous is not None
+        and type(now) in (int, float) and math.isfinite(now)
+        and type(issued) in (int, float) and math.isfinite(issued)
+        and type(expiry) in (int, float) and math.isfinite(expiry)
+        and expiry <= issued <= now and 0 <= now - expiry <= MAX_AGE_SECONDS
+    )
     if (type(now) not in (int, float) or not math.isfinite(now) or
             type(issued) not in (int, float) or not math.isfinite(issued) or
             type(expiry) not in (int, float) or not math.isfinite(expiry) or
-            issued > now or now - issued > MAX_AGE_SECONDS or now >= expiry):
+            issued > now or now - issued > MAX_AGE_SECONDS or
+            (now >= expiry and not bounded_expired_failure)):
         raise AuditBlocked("audit proof timestamp invalid, stale or task expired")
     signature = receipt.get("signature")
     if not isinstance(signature, str) or SHA256.fullmatch(signature) is None:

@@ -1353,10 +1353,11 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
     ident = "CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001"
     need(policy.get("id") == ident, "identifier")
     need(policy.get("version") == "1.1", "version")
-    need(policy.get("status") == "OWNER_APPROVED", "owner approval")
+    need(policy.get("status") == "OWNER_APPROVED_ACTIVE", "owner approval")
     need(policy.get("approved_text_path") == "canonical/policies/" + ident + ".md", "source path")
     need(policy.get("approved_section_count") == 16, "section count")
-    need(policy.get("replaces", {}).get("version") == "1.0" and policy.get("replaces", {}).get("status") == "REPEALED" and policy.get("replaces", {}).get("normative_active") is False, "v1.0 repeal")
+    need(policy.get("active_normative_version") == "1.1" and policy.get("normative_active") is True, "v1.1 sole normative authority")
+    need(policy.get("replaces", {}).get("version") == "1.0" and policy.get("replaces", {}).get("status") == "REPEALED" and policy.get("replaces", {}).get("normative_active") is False and policy.get("replaces", {}).get("repeal_effective") is True and "applies_after" not in policy.get("replaces", {}), "v1.0 unconditional repeal")
     need(policy.get("enforcement", {}).get("gate") == "scripts/http409_recovery_guard.py", "real execution gate reference")
     need(policy.get("finalization_gates") == ["TEXT", "STRUCTURE", "MERGE", "STATUS", "REGISTRY", "CI", "MAIN"], "finalization gates")
     required = ("identify_specific_http_conflict", "exact_state_before_repair",
@@ -1383,9 +1384,11 @@ def validate_http_409_conflict_recovery(policy, root=ROOT):
     need((root / "scripts/http409_recovery_guard.py").is_file(), "execution gate missing")
     need((root / "tests/test_http409_recovery_guard.py").is_file(), "decision gate tests missing")
     need("**Verzió:** 1.1" in text, "normative version")
-    need("a v1.0 teljes egészében hatályát veszti" in text, "replacement text")
+    need("**Helyettesített változat:** v1.0 – HATÁLYON KÍVÜL HELYEZVE" in text, "obsolete version must already be repealed")
+    need("HATÁLYON KÍVÜL HELYEZENDŐ" not in text, "pending repeal prohibited")
+    need("A v1.0 teljes egészében hatályon kívül van helyezve" in text, "replacement text")
     need(len(re.findall(r"^## [0-9]+\. §", text, re.M)) == 16, "all 16 sections")
-    for phrase in ("a v1.0 teljes egészében hatályát veszti",
+    for phrase in ("A v1.0 teljes egészében hatályon kívül van helyezve",
                    "A HTTP 409 Conflict szabály végrehajtását",
                    "Valamennyi döntési kapunál",
                    "Az Execution Guard feladata",

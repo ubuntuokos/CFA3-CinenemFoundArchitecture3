@@ -2,8 +2,9 @@
 
 **Megnevezés:** HTTP 409 Conflict hibák kötelező felismerése, célzott javítása, biztonságos újravégrehajtása és az indokolatlan blokkolások megelőzése
 
-**Verzió:** 1.0  
-**Státusz:** JÓVÁHAGYÁSRA VÁR  
+**Verzió:** 1.1  
+**Státusz:** JÓVÁHAGYVA – KIKÉNYSZERÍTÉS MEGVALÓSÍTÁS ALATT  
+**Szabályviszony:** TELJES HELYETTESÍTÉS; a v1.0 hatályon kívül helyezett, a v1.1 az egyetlen aktuális normatív változat  
 **Hatály:** Minden CFA3-fejlesztés, GitHub API-művelet, repository-módosítás, commit, branch, pull request, fájlkezelés, nyilvántartás-frissítés és minden olyan szolgáltatás, amely HTTP 409 Conflict választ adhat.
 
 ## 1. § – Alapelv
@@ -14,20 +15,17 @@ A fejlesztő AI köteles a konfliktus konkrét okát meghatározni, és amennyib
 
 A 409-es hiba nem szolgálhat indokként a feladat indokolatlan megszakítására, új feladat létrehozására vagy a felelősség felhasználóra történő áthárítására.
 
-## 2. § – Kötelező hibaazonosítás
+## 2. § – Teljes helyettesítés és hatályon kívül helyezés
 
-HTTP 409 válasz esetén az AI köteles azonosítani:
+A v1.1 a v1.0 teljes helyettesítője, nem kiegészítése. A v1.0 minden rendelkezése hatályát veszti a v1.1 bizonyított bevezetésével; önálló vagy párhuzamos aktív szabályként nem használható.
 
-1. Az érintett API-végpontot és HTTP-módszert.
-2. A szerver tényleges válaszát és hibakódját.
-3. Az érintett erőforrást, fájlt, branchet vagy PR-t.
-4. Az eredeti művelet célját.
-5. Az ütközést okozó aktuális állapotot.
-6. A biztonságos helyreállításhoz szükséges minimális műveletet.
+A v1.0 nem szolgálhat aktív szabályforrásként, végrehajtási jogosultságként, ellenőrzési kapuk normatív alapjaként vagy automatikus döntési feltételként. A központi nyilvántartásban kizárólag a v1.1 szerepelhet aktuális változatként.
 
-A konfliktus okáról bizonyíték nélkül nem állítható, hogy jogosultsági, hálózati, GitHub-szolgáltatási vagy felhasználói hiba.
+A korábbi GitHub-commitok és bizonyítékok megőrizendők audit-előzményként, normatív hatály nélkül. A v1.1 nem tekinthető működőnek pusztán a jóváhagyás vagy a forrásfájl megjelenése miatt.
 
-## 3. § – Exact-state ellenőrzés
+## 3. § – Exact-state ellenőrzés és kötelező végrehajtási kapuk
+
+A 409-es esemény felismerését, az erőforrás azonosítását, a javítási jogosultság eldöntését, a STOP-kapukat és a helyreállítás bizonyítását a végrehajtási rendszernek műveletenként ki kell kényszerítenie.
 
 A javítás előtt kötelező az ütközés szempontjából releváns tényleges állapot lekérése.
 
@@ -146,7 +144,9 @@ Ezekhez az adott műveletre vonatkozó eredeti jogosultságok és jóváhagyáso
 
 A technikai hibajavítás nem kerülheti meg a CFA3 GitHub merge- és biztonsági szabályait.
 
-## 12. § – A javítás bizonyítása
+## 12. § – A javítás bizonyítása és a rendelkezések kötelező leképezése
+
+Mind a 16 § minden kötelező rendelkezését egyedi végrehajtási feltételhez, tiltáshoz, döntési kimenethez vagy ellenőrizhető bizonyítékhoz kell rendelni. A leíró dokumentum és a JSON-jelző önmagában nem végrehajtási szabály.
 
 A 409-es hiba megszüntetését kizárólag tényleges rendszerbizonyíték alapján szabad sikeresnek minősíteni.
 
@@ -192,9 +192,9 @@ A fejlesztő köteles megőrizni:
 
 A konfliktus nem indokolhatja a feladat önkényes átértelmezését vagy más feladatra történő áttérést.
 
-## 15. § – Kapcsolat a meglévő CFA3-szabályokkal
+## 15. § – Execution Guard és meglévő CFA3-szabályok
 
-Jelen szabály a HTTP 409 Conflict kezelésére vonatkozó speciális végrehajtási előírás.
+Jelen szabály a HTTP 409 Conflict kezelésére vonatkozó speciális végrehajtási előírás. A Bootstrap feladata a forrás és a strukturális integritás ellenőrzése; az Execution Guard feladata a tényleges döntés és a tiltások kikényszerítése. Egyik nem helyettesítheti a másikat. A rendszer által nem közvetített külső útvonalra nem állítható kikényszerítés.
 
 Nem írhatja felül a CFA3 kötelező exact-state, jóváhagyási, blokkolási, adatmegőrzési, GitHub merge- és véglegesítési szabályait.
 
@@ -202,7 +202,7 @@ Különösen alkalmazandó az alábbi elv:
 
 **Az AI köteles önállóan kijavítani a saját, biztonságosan helyreállítható technikai hibáját, de nem jogosult önállóan feloldani olyan konfliktust, amely új felhasználói döntést igényel.**
 
-## 16. § – Befejezési feltétel
+## 16. § – Befejezési feltétel és elfogadási jogkör
 
 A HTTP 409 Conflict helyreállítása kizárólag akkor tekinthető teljesítettnek, ha:
 
@@ -216,3 +216,5 @@ A HTTP 409 Conflict helyreállítása kizárólag akkor tekinthető teljesített
 A konfliktus feloldása nem jelenti automatikusan a teljes fejlesztési feladat befejezését.
 
 A fejlesztési feladatot annak saját jóváhagyott befejezési feltétele szerint kell lezárni.
+
+A tartós, tényleges működés végleges elismerése a felhasználó döntési jogköre; az implementáció és a tesztek megvalósítását az önálló működési elismerés hiánya nem akadályozhatja.

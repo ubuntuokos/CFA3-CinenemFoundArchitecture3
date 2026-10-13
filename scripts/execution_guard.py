@@ -34,6 +34,8 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_guard_rule_spec.py",
     "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "scripts/execution_guard.py",
+    "scripts/http409_recovery_guard.py",
+    "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.md",
 })
 
 class Blocked(RuntimeError):

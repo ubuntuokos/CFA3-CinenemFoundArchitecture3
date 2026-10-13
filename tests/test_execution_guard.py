@@ -105,6 +105,95 @@ class GuardTests(unittest.TestCase):
         with self.assertRaises(Blocked):
             check_task(ROOT, t)
 
+    def test_dev01_late_live_blocker_stops_executor_and_records_failure(self):
+        """One rule only: never execute after preflight/live-state drift."""
+        from check_execution_guard_audit import verify_audit_receipt
+        from test_execution_guard_audit import issued, KEY as AUDIT_KEY
+        from test_execution_rule_evidence import (
+            receipts, evidence_bytes, KEY as RULE_KEY, NOW as RULE_NOW,
+        )
+        task_key = b"synthetic-dev01-owner-task-signature-key".ljust(32, b"_")
+        admission = {
+            "current_83_rule_inventory_verified": True,
+            "current_83_rule_gates_verified": True,
+            "current_83_conflicts_resolved": True,
+            "independent_proof_verified": True,
+        }
+        preflight = {
+            "source_verified": True, "scope_verified": True,
+            "resource_verified": True, "output_contract_verified": True,
+        }
+        for failure in ("main", "head", "checks", "overlap", "review",
+                        "ruleset", "read_error"):
+            with self.subTest(late_blocker=failure):
+                t = sample()
+                t["operation"] = "REPOSITORY_WRITE"
+                t["branch"] = "guard/dev01"
+                t["head_sha"] = "b" * 40
+                t["signature"] = hmac.new(
+                    task_key, canonical_bytes(t), hashlib.sha256).hexdigest()
+                issued_rules = receipts(t, load(ROOT, GOV))
+                store = {r["rule_id"]: evidence_bytes(r) for r in issued_rules}
+                good = {
+                    "main_current": True, "head_current": True, "no_overlap": True,
+                    "checks_passed": True, "review_threads_clear": True,
+                    "owner_scope_approved": True,
+                    "owner_grant_signature_verified": True,
+                    "main_ruleset_verified": True,
+                    "privileged_bypass_actors_verified": True,
+                    "actual_main_sha": t["main_sha"],
+                    "actual_head_sha": t["head_sha"],
+                }
+                observed, executed, audit_phases = [], [], []
+                def state(_):
+                    observed.append(True)
+                    if len(observed) == 1:
+                        return dict(good)
+                    if failure == "read_error":
+                        raise OSError("trusted GitHub state became unavailable")
+                    changed = dict(good)
+                    name = {
+                        "main": "actual_main_sha",
+                        "head": "actual_head_sha",
+                        "checks": "checks_passed",
+                        "overlap": "no_overlap",
+                        "review": "review_threads_clear",
+                        "ruleset": "main_ruleset_verified",
+                    }[failure]
+                    changed[name] = "c" * 40 if name.startswith("actual_") else False
+                    return changed
+
+                with (tempfile.TemporaryDirectory() as location,
+                      patch("execution_guard.policy_issues", return_value=[]),
+                      patch("execution_guard.trusted_runtime_issues", return_value=[]),
+                      patch("test_execution_guard_audit.NOW", RULE_NOW),
+                      patch("check_execution_rule_evidence.time.time",
+                            return_value=RULE_NOW)):
+                    reserved = issued(t, "RESERVED")
+                    first = verify_audit_receipt(
+                        t, reserved, AUDIT_KEY, now=RULE_NOW)
+                    failed = issued(t, "FAILED", first)
+                    def audit(_, phase):
+                        audit_phases.append(phase)
+                        return {"RESERVED": reserved, "FAILED": failed}[phase]
+
+                    with self.assertRaises(Blocked):
+                        guarded_execute(
+                            t, root=ROOT, secret=task_key,
+                            admission=lambda _: admission,
+                            live_state=state,
+                            preflight=lambda _: preflight,
+                            executor=lambda _: executed.append(True),
+                            verify_result=lambda *_: True, audit=audit,
+                            state_dir=location, rule_attester=lambda _: issued_rules,
+                            rule_attestation_secret=RULE_KEY,
+                            rule_evidence_resolver=lambda rid, _: store.get(rid),
+                            audit_attestation_secret=AUDIT_KEY,
+                        )
+                self.assertEqual(2, len(observed))
+                self.assertEqual(["RESERVED", "FAILED"], audit_phases)
+                self.assertEqual([], executed)
+
     def test_incomplete_governance_never_invokes_executor(self):
         calls = []
         with self.assertRaises(Blocked):

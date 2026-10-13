@@ -61,6 +61,56 @@ class AuditProofTests(unittest.TestCase):
         self.assertEqual("FAILED", self.check(
             t, issued(t, "FAILED", first), "FAILED", first)["phase"])
 
+    def test_dev01_expired_task_records_only_bounded_signed_failed(self):
+        t = dict(task(), expires_at=NOW + 3)
+        first = verify_audit_receipt(
+            t, issued(t, "RESERVED"), KEY, "RESERVED", now=NOW)
+        failed = issued(t, "FAILED", first)
+        failed["issued_at"] = NOW + 4
+        signed_again(failed)
+        result = verify_audit_receipt(
+            t, failed, KEY, "FAILED", previous=first, now=NOW + 4)
+        self.assertEqual("FAILED", result["phase"])
+
+        # A completed operation, an initial reservation, a replayed pre-expiry
+        # acknowledgement and an unchained FAILED are never accepted.
+        verified = issued(t, "VERIFIED", first)
+        verified["issued_at"] = NOW + 4
+        signed_again(verified)
+        with self.assertRaisesRegex(AuditBlocked, "timestamp"):
+            verify_audit_receipt(
+                t, verified, KEY, "VERIFIED", previous=first, now=NOW + 4)
+        reserved = issued(t, "RESERVED")
+        reserved["issued_at"] = NOW + 4
+        signed_again(reserved)
+        with self.assertRaisesRegex(AuditBlocked, "timestamp"):
+            verify_audit_receipt(t, reserved, KEY, "RESERVED", now=NOW + 4)
+        with self.assertRaises(AuditBlocked):
+            verify_audit_receipt(t, failed, KEY, "FAILED", now=NOW + 4)
+        old_event = issued(t, "FAILED", first)
+        old_event["issued_at"] = NOW + 2
+        signed_again(old_event)
+        with self.assertRaisesRegex(AuditBlocked, "timestamp"):
+            verify_audit_receipt(
+                t, old_event, KEY, "FAILED", previous=first, now=NOW + 4)
+
+        too_late = copy.deepcopy(failed)
+        too_late["issued_at"] = NOW + 65
+        signed_again(too_late)
+        with self.assertRaisesRegex(AuditBlocked, "timestamp"):
+            verify_audit_receipt(
+                t, too_late, KEY, "FAILED", previous=first, now=NOW + 65)
+        changed_chain = copy.deepcopy(failed)
+        changed_chain["previous_receipt_sha256"] = "0" * 64
+        signed_again(changed_chain)
+        with self.assertRaisesRegex(AuditBlocked, "chain"):
+            verify_audit_receipt(
+                t, changed_chain, KEY, "FAILED", previous=first, now=NOW + 4)
+        changed_sig = dict(failed, signature="0" * 64)
+        with self.assertRaisesRegex(AuditBlocked, "signature"):
+            verify_audit_receipt(
+                t, changed_sig, KEY, "FAILED", previous=first, now=NOW + 4)
+
     def test_missing_or_noop_ack_is_denied(self):
         for value in (None, True, {}, []):
             with self.subTest(value=value), self.assertRaises(AuditBlocked):

@@ -75,6 +75,25 @@ class Http409GuardTests(unittest.TestCase):
         self.assertEqual(result.decision,Decision.STOP)
         self.assertFalse(calls)
 
+    def test_execution_guard_dispatch_success(self):
+        from execution_guard import _http409_guarded_executor
+        task = {"task_id":"approved-1","target":"a","operation":"REPOSITORY_WRITE",
+                "http_409_recovery":dict(self.event)}
+        checked = {"http_409_recovery":{"scope":dict(self.scope),
+                   "authority":dict(self.authority),"evidence":dict(self.evidence)}}
+        adapters = {"inspect":lambda name:dict(self.observed),
+                    "write":lambda event,expected_version:{"accepted":True,
+                        "original_task_resumed":True,"unauthorized_changes":False,
+                        "original_conflict_resolved":True},
+                    "readback":lambda name:{"resource":name,"version":"new",
+                        "readback_verified":True}}
+        self.assertEqual(_http409_guarded_executor(task,checked,adapters)[0]["decision"],"ALLOW")
+
+    def test_execution_guard_rejects_missing_trusted_proof(self):
+        from execution_guard import _http409_guarded_executor, Blocked
+        with self.assertRaises(Blocked):
+            _http409_guarded_executor({}, {}, {})
+
     def test_closed_only_on_independent_proof(self):
         b=dict(resource="a",version="old")
         a=dict(resource="a",version="new",readback_verified=True)

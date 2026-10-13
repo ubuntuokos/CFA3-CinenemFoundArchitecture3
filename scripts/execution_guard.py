@@ -34,8 +34,6 @@ GUARD_SOURCE_BINDINGS = frozenset({
     "scripts/check_execution_guard_rule_spec.py",
     "canonical/registries/CFA3-EXECUTION-GUARD-OWNER-RULE-SPEC-001.json",
     "scripts/execution_guard.py",
-    "scripts/http409_recovery_guard.py",
-    "canonical/policies/CFA3-POLICY-HTTP-409-CONFLICT-RECOVERY-001.md",
 })
 
 class Blocked(RuntimeError):
@@ -305,46 +303,11 @@ def _reserve(folder, task):
             if tmp.exists():
                 tmp.unlink()
 
-def _http409_guarded_executor(task, checked, adapters):
-    """Dispatch one signed HTTP409 correction through the v1.1 fail-closed gate.
-
-    The independent trusted preflight is responsible for scope, authority and
-    evidence. Signed task data alone can never authorize or attest a correction.
-    """
-    from http409_recovery_guard import execute_recovery, Decision
-    if task.get("operation") != "REPOSITORY_WRITE":
-        raise Blocked("HTTP409_GATE: recovery requires repository write authority")
-    if not isinstance(checked, dict) or not isinstance(adapters, dict):
-        raise Blocked("HTTP409_GATE: trusted preflight or adapters absent")
-    event = task.get("http_409_recovery")
-    proof = checked.get("http_409_recovery")
-    if not isinstance(event, dict) or not isinstance(proof, dict):
-        raise Blocked("HTTP409_GATE: signed incident or independent proof absent")
-    if event.get("operation_id") != task.get("task_id"):
-        raise Blocked("HTTP409_GATE: signed task identity mismatch")
-    if event.get("resource") != task.get("target"):
-        raise Blocked("HTTP409_GATE: resource outside signed task target")
-    result = execute_recovery(
-        event,
-        scope=proof.get("scope"),
-        authority=proof.get("authority"),
-        evidence=proof.get("evidence"),
-        inspect=adapters.get("inspect"),
-        write=adapters.get("write"),
-        readback=adapters.get("readback"),
-    )
-    if result.decision != Decision.ALLOW:
-        raise Blocked("HTTP409_GATE: " + result.reason)
-    return [{"policy": result.policy, "version": result.version,
-             "decision": result.decision.value, "reason": result.reason}]
-
-
 def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
                     live_state=None, preflight=None, executor=None,
                     verify_result=None, audit=None, state_dir=None,
                     rule_attester=None, rule_attestation_secret=None,
-                    rule_evidence_resolver=None, audit_attestation_secret=None,
-                    http409_adapters=None):
+                    rule_evidence_resolver=None, audit_attestation_secret=None):
     """Requires a separately isolated trusted service with exclusive credentials.
 
     It cannot intercept native ChatGPT tools or other unguarded service routes.
@@ -409,10 +372,7 @@ def guarded_execute(task, *, root=ROOT, secret=None, admission=None,
     except AuditBlocked as exc:
         raise Blocked("AUDIT_GATE: reserved event not independently acknowledged") from exc
     try:
-        if task.get("http_409_recovery") is not None:
-            outputs = _http409_guarded_executor(task, checked, http409_adapters)
-        else:
-            outputs = executor(task)
+        outputs = executor(task)
         if not isinstance(outputs, (list, tuple)) or len(outputs) != task["expected_outputs"]:
             raise Blocked("RESULT_GATE: wrong output count")
         if verify_result(task, outputs) is not True:

@@ -61,6 +61,16 @@ class LiveGithubStateTests(unittest.TestCase):
         d["open_prs"][1]["changed_files"].append("scripts/execution_guard.py")
         with self.assertRaises(LiveStateBlocked):self.check(d)
 
+    def test_signed_scope_must_match_entire_live_pr_diff(self):
+        data=snapshot()
+        data["open_prs"][0]["changed_files"].append("docs/unauthorized.txt")
+        with self.assertRaisesRegex(LiveStateBlocked, "signed exact scope"):
+            self.check(data)
+        expanded=task()
+        expanded["scope_targets"].append("docs/not-in-pr.txt")
+        with self.assertRaisesRegex(LiveStateBlocked, "signed exact scope"):
+            self.check(contract=expanded)
+
     def test_missing_pr_page_and_duplicate_pr_block(self):
         for change in ("missing","duplicate"):
             d=snapshot()

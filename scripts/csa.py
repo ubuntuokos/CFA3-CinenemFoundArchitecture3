@@ -7,6 +7,7 @@ and ChatGPT conversation access are outside this local tool's authority.
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -63,7 +64,70 @@ def parse(path):
         abort("record content drift: " + str(path))
     return data
 
+WRITE_MARKER = ".CSA-WRITE-IN-PROGRESS"
+
+def check_not_writing(root):
+    if (root / WRITE_MARKER).exists():
+        abort("incomplete CSA write detected: verify and restore before continuing")
+
+
+def commit_changes(root, changes):
+    """Fail-closed multi-file update with ordinary-error rollback.
+
+    A process crash may leave WRITE_MARKER. No reader or writer proceeds then;
+    recovery needs explicit inspection, rather than pretending atomic durability.
+    """
+    root = Path(root).resolve()
+    lock = root / WRITE_MARKER
+    if not changes:
+        return
+    for path, content in changes.items():
+        path = Path(path)
+        if (not isinstance(content, str) or path == lock
+                or not path.resolve().is_relative_to(root)
+                or path.is_symlink()
+                or any(parent.is_symlink() for parent in
+                       path.parents if parent != root and parent != root.parent)):
+            abort("unsafe CSA transaction path")
+    root.mkdir(parents=True, exist_ok=True)
+    try:
+        with lock.open("x", encoding="utf-8") as handle:
+            handle.write("PENDING - manual integrity review required if interrupted\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+    except FileExistsError as exc:
+        raise ValueError("incomplete or concurrent CSA write detected") from exc
+    backed_up = {}
+    updated = []
+    try:
+        for path in sorted(changes):
+            if path.exists() and not path.is_file():
+                abort("non-file CSA transaction destination: " + str(path))
+            backed_up[path] = path.read_bytes() if path.exists() else None
+        for path in sorted(changes):
+            atomic_text(path, changes[path])
+            updated.append(path)
+    except Exception:
+        # Only an ordinary failure is automatically rolled back. Interruptions,
+        # failed rollbacks, or unverified storage must remain blocked.
+        restored = True
+        for path in reversed(updated):
+            try:
+                old = backed_up[path]
+                if old is None:
+                    path.unlink()
+                else:
+                    atomic_text(path, old.decode("utf-8"))
+            except Exception:
+                restored = False
+        if restored:
+            lock.unlink()
+        raise
+    lock.unlink()
+
+
 def all_records(root):
+    check_not_writing(root)
     rows = []
     for p in sorted((root / "projects").glob("*/suggestions/CSA-*.md")):
         meta = parse(p)
@@ -235,8 +299,7 @@ def computed_indexes(root, rows):
 
 
 def rebuild(root):
-    for path, content in computed_indexes(root, all_records(root)).items():
-        atomic_text(path, content)
+    commit_changes(root, computed_indexes(root, all_records(root)))
 
 def add(root, args):
     if not PROJECT.fullmatch(args.project):
@@ -261,6 +324,8 @@ def add(root, args):
     excluded = list(getattr(args, "excludes", []))
     refs = list(getattr(args, "relation", []))
     donors = list(getattr(args, "donor_id", []))
+    verify(root, getattr(args, "baseline_roster", None),
+           getattr(args, "donor_registry", None), quiet=True)
     rows = all_records(root)
     fingerprint = sha256(original.encode("utf-8"))
     matches = [r for _, r in rows if r["project"] == args.project
@@ -282,8 +347,10 @@ def add(root, args):
     validated_relations(meta, {r["id"] for _, r in rows}, roster,
                         getattr(args, "donor_registry", None))
     path = record_path(root, args.project, ident)
-    atomic_text(path, render(meta))
-    rebuild(root)
+    prospective = rows + [(path, meta)]
+    updates = computed_indexes(root, prospective)
+    updates[path] = render(meta)
+    commit_changes(root, updates)
     print(ident)
 
 def find(root, args):
@@ -305,7 +372,10 @@ def find(root, args):
                   + "\\t" + r["approval"] + "\\t" + r["implementation"])
 
 def change(root, args):
-    matches = [(p, r) for p, r in all_records(root) if r["id"] == args.id]
+    verify(root, getattr(args, "baseline_roster", None),
+           getattr(args, "donor_registry", None), quiet=True)
+    rows = all_records(root)
+    matches = [(p, r) for p, r in rows if r["id"] == args.id]
     if len(matches) != 1:
         abort("record not found")
     path, meta = matches[0]
@@ -323,8 +393,11 @@ def change(root, args):
             abort("verified implementation requires independent authoritative verification")
         meta["implementation"] = args.state
         meta["implementation_events"].append({"state": args.state, "evidence": args.evidence})
-    atomic_text(path, render(meta))
-    rebuild(root)
+    prospective = [(p, meta if p == path else record)
+                   for p, record in rows]
+    updates = computed_indexes(root, prospective)
+    updates[path] = render(meta)
+    commit_changes(root, updates)
 
 def verify(root, roster_path=None, donor_registry=None, *, quiet=False):
     rows = all_records(root)
@@ -458,6 +531,8 @@ def main(argv=None):
     s.add_argument("kind", choices=["approval", "implementation"])
     s.add_argument("state")
     s.add_argument("--evidence", required=True)
+    s.add_argument("--baseline-roster", required=True)
+    s.add_argument("--donor-registry")
     v = sub.add_parser("verify")
     v.add_argument("--baseline-roster")
     v.add_argument("--donor-registry")

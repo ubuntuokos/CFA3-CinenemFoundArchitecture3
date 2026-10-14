@@ -35,3 +35,7 @@ Ez a megvalósítás nem jelenti a donoradatbázis lezárását, a teljes kétir
 A `context` CLI egy meghatározott rekordazonosító vagy baseline-azonosító alapján, a helyi rekordok és indexek teljes szerkezeti ellenőrzése után állítja elő a következő tervezési lépés számára használható JSON-kontextust. A kapcsolatok fordított irányban is megjelennek. A státusz és a rekordtípus külön marad, ezért a találatok **nem** kapnak automatikus véglegesítési vagy megvalósítási minősítést.
 
 Ez helyi, ellenőrzött olvasási interfész. Nem jelenti a ChatGPT natív integrációjának, a teljes donoradatbázisnak vagy a kiadási kizárásoknak az éles bizonyítását.
+
+## Negyedik szakasz: rekord/index konzisztencia
+
+Az írási műveletek a rekordot és a kapcsolódó indexeket együtt készítik elő, az érintett fájlok írása előtt elvégzik az alkalmazandó ellenőrzést. Az egyidejű írásokat és a megszakított folyamatok után megmaradt `.CSA-WRITE-IN-PROGRESS` jelzőt a rendszer blokkolja; normál I/O-hibánál a már módosított fájlokat visszaállítja. A tároló fizikai törése/összeomlása utáni automatikus helyreállítás továbbra sem igazolt, és a jelző ellenőrzött feloldásáig STOP érvényes. Ez nem runtime-alkalmazásfunkció, és a donoradatbázis kezelését nem módosítja.

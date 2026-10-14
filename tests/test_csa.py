@@ -67,7 +67,8 @@ class CSATests(unittest.TestCase):
     def test_approval_does_not_change_implementation(self):
         self.seed()
         args = type("State", (), dict(id="CSA-000001", kind="approval",
-                                     state="APPROVED", evidence="owner-message"))
+                                     state="APPROVED", evidence="owner-message",
+                                     baseline_roster=str(self.roster), donor_registry=None))
         csa.change(self.archive, args)
         record = csa.all_records(self.archive)[0][1]
         self.assertEqual(record["implementation"], "UNKNOWN")
@@ -76,7 +77,8 @@ class CSATests(unittest.TestCase):
     def test_implementation_claim_requires_independent_proof(self):
         self.seed()
         args = type("State", (), dict(id="CSA-000001", kind="implementation",
-                                     state="IMPLEMENTED", evidence="old AI claim"))
+                                     state="IMPLEMENTED", evidence="old AI claim",
+                                     baseline_roster=str(self.roster), donor_registry=None))
         with self.assertRaisesRegex(ValueError, "independent"):
             csa.change(self.archive, args)
 
@@ -210,6 +212,44 @@ class CSATests(unittest.TestCase):
                                        baseline_roster=str(self.roster), donor_registry=None))
         with self.assertRaisesRegex(ValueError, "exactly one"):
             csa.context(self.archive, query)
+
+    def test_failed_multi_file_write_rolls_back_every_path(self):
+        original = csa.atomic_text
+        before = {p: p.read_bytes() for p in self.archive.rglob("*") if p.is_file()}
+        count = [0]
+        def fail_second_file(path, content):
+            count[0] += 1
+            if count[0] == 2:
+                raise OSError("injected index write failure")
+            return original(path, content)
+        with patch.object(csa, "atomic_text", side_effect=fail_second_file):
+            with self.assertRaisesRegex(OSError, "injected index"):
+                csa.add(self.archive, self.args)
+        after = {p: p.read_bytes() for p in self.archive.rglob("*") if p.is_file()}
+        self.assertEqual(before, after)
+        self.assertFalse((self.archive / csa.WRITE_MARKER).exists())
+        csa.verify(self.archive)
+
+    def test_unfinished_write_blocks_every_reader_and_writer(self):
+        marker = self.archive / csa.WRITE_MARKER
+        marker.write_text("manually inspect this interrupted update", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "incomplete CSA write"):
+            csa.all_records(self.archive)
+        with self.assertRaisesRegex(ValueError, "incomplete or concurrent CSA write"):
+            csa.commit_changes(self.archive, {self.archive / "CSA-MANIFEST.md": "bad"})
+        with self.assertRaisesRegex(ValueError, "incomplete CSA write"):
+            csa.verify(self.archive)
+
+    def test_status_update_rejects_unverified_roster_before_writing(self):
+        self.seed()
+        record_path, _ = csa.all_records(self.archive)[0]
+        unchanged = record_path.read_bytes()
+        status = type("State", (), dict(id="CSA-000001", kind="approval",
+                                       state="APPROVED", evidence="owner-message",
+                                       baseline_roster=None, donor_registry=None))
+        with self.assertRaisesRegex(ValueError, "baseline roster required"):
+            csa.change(self.archive, status)
+        self.assertEqual(unchanged, record_path.read_bytes())
 
     def test_data_root_cannot_be_a_child_of_application_checkout(self):
         nested = ROOT / "planning-registry-data"

@@ -56,3 +56,9 @@ A `context` művelet kizárólag egy `--record-id` **vagy** egy `--baseline-id` 
 Példa: `python3 scripts/csa.py --root /elkülönített/csa-adatok context --baseline-id CAP-001 --baseline-roster /hiteles/CFA3-CAPABILITY-NAMES-200-001.json`
 
 Az eszköz **nem** fér hozzá automatikusan ChatGPT-beszélgetésekhez, nem küld adatokat GitHubra, és a rekordok lekérdezése nem véglegesíti az előzetes terveket. Az `add` művelethez forrás-hivatkozás (`--source`) kötelező; a fájl önmagában tárolt forrásmezője nem bizonyít külső hozzáférést. A JSON-kimenetet csak a jogosult tervezési munkamenet kezelheti.
+
+## Írási integritás – negyedik szakasz
+
+A rekord és az összes érintett index írása ugyanazon tranzakciós műveletben történik. Az előzetes szerkezeti ellenőrzés **a módosítás előtt** fut; a módosítandó rekordot és a várható indexeket a rendszer előre összeállítja. A módosítás alatt `.CSA-WRITE-IN-PROGRESS` jelző blokkolja az egyidejű írást és az olvasást. Szokásos fájlrendszerhiba esetén a folyamat megkísérli a már átírt fájlok visszaállítását; megszakítás vagy sikertelen visszaállítás esetén a jelző a helyén marad, és a nyilvántartás **STOP/BLOCKER** állapotba kerül az ellenőrzött helyreállításig.
+
+Fontos: több fájl egyidejű cseréje nem fizikai, összeomlásbiztos ACID-tranzakció. A megoldás rendes hibákra visszaállítást és megszakításnál blokkoló jelzést biztosít, nem állít automatikus katasztrófa-helyreállítást. A `status` parancs immár kötelezően megköveteli a `--baseline-roster` argumentumot, és az egész helyi nyilvántartást ellenőrzi, mielőtt jóváhagyási státuszt vagy implementációs állapotot módosítana. A végleges alkalmazásterv jóváhagyási határa ezzel sem léphető át automatikusan.

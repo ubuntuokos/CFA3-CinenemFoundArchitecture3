@@ -84,7 +84,7 @@ class CSATests(unittest.TestCase):
         self.text.write_text("X" * (csa.JSON_LIMIT + 12), encoding="utf-8")
         with contextlib.redirect_stdout(io.StringIO()):
             csa.add(self.archive, self.args)
-            csa.verify(self.archive)
+            csa.verify(self.archive, self.roster)
         self.assertGreater(csa.all_records(self.archive)[0][0].stat().st_size,
                            csa.JSON_LIMIT)
 
@@ -93,13 +93,13 @@ class CSATests(unittest.TestCase):
         oversize.parent.mkdir(parents=True, exist_ok=True)
         oversize.write_text(json.dumps({"x": "A" * csa.JSON_LIMIT}), encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "JSON size"):
-            csa.verify(self.archive)
+            csa.verify(self.archive, self.roster)
 
     def test_corrupt_suggestion_rejected(self):
         path, _ = self.seed()
         path.write_text(path.read_text("utf-8") + "tampered", encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "content drift"):
-            csa.verify(self.archive)
+            csa.verify(self.archive, self.roster)
 
     def test_data_root_cannot_be_application_checkout(self):
         code = self.path / "fake-checkout"

@@ -38,3 +38,13 @@ bounded traversal, authoritative repository implementation-state verification,
 canonical GitHub synchronization and user-facing native ChatGPT integration
 require independent proof. Do not mark those capabilities IMPLEMENTED until
 real tests have passed. The parallel donor workflow is unaffected.
+
+## Baseline-kötött rekordok (1.1-es tervezési infrastruktúra)
+
+A v2 rekordok csak megadott, hiteles, 200 elemű CFA3 baseline-névjegyzék mellett vehetők fel. A 176–200 közötti `RESERVED_NUMBER_ONLY` névhelyekre nem lehet ajánlást végleges baseline-hozzárendeléssel felvenni. Az új névhely kiosztása külön jóváhagyási folyamat.
+
+A `--kind` megkülönbözteti az ajánlást, előzetes tervet és egyéb tervezési rekordot. A `--purpose`, `--baseline-id` és `--baseline-roster` kötelező. Az opcionális `--relation` CSA-rekordazonosítókkal kétirányúan indexelt kapcsolatot ad; `--applies-to` és `--excludes` a megengedett és kizárt baseline-felhasználást rögzíti. Az opcionális `--donor-id` hivatkozás olvasási célú `--donor-registry` használatát és kanonikus donorellenőrzést igényel. Donoradat nem másolódik át.
+
+A `verify` a már létrehozott v2 rekordokhoz ugyanazt a hiteles baseline-névjegyzéket kérheti a `--baseline-roster` kapcsolóval. A v1, baseline nélküli rekordok nem minősülnek automatikusan 1.1-kompatibilis rekordokká.
+
+A `CSA-RELATIONS.md` index a közvetlen és fordított hivatkozásokat tartalmazza. A státusz bizonyítékkal változtatható, de ajánlás/előzetes terv jóváhagyása önmagában nem véglegesíti az alkalmazástervet.

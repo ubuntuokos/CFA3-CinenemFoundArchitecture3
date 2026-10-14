@@ -21,7 +21,20 @@ class CSATests(unittest.TestCase):
         csa.init(self.archive)
         self.text = self.path / "suggestion.txt"
         self.text.write_text("Új képesség: offline keresés.\n", encoding="utf-8")
-        self.args = type("Args", (), dict(project="CFA3", title="Offline keresés",
+        self.roster = self.path / "baseline.json"
+        self.roster.write_text(json.dumps({
+            "schema": "cfa3.capability-name-roster.v1", "target_count": 200,
+            "carried_legacy_names": 175, "numbered_unassigned_slots": 25,
+            "names": [{"id": f"CAP-{i:03d}",
+                        "name": f"Known {i}" if i <= 175 else f"CAP-{i:03d}",
+                        "state": "LEGACY_NAME_CARRIED_FORWARD" if i <= 175
+                        else "RESERVED_NUMBER_ONLY"} for i in range(1, 201)]
+        }), encoding="utf-8")
+        self.args = type("Args", (), dict(
+            baseline_roster=str(self.roster), baseline_id="CAP-001",
+            purpose="CFA3 offline search design", kind="RECOMMENDATION",
+            applies_to=[], excludes=[], relation=[], donor_id=[],
+            donor_registry=None, project="CFA3", title="Offline keresés",
                        category=["AI"], suggestion_file=str(self.text),
                        source="chat:2026-10-12", conversation_id="conversation-local"))
 
@@ -37,7 +50,7 @@ class CSATests(unittest.TestCase):
             csa.find(self.archive, type("Q", (), dict(query="offline", project="CFA3")))
         self.assertIn("CSA-000001", out.getvalue())
         with contextlib.redirect_stdout(io.StringIO()):
-            csa.verify(self.archive)
+            csa.verify(self.archive, self.roster)
         output = self.path / "export.zip"
         csa.export(self.archive, type("E", (), dict(id=None, project=None, output=str(output))))
         import zipfile
@@ -93,6 +106,63 @@ class CSATests(unittest.TestCase):
         (code / "canonical" / "policies").mkdir(parents=True)
         with self.assertRaisesRegex(ValueError, "application repository"):
             csa.safe_root(code)
+
+    def test_index_tampering_is_detected(self):
+        self.seed()
+        index = self.archive / "indexes" / "CSA-INDEX.md"
+        index.write_text(index.read_text("utf-8") + "tampered", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "index or manifest drift"):
+            csa.verify(self.archive, self.roster)
+
+    def test_allocated_reserved_slot_requires_order(self):
+        import copy
+        doc = json.loads(self.roster.read_text("utf-8"))
+        doc["names"][175] = {"id": "CAP-176", "name": "New approved capability",
+                              "state": "OWNER_APPROVED"}
+        doc["numbered_unassigned_slots"] = 24
+        self.roster.write_text(json.dumps(doc), encoding="utf-8")
+        self.args.baseline_id = "CAP-176"
+        with contextlib.redirect_stdout(io.StringIO()):
+            csa.add(self.archive, self.args)
+        doc["names"][176] = {"id": "CAP-177", "name": "Second approved",
+                              "state": "OWNER_APPROVED"}
+        doc["names"][175] = {"id": "CAP-176", "name": "CAP-176",
+                              "state": "RESERVED_NUMBER_ONLY"}
+        with self.assertRaisesRegex(ValueError, "lowest reserved"):
+            csa.canonical_roster(self._write_roster(doc))
+
+    def _write_roster(self, data):
+        self.roster.write_text(json.dumps(data), encoding="utf-8")
+        return self.roster
+
+    def test_reserved_baseline_is_not_usable(self):
+        self.args.baseline_id = "CAP-176"
+        with self.assertRaisesRegex(ValueError, "reserved"):
+            csa.add(self.archive, self.args)
+
+    def test_missing_roster_blocks_verification(self):
+        self.seed()
+        with self.assertRaisesRegex(ValueError, "baseline roster required"):
+            csa.verify(self.archive)
+
+    def test_record_type_and_reverse_relation_index(self):
+        first, _ = self.seed()
+        self.text.write_text("Előzetes verzió a keresési tervhez.\n", "utf-8")
+        self.args.kind = "PRELIMINARY_PLAN"
+        self.args.relation = ["CSA-000001"]
+        with contextlib.redirect_stdout(io.StringIO()):
+            csa.add(self.archive, self.args)
+        record = csa.all_records(self.archive)[1][1]
+        self.assertEqual(record["approval"], "PENDING")
+        self.assertEqual(record["record_kind"], "PRELIMINARY_PLAN")
+        inverse = (self.archive / "indexes" / "CSA-RELATIONS.md").read_text("utf-8")
+        self.assertIn("CSA-000001 |  | CSA-000002", inverse)
+        csa.verify(self.archive, self.roster)
+
+    def test_nonexistent_related_record_is_blocked(self):
+        self.args.relation = ["CSA-999999"]
+        with self.assertRaisesRegex(ValueError, "unknown or self-referencing"):
+            csa.add(self.archive, self.args)
 
     def test_data_root_cannot_be_a_child_of_application_checkout(self):
         nested = ROOT / "planning-registry-data"

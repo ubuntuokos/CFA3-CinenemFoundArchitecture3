@@ -87,37 +87,176 @@ def init(root):
     root.mkdir(parents=True, exist_ok=True)
     rebuild(root)
 
-def rebuild(root):
-    rows = all_records(root)
-    manifest = "# CSA Manifest\n\nInternal development data, never application payload.\n\n"
+
+KIND = re.compile(r"^[A-Z][A-Z0-9_]{1,79}$")
+CAP_ID = re.compile(r"^CAP-([0-9]{3})$")
+
+def canonical_roster(path):
+    if not path:
+        abort("baseline roster required; unverified baseline is not permitted")
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if (data.get("schema") != "cfa3.capability-name-roster.v1"
+            or data.get("target_count") != 200
+            or data.get("carried_legacy_names") != 175
+            or type(data.get("numbered_unassigned_slots")) is not int):
+        abort("unexpected baseline roster schema or counts")
+    entries = data.get("names")
+    if not isinstance(entries, list) or len(entries) != 200:
+        abort("baseline roster must contain exactly 200 slots")
+    roster = {}
+    seen_names = set()
+    reserved_seen = False
+    reserved_count = 0
+    for slot, row in enumerate(entries, 1):
+        ident = "CAP-" + str(slot).zfill(3)
+        if not isinstance(row, dict) or row.get("id") != ident:
+            abort("baseline IDs are not in stable numbered order")
+        name, state = row.get("name"), row.get("state")
+        if not isinstance(name, str) or not name.strip():
+            abort("unnamed baseline item")
+        if slot <= 175 and state != "LEGACY_NAME_CARRIED_FORWARD":
+            abort("initial 175 baseline states changed without reconciliation")
+        if slot > 175 and state == "RESERVED_NUMBER_ONLY":
+            if name != ident:
+                abort("reserved baseline slot cannot carry a name")
+            reserved_seen = True
+            reserved_count += 1
+        elif slot > 175:
+            if reserved_seen:
+                abort("new baseline names must allocate lowest reserved slot first")
+            if name == ident:
+                abort("allocated baseline slot must have an approved distinct name")
+        if slot > 175 and state not in (
+                "RESERVED_NUMBER_ONLY", "NAMED_PENDING_DESIGN_AND_ACCEPTANCE",
+                "OWNER_APPROVED", "FINALIZED"):
+            abort("unrecognized reserved-slot state")
+        if name in seen_names:
+            abort("duplicate baseline name")
+        seen_names.add(name)
+        roster[ident] = row
+    if reserved_count != data["numbered_unassigned_slots"]:
+        abort("baseline reserved-slot count does not match current roster")
+    return roster
+
+def active_baseline(roster, ident):
+    row = roster.get(ident)
+    if row is None or row["state"] in (
+            "RESERVED_NUMBER_ONLY", "NAMED_PENDING_DESIGN_AND_ACCEPTANCE"):
+        abort("baseline target is absent, reserved, or not accepted: " + str(ident))
+    return row
+
+def validated_relations(meta, known_ids, roster, donor_registry=None):
+    if meta.get("schema") != "csa.record.v2":
+        abort("legacy record lacks required baseline-bound v2 fields: " + meta["id"])
+    kind = meta.get("record_kind")
+    if not isinstance(kind, str) or not KIND.fullmatch(kind):
+        abort("invalid record kind")
+    if not isinstance(meta.get("purpose"), str) or not meta["purpose"].strip():
+        abort("record purpose required")
+    active_baseline(roster, meta.get("baseline_id"))
+    relations = meta.get("relations")
+    if not isinstance(relations, list) or len(set(relations)) != len(relations):
+        abort("duplicate or invalid record relations")
+    if any(x not in known_ids or x == meta["id"] for x in relations):
+        abort("unknown or self-referencing record relation")
+    allowed = meta.get("applicable_baselines")
+    excluded = meta.get("excluded_baselines")
+    if not isinstance(allowed, list) or not isinstance(excluded, list):
+        abort("baseline applicability must be lists")
+    if len(set(allowed)) != len(allowed) or len(set(excluded)) != len(excluded):
+        abort("duplicate baseline applicability")
+    if set(allowed) & set(excluded):
+        abort("baseline cannot be both allowed and excluded")
+    for item in allowed + excluded:
+        active_baseline(roster, item)
+    donors = meta.get("donor_ids")
+    if not isinstance(donors, list) or len(set(donors)) != len(donors):
+        abort("invalid or duplicate donor reference")
+    if donors:
+        if not donor_registry:
+            abort("donor registry required for donor references")
+        # Use the existing CFA3 canonical read-only donor resolver.
+        from donor_reference_lookup import lookup
+        for ident in donors:
+            resolved = lookup(donor_id=ident, registry_path=Path(donor_registry))
+            if (not resolved or resolved.get("donor_id") != ident or
+                    resolved.get("donor_registration") not in (
+                        "CANONICAL_REFERENCE_REGISTERED",
+                        "ACCEPTED_REFERENCE")):
+                abort("donor is not a published canonical reference: " + str(ident))
+
+def computed_indexes(root, rows):
+    manifest = "# CSA Manifest\n\nInternal development data; never an application payload.\n\n"
     manifest += "Records: " + str(len(rows)) + "\n\n"
-    index = "# CSA Javaslatindex\n\n| ID | Projekt | Cím | Döntés | Megvalósítás |\n|---|---|---|---|---|\n"
+    columns = ["ID", "Markdown path", "Baseline ID", "Type", "Project",
+               "Title", "Purpose", "Approval", "Implementation"]
+    index = "# CSA tervezési index\n\n| " + " | ".join(columns) + " |\n"
+    index += "|" + "|".join("---" for _ in columns) + "|\n"
     projects = {}
+    inverse = {}
     for p, r in rows:
-        projects.setdefault(r["project"], []).append(r)
-        def cell(value):
-            return str(value).replace("|", "\\|").replace("\n", " ")
-        index += "| " + " | ".join(map(cell, [r["id"], r["project"], r["title"],
-                     r["approval"], r["implementation"]])) + " |\n"
-    atomic_text(root / "CSA-MANIFEST.md", manifest)
-    atomic_text(root / "indexes" / "CSA-INDEX.md", index)
-    atomic_text(root / "CSA-PROJECT-INDEX.md",
-                "# CSA Projektindex\n\n" + "".join(
-                    "- " + k + ": " + str(len(v)) + "\n"
-                    for k, v in sorted(projects.items())))
+        projects.setdefault(r["project"], []).append((p, r))
+        for target in r.get("relations", []):
+            inverse.setdefault(target, []).append(r["id"])
+    def cell(value):
+        return str(value).replace("|", "\\|").replace("\n", " ")
+    for p, r in rows:
+        rel = p.relative_to(root).as_posix()
+        values = ["[" + r["id"] + "](../" + rel + ")",
+                  "[file](../" + rel + ")", r.get("baseline_id", "UNBOUND"),
+                  r.get("record_kind", "LEGACY"), r["project"], r["title"],
+                  r.get("purpose", ""), r["approval"], r["implementation"]]
+        index += "| " + " | ".join(map(cell, values)) + " |\n"
+    relationships = "# CSA kapcsolatok (előre és vissza)\n\n"
+    relationships += "| Rekord | Kapcsolódó rekordok | Bejövő hivatkozások | Donor ID-k |\n"
+    relationships += "|---|---|---|---|\n"
+    for p, r in rows:
+        values = [r["id"], ", ".join(r.get("relations", [])),
+                  ", ".join(sorted(inverse.get(r["id"], []))),
+                  ", ".join(r.get("donor_ids", []))]
+        relationships += "| " + " | ".join(map(cell, values)) + " |\n"
+    expected = {
+        root / "CSA-MANIFEST.md": manifest,
+        root / "indexes" / "CSA-INDEX.md": index,
+        root / "indexes" / "CSA-RELATIONS.md": relationships,
+        root / "CSA-PROJECT-INDEX.md":
+            "# CSA Projektindex\n\n" + "".join(
+                "- " + k + ": " + str(len(v)) + "\n"
+                for k, v in sorted(projects.items()))
+    }
     for project, records in projects.items():
-        atomic_text(root / "projects" / project / "INDEX.md",
-                    "# " + project + "\n\n" + "".join(
-                        "- " + r["id"] + ": " + r["title"] + "\n" for r in records))
+        expected[root / "projects" / project / "INDEX.md"] = (
+            "# " + project + "\n\n" + "".join(
+                "- [" + r["id"] + "](suggestions/" + r["id"] +
+                ".md): " + r["title"] + "\n" for _, r in records))
+    return expected
+
+
+def rebuild(root):
+    for path, content in computed_indexes(root, all_records(root)).items():
+        atomic_text(path, content)
 
 def add(root, args):
     if not PROJECT.fullmatch(args.project):
         abort("invalid project")
     original = Path(args.suggestion_file).read_text("utf-8")
     if not original.strip():
-        abort("empty suggestion")
+        abort("empty record content")
     if re.search(r"(?i)(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN PRIVATE KEY-----)", original):
-        abort("potential credential in suggestion")
+        abort("potential credential in record")
+    roster = canonical_roster(getattr(args, "baseline_roster", None))
+    baseline_id = getattr(args, "baseline_id", None)
+    active_baseline(roster, baseline_id)
+    kind = getattr(args, "kind", "RECOMMENDATION")
+    purpose = getattr(args, "purpose", None)
+    if not isinstance(kind, str) or not KIND.fullmatch(kind):
+        abort("invalid record kind")
+    if not isinstance(purpose, str) or not purpose.strip():
+        abort("record purpose required")
+    applicable = list(getattr(args, "applies_to", []))
+    excluded = list(getattr(args, "excludes", []))
+    refs = list(getattr(args, "relation", []))
+    donors = list(getattr(args, "donor_id", []))
     rows = all_records(root)
     fingerprint = sha256(original.encode("utf-8"))
     matches = [r for _, r in rows if r["project"] == args.project
@@ -126,13 +265,18 @@ def add(root, args):
         abort("possible duplicate; review record " + matches[0]["id"])
     number = 1 + max((int(r["id"].split("-")[-1]) for _, r in rows), default=0)
     ident = "CSA-" + str(number).zfill(6)
-    meta = {"schema": "csa.record.v1", "id": ident, "project": args.project,
-            "title": args.title, "categories": args.category,
-            "source": args.source, "conversation_id": args.conversation_id,
-            "original_text": original, "text_sha256": fingerprint,
-            "approval": "PENDING", "implementation": "UNKNOWN",
-            "decisions": [], "implementation_events": [],
-            "relations": [], "sources": [args.source] if args.source else []}
+    meta = {"schema": "csa.record.v2", "id": ident, "project": args.project,
+            "title": args.title, "record_kind": kind, "purpose": purpose.strip(),
+            "baseline_id": baseline_id, "applicable_baselines": applicable,
+            "excluded_baselines": excluded, "donor_ids": donors,
+            "categories": args.category, "source": args.source,
+            "conversation_id": args.conversation_id, "original_text": original,
+            "text_sha256": fingerprint, "approval": "PENDING",
+            "implementation": "UNKNOWN", "decisions": [],
+            "implementation_events": [], "relations": refs,
+            "sources": [args.source] if args.source else []}
+    validated_relations(meta, {r["id"] for _, r in rows}, roster,
+                        getattr(args, "donor_registry", None))
     path = record_path(root, args.project, ident)
     atomic_text(path, render(meta))
     rebuild(root)
@@ -143,11 +287,18 @@ def find(root, args):
     for _, r in all_records(root):
         if args.project and r["project"] != args.project:
             continue
-        haystack = " ".join([r["title"], r["original_text"], " ".join(r["categories"]),
-                              r["project"]]).casefold()
+        if getattr(args, "baseline_id", None) and r.get("baseline_id") != args.baseline_id:
+            continue
+        if getattr(args, "kind", None) and r.get("record_kind") != args.kind:
+            continue
+        haystack = " ".join([
+            r["title"], r["original_text"], " ".join(r["categories"]),
+            r["project"], r.get("baseline_id", ""), r.get("record_kind", ""),
+            r.get("purpose", ""), " ".join(r.get("applicable_baselines", [])),
+            " ".join(r.get("excluded_baselines", []))]).casefold()
         if term in haystack:
-            print(r["id"] + "\t" + r["project"] + "\t" + r["title"]
-                  + "\t" + r["approval"] + "\t" + r["implementation"])
+            print(r["id"] + "\\t" + r["project"] + "\\t" + r["title"]
+                  + "\\t" + r["approval"] + "\\t" + r["implementation"])
 
 def change(root, args):
     matches = [(p, r) for p, r in all_records(root) if r["id"] == args.id]
@@ -171,23 +322,29 @@ def change(root, args):
     atomic_text(path, render(meta))
     rebuild(root)
 
-def verify(root):
+def verify(root, roster_path=None, donor_registry=None):
     rows = all_records(root)
+    known = {r["id"] for _, r in rows}
+    roster = canonical_roster(roster_path) if rows else None
     for path in sorted(root.rglob("*.json")):
         if path.stat().st_size > JSON_LIMIT:
             abort("JSON size exceeds 0.95 MiB: " + str(path))
         json.loads(path.read_text("utf-8"))
     for p, meta in rows:
-        if not PROJECT.fullmatch(meta["project"]) or meta.get("approval") not in APPROVAL \
-           or meta.get("implementation") not in IMPLEMENTATION:
+        if (not PROJECT.fullmatch(meta["project"])
+                or meta.get("approval") not in APPROVAL
+                or meta.get("implementation") not in IMPLEMENTATION):
             abort("invalid record state: " + str(p))
         if sha256(meta["original_text"].encode("utf-8")) != meta["text_sha256"]:
             abort("original suggestion digest mismatch")
-    expected = (root / "CSA-MANIFEST.md").read_text("utf-8")
-    if "Records: " + str(len(rows)) not in expected:
-        abort("manifest count drift")
+        validated_relations(meta, known, roster, donor_registry)
+        if meta["approval"] != "PENDING" and not meta.get("decisions"):
+            abort("non-pending record has no approval evidence")
+    for path, content in computed_indexes(root, rows).items():
+        if not path.is_file() or path.read_text("utf-8") != content:
+            abort("index or manifest drift: " + str(path))
     print("CSA_LOCAL_STRUCTURAL_PASS: " + str(len(rows))
-          + " records; not GitHub or ChatGPT access proof")
+          + " records; not GitHub, donor completeness, or ChatGPT proof")
 
 def export(root, args):
     matches = [(p, r) for p, r in all_records(root)
@@ -226,15 +383,28 @@ def main(argv=None):
     a.add_argument("--suggestion-file", required=True)
     a.add_argument("--source", default="")
     a.add_argument("--conversation-id", default="")
+    a.add_argument("--kind", default="RECOMMENDATION")
+    a.add_argument("--purpose", required=True)
+    a.add_argument("--baseline-id", required=True)
+    a.add_argument("--baseline-roster", required=True)
+    a.add_argument("--applies-to", action="append", default=[])
+    a.add_argument("--excludes", action="append", default=[])
+    a.add_argument("--relation", action="append", default=[])
+    a.add_argument("--donor-id", action="append", default=[])
+    a.add_argument("--donor-registry")
     f = sub.add_parser("find")
     f.add_argument("query")
     f.add_argument("--project")
+    f.add_argument("--kind")
+    f.add_argument("--baseline-id")
     s = sub.add_parser("status")
     s.add_argument("id")
     s.add_argument("kind", choices=["approval", "implementation"])
     s.add_argument("state")
     s.add_argument("--evidence", required=True)
-    sub.add_parser("verify")
+    v = sub.add_parser("verify")
+    v.add_argument("--baseline-roster")
+    v.add_argument("--donor-registry")
     e = sub.add_parser("export")
     e.add_argument("--id")
     e.add_argument("--project")
@@ -251,7 +421,7 @@ def main(argv=None):
         elif args.cmd == "status":
             change(root, args)
         elif args.cmd == "verify":
-            verify(root)
+            verify(root, args.baseline_roster, args.donor_registry)
         elif args.cmd == "export":
             export(root, args)
     except (ValueError, OSError, json.JSONDecodeError) as exc:

@@ -164,6 +164,53 @@ class CSATests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown or self-referencing"):
             csa.add(self.archive, self.args)
 
+    def test_add_requires_traceable_source(self):
+        self.args.source = ""
+        with self.assertRaisesRegex(ValueError, "source/provenance"):
+            csa.add(self.archive, self.args)
+
+    def test_context_separates_preliminary_plan_and_inbound_links(self):
+        self.seed()
+        self.text.write_text("Nem véglegesített előzetes terv.\n", encoding="utf-8")
+        self.args.kind = "PRELIMINARY_PLAN"
+        self.args.relation = ["CSA-000001"]
+        with contextlib.redirect_stdout(io.StringIO()):
+            csa.add(self.archive, self.args)
+        query = type("Query", (), dict(record_id=None, baseline_id="CAP-001",
+                                       baseline_roster=str(self.roster), donor_registry=None))
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            csa.context(self.archive, query)
+        result = json.loads(out.getvalue())
+        self.assertEqual(result["schema"], "csa.planning-context.v1")
+        self.assertEqual(len(result["records"]), 2)
+        first, second = result["records"]
+        self.assertEqual(first["inbound_record_ids"], ["CSA-000002"])
+        self.assertTrue(second["is_nonfinal_proposal"])
+        self.assertEqual(second["record"]["record_kind"], "PRELIMINARY_PLAN")
+        self.assertEqual(second["record"]["approval"], "PENDING")
+        self.assertEqual(second["record"]["implementation"], "UNKNOWN")
+
+    def test_context_does_not_accept_reserved_target(self):
+        query = type("Query", (), dict(record_id=None, baseline_id="CAP-176",
+                                       baseline_roster=str(self.roster), donor_registry=None))
+        with self.assertRaisesRegex(ValueError, "reserved"):
+            csa.context(self.archive, query)
+
+    def test_context_refuses_broken_index(self):
+        self.seed()
+        path = self.archive / "indexes" / "CSA-RELATIONS.md"
+        path.write_text("corrupted", encoding="utf-8")
+        query = type("Query", (), dict(record_id="CSA-000001", baseline_id=None,
+                                       baseline_roster=str(self.roster), donor_registry=None))
+        with self.assertRaisesRegex(ValueError, "index or manifest drift"):
+            csa.context(self.archive, query)
+
+    def test_context_requires_precise_scope(self):
+        query = type("Query", (), dict(record_id=None, baseline_id=None,
+                                       baseline_roster=str(self.roster), donor_registry=None))
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            csa.context(self.archive, query)
+
     def test_data_root_cannot_be_a_child_of_application_checkout(self):
         nested = ROOT / "planning-registry-data"
         with self.assertRaisesRegex(ValueError, "application repository"):

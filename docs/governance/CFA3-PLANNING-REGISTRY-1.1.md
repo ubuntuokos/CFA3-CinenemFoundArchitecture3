@@ -29,3 +29,9 @@ A megvalósítás további lépései csak az érintett jóváhagyott források t
 A bootstrap bővítése `csa.record.v2` rekordokat támogat kötelező `record_kind`, `purpose` és stabil `baseline_id` adatokkal; a már jóváhagyott 200 elemű névjegyzék külön forrás. A fenntartott baseline-névhelyek használatát a validátor elutasítja. A kapcsolt rekordok fordított mutatói indexben kereshetők, míg a donor-hivatkozások a meglévő read-only donor-feloldón keresztül érvényesíthetők.
 
 Ez a megvalósítás nem jelenti a donoradatbázis lezárását, a teljes kétirányú ChatGPT-integrációt, és nem módosítja az alkalmazás futásidejű kódját. A további specifikációs egyezéshez a donoradatbázis elkészülő, hiteles szerkezetével való ellenőrzés szükséges.
+
+## Célzott kontextusolvasás
+
+A `context` CLI egy meghatározott rekordazonosító vagy baseline-azonosító alapján, a helyi rekordok és indexek teljes szerkezeti ellenőrzése után állítja elő a következő tervezési lépés számára használható JSON-kontextust. A kapcsolatok fordított irányban is megjelennek. A státusz és a rekordtípus külön marad, ezért a találatok **nem** kapnak automatikus véglegesítési vagy megvalósítási minősítést.
+
+Ez helyi, ellenőrzött olvasási interfész. Nem jelenti a ChatGPT natív integrációjának, a teljes donoradatbázisnak vagy a kiadási kizárásoknak az éles bizonyítását.

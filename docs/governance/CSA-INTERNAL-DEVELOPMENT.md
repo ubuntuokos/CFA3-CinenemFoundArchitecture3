@@ -48,3 +48,11 @@ A `--kind` megkülönbözteti az ajánlást, előzetes tervet és egyéb tervez�
 A `verify` a már létrehozott v2 rekordokhoz ugyanazt a hiteles baseline-névjegyzéket kérheti a `--baseline-roster` kapcsolóval. A v1, baseline nélküli rekordok nem minősülnek automatikusan 1.1-kompatibilis rekordokká.
 
 A `CSA-RELATIONS.md` index a közvetlen és fordított hivatkozásokat tartalmazza. A státusz bizonyítékkal változtatható, de ajánlás/előzetes terv jóváhagyása önmagában nem véglegesíti az alkalmazástervet.
+
+## Ellenőrzött, olvasási célú tervezési kontextus
+
+A `context` művelet kizárólag egy `--record-id` **vagy** egy `--baseline-id` megadása után fut. A megadott `--baseline-roster` névjegyzéket, a rekordokat, az indexeket és szükség esetén a `--donor-registry` hivatkozásokat az olvasás előtt ellenőrzi. A kimenet JSON: forrás/proveniencia, eredeti Markdown-szöveg, rekordtípus, jóváhagyási és implementációs állapot, előre és visszafelé mutató kapcsolatok. Kereséskor a `PRIMARY_BASELINE` és `APPLICABLE_BASELINE` szerep külön látható.
+
+Példa: `python3 scripts/csa.py --root /elkülönített/csa-adatok context --baseline-id CAP-001 --baseline-roster /hiteles/CFA3-CAPABILITY-NAMES-200-001.json`
+
+Az eszköz **nem** fér hozzá automatikusan ChatGPT-beszélgetésekhez, nem küld adatokat GitHubra, és a rekordok lekérdezése nem véglegesíti az előzetes terveket. Az `add` művelethez forrás-hivatkozás (`--source`) kötelező; a fájl önmagában tárolt forrásmezője nem bizonyít külső hozzáférést. A JSON-kimenetet csak a jogosult tervezési munkamenet kezelheti.

@@ -148,6 +148,8 @@ def active_baseline(roster, ident):
 def validated_relations(meta, known_ids, roster, donor_registry=None):
     if meta.get("schema") != "csa.record.v2":
         abort("legacy record lacks required baseline-bound v2 fields: " + meta["id"])
+    if not isinstance(meta.get("source"), str) or not meta["source"].strip():
+        abort("source/provenance reference required")
     kind = meta.get("record_kind")
     if not isinstance(kind, str) or not KIND.fullmatch(kind):
         abort("invalid record kind")
@@ -242,6 +244,8 @@ def add(root, args):
     original = Path(args.suggestion_file).read_text("utf-8")
     if not original.strip():
         abort("empty record content")
+    if not isinstance(args.source, str) or not args.source.strip():
+        abort("a nonempty source/provenance reference is required")
     if re.search(r"(?i)(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN PRIVATE KEY-----)", original):
         abort("potential credential in record")
     roster = canonical_roster(getattr(args, "baseline_roster", None))
@@ -322,7 +326,7 @@ def change(root, args):
     atomic_text(path, render(meta))
     rebuild(root)
 
-def verify(root, roster_path=None, donor_registry=None):
+def verify(root, roster_path=None, donor_registry=None, *, quiet=False):
     rows = all_records(root)
     known = {r["id"] for _, r in rows}
     roster = canonical_roster(roster_path) if rows else None
@@ -343,8 +347,60 @@ def verify(root, roster_path=None, donor_registry=None):
     for path, content in computed_indexes(root, rows).items():
         if not path.is_file() or path.read_text("utf-8") != content:
             abort("index or manifest drift: " + str(path))
-    print("CSA_LOCAL_STRUCTURAL_PASS: " + str(len(rows))
-          + " records; not GitHub, donor completeness, or ChatGPT proof")
+    if not quiet:
+        print("CSA_LOCAL_STRUCTURAL_PASS: " + str(len(rows))
+              + " records; not GitHub, donor completeness, or ChatGPT proof")
+
+def context(root, args):
+    """Read-only, scope-bound retrieval for an authorized design task.
+
+    Does not finalize a proposal or claim it was implemented.
+    """
+    ident = args.record_id
+    baseline = args.baseline_id
+    if bool(ident) == bool(baseline):
+        abort("choose exactly one record ID or baseline ID for context")
+    # Reject inconsistent local manifests, links, donor references and roster
+    # before exposing records to a new design task.
+    verify(root, args.baseline_roster, args.donor_registry, quiet=True)
+    rows = all_records(root)
+    roster = canonical_roster(args.baseline_roster)
+    if baseline:
+        active_baseline(roster, baseline)
+    inbound = {}
+    for _, record in rows:
+        for target in record["relations"]:
+            inbound.setdefault(target, []).append(record["id"])
+    matches = []
+    for path, record in rows:
+        if ident:
+            if record["id"] != ident:
+                continue
+            role = "EXACT_RECORD"
+        elif record["baseline_id"] == baseline:
+            role = "PRIMARY_BASELINE"
+        elif baseline in record["applicable_baselines"]:
+            role = "APPLICABLE_BASELINE"
+        else:
+            continue
+        matches.append({
+            "relative_markdown_path": path.relative_to(root).as_posix(),
+            "match_role": role,
+            "inbound_record_ids": sorted(inbound.get(record["id"], [])),
+            "is_nonfinal_proposal": record["record_kind"] in
+                ("RECOMMENDATION", "PRELIMINARY_PLAN"),
+            "record": record,
+        })
+    if not matches:
+        abort("no verified planning records found for requested scope")
+    result = {
+        "schema": "csa.planning-context.v1",
+        "scope": {"record_id": ident, "baseline_id": baseline},
+        "note": "Archive status and approval are not proof of a finalized application or implementation",
+        "records": matches,
+    }
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+
 
 def export(root, args):
     matches = [(p, r) for p, r in all_records(root)
@@ -381,7 +437,7 @@ def main(argv=None):
     a.add_argument("--title", required=True)
     a.add_argument("--category", action="append", default=[])
     a.add_argument("--suggestion-file", required=True)
-    a.add_argument("--source", default="")
+    a.add_argument("--source", required=True)
     a.add_argument("--conversation-id", default="")
     a.add_argument("--kind", default="RECOMMENDATION")
     a.add_argument("--purpose", required=True)
@@ -405,6 +461,11 @@ def main(argv=None):
     v = sub.add_parser("verify")
     v.add_argument("--baseline-roster")
     v.add_argument("--donor-registry")
+    c = sub.add_parser("context")
+    c.add_argument("--record-id")
+    c.add_argument("--baseline-id")
+    c.add_argument("--baseline-roster", required=True)
+    c.add_argument("--donor-registry")
     e = sub.add_parser("export")
     e.add_argument("--id")
     e.add_argument("--project")
@@ -422,6 +483,8 @@ def main(argv=None):
             change(root, args)
         elif args.cmd == "verify":
             verify(root, args.baseline_roster, args.donor_registry)
+        elif args.cmd == "context":
+            context(root, args)
         elif args.cmd == "export":
             export(root, args)
     except (ValueError, OSError, json.JSONDecodeError) as exc:

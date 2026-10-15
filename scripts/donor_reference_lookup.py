@@ -307,7 +307,13 @@ def lookup_published(*, donor_id=None, original_url=None):
     if (donor_id is None) == (original_url is None):
         raise ValueError("Exactly one donor ID or original URL is required")
     import hashlib
-    doc = json.loads(PUBLISHED_FIRST.read_text(encoding="utf-8"))
+    catalog_raw = PUBLISHED_FIRST.read_bytes()
+    catalog_blob = hashlib.sha1(
+        b"blob " + str(len(catalog_raw)).encode("ascii") + b"\0" + catalog_raw
+    ).hexdigest()
+    if catalog_blob != "7de979fd2d975ff99573f41e4a0035a57925bb52":
+        raise ValueError("Published donor catalog digest mismatch")
+    doc = json.loads(catalog_raw)
     raw = PUBLISHED_FIRST_ARCHIVE.read_bytes()
     old_blob = hashlib.sha1(
         b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw

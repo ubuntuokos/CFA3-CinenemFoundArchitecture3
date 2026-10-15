@@ -11,8 +11,10 @@ from build_donor_source_file01_queue import validated_queue
 ROOT = Path(__file__).resolve().parents[1]
 REG = ROOT / "canonical/registries"
 OBSERVATION_BATCHES = {
-    "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-001.json": 15,
-    "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-002.json": 10,
+    "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-001.json": (
+        15, "323be9c86193498a250314aba7527125beaab1d40198d452eb1067c6049ba4dc"),
+    "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-002.json": (
+        10, "3f905ae5950342896e1b346d0cde94f3557bf2c416d610831cb20fb517b7abd0"),
 }
 
 
@@ -22,11 +24,15 @@ def observation_batches(read, directory=REG):
     if paths != set(OBSERVATION_BATCHES):
         raise ValueError("Source-file 001 observation batch inventory mismatch")
     batches = []
-    for name, count in OBSERVATION_BATCHES.items():
-        doc = read(directory / name)
+    for name, (count, expected_sha256) in OBSERVATION_BATCHES.items():
+        path = directory / name
+        raw = path.read_bytes()
+        doc = read(path, raw=raw)
         records = doc.get("records")
         if not isinstance(records, list) or len(records) != count:
             raise ValueError("Source-file 001 observation record count mismatch: " + name)
+        if hashlib.sha256(raw).hexdigest() != expected_sha256:
+            raise ValueError("Source-file 001 observation digest mismatch: " + name)
         batches.append(doc)
     return batches
 
@@ -34,8 +40,9 @@ def observation_batches(read, directory=REG):
 def audit():
     inputs = {}
 
-    def read(path):
-        raw = path.read_bytes()
+    def read(path, raw=None):
+        if raw is None:
+            raw = path.read_bytes()
         inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(raw).hexdigest()
         return json.loads(raw)
 
@@ -51,6 +58,7 @@ def audit():
     extra = read(donor.PUBLISHED_EXACT_ALIASES)
     read(donor.PUBLISHED_SOURCE_UNION)
     donor._verified_published_original_aliases(catalog)
+    published = donor.ValidatedPublishedCatalog()
     missing, conflicts, preserved_routes = [], [], []
     transfer_routes = {row["alias"]: row for row in snapshot_doc["locator_routes"]}
 
@@ -66,14 +74,14 @@ def audit():
         compare("historical identity:" + sid, row["donor_id"], sid)
         compare("historical status:" + sid, row["historical_status"], original["status"])
         compare("historical locator:" + sid, row["original_url"], original["source"]["locator"])
-        compare("published ID:" + sid, donor.lookup_published(donor_id=sid), row)
+        compare("published ID:" + sid, donor.lookup_published(donor_id=sid, catalog=published), row)
         compare("transfer ID:" + sid, donor.lookup_snapshot(snapshot, donor_id=sid)["donor_id"], sid)
 
     urls = dict(catalog["lookup_by_locator"])
     urls.update({r["original_url"]: r["donor_id"] for r in extra["aliases"]})
     for url, sid in urls.items():
         row = catalog["records"][catalog["lookup_by_id"][sid]]
-        compare("published URL:" + url, donor.lookup_published(original_url=url), row)
+        compare("published URL:" + url, donor.lookup_published(original_url=url, catalog=published), row)
         current = donor.lookup_snapshot(snapshot, original_url=url)
         current_id = None if current is None else current["donor_id"]
         resolved = lifecycle.resolve_migrated_url(url, lifecycle_routes)
@@ -91,7 +99,7 @@ def audit():
                 compare("transfer URL:" + url, current_id, sid)
 
     for row in canonical["records"]:
-        actual = donor.lookup_published(donor_id=row["donor_id"])
+        actual = donor.lookup_published(donor_id=row["donor_id"], catalog=published)
         compare("canonical registration:" + row["donor_id"],
                 None if actual is None else actual["donor_registration"], row["donor_registration"])
 

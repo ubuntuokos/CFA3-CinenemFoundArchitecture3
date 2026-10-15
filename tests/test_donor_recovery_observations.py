@@ -21,7 +21,7 @@ class RecoveryObservationTests(unittest.TestCase):
 
     def read_batches(self):
         return recovery.observation_batches(
-            lambda path: json.loads(path.read_bytes()), self.directory)
+            lambda path, raw: json.loads(raw), self.directory)
 
     def test_original_two_batches_preserve_all_25_observations(self):
         self.assertEqual([len(doc["records"]) for doc in self.read_batches()], [15, 10])
@@ -63,6 +63,21 @@ class RecoveryObservationTests(unittest.TestCase):
         shutil.copyfile(path, path.with_name(path.name.replace("001.json", "003.json")))
         with self.assertRaisesRegex(ValueError, "inventory mismatch"):
             self.read_batches()
+
+    def test_changed_metadata_with_original_identity_and_count_is_rejected(self):
+        for name in recovery.OBSERVATION_BATCHES:
+            path = self.directory / name
+            raw = path.read_bytes()
+            for field, value in (("github_repository_metadata", "NOT_FOUND_AT_CHECK"),
+                                 ("reported_pushed_at", "2099-01-01T00:00:00Z"),
+                                 ("rights_review_complete", True)):
+                with self.subTest(batch=name, field=field):
+                    doc = json.loads(raw)
+                    doc["records"][0][field] = value
+                    path.write_text(json.dumps(doc), encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "observation digest mismatch"):
+                        self.read_batches()
+            path.write_bytes(raw)
 
 
 if __name__ == "__main__":

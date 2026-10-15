@@ -302,10 +302,7 @@ def _verified_published_original_aliases(doc):
 
 
 
-def lookup_published(*, donor_id=None, original_url=None):
-    """Read the first canonically available file, excluding other staged sources."""
-    if (donor_id is None) == (original_url is None):
-        raise ValueError("Exactly one donor ID or original URL is required")
+def _load_published_catalog():
     import hashlib
     catalog_raw = PUBLISHED_FIRST.read_bytes()
     catalog_blob = hashlib.sha1(
@@ -332,11 +329,47 @@ def lookup_published(*, donor_id=None, original_url=None):
             or len(index) != 1919 or len(routes) != 1997
             or doc.get("alias_index_size") != len(routes)):
         raise ValueError("Published donor source-file integrity check failed")
+    return doc
+
+
+_VALIDATED_PUBLISHED_HANDLES = WeakKeyDictionary()
+
+
+class ValidatedPublishedCatalog:
+    """Authenticated immutable snapshot for a batch, not a live filesystem view."""
+    __slots__ = ("__weakref__",)
+
+    def __new__(cls):
+        if cls is not ValidatedPublishedCatalog:
+            raise TypeError("ValidatedPublishedCatalog does not allow subclasses")
+        doc = _load_published_catalog()
+        aliases = _verified_published_original_aliases(doc)
+        handle = object.__new__(cls)
+        _VALIDATED_PUBLISHED_HANDLES[handle] = (_freeze(doc), _freeze(aliases))
+        return handle
+
+    def _trusted(self):
+        state = _VALIDATED_PUBLISHED_HANDLES.get(self)
+        if state is None:
+            raise ValueError("Unvalidated published donor catalog handle")
+        return state
+
+
+def lookup_published(*, donor_id=None, original_url=None, catalog=None):
+    """Read source-file 001; authenticate now unless given a validated snapshot."""
+    if (donor_id is None) == (original_url is None):
+        raise ValueError("Exactly one donor ID or original URL is required")
+    if catalog is None:
+        catalog = ValidatedPublishedCatalog()
+    if type(catalog) is not ValidatedPublishedCatalog:
+        raise ValueError("Unvalidated published donor catalog handle")
+    doc, aliases = catalog._trusted()
+    records, index, routes = doc["records"], doc["lookup_by_id"], doc["lookup_by_locator"]
     supplementary_alias = False
     if original_url is not None:
         donor_id = routes.get(original_url)
         if donor_id is None:
-            donor_id = _verified_published_original_aliases(doc).get(original_url)
+            donor_id = aliases.get(original_url)
             supplementary_alias = donor_id is not None
             if donor_id is None:
                 return None
@@ -354,7 +387,7 @@ def lookup_published(*, donor_id=None, original_url=None):
             or row.get("license_authorized") is not False
             or row.get("model_provider_admission") is not False):
         raise ValueError("Inconsistent published donor record")
-    return row
+    return _detach(row)
 
 def main():
     parser = argparse.ArgumentParser(description="Read-only lookup of registered CFA3 donor references")

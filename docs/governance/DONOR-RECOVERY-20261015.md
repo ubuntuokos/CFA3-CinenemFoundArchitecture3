@@ -22,9 +22,13 @@ returned the modified record through ID and direct URL lookup. The catalog's
 Git blob digest was only enforced on the supplementary alias path. This was a
 lookup integrity defect; no existing catalog corruption was found.
 
-Every published lookup now verifies the existing catalog blob
+Published lookup now verifies the existing catalog blob
 `7de979fd2d975ff99573f41e4a0035a57925bb52` before parsing or returning a hit or
-miss. The authenticated bytes are the bytes parsed. Regression coverage includes
+miss. Batch readers can explicitly reuse an authenticated immutable snapshot;
+individual lookups without a handle authenticate the current files. The batch
+handle cannot be forged through constructor bypass or modified through returned
+records. It represents the verified snapshot, not subsequent filesystem changes.
+The authenticated bytes are the bytes parsed. Regression coverage includes
 unauthorized approval promotion, replacement of an ID with unchanged index
 length, corruption in another record, and detached return values.
 
@@ -40,8 +44,12 @@ The checked-in JSON report records the input SHA-256 digests and actual file
 sizes. The script exits unsuccessfully on missing or inconsistent readbacks;
 input authentication errors also fail the command.
 Both historical observation batch paths and their respective 15/10 record
-counts are mandatory. Missing, renamed, unexpected or truncated batches fail
-the audit instead of silently reducing its coverage.
+counts are mandatory. Their full bytes must also match independently pinned
+historical SHA-256 digests. Missing, renamed, unexpected, truncated or altered
+batches fail the audit instead of silently reducing or changing its evidence.
+All 1919 IDs and 2012 URLs are tested through the batch API without file reads
+after authentication, preserving the same readback result without repeatedly
+loading the catalog and archive.
 
 | Measurement | Result |
 | --- | ---: |

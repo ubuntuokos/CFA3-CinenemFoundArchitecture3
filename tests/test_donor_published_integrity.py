@@ -67,6 +67,64 @@ class PublishedIntegrityTests(unittest.TestCase):
         self.assertEqual(lookup.lookup_published(original_url=expected["original_url"]), expected)
         self.assertIsNone(lookup.lookup_published(donor_id="UNKNOWN"))
 
+    def test_batch_reads_all_ids_and_urls_without_rereading_files(self):
+        handle = lookup.ValidatedPublishedCatalog()
+        aliases = json.loads(lookup.PUBLISHED_EXACT_ALIASES.read_bytes())["aliases"]
+        routes = dict(self.catalog["lookup_by_locator"])
+        routes.update({row["original_url"]: row["donor_id"] for row in aliases})
+        with patch.object(Path, "read_bytes", side_effect=AssertionError("batch file read")), \
+                patch.object(Path, "read_text", side_effect=AssertionError("batch file read")):
+            for row in self.catalog["records"]:
+                self.assertEqual(lookup.lookup_published(donor_id=row["donor_id"], catalog=handle), row)
+            for url, sid in routes.items():
+                expected = self.catalog["records"][self.catalog["lookup_by_id"][sid]]
+                self.assertEqual(lookup.lookup_published(original_url=url, catalog=handle), expected)
+
+    def test_forged_batch_handles_fail_before_hits_or_misses(self):
+        for handle in (object.__new__(lookup.ValidatedPublishedCatalog), {}, self.catalog):
+            for query in ({"donor_id": self.candidate["donor_id"]},
+                          {"donor_id": "UNKNOWN"},
+                          {"original_url": "https://example.invalid/unknown"}):
+                with self.subTest(handle=type(handle), query=query):
+                    with self.assertRaisesRegex(ValueError, "Unvalidated published"):
+                        lookup.lookup_published(catalog=handle, **query)
+
+    def test_batch_state_is_deeply_immutable_and_returns_detached_rows(self):
+        handle = lookup.ValidatedPublishedCatalog()
+        doc, aliases = handle._trusted()
+        with self.assertRaises(TypeError):
+            doc["records"][0]["historical_status"] = "ACCEPTED_REFERENCE"
+        with self.assertRaises(TypeError):
+            aliases["https://example.invalid/"] = "NEW"
+        expected = self.candidate
+        row = lookup.lookup_published(donor_id=expected["donor_id"], catalog=handle)
+        row["lookup_aliases"].clear()
+        row["historical_status"] = "ACCEPTED_REFERENCE"
+        self.assertEqual(lookup.lookup_published(donor_id=expected["donor_id"], catalog=handle), expected)
+
+    def test_existing_batch_is_snapshot_but_new_lookup_detects_changed_file(self):
+        handle = lookup.ValidatedPublishedCatalog()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "catalog.json"
+            path.write_bytes(b"{}")
+            with patch.object(lookup, "PUBLISHED_FIRST", path):
+                self.assertEqual(lookup.lookup_published(
+                    donor_id=self.candidate["donor_id"], catalog=handle), self.candidate)
+                with self.assertRaisesRegex(ValueError, "catalog digest mismatch"):
+                    lookup.lookup_published(donor_id=self.candidate["donor_id"])
+
+    def test_batch_creation_authenticates_archive_and_rejects_subclasses(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "archive.json"
+            path.write_bytes(b"{}")
+            with patch.object(lookup, "PUBLISHED_FIRST_ARCHIVE", path):
+                with self.assertRaisesRegex(ValueError, "source-file integrity"):
+                    lookup.ValidatedPublishedCatalog()
+        class Derived(lookup.ValidatedPublishedCatalog):
+            pass
+        with self.assertRaises(TypeError):
+            Derived()
+
 
 if __name__ == "__main__":
     unittest.main()

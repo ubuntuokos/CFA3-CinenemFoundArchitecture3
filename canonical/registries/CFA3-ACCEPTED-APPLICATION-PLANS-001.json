@@ -1,0 +1,71 @@
+{
+  "schema": "cfa3.accepted-application-plans.v1",
+  "id": "CFA3-ACCEPTED-APPLICATION-PLANS-001",
+  "purpose": "Repository-side index of owner-approved CFA3 application specifications. Not a CSA conversation/suggestion database.",
+  "records": [
+    {
+      "id": "CFA3-AI-VIDEO-TOOLS-V2-FINAL",
+      "application": "AI Video Tools",
+      "title": "CFA3 — AI VIDEO TOOLS",
+      "application_area": "AI / Video Generation / Creative Tools",
+      "document_version": "2.0 FINAL",
+      "decision_status": "OWNER_APPROVED",
+      "implementation_status": "PLANNED_NOT_IMPLEMENTED",
+      "owner_decision_date": "2026-10-15",
+      "source_kind": "OWNER_SUPPLIED_ACCEPTED_SPECIFICATION",
+      "document_path": "docs/plans/accepted/CFA3-AI-VIDEO-TOOLS-V2-FINAL.md",
+      "source_sha256": "603cda542882d41a33b76a01c6b3cff05ed7c0eb3e6839f7bf74d70db0237df8",
+      "integration_path": "docs/architecture/AI-VIDEO-TOOLS-CFA3-INTEGRATION.md",
+      "required_generators": [
+        {
+          "id": "AVT-001",
+          "name": "FramePack",
+          "adapter": "LOCAL"
+        },
+        {
+          "id": "AVT-002",
+          "name": "WanGP",
+          "adapter": "LOCAL"
+        },
+        {
+          "id": "AVT-003",
+          "name": "LTX Desktop",
+          "adapter": "LOCAL_OR_PROVIDER"
+        },
+        {
+          "id": "AVT-004",
+          "name": "VideoX-Fun",
+          "adapter": "LOCAL"
+        },
+        {
+          "id": "AVT-005",
+          "name": "EasyAnimate",
+          "adapter": "LOCAL"
+        },
+        {
+          "id": "AVT-006",
+          "name": "Runway API",
+          "adapter": "CLOUD"
+        },
+        {
+          "id": "AVT-007",
+          "name": "Kling AI API",
+          "adapter": "CLOUD"
+        }
+      ],
+      "gui": "CFA3_NATIVE_QT6",
+      "model_weights_in_base_installer": false,
+      "local_model_authority": "CFA3 Model Manager",
+      "execution_route_authority": "Model Router",
+      "workflow_authority": "Temporal / existing shared workflow layer",
+      "asset_authority": "Shared Asset Management",
+      "plugin_authority": "Shared Plugin & Extension Fabric",
+      "host_resource_authority": "Host Resource Broker / Hardware Policy",
+      "cpu_only_platform_base": true,
+      "donor_admission_by_this_record": false,
+      "baseline_mapping": "PENDING_AUTHORITATIVE_BASELINE_VERIFICATION",
+      "implementation_authorized_by_this_record": false,
+      "source_git_blob_sha1": "826faa4c9d03775dca3627ee4c3ffe47e86c4d0e"
+    }
+  ]
+}

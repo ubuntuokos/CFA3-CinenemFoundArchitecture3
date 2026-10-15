@@ -39,6 +39,9 @@ Run `python3 scripts/check_donor_source_file01_recovery.py` from the repository.
 The checked-in JSON report records the input SHA-256 digests and actual file
 sizes. The script exits unsuccessfully on missing or inconsistent readbacks;
 input authentication errors also fail the command.
+Both historical observation batch paths and their respective 15/10 record
+counts are mandatory. Missing, renamed, unexpected or truncated batches fail
+the audit instead of silently reducing its coverage.
 
 | Measurement | Result |
 | --- | ---: |

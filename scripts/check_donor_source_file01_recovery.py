@@ -10,6 +10,25 @@ from build_donor_source_file01_queue import validated_queue
 
 ROOT = Path(__file__).resolve().parents[1]
 REG = ROOT / "canonical/registries"
+OBSERVATION_BATCHES = {
+    "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-001.json": 15,
+    "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-002.json": 10,
+}
+
+
+def observation_batches(read, directory=REG):
+    paths = {path.name for path in directory.glob(
+        "CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-*.json")}
+    if paths != set(OBSERVATION_BATCHES):
+        raise ValueError("Source-file 001 observation batch inventory mismatch")
+    batches = []
+    for name, count in OBSERVATION_BATCHES.items():
+        doc = read(directory / name)
+        records = doc.get("records")
+        if not isinstance(records, list) or len(records) != count:
+            raise ValueError("Source-file 001 observation record count mismatch: " + name)
+        batches.append(doc)
+    return batches
 
 
 def audit():
@@ -77,8 +96,7 @@ def audit():
                 None if actual is None else actual["donor_registration"], row["donor_registration"])
 
     observations = []
-    for path in sorted(REG.glob("CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-*.json")):
-        doc = read(path)
+    for doc in observation_batches(read):
         for observation in doc["records"]:
             row = catalog["records"][observation["source_file_position"]]
             for key, old_key in (("donor_id", "donor_id"), ("original_url", "original_url"),

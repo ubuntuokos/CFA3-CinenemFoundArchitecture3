@@ -64,7 +64,8 @@
       "cpu_only_platform_base": true,
       "donor_admission_by_this_record": false,
       "baseline_mapping": "PENDING_AUTHORITATIVE_BASELINE_VERIFICATION",
-      "implementation_authorized_by_this_record": false
+      "implementation_authorized_by_this_record": false,
+      "source_git_blob_sha1": "826faa4c9d03775dca3627ee4c3ffe47e86c4d0e"
     }
   ]
 }

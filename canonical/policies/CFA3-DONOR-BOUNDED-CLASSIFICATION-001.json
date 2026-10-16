@@ -1,0 +1,10 @@
+{
+  "schema": "cfa3.policy-withdrawal.v1",
+  "id": "CFA3-DONOR-BOUNDED-CLASSIFICATION-001",
+  "status": "WITHDRAWN",
+  "withdrawal_date": "2026-10-16",
+  "authority": "OWNER_INSTRUCTION",
+  "scope": "DONOR_DATABASE_PROCESSING_RULES",
+  "replacement_rules": [],
+  "note": "The donor classification and processing requirements formerly identified by this policy have been withdrawn. This record contains no active processing rules. Donor records, canonical registry data, search/index storage, and the separate file-size storage policy are retained."
+}

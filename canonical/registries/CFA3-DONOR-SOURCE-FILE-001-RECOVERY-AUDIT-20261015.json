@@ -1,0 +1,77 @@
+{
+  "schema": "cfa3.donor-source-file-recovery-audit.v1",
+  "scope": "SOURCE_FILE_001_PRESERVED_RECORDS_AND_PUBLISHED_LOOKUP_ONLY",
+  "source_file_sequence": 1,
+  "input_sha256": {
+    "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json": "96e63bc0f174aceddc2893efc2ee3a2e845d0f720dbe9fcecab3cd41b3f23a2d",
+    "archive/donor-source-migration/2026-10-09/FA3-DONOR-REFERENCE-REGISTRY-001.json": "4798642f9a8dd6dd9181eadb31b28f4071c9d45251b9b659d22e005c21cd4e4f",
+    "canonical/registries/CFA3-DONOR-REFERENCE-REGISTRY-001.json": "c3f53e1b28b331098855dae27e3d3514273df446be6b006cfc2243564bfcad01",
+    "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json": "dc135c90d1983e0458b79f25aa350ec77aeabfaf7e05bc3eb8dbacd2e736f1e8",
+    "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json": "a6b53953d593c18b3add01cab0c368b14941339d66de6c0d441505f9ae8fc0ae",
+    "canonical/registries/CFA3-DONOR-SOURCE-FILE-001-TWO-PHASE-QUEUE-001.json": "683af6d0165b7bc44703dd91cf959903291b2b05e13aeec2f1dd11e4dc41716e",
+    "canonical/registries/CFA3-DONOR-PUBLISHED-ORIGINAL-URL-ALIASES-20261012.json": "6a7feb7619636ef4765a2764bb0b9a1ddffc1eb8c688c2c5ce065043e9e0a29f",
+    "archive/donor-source-migration/2026-10-09/CFA3-DONOR-BASELINE-USER-SOURCE-UNION-2026-10-05.json": "58cfae644dbf2a33dc5a0597a7ab144a60e00d8e1dbf483c18f9f1e264b2e595",
+    "canonical/registries/CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-001.json": "323be9c86193498a250314aba7527125beaab1d40198d452eb1067c6049ba4dc",
+    "canonical/registries/CFA3-DONOR-SOURCE-FILE-001-PHASE1-UPSTREAM-OBSERVATIONS-002.json": "3f905ae5950342896e1b346d0cde94f3557bf2c416d610831cb20fb517b7abd0"
+  },
+  "canonical_registry_records": 81,
+  "source_records_read_back": 1919,
+  "published_url_readbacks": 2012,
+  "queue_records": 1919,
+  "queue_groups": {
+    "direct_candidates": 1136,
+    "collection_candidates": 546,
+    "needs_classification": 80,
+    "non_network_references": 157
+  },
+  "historical_metadata_observations": 25,
+  "observed_metadata_returned": 24,
+  "observed_metadata_not_found_at_check": [
+    "https://github.com/6174/recut"
+  ],
+  "observations_are_full_processing_or_current_upstream_proof": false,
+  "MISSING": 0,
+  "missing": [],
+  "UNRESOLVED_CONFLICT": 0,
+  "unresolved_conflicts": [],
+  "preserved_supersession_routes": [
+    {
+      "url": "https://github.com/Ascend/triton-ascend",
+      "historical_id": "FA3-DONOR-ASCEND-TRITON-ASCEND-LEGACY-001",
+      "preferred_id": "FA3-DONOR-TRITON-LANG-TRITON-ASCEND-001",
+      "authority": "HISTORICAL_OWNER_BASELINE"
+    }
+  ],
+  "preexisting_oversize_files": [
+    {
+      "path": "archive/donor-source-migration/2026-10-09/FA3-DONOR-REFERENCE-REGISTRY-001.json",
+      "bytes": 2994706
+    },
+    {
+      "path": "canonical/registries/CFA3-DONOR-L1-URL-ROUTING-20261010.json",
+      "bytes": 1066074
+    },
+    {
+      "path": "canonical/registries/CFA3-DONOR-SOURCE-FILE-001.json",
+      "bytes": 1253225
+    },
+    {
+      "path": "canonical/registries/CFA3-DONOR-TRANSFER-SNAPSHOT-001.json",
+      "bytes": 8189514
+    },
+    {
+      "path": "canonical/registries/CFA3-SOURCE-LIFECYCLE-INDEX-001.json",
+      "bytes": 4308102
+    }
+  ],
+  "global_missing_owner_submissions": "UNPROVEN",
+  "global_unresolved_identity_conflicts": "UNPROVEN",
+  "original_frozen_L1_B": null,
+  "lifecycle_index_complete": false,
+  "L1_PUBLISHED_AND_VERIFIED_PASS": false,
+  "L2_started_by_this_task": false,
+  "L3_L5_started_by_this_task": false,
+  "new_donor_approvals": 0,
+  "donor_records_changed": 0,
+  "legacy_repository_writes": 0
+}

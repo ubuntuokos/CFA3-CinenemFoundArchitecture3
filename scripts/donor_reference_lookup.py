@@ -218,6 +218,9 @@ PUBLISHED_SOURCE_UNION = Path(__file__).resolve().parents[1] / (
 PUBLISHED_EXACT_ALIASES = Path(__file__).resolve().parents[1] / (
     "canonical/registries/CFA3-DONOR-PUBLISHED-ORIGINAL-URL-ALIASES-20261012.json"
 )
+PUBLISHED_AI_TEXT_DELTA = Path(__file__).resolve().parents[1] / (
+    "archive/donor-source-migration/2026-10-09/FA3-DONOR-AI-TEXT-MINDMAP-RENDER-SHADER-2026-09-29.json"
+)
 
 
 def _verified_published_original_aliases(doc):
@@ -298,7 +301,72 @@ def _verified_published_original_aliases(doc):
             or sorted(expected, key=lambda x: x["original_url"]) != sorted(
                 supplement.get("aliases", []), key=lambda x: x["original_url"])):
         raise ValueError("Published donor original URL alias coverage mismatch")
-    return {item["original_url"]: item["donor_id"] for item in expected}
+    aliases = {item["original_url"]: item["donor_id"] for item in expected}
+
+    # Restore the exact historical AI-text intake URL variants as aliases for
+    # the already-published donor records. This is search-only and fail-closed.
+    ai_raw = PUBLISHED_AI_TEXT_DELTA.read_bytes()
+    ai_blob = blob_sha(ai_raw)
+    ai_pin = "c18710d41f48bc4bf542c2f591ab916ff65cd6c9"
+    if ai_blob != ai_pin:
+        raise ValueError("Historical AI-text donor delta was modified")
+    ai_delta = json.loads(ai_raw)
+    ai_sources = ai_delta.get("sources", [])
+    ai_ids = ai_delta.get("new_ids", [])
+    if (ai_delta.get("schema") != "fa3.donor-intake-delta.v1"
+            or ai_delta.get("source_count") != 50
+            or ai_delta.get("unique_source_key_count") != 39
+            or ai_delta.get("expected_new_source_count") != 39
+            or len(ai_sources) != 39 or len(ai_ids) != 39
+            or ai_delta.get("updated_existing") != []
+            or ai_delta.get("capability_delta") != 0
+            or ai_delta.get("source_license_status") != "UNVERIFIED"
+            or any(ai_delta.get(key) is not False for key in (
+                "automatic_dependency", "automatic_fetch", "automatic_install",
+                "automatic_code_import", "automatic_provider_admission",
+                "automatic_activation", "authority"))
+            or ai_delta.get("result_flags", {}).get("all_non_authoritative") is not True
+            or ai_delta.get("result_flags", {}).get("no_auto_admission") is not True):
+        raise ValueError("Historical AI-text donor delta scope changed")
+    ai_id_by_key = {row["key"]: row["id"] for row in ai_ids}
+    if len(ai_id_by_key) != 39 or len({row["id"] for row in ai_ids}) != 39:
+        raise ValueError("Historical AI-text donor identities are not unique")
+    ai_seen_urls = set()
+    ai_missing_routes = {}
+    for source in ai_sources:
+        key = source.get("normalized_source_key")
+        source_id = ai_id_by_key.get(key)
+        position = by_id.get(source_id)
+        urls = source.get("urls", [])
+        if (not isinstance(key, str) or source_id is None
+                or position is None or type(position) is not int
+                or not 0 <= position < len(records)
+                or records[position].get("donor_id") != source_id
+                or records[position].get("normalized_key") != key
+                or records[position].get("historical_status") != "ACCEPTED_REFERENCE"
+                or any(records[position].get(flag) is not False for flag in (
+                    "runtime_admission", "code_copy_authorized",
+                    "license_authorized", "model_provider_admission"))
+                or not isinstance(urls, list) or not urls):
+            raise ValueError("Historical AI-text source is not an unchanged published donor")
+        for url in urls:
+            if (not isinstance(url, str) or not url.startswith("https://")
+                    or url in ai_seen_urls):
+                raise ValueError("Historical AI-text URL is invalid or duplicated")
+            ai_seen_urls.add(url)
+            direct = existing.get(url)
+            if direct is not None:
+                if direct != source_id:
+                    raise ValueError("Historical AI-text URL conflicts with a canonical identity")
+                continue
+            previous = aliases.get(url)
+            if previous is not None and previous != source_id:
+                raise ValueError("Historical AI-text URL conflicts with a published alias")
+            ai_missing_routes[url] = source_id
+    if len(ai_seen_urls) != 50 or len(ai_missing_routes) != 17:
+        raise ValueError("Historical AI-text original URL coverage mismatch")
+    aliases.update(ai_missing_routes)
+    return aliases
 
 
 

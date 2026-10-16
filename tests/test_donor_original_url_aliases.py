@@ -87,6 +87,10 @@ class OriginalUrlAliasTests(unittest.TestCase):
         delta = self.ai_text
         self.assertEqual(delta["source_count"], 50)
         self.assertEqual(delta["unique_source_key_count"], 39)
+        self.assertEqual(
+            sum(len(source["urls"]) for source in delta["sources"]),
+            delta["source_count"],
+        )
         ids = {row["key"]: row["id"] for row in delta["new_ids"]}
         self.assertEqual(len(ids), 39)
         urls = set()

@@ -1,0 +1,25 @@
+{
+  "schema": "cfa3.donor-conversation-link-occurrences.v1",
+  "id": "CFA3-DONOR-CONVERSATION-LINK-OCCURRENCES-001",
+  "repository": "ubuntuokos/CFA3-CinenemFoundArchitecture3",
+  "scope": "USER_MESSAGES_ONLY",
+  "ordering": "ASCENDING_BY_USER_MESSAGE_TIMESTAMP",
+  "completion_state": "IN_PROGRESS",
+  "global_complete": false,
+  "processed_through": "2026-03-27T21:10:28Z",
+  "occurrence_count": 1,
+  "entries": [
+    {
+      "occurrence_index": 1,
+      "conversation_timestamp": "2026-03-27T21:10:28Z",
+      "message_role": "USER",
+      "exact_url": "http://www.ubuntu.com/support",
+      "source_id": "FA3-DONOR-WWW-UBUNTU-COM-SUPPORT-1040BD88-001",
+      "normalized_key": "http://www.ubuntu.com/support",
+      "identity_resolution": "EXISTING_DONOR_IDENTITY",
+      "evidence_ref": "CHATGPT_USER_MESSAGE:2026-03-27T21:10:28Z#1",
+      "user_submitted": true,
+      "donor_inclusion_by_current_owner_order": true
+    }
+  ]
+}

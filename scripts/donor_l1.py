@@ -27,7 +27,6 @@ MEDIA_SOURCE = ARCH / "FA3-DONOR-MEDIA-INTAKE-2026-09-29.json"
 OWNER_APPROVAL_19_26 = ROOT / "canonical/registries/CFA3-DONOR-OWNER-APPROVAL-19-26-20261010.json"
 OWNER_RECOVERY = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-OWNER-URL-RECOVERY-20261010.json"
 PR_OWNER_TRANSFER = ROOT / "canonical/registries/CFA3-DONOR-L1-HISTORICAL-PR-744-745-OWNER-TRANSFER-20261010.json"
-CONVERSATION_OCCURRENCES = ROOT / "canonical/registries/CFA3-DONOR-CONVERSATION-LINK-OCCURRENCES-001.json"
 # SHA256 over historical GitHub commit ce8b8a888a8c762393a4fa4c80e5a1c08a64dbed:
 # ordered 48 original URL occurrences and sorted 36 proposed original donor IDs.
 TRIPO_URL_ORDER_SHA256 = "f78ba37406396b871e390f8619eff9c2d7b87d9b4db9e165ef6bff5ac742c433"
@@ -171,43 +170,6 @@ def historical_pr_owner_approvals():
     if seen != {744, 745}:
         raise ValueError("Historical approved PRs not fully represented")
     return manifest["records"]
-
-
-def conversation_occurrences():
-    """Chronological USER-message URL occurrences recovered directly from ChatGPT conversations."""
-    record = json_read(CONVERSATION_OCCURRENCES)
-    if (record.get("schema") != "cfa3.donor-conversation-link-occurrences.v1"
-            or record.get("id") != "CFA3-DONOR-CONVERSATION-LINK-OCCURRENCES-001"
-            or record.get("repository") != "ubuntuokos/CFA3-CinenemFoundArchitecture3"
-            or record.get("scope") != "USER_MESSAGES_ONLY"
-            or record.get("ordering") != "ASCENDING_BY_USER_MESSAGE_TIMESTAMP"
-            or record.get("completion_state") not in {"IN_PROGRESS", "COMPLETE"}
-            or record.get("global_complete") is not (record.get("completion_state") == "COMPLETE")
-            or record.get("occurrence_count") != len(record.get("entries", []))):
-        raise ValueError("Conversation occurrence ledger header mismatch")
-    entries = record["entries"]
-    if [e.get("occurrence_index") for e in entries] != list(range(1, len(entries) + 1)):
-        raise ValueError("Conversation occurrence indices are not contiguous")
-    timestamps = [e.get("conversation_timestamp") for e in entries]
-    if timestamps != sorted(timestamps):
-        raise ValueError("Conversation occurrence order is not chronological")
-    for entry in entries:
-        if (entry.get("message_role") != "USER"
-                or entry.get("user_submitted") is not True
-                or entry.get("donor_inclusion_by_current_owner_order") is not True
-                or not str(entry.get("exact_url", "")).startswith(("http://", "https://"))
-                or not entry.get("source_id")
-                or not entry.get("normalized_key")
-                or not entry.get("identity_resolution")
-                or not entry.get("evidence_ref")):
-            raise ValueError("Conversation occurrence entry boundary mismatch")
-    if entries:
-        first = entries[0]
-        if (first["conversation_timestamp"] != "2026-03-27T21:10:28Z"
-                or first["exact_url"] != "http://www.ubuntu.com/support"
-                or first["source_id"] != "FA3-DONOR-WWW-UBUNTU-COM-SUPPORT-1040BD88-001"):
-            raise ValueError("Earliest recovered conversation occurrence changed")
-    return entries
 
 
 def frozen_sources():
@@ -435,32 +397,6 @@ def register_owner_message_urls(db):
         db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
                    (sid,url,"HISTORICAL_OWNER_MESSAGES_20261007","EXPLICIT_DONOR_COMMAND"))
     return len(pairs)
-
-
-def register_conversation_occurrences(db):
-    """Preserve every recovered USER-message URL occurrence without deduplicating occurrences."""
-    entries = conversation_occurrences()
-    for entry in entries:
-        sid = entry["source_id"]
-        url = entry["exact_url"]
-        row = db.execute(
-            "SELECT normalized_key FROM sources WHERE source_id=?", (sid,)
-        ).fetchone()
-        if row != (entry["normalized_key"],):
-            raise ValueError("Conversation URL source identity missing or mismatched: " + url)
-        existing = {x[0] for x in db.execute(
-            "SELECT source_id FROM aliases WHERE alias=?", (url,)
-        )}
-        if existing - {sid}:
-            raise ValueError("Conversation URL resolves to multiple donor identities: " + url)
-        db.execute("INSERT OR IGNORE INTO aliases VALUES(?,?)", (url, sid))
-        db.execute("INSERT OR IGNORE INTO source_provenance VALUES(?,?,?,?)",
-                   (sid, url, "CHATGPT_USER_CONVERSATIONS", entry["evidence_ref"]))
-        db.execute("INSERT INTO historical_link_occurrences VALUES(?,?,?,?,?,?,?,?,?)",
-                   ("CHATGPT_USER_CONVERSATIONS", entry["occurrence_index"], sid, url,
-                    entry["normalized_key"], entry["identity_resolution"],
-                    entry["evidence_ref"], None, 1))
-    return len(entries)
 
 
 def register_historical_pr_owner_urls(db):
@@ -770,7 +706,6 @@ def prepare(db, sources, run_id):
     register_historical_urls(db, sources)
     register_tripo_historical_urls(db, sources)
     register_owner_message_urls(db)
-    register_conversation_occurrences(db)
     register_historical_pr_owner_urls(db)
     register_shgaf_original_urls(db)
     register_cast_original_urls(db)
@@ -796,7 +731,6 @@ def prepare(db, sources, run_id):
         ("historical_supplement_owner_approved_transfer_sources","19"),
         ("additional_owner_approved_transfer_sources","4"),
         ("historical_tripo_original_occurrences","48"),
-        ("conversation_user_link_occurrences",str(len(conversation_occurrences()))),
         ("historical_shgaf_submitted_urls","20"),
         ("historical_cast_submitted_url_views","9"),
         ("historical_media_intake_original_urls","58"),
@@ -882,22 +816,6 @@ def verify(path, expected):
         old_aggregate_id = recovery["historical_aggregate_reconciliation"]["historical_proposed_donor_id"]
         if db.execute("SELECT 1 FROM sources WHERE source_id=?", (old_aggregate_id,)).fetchone():
             raise ValueError("Non-canonical historical Tripo aggregate was improperly admitted")
-        conversation_expected = [
-            (x["occurrence_index"], x["source_id"], x["exact_url"],
-             x["normalized_key"], x["identity_resolution"], x["evidence_ref"], None, 1)
-            for x in conversation_occurrences()
-        ]
-        conversation_actual = list(db.execute(
-            "SELECT occurrence_index,source_id,original_url,normalized_key,identity_resolution,evidence_ref,parent_id,global_level "
-            "FROM historical_link_occurrences WHERE source_group=? ORDER BY occurrence_index",
-            ("CHATGPT_USER_CONVERSATIONS",)))
-        if conversation_actual != conversation_expected:
-            raise ValueError("Conversation USER URL occurrence read-back mismatch")
-        for _, sid, url, _, _, evidence_ref, _, _ in conversation_actual:
-            if not db.execute(
-                    "SELECT 1 FROM source_provenance WHERE source_id=? AND original_url=? AND source_set=? AND historical_evidence=?",
-                    (sid, url, "CHATGPT_USER_CONVERSATIONS", evidence_ref)).fetchone():
-                raise ValueError("Conversation USER URL provenance read-back missing")
         alias_total = db.execute("SELECT count(DISTINCT alias) FROM aliases").fetchone()[0]
         resolved_rows = list(db.execute(
             "SELECT alias,preferred_source_id,related_source_ids_json FROM url_resolution"))
